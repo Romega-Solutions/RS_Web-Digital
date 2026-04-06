@@ -1,11 +1,10 @@
+import { ExploreServicesButton } from "../components/ExploreServicesButton";
+import { HomeHero } from "../components/HomeHero";
+import { ServiceStrip } from "../components/ServiceStrip";
+import { SiteFooter } from "../components/SiteFooter";
+import { SiteHeader } from "../components/SiteHeader";
+
 export default function Home() {
-  const navItems = ["Home", "About", "Services", "Careers & Talents"];
-  const serviceItems = [
-    "Our Services",
-    "Talent Acquisition",
-    "Digital Marketing",
-    "Website Development",
-  ];
   const trustPillars = [
     {
       title: "Strategic Team Growth",
@@ -41,73 +40,12 @@ export default function Home() {
 
   return (
     <div className="site-shell" id="top">
-      <header className="top-nav">
-        <div className="top-nav-inner">
-          <a href="#" className="brand-mark" aria-label="Romega Solutions home">
-            <span className="brand-mark-icon" aria-hidden="true">
-              RS
-            </span>
-            <span className="brand-mark-text">Romega Solutions</span>
-          </a>
-
-          <nav className="nav-menu">
-            {navItems.map((item) => (
-              <a
-                key={item}
-                href="#"
-                className={`menu-link ${item === "Home" ? "menu-link-active" : ""}`}
-              >
-                {item}
-              </a>
-            ))}
-          </nav>
-
-          <div className="nav-cta-wrap">
-            <span className="nav-cta-arrow" aria-hidden="true">
-              →
-            </span>
-            <a href="#" className="cta-chip">
-              Work with us
-            </a>
-          </div>
-        </div>
-      </header>
+      <SiteHeader activeItem="Home" />
 
       <main>
-        <section className="hero">
-          <div className="hero-grid" aria-hidden="true" />
-          <div className="hero-overlay" aria-hidden="true" />
+        <HomeHero />
 
-          <div className="hero-content">
-            <h1 className="headline">
-              <span className="hero-line hero-line-one">
-                Built for <span className="growing-word">growing</span> businesses.
-              </span>
-            </h1>
-            <p className="hero-line hero-subtitle">
-              Designed for <span className="accent-slab">what&apos;s next.</span>
-            </p>
-
-            <p className="hero-copy">
-              Partnering with businesses to grow teams, strengthen brands, and
-              scale with confidence.
-            </p>
-
-            <a href="#" className="hero-action">
-              Explore Our Services
-            </a>
-          </div>
-        </section>
-
-        <section className="service-strip">
-          <div className="service-strip-track">
-            {[...serviceItems, ...serviceItems].map((item, index) => (
-              <span key={`${item}-${index}`} className="service-strip-item">
-                {item}
-              </span>
-            ))}
-          </div>
-        </section>
+        <ServiceStrip />
 
         <section className="growth-section">
           <div className="growth-grid" aria-hidden="true" />
@@ -115,9 +53,8 @@ export default function Home() {
           <div className="growth-inner">
             <div className="growth-copy-wrap">
               <h2 className="growth-title">
-                Growth feels easier when you have the right partner.
+                Growth feels easier when you have the right <span className="growing-word">partner.</span>
               </h2>
-              <div className="growth-brush" aria-hidden="true" />
             </div>
 
             <div className="growth-side">
@@ -135,9 +72,7 @@ export default function Home() {
             <div className="growth-banner-overlay" aria-hidden="true" />
             <div className="growth-banner-content">
               <h3 className="growth-banner-title">Let&apos;s Build What&apos;s Next</h3>
-              <a href="#" className="growth-banner-action">
-                Explore Our Services
-              </a>
+              <ExploreServicesButton className="hero-action" />
             </div>
           </div>
         </section>
@@ -243,8 +178,8 @@ export default function Home() {
 
           <div className="testimonial-content">
             <blockquote className="testimonial-quote">
-              "Romega placed three VP-level executives in record time, helping
-              us avoid months of lost revenue"
+              &ldquo;Romega placed three VP-level executives in record time, helping
+              us avoid months of lost revenue&rdquo;
             </blockquote>
             <p className="testimonial-author">Martin Reyes, CEO</p>
 
@@ -289,62 +224,7 @@ export default function Home() {
           </div>
         </section>
 
-        <footer className="site-footer">
-          <div className="site-footer-inner">
-            <div className="site-footer-brand">
-              <div className="site-footer-logo-wrap">
-                <span className="site-footer-logo-mark">RS</span>
-                <div className="site-footer-logo-text">
-                  <strong>ROMEGA SOLUTIONS</strong>
-                  <span>HR AND MARKETING SERVICES</span>
-                </div>
-              </div>
-              <p className="site-footer-tagline">
-                We provide talent solutions, brand support, and strategic
-                guidance designed for sustainable growth in a global landscape.
-              </p>
-            </div>
-
-            <div className="site-footer-links">
-              <a href="#">Home</a>
-              <a href="#">About</a>
-              <a href="#">Services</a>
-              <a href="#">Careers</a>
-              <a href="#">Talents</a>
-            </div>
-
-            <div className="site-footer-connect">
-              <h3>Connect With Us</h3>
-              <div className="site-footer-socials" aria-hidden="true">
-                <span className="site-footer-social">in</span>
-                <span className="site-footer-social">f</span>
-                <span className="site-footer-social">ig</span>
-              </div>
-
-              <p className="site-footer-contact">
-                <span>@</span>
-                <a href="mailto:info@romega-solutions.com">info@romega-solutions.com</a>
-              </p>
-              <p className="site-footer-contact">
-                <span>o</span>
-                <a href="mailto:info@romega-solutions.com">info@romega-solutions.com</a>
-              </p>
-            </div>
-
-            <a href="#top" className="site-footer-backtop">
-              <span className="site-footer-backtop-arrow">^</span>
-              <span>back to top</span>
-            </a>
-          </div>
-
-          <div className="site-footer-legal">
-            <p>
-              © 2026 Romega Solutions. All rights reserved.
-              <a href="#">Privacy Policy</a>
-              <a href="#">Terms of Use</a>
-            </p>
-          </div>
-        </footer>
+        <SiteFooter />
       </main>
     </div>
   );

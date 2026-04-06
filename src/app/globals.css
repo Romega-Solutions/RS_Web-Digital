@@ -2,9 +2,7 @@
 
 @font-face {
   font-family: "The Seasons";
-  src: local("The Seasons"), local("The Seasons Regular"),
-    url("/fonts/the-seasons-regular.woff2") format("woff2"),
-    url("/fonts/the-seasons-regular.woff") format("woff");
+  src: local("The Seasons"), local("The Seasons Regular");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -12,9 +10,7 @@
 
 @font-face {
   font-family: "Garet";
-  src: local("Garet"), local("Garet Regular"),
-    url("/fonts/garet-regular.woff2") format("woff2"),
-    url("/fonts/garet-regular.woff") format("woff");
+  src: local("Garet"), local("Garet Regular");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -22,9 +18,7 @@
 
 @font-face {
   font-family: "Garet";
-  src: local("Garet"), local("Garet Medium"),
-    url("/fonts/garet-medium.woff2") format("woff2"),
-    url("/fonts/garet-medium.woff") format("woff");
+  src: local("Garet"), local("Garet Medium");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -32,9 +26,7 @@
 
 @font-face {
   font-family: "TT Interphases";
-  src: local("TT Interphases"), local("TT Interphases Regular"),
-    url("/fonts/tt-interphases-regular.woff2") format("woff2"),
-    url("/fonts/tt-interphases-regular.woff") format("woff");
+  src: local("TT Interphases"), local("TT Interphases Regular");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -42,9 +34,7 @@
 
 @font-face {
   font-family: "TT Ramillas";
-  src: local("TT Ramillas"), local("TT Ramillas Regular"),
-    url("/fonts/tt-ramillas-regular.woff2") format("woff2"),
-    url("/fonts/tt-ramillas-regular.woff") format("woff");
+  src: local("TT Ramillas"), local("TT Ramillas Regular");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -52,9 +42,7 @@
 
 @font-face {
   font-family: "TT Ramillas";
-  src: local("TT Ramillas"), local("TT Ramillas Medium"),
-    url("/fonts/tt-ramillas-medium.woff2") format("woff2"),
-    url("/fonts/tt-ramillas-medium.woff") format("woff");
+  src: local("TT Ramillas"), local("TT Ramillas Medium");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -62,9 +50,7 @@
 
 @font-face {
   font-family: "TT Interphases";
-  src: local("TT Interphases"), local("TT Interphases SemiBold"),
-    url("/fonts/tt-interphases-semibold.woff2") format("woff2"),
-    url("/fonts/tt-interphases-semibold.woff") format("woff");
+  src: local("TT Interphases"), local("TT Interphases SemiBold");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -72,9 +58,7 @@
 
 @font-face {
   font-family: "The Seasons";
-  src: local("The Seasons"), local("The Seasons Medium"),
-    url("/fonts/the-seasons-medium.woff2") format("woff2"),
-    url("/fonts/the-seasons-medium.woff") format("woff");
+  src: local("The Seasons"), local("The Seasons Medium");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -89,14 +73,14 @@
   --color-surface: #f7f9fc;
   --color-text: #f3f5f7;
   --color-muted: #b8bec8;
-  --font-display: "The Seasons", "TT Ramillas", "Iowan Old Style", "Times New Roman", serif;
-  --font-ui: "Work Sans", var(--font-public-sans), "Segoe UI", sans-serif;
-  --font-nav: var(--font-poppins), "Poppins", "Work Sans", "Segoe UI", sans-serif;
-  --font-cta: "TT Interphases", var(--font-manrope), var(--font-poppins), "Poppins", "Work Sans", "Segoe UI", sans-serif;
-  --font-growth-title: "TT Ramillas", var(--font-cormorant-garamond), "The Seasons", "Iowan Old Style", "Times New Roman", serif;
-  --font-growth-copy: "TT Interphases", var(--font-manrope), var(--font-poppins), "Poppins", "Work Sans", "Segoe UI", sans-serif;
-  --font-work: var(--font-work-sans), "Work Sans", var(--font-public-sans), "Segoe UI", sans-serif;
-  --font-garet: "Garet", var(--font-poppins), "Poppins", "Work Sans", "Segoe UI", sans-serif;
+  --font-display: "The Seasons", "TT Ramillas", Georgia, "Iowan Old Style", "Times New Roman", serif;
+  --font-ui: "Garet", "TT Interphases", "Aptos", "Segoe UI", Arial, sans-serif;
+  --font-nav: "Garet", "TT Interphases", "Aptos", "Segoe UI", Arial, sans-serif;
+  --font-cta: "TT Interphases", "Garet", "Aptos", "Segoe UI", Arial, sans-serif;
+  --font-growth-title: "TT Ramillas", "The Seasons", Georgia, "Iowan Old Style", "Times New Roman", serif;
+  --font-growth-copy: "TT Interphases", "Garet", "Aptos", "Segoe UI", Arial, sans-serif;
+  --font-work: "Garet", "TT Interphases", "Aptos", "Segoe UI", Arial, sans-serif;
+  --font-garet: "Garet", "TT Interphases", "Aptos", "Segoe UI", Arial, sans-serif;
 }
 
 @theme inline {
@@ -108,7 +92,7 @@
   --color-page: var(--color-page);
   --color-surface: var(--color-surface);
   --color-muted: var(--color-muted);
-  --font-sans: var(--font-public-sans);
+  --font-sans: var(--font-ui);
 }
 
 body {
@@ -210,20 +194,20 @@ body {
 
   .growing-word::after {
     content: "";
-    background-image: linear-gradient(to right, rgb(254 189 25 / 0.95), rgb(254 189 25 / 0.72));
-    @apply absolute -bottom-2 left-0 h-1.5 w-full;
+    background-image: linear-gradient(to right, rgb(254 189 25 / 0.96), rgb(254 189 25 / 0.84));
+    @apply absolute -bottom-4 left-0 h-1 w-full;
   }
 
   .growing-word::before {
     content: "";
     background-image: repeating-linear-gradient(
       to right,
-      rgb(255 255 255 / 0.95) 0,
-      rgb(255 255 255 / 0.95) 8px,
-      rgb(255 255 255 / 0.75) 8px,
-      rgb(255 255 255 / 0.75) 11px
+      rgb(254 189 25 / 0.98) 0,
+      rgb(254 189 25 / 0.98) 10px,
+      rgb(254 189 25 / 0.78) 10px,
+      rgb(254 189 25 / 0.78) 14px
     );
-    @apply absolute -bottom-1 left-0 h-1.5 w-full;
+    @apply absolute -bottom-1.5 left-0 h-0.5 w-full;
   }
 
   .accent-slab {
@@ -241,7 +225,7 @@ body {
   }
 
   .hero-action {
-    @apply mt-10 inline-block w-fit rounded-full bg-brand-primary px-10 py-4 text-2xl font-semibold text-white underline decoration-2 underline-offset-2 transition-colors hover:bg-[#ffd04d] md:px-12 md:py-4 md:text-4xl;
+    @apply mt-10 inline-block w-fit rounded-full bg-brand-primary px-10 py-4 text-2xl font-semibold text-white no-underline transition-colors hover:bg-[#ffd04d] md:px-12 md:py-4 md:text-4xl;
     font-family: var(--font-cta);
   }
 
@@ -288,17 +272,6 @@ body {
     font-family: var(--font-growth-title);
   }
 
-  .growth-brush {
-    background-image: repeating-linear-gradient(
-      to right,
-      rgb(0 0 0 / 0.95) 0,
-      rgb(0 0 0 / 0.95) 12px,
-      rgb(0 0 0 / 0.8) 12px,
-      rgb(0 0 0 / 0.8) 15px
-    );
-    @apply mt-5 h-3 w-[83%] max-w-105 md:h-4;
-  }
-
   .growth-side {
     @apply flex flex-col gap-5;
   }
@@ -332,10 +305,6 @@ body {
 
   .growth-banner-title {
     @apply text-5xl leading-none font-semibold tracking-tight text-white md:text-7xl;
-  }
-
-  .growth-banner-action {
-    @apply mt-6 inline-block bg-brand-primary px-6 py-3 text-2xl font-bold text-background transition-colors hover:bg-[#ffd04d] md:mt-8 md:px-8 md:py-4;
   }
 
   .trust-section {
@@ -421,6 +390,215 @@ body {
 
   .service-strip:hover .service-strip-track {
     animation-play-state: paused;
+  }
+
+  .about-hero {
+    background: linear-gradient(180deg, #4b91e8 0%, #76acef 58%, #9dc4f3 100%);
+    @apply relative overflow-hidden px-5 py-10 md:px-10 md:py-16;
+  }
+
+  .about-hero-inner {
+    background-image: linear-gradient(to right, rgb(255 255 255 / 0.12) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.12) 1px, transparent 1px);
+    background-size: 92px 92px;
+    @apply mx-auto grid w-full max-w-7xl items-center gap-8 md:grid-cols-[0.88fr_1.12fr] md:gap-10;
+  }
+
+  .about-hero-photo-frame {
+    @apply relative mx-auto min-h-[22rem] w-full max-w-[20.5rem] overflow-hidden rounded-[2rem] shadow-[0_26px_70px_rgba(18,55,110,0.18)] md:mx-0 md:min-h-[28rem] md:max-w-[24rem];
+  }
+
+  .about-hero-photo {
+    @apply object-cover;
+  }
+
+  .about-hero-copy {
+    @apply px-1 text-white md:px-0;
+  }
+
+  .about-hero-title {
+    @apply text-[2.8rem] leading-[0.92] tracking-tight text-white md:text-[5.2rem];
+    font-family: var(--font-display);
+  }
+
+  .about-hero-highlight {
+    @apply inline bg-brand-primary px-2 text-white;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  .about-hero-text {
+    @apply mt-8 max-w-3xl space-y-7 text-lg leading-tight text-white/95 md:text-[1.1rem];
+    font-family: var(--font-nav);
+  }
+
+  .about-hero-text strong {
+    @apply font-extrabold text-white;
+  }
+
+  .about-hero-cta {
+    @apply mt-10 inline-flex items-center justify-center rounded-full bg-brand-primary px-8 py-3 text-xl font-semibold text-white no-underline transition-colors hover:bg-[#ffd04d] md:px-12 md:py-4 md:text-2xl;
+    font-family: var(--font-cta);
+  }
+
+  .services-hero {
+    @apply relative isolate overflow-hidden;
+  }
+
+  .services-hero-media {
+    @apply absolute inset-0;
+  }
+
+  .services-hero-image {
+    @apply object-cover;
+  }
+
+  .services-hero-overlay {
+    background:
+      linear-gradient(180deg, rgb(24 26 31 / 0.22), rgb(24 26 31 / 0.36)),
+      linear-gradient(to right, rgb(255 255 255 / 0.11) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.11) 1px, transparent 1px);
+    background-size: auto, 92px 92px, 92px 92px;
+    @apply absolute inset-0;
+  }
+
+  .services-hero-inner {
+    @apply relative z-10 mx-auto flex min-h-[38rem] w-full max-w-6xl flex-col items-center justify-center px-6 py-20 text-center text-white md:min-h-[44rem] md:px-10;
+  }
+
+  .services-hero-title {
+    @apply text-[2.9rem] leading-[0.92] tracking-tight text-white md:text-[5.6rem];
+    font-family: var(--font-display);
+  }
+
+  .services-hero-highlight {
+    @apply text-brand-primary;
+  }
+
+  .services-hero-copy {
+    @apply mt-8 max-w-4xl text-xl leading-tight text-white/95 md:text-[2rem];
+    font-family: var(--font-nav);
+  }
+
+  .services-hero-cta {
+    @apply mt-10 inline-flex items-center justify-center rounded-full bg-brand-primary px-8 py-3 text-xl font-semibold text-white no-underline transition-colors hover:bg-[#ffd04d] md:px-12 md:py-4 md:text-2xl;
+    font-family: var(--font-cta);
+  }
+
+  .services-detail-section {
+    @apply bg-white px-5 py-14 text-black md:px-10 md:py-18;
+    font-family: var(--font-nav);
+  }
+
+  .services-detail-inner {
+    @apply mx-auto flex w-full max-w-6xl flex-col gap-12;
+  }
+
+  .services-detail-row {
+    @apply grid items-start gap-8 md:grid-cols-[0.94fr_1.06fr] md:gap-10;
+  }
+
+  .services-detail-row-reverse {
+    @apply md:grid-cols-[1.06fr_0.94fr];
+  }
+
+  .services-detail-row-reverse .services-detail-media {
+    @apply md:order-2;
+  }
+
+  .services-detail-row-reverse .services-detail-copy {
+    @apply md:order-1;
+  }
+
+  .services-detail-media {
+    @apply relative min-h-76 overflow-hidden bg-[#d8ddd9] shadow-[0_18px_44px_rgba(16,24,40,0.12)] md:min-h-92;
+  }
+
+  .services-detail-image {
+    @apply object-cover;
+  }
+
+  .services-detail-copy {
+    @apply flex flex-col justify-center;
+  }
+
+  .services-detail-intro {
+    @apply text-3xl leading-[0.95] font-bold text-brand-secondary md:text-[2.6rem];
+  }
+
+  .services-detail-text {
+    @apply mt-4 max-w-xl text-sm leading-relaxed text-black/75 md:text-[1.06rem];
+  }
+
+  .services-detail-offer {
+    @apply mt-5 text-2xl leading-none font-bold text-brand-secondary md:text-[2.15rem];
+  }
+
+  .services-detail-list {
+    @apply mt-3 space-y-1.5 pl-5 text-sm leading-relaxed text-black/85 marker:text-brand-secondary md:text-[1.02rem];
+  }
+
+  .services-detail-list li {
+    @apply list-disc;
+  }
+
+  .services-detail-cta-wrap {
+    @apply flex justify-center pt-2;
+  }
+
+  .services-detail-cta {
+    @apply inline-block rounded-full bg-brand-primary px-8 py-3 text-base font-semibold text-white no-underline transition-colors hover:bg-[#ffd04d] md:px-10 md:text-lg;
+    font-family: var(--font-cta);
+  }
+
+  .services-consultation {
+    @apply relative isolate overflow-hidden px-5 py-14 md:px-10 md:py-20;
+  }
+
+  .services-consultation-media {
+    @apply absolute inset-0;
+  }
+
+  .services-consultation-image {
+    @apply object-cover;
+  }
+
+  .services-consultation-overlay {
+    background:
+      linear-gradient(180deg, rgb(35 26 18 / 0.24), rgb(35 26 18 / 0.42)),
+      linear-gradient(90deg, rgb(255 255 255 / 0.08), transparent 30%, transparent 70%, rgb(255 255 255 / 0.05));
+    @apply absolute inset-0;
+  }
+
+  .services-consultation-content {
+    @apply relative z-10 mx-auto flex min-h-[20rem] w-full max-w-5xl flex-col items-center justify-center px-4 text-center text-white md:min-h-[23rem];
+  }
+
+  .services-consultation-title {
+    @apply text-4xl leading-[0.94] tracking-tight md:text-[5rem];
+    font-family: var(--font-display);
+  }
+
+  .services-consultation-emphasis {
+    @apply relative inline-block px-1.5;
+  }
+
+  .services-consultation-emphasis::after {
+    content: "";
+    border: 3px solid rgb(255 255 255 / 0.92);
+    border-radius: 58% 42% 54% 46% / 48% 55% 45% 52%;
+    transform: rotate(2deg);
+    @apply pointer-events-none absolute -inset-x-5 -inset-y-2 md:-inset-x-7 md:-inset-y-3;
+  }
+
+  .services-consultation-copy {
+    @apply mt-5 max-w-4xl text-xl leading-tight text-white/95 md:text-[2rem];
+    font-family: var(--font-nav);
+  }
+
+  .services-consultation-cta {
+    @apply mt-8 inline-flex items-center justify-center rounded-full bg-brand-primary px-8 py-3 text-lg font-semibold text-white no-underline transition-colors hover:bg-[#ffd04d] md:mt-10 md:px-12 md:py-4 md:text-2xl;
+    font-family: var(--font-cta);
   }
 
   .approach-section {
