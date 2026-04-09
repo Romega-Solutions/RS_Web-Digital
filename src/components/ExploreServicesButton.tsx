@@ -12,7 +12,7 @@ export function ExploreServicesButton({
   return (
     <Link
       href={href}
-      className={`${className} inline-flex items-center justify-center text-center font-bold`}
+      className={`${className} inline-flex items-center justify-center text-center font-semibold`}
     >
       Explore Our Services
     </Link>

@@ -9,32 +9,38 @@ export default function Home() {
     {
       title: "Strategic Team Growth",
       description: "Build teams aligned with your goals, culture, and long-term vision.",
-      iconLabel: "TG",
+      iconSrc: "/2.0%20Website%20Assets/Icon%2001%20_%20Strategic%20Team%20Growth.png",
+      iconAlt: "Strategic Team Growth icon",
     },
     {
       title: "Stronger Brand Foundations",
       description: "Clarify your message and create a brand that builds trust across markets.",
-      iconLabel: "BF",
+      iconSrc: "/2.0%20Website%20Assets/Icon%2002%20_%20Stronger%20Brand%20Foundations.png",
+      iconAlt: "Stronger Brand Foundations icon",
     },
     {
       title: "Operational Clarity",
       description: "Simplified processes that give leaders more time to focus on impact.",
-      iconLabel: "OC",
+      iconSrc: "/2.0%20Website%20Assets/Icon%2003%20_%20Operational%20Clarity.png",
+      iconAlt: "Operational Clarity icon",
     },
     {
       title: "Cost-Smart Growth",
       description: "Invest wisely while protecting revenue and momentum.",
-      iconLabel: "CS",
+      iconSrc: "/2.0%20Website%20Assets/Icon%2004%20_%20Cost-Smart%20Growth.png",
+      iconAlt: "Cost-Smart Growth icon",
     },
     {
       title: "Long-Term Confidence",
       description: "Teams that stay. Brands that last. Growth that is sustainable.",
-      iconLabel: "LC",
+      iconSrc: "/2.0%20Website%20Assets/Icon%2005%20_%20Long-Term%20Confidence.png",
+      iconAlt: "Long-Term Confidence icon",
     },
     {
       title: "Global Perspective",
       description: "Supporting businesses across borders with insight and experience.",
-      iconLabel: "GP",
+      iconSrc: "/2.0%20Website%20Assets/Icon%2006%20_%20Global%20Perspective.png",
+      iconAlt: "Global Perspective icon",
     },
   ];
 
@@ -61,7 +67,7 @@ export default function Home() {
               <div className="growth-photo" aria-hidden="true" />
               <p className="growth-text">
                 We work alongside founders and leaders who want to scale
-                without chaos. From talent and operations to brand support,
+                without chaos. <strong>From talent and operations to brand support,</strong>
                 Romega brings structure, perspective, and steady guidance so
                 growth feels intentional, not overwhelming.
               </p>
@@ -72,14 +78,16 @@ export default function Home() {
             <div className="growth-banner-overlay" aria-hidden="true" />
             <div className="growth-banner-content">
               <h3 className="growth-banner-title">Let&apos;s Build What&apos;s Next</h3>
-              <ExploreServicesButton className="hero-action" />
+              <ExploreServicesButton className="growth-banner-cta" />
             </div>
           </div>
         </section>
 
         <section className="trust-section">
           <div className="trust-inner">
-            <h2 className="trust-title">Why Businesses Trust Romega</h2>
+            <h2 className="trust-title">
+              <span className="trust-title-highlight">Why Businesses Trust Romega</span>
+            </h2>
             <p className="trust-kicker">
               Not just another service provider.
               <span className="trust-kicker-emphasis"> A long-term growth partner.</span>
@@ -94,9 +102,12 @@ export default function Home() {
             <div className="trust-grid">
               {trustPillars.map((pillar) => (
                 <article key={pillar.title} className="trust-card">
-                  <div className="trust-icon-frame" aria-hidden="true">
-                    <div className="trust-icon-core">{pillar.iconLabel}</div>
-                  </div>
+                  <img
+                    src={pillar.iconSrc}
+                    alt={pillar.iconAlt}
+                    className="trust-icon-image"
+                    loading="lazy"
+                  />
                   <h3 className="trust-card-title">{pillar.title}</h3>
                   <p className="trust-card-copy">{pillar.description}</p>
                 </article>
@@ -147,21 +158,36 @@ export default function Home() {
 
             <div className="services-spotlight-grid">
               <article className="services-spotlight-card services-card-talent">
-                <h3 className="services-spotlight-title">Talent Solutions</h3>
+                <img
+                  src="/2.0%20Website%20Assets/Image%201%20_%20Talent%20Solutions.png"
+                  alt="Talent Solutions"
+                  className="services-spotlight-image"
+                  loading="lazy"
+                />
               </article>
 
               <article className="services-spotlight-card services-card-brand">
-                <h3 className="services-spotlight-title">Brand &amp; Growth Support</h3>
+                <img
+                  src="/2.0%20Website%20Assets/Image%202%20_%20Brand%20%26%20Growth%20Support.png"
+                  alt="Brand & Growth Support"
+                  className="services-spotlight-image"
+                  loading="lazy"
+                />
               </article>
 
               <article className="services-spotlight-card services-card-ops">
-                <h3 className="services-spotlight-title">Strategic Operations</h3>
+                <img
+                  src="/2.0%20Website%20Assets/Image%203%20_%20Strategic%20Operations.png"
+                  alt="Strategic Operations"
+                  className="services-spotlight-image"
+                  loading="lazy"
+                />
               </article>
             </div>
 
-            <a href="#" className="services-spotlight-cta">
+            <button type="button" className="services-spotlight-button">
               See How We Can Help
-            </a>
+            </button>
           </div>
         </section>
 
@@ -196,7 +222,10 @@ export default function Home() {
         <section className="social-connect">
           <div className="social-connect-inner">
             <div className="social-connect-copy">
-              <h2 className="social-connect-title">STAY CONNECTED.</h2>
+              <h2 className="social-connect-title">
+                <span>Stay </span>
+                <span className="social-connect-title-emphasis">Connected.</span>
+              </h2>
 
               <p className="social-connect-text">
                 Growth does not stop at hiring or branding. On LinkedIn, we
@@ -212,14 +241,12 @@ export default function Home() {
             </div>
 
             <div className="social-connect-visual" aria-hidden="true">
-              <div className="social-connect-arrow" />
-              <div className="social-phone">
-                <div className="social-phone-notch" />
-                <div className="social-phone-screen" />
-              </div>
-              <div className="social-card social-card-one" />
-              <div className="social-card social-card-two" />
-              <div className="social-linkedin-badge">in</div>
+              <img
+                src="/stay-connected-transparent.png"
+                alt=""
+                className="social-connect-visual-image"
+                loading="lazy"
+              />
             </div>
           </div>
         </section>
