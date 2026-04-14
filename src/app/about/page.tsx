@@ -1,6 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { AboutExpertsSection } from "../../components/AboutExpertsSection";
+import { AboutGrowthSection } from "../../components/AboutGrowthSection";
+import { AboutMissionSection } from "../../components/AboutMissionSection";
+import { AboutPartnersSection } from "../../components/AboutPartnersSection";
+import { AboutValuesSection } from "../../components/AboutValuesSection";
+import { AboutVisionSection } from "../../components/AboutVisionSection";
 import { ConsultationBanner } from "../../components/ConsultationBanner";
 import { SiteFooter } from "../../components/SiteFooter";
 import { SiteHeader } from "../../components/SiteHeader";
@@ -20,7 +26,7 @@ export default function AboutPage() {
           <div className="about-hero-inner">
             <div className="about-hero-photo-frame">
               <Image
-                src="/2.0%20Website%20Assets/2.png"
+                src="/prompt-images/about/1_hero.png"
                 alt="Romega team collaborating around a table"
                 fill
                 priority
@@ -61,6 +67,18 @@ export default function AboutPage() {
             </div>
           </div>
         </section>
+
+        <AboutMissionSection />
+
+        <AboutVisionSection />
+
+        <AboutValuesSection />
+
+        <AboutPartnersSection />
+
+        <AboutExpertsSection />
+
+        <AboutGrowthSection />
 
         <ConsultationBanner />
       </main>

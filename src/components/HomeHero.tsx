@@ -7,7 +7,6 @@ type HomeHeroProps = {
 export function HomeHero({ buttonHref = "/services" }: HomeHeroProps) {
   return (
     <section className="hero">
-      <div className="hero-grid" aria-hidden="true" />
       <div className="hero-overlay" aria-hidden="true" />
 
       <div className="hero-content">
