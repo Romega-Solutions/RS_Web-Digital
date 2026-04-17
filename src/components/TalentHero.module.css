@@ -1,0 +1,101 @@
+.hero {
+  background: linear-gradient(180deg, #f7f9fc 0%, #eef4fb 100%);
+  padding: calc(3rem + 96px) 1rem 3.5rem;
+}
+
+.container {
+  max-width: 75rem;
+  margin: 0 auto;
+}
+
+.content {
+  max-width: 58rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.badge {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0 0 1rem;
+  color: #5d6b7c;
+  font-size: 0.95rem;
+}
+
+.stars {
+  color: #febd19;
+  letter-spacing: 0.08em;
+}
+
+.title {
+  margin: 0 0 1rem;
+  color: #1f4f8d;
+  font-family: "Times New Roman", Times, Georgia, serif;
+  font-size: clamp(2.3rem, 5vw, 4.2rem);
+  line-height: 0.98;
+}
+
+.description {
+  margin: 0 auto;
+  max-width: 48rem;
+  color: #415163;
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+
+.featureCard {
+  border: 1px solid #d7e2ef;
+  border-radius: 8px;
+  background: #fff;
+  padding: 1.35rem 1.1rem;
+  box-shadow: 0 10px 30px rgba(34, 72, 115, 0.08);
+}
+
+.featureIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 8px;
+  background: rgba(55, 141, 238, 0.12);
+  color: #378dee;
+}
+
+.featureIcon svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.featureTitle {
+  margin: 0.9rem 0 0.45rem;
+  color: #1a1c1e;
+  font-family: "Times New Roman", Times, Georgia, serif;
+  font-size: 1.25rem;
+}
+
+.featureCopy {
+  margin: 0;
+  color: #56677a;
+  line-height: 1.7;
+}
+
+@media (min-width: 700px) {
+  .hero {
+    padding: calc(4rem + 96px) 1.5rem 4rem;
+  }
+
+  .features {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

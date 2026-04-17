@@ -1,69 +1,5 @@
 @import "tailwindcss";
 
-@font-face {
-  font-family: "The Seasons";
-  src: local("The Seasons"), local("The Seasons Regular");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Garet";
-  src: local("Garet"), local("Garet Regular");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Garet";
-  src: local("Garet"), local("Garet Medium");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "TT Interphases";
-  src: local("TT Interphases"), local("TT Interphases Regular");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "TT Ramillas";
-  src: local("TT Ramillas"), local("TT Ramillas Regular");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "TT Ramillas";
-  src: local("TT Ramillas"), local("TT Ramillas Medium");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "TT Interphases";
-  src: local("TT Interphases"), local("TT Interphases SemiBold");
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "The Seasons";
-  src: local("The Seasons"), local("The Seasons Medium");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
 :root {
   --color-primary: #febd19;
   --color-secondary: #378dee;
@@ -73,14 +9,16 @@
   --color-surface: #f7f9fc;
   --color-text: #f3f5f7;
   --color-muted: #b8bec8;
-  --font-display: "The Seasons", "TT Ramillas", Georgia, "Iowan Old Style", "Times New Roman", serif;
-  --font-ui: "Garet", "TT Interphases", "Aptos", "Segoe UI", Arial, sans-serif;
-  --font-nav: "Garet", "TT Interphases", "Aptos", "Segoe UI", Arial, sans-serif;
-  --font-cta: "TT Interphases", "Garet", "Aptos", "Segoe UI", Arial, sans-serif;
-  --font-growth-title: "TT Ramillas", "The Seasons", Georgia, "Iowan Old Style", "Times New Roman", serif;
-  --font-growth-copy: "TT Interphases", "Garet", "Aptos", "Segoe UI", Arial, sans-serif;
-  --font-work: "Garet", "TT Interphases", "Aptos", "Segoe UI", Arial, sans-serif;
-  --font-garet: "Garet", "TT Interphases", "Aptos", "Segoe UI", Arial, sans-serif;
+  --font-heading: "Times New Roman", Times, Georgia, serif;
+  --font-body: var(--font-poppins), "Poppins", "Aptos", "Segoe UI", Arial, sans-serif;
+  --font-display: var(--font-heading);
+  --font-ui: var(--font-body);
+  --font-nav: var(--font-body);
+  --font-cta: var(--font-body);
+  --font-growth-title: var(--font-heading);
+  --font-growth-copy: var(--font-body);
+  --font-work: var(--font-body);
+  --font-garet: var(--font-body);
 }
 
 @theme inline {
@@ -98,6 +36,27 @@
 body {
   @apply bg-background text-foreground;
   font-family: var(--font-ui);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+}
+
+p,
+li,
+a,
+button,
+input,
+textarea,
+select,
+label,
+span {
+  font-family: var(--font-body);
 }
 
 @layer components {
@@ -148,13 +107,58 @@ body {
     @apply rounded-xl px-3 py-2 text-sm hover:bg-brand-secondary/8;
   }
 
+  .nav-menu-mobile-group {
+    @apply flex flex-col gap-1;
+  }
+
+  .nav-menu-mobile-group-label {
+    @apply cursor-default;
+  }
+
+  .nav-menu-mobile-submenu {
+    @apply ml-3 flex flex-col gap-1;
+  }
+
+  .nav-menu-mobile-sublink {
+    @apply rounded-lg px-3 py-2 text-sm text-brand-secondary/90 hover:bg-brand-secondary/8 hover:text-brand-primary;
+  }
+
   .menu-link {
     @apply text-sm font-medium tracking-tight text-brand-secondary transition-colors hover:text-brand-primary lg:text-base xl:text-lg;
     font-family: var(--font-nav);
   }
 
+  .site-navbar-link {
+    font-family: "Times New Roman", Times, Georgia, serif;
+  }
+
   .menu-link-active {
     @apply font-semibold text-brand-primary;
+  }
+
+  .nav-dropdown {
+    @apply relative flex items-center;
+  }
+
+  .nav-dropdown-trigger {
+    @apply inline-flex items-center gap-2 border-0 bg-transparent p-0;
+  }
+
+  .nav-dropdown-caret {
+    @apply text-xs leading-none;
+  }
+
+  .nav-dropdown-menu {
+    @apply invisible absolute left-1/2 top-full z-40 mt-3 min-w-40 -translate-x-1/2 rounded-lg border border-brand-secondary/15 bg-white p-2 opacity-0 shadow-lg transition-all;
+  }
+
+  .nav-dropdown-menu-open {
+    @apply visible opacity-100;
+  }
+
+  .nav-dropdown-item {
+    @apply block rounded-md px-3 py-2 text-sm font-medium text-brand-secondary transition-colors hover:bg-brand-secondary/8 hover:text-brand-primary;
+    font-family: "Times New Roman", Times, Georgia, serif;
   }
 
   .nav-cta-wrap {
@@ -176,6 +180,10 @@ body {
   .cta-chip {
     @apply rounded-full bg-brand-secondary px-3 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-[#2f7de0] md:px-4 md:text-base;
     font-family: var(--font-nav);
+  }
+
+  .site-navbar-cta {
+    font-family: "Times New Roman", Times, Georgia, serif;
   }
 
   .nav-menu-mobile-cta {
@@ -1114,7 +1122,7 @@ body {
 
   .about-growth-mark {
     @apply absolute bottom-5 right-8 text-[4rem] leading-none text-brand-secondary/35;
-    font-family: Georgia, serif;
+    font-family: var(--font-heading);
   }
 
   .about-growth-arrow {
@@ -1283,6 +1291,403 @@ body {
   .services-consultation-cta {
     @apply mt-8 inline-flex items-center justify-center rounded-full bg-brand-primary px-8 py-3 text-lg font-semibold text-white no-underline transition-colors hover:bg-[#ffd04d] md:mt-10 md:px-12 md:py-4 md:text-2xl;
     font-family: var(--font-cta);
+  }
+
+  .contact-hero {
+    background:
+      linear-gradient(135deg, rgb(55 141 238 / 0.96), rgb(121 152 240 / 0.88)),
+      linear-gradient(to right, rgb(255 255 255 / 0.12) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.12) 1px, transparent 1px);
+    background-size: auto, 92px 92px, 92px 92px;
+    @apply px-5 py-12 md:px-10 md:py-18;
+  }
+
+  .contact-hero-inner {
+    @apply mx-auto grid w-full max-w-7xl gap-8 md:grid-cols-[0.92fr_1.08fr] md:items-start md:gap-10;
+  }
+
+  .contact-hero-copy {
+    @apply pt-2 text-white;
+  }
+
+  .contact-hero-kicker {
+    @apply text-sm font-semibold uppercase tracking-[0.18em] text-white/80;
+  }
+
+  .contact-hero-title {
+    @apply mt-4 max-w-2xl text-[3rem] leading-[0.92] tracking-tight md:text-[5.2rem];
+    font-family: var(--font-display);
+  }
+
+  .contact-hero-text {
+    @apply mt-7 max-w-xl text-lg leading-tight text-white/95 md:text-[1.35rem];
+    font-family: var(--font-nav);
+  }
+
+  .contact-hero-points {
+    @apply mt-10 grid gap-4;
+  }
+
+  .contact-hero-points div {
+    @apply rounded-lg border border-white/20 bg-white/10 p-5 backdrop-blur-[2px];
+  }
+
+  .contact-hero-points span {
+    @apply block text-xs font-bold uppercase tracking-[0.14em] text-brand-primary;
+  }
+
+  .contact-hero-points a,
+  .contact-hero-points p {
+    @apply mt-2 block text-base leading-tight text-white md:text-lg;
+  }
+
+  .contact-form-shell {
+    @apply rounded-lg bg-white p-6 text-black shadow-[0_28px_60px_rgba(16,24,40,0.18)] md:p-8;
+    font-family: var(--font-nav);
+  }
+
+  .contact-form-header h2 {
+    @apply text-[2rem] leading-none text-brand-secondary md:text-[2.6rem];
+    font-family: var(--font-display);
+  }
+
+  .contact-form-header p {
+    @apply mt-3 text-sm text-black/70 md:text-base;
+  }
+
+  .contact-form {
+    @apply mt-6;
+  }
+
+  .contact-form-grid {
+    @apply grid gap-4 md:grid-cols-2;
+  }
+
+  .contact-field {
+    @apply flex flex-col gap-2;
+  }
+
+  .contact-field span {
+    @apply text-sm font-semibold text-brand-secondary;
+  }
+
+  .contact-field input,
+  .contact-field textarea {
+    @apply w-full rounded-lg border border-brand-secondary/20 bg-[#f7f9fc] px-4 py-3 text-base text-black outline-none transition-colors;
+  }
+
+  .contact-field input:focus,
+  .contact-field textarea:focus {
+    @apply border-brand-secondary;
+  }
+
+  .contact-field textarea {
+    @apply min-h-40 resize-y;
+  }
+
+  .contact-honeypot {
+    @apply absolute left-[-9999px] top-auto h-px w-px overflow-hidden;
+  }
+
+  .contact-form-status {
+    @apply mt-5 rounded-lg px-4 py-3 text-sm font-medium;
+  }
+
+  .contact-form-status-success {
+    @apply bg-green-50 text-green-700;
+  }
+
+  .contact-form-status-error {
+    @apply bg-red-50 text-red-700;
+  }
+
+  .contact-form-actions {
+    @apply mt-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between;
+  }
+
+  .contact-submit {
+    @apply inline-flex items-center justify-center rounded-full bg-brand-secondary px-8 py-3 text-base font-semibold text-white transition-colors hover:bg-[#2f7de0] disabled:cursor-not-allowed disabled:opacity-70;
+  }
+
+  .contact-form-note {
+    @apply max-w-md text-sm leading-relaxed text-black/70;
+  }
+
+  .contact-form-note a {
+    @apply text-brand-secondary underline underline-offset-2;
+  }
+
+  .careers-hero-section {
+    @apply relative isolate overflow-hidden px-5 py-12 text-black md:px-10 md:py-18;
+    font-family: var(--font-nav);
+  }
+
+  .careers-hero-background {
+    @apply absolute inset-0;
+  }
+
+  .careers-hero-background-image {
+    @apply object-cover opacity-25;
+  }
+
+  .careers-hero-section::after {
+    content: "";
+    background:
+      linear-gradient(180deg, rgb(236 245 255 / 0.96), rgb(246 249 252 / 0.96)),
+      linear-gradient(to right, rgb(55 141 238 / 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(55 141 238 / 0.08) 1px, transparent 1px);
+    background-size: auto, 88px 88px, 88px 88px;
+    @apply absolute inset-0;
+  }
+
+  .careers-hero-inner,
+  .careers-privacy-inner,
+  .careers-values-inner {
+    @apply relative z-10 mx-auto w-full max-w-6xl;
+  }
+
+  .careers-hero-grid {
+    @apply grid items-center gap-8 md:grid-cols-[1.02fr_0.98fr] md:gap-10;
+  }
+
+  .careers-hero-copy-wrap {
+    @apply max-w-3xl;
+  }
+
+  .careers-hero-head {
+    @apply text-left;
+  }
+
+  .careers-hero-kicker,
+  .careers-values-label {
+    @apply text-sm font-semibold uppercase tracking-[0.16em] text-brand-secondary;
+  }
+
+  .careers-hero-title,
+  .careers-section-title {
+    @apply mt-4 text-[2.8rem] leading-[0.92] tracking-tight text-brand-secondary md:text-[4.4rem];
+    font-family: var(--font-display);
+  }
+
+  .careers-hero-copy,
+  .careers-section-copy {
+    @apply mt-6 max-w-4xl text-lg leading-tight text-black/80 md:text-[1.3rem];
+  }
+
+  .careers-hero-date {
+    @apply mt-3 text-sm text-black/55;
+  }
+
+  .careers-hero-actions {
+    @apply mt-10 flex flex-col gap-4 md:flex-row;
+  }
+
+  .careers-hero-action {
+    @apply inline-flex items-center justify-center gap-3 rounded-lg px-7 py-3 text-base font-semibold no-underline transition-colors md:min-w-72 md:text-lg;
+  }
+
+  .careers-hero-action img {
+    @apply h-6 w-6 shrink-0;
+  }
+
+  .careers-hero-action-primary {
+    @apply bg-brand-secondary text-white hover:bg-[#2f7de0];
+  }
+
+  .careers-hero-action-secondary {
+    @apply border border-brand-secondary/25 bg-white text-brand-secondary hover:bg-[#eef5ff];
+  }
+
+  .careers-hero-media {
+    @apply flex flex-col gap-4;
+  }
+
+  .careers-hero-photo-frame {
+    @apply relative min-h-[25rem] overflow-hidden rounded-lg shadow-[0_24px_48px_rgba(16,24,40,0.16)] md:min-h-[32rem];
+  }
+
+  .careers-hero-photo {
+    @apply object-cover;
+  }
+
+  .careers-hero-stat-card,
+  .careers-info-card,
+  .careers-privacy-card,
+  .careers-value-card,
+  .careers-job-card {
+    @apply rounded-lg border border-brand-secondary/15 bg-white p-6 shadow-[0_14px_34px_rgba(16,24,40,0.08)];
+  }
+
+  .careers-hero-stat-card {
+    @apply max-w-md bg-[#fff4d6];
+  }
+
+  .careers-hero-stat-card strong {
+    @apply text-lg font-semibold text-brand-secondary;
+  }
+
+  .careers-hero-stat-card p {
+    @apply mt-2 text-sm leading-relaxed text-black/75;
+  }
+
+  .careers-hero-columns {
+    @apply mt-12 grid gap-6 md:grid-cols-2;
+  }
+
+  .careers-info-card h2,
+  .careers-value-card h3,
+  .careers-privacy-card h3,
+  .careers-job-card h3 {
+    @apply text-2xl leading-tight text-brand-secondary;
+    font-family: var(--font-display);
+  }
+
+  .careers-bullet-list {
+    @apply mt-5 space-y-4;
+  }
+
+  .careers-bullet-list li {
+    @apply flex items-start gap-3 text-base leading-relaxed text-black/80 md:text-lg;
+  }
+
+  .careers-bullet-list img {
+    @apply mt-1 h-7 w-7 shrink-0;
+  }
+
+  .careers-privacy-section,
+  .careers-values-section {
+    @apply px-5 py-14 text-black md:px-10 md:py-18;
+    font-family: var(--font-nav);
+  }
+
+  .careers-privacy-section {
+    @apply bg-white;
+  }
+
+  .careers-privacy-grid {
+    @apply mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-4;
+  }
+
+  .careers-privacy-card {
+    @apply text-center;
+  }
+
+  .careers-privacy-icon-image {
+    @apply mx-auto h-12 w-12;
+  }
+
+  .careers-privacy-card h3 {
+    @apply mt-4 text-xl;
+    font-family: var(--font-nav);
+  }
+
+  .careers-values-section {
+    background: linear-gradient(180deg, #f7f9fc 0%, #ffffff 100%);
+  }
+
+  .careers-values-inner {
+    @apply grid gap-8 md:grid-cols-2;
+  }
+
+  .careers-values-grid {
+    @apply mt-8 grid gap-5 sm:grid-cols-2;
+  }
+
+  .careers-value-card h3 {
+    @apply mt-4 text-xl;
+    font-family: var(--font-nav);
+  }
+
+  .careers-value-card p {
+    @apply mt-3 text-base leading-relaxed text-black/75;
+  }
+
+  .careers-value-icon {
+    @apply h-11 w-11;
+  }
+
+  .careers-bottom-cta {
+    @apply mx-auto mt-10 flex w-full max-w-6xl justify-center;
+  }
+
+  .careers-bottom-link {
+    @apply inline-flex items-center justify-center rounded-full bg-brand-primary px-8 py-3 text-base font-semibold text-white no-underline transition-colors hover:bg-[#ffd04d];
+  }
+
+  .careers-sidebar-root {
+    @apply fixed inset-0 z-[100];
+  }
+
+  .careers-sidebar-overlay {
+    @apply absolute inset-0 bg-black/45;
+  }
+
+  .careers-sidebar-panel {
+    @apply absolute right-0 top-0 flex h-full w-full max-w-2xl flex-col bg-white shadow-[0_22px_60px_rgba(16,24,40,0.24)];
+    font-family: var(--font-nav);
+  }
+
+  .careers-sidebar-header {
+    @apply flex items-start justify-between gap-4 border-b border-brand-secondary/12 px-6 py-5;
+  }
+
+  .careers-sidebar-header h2 {
+    @apply text-[2rem] leading-none text-brand-secondary;
+    font-family: var(--font-display);
+  }
+
+  .careers-sidebar-header p {
+    @apply mt-2 text-sm text-black/65;
+  }
+
+  .careers-sidebar-close,
+  .careers-sidebar-retry,
+  .careers-job-link {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-brand-secondary/20 px-4 py-2 text-sm font-semibold text-brand-secondary transition-colors hover:bg-[#eef5ff];
+  }
+
+  .careers-sidebar-content {
+    @apply flex-1 overflow-y-auto px-6 py-5;
+  }
+
+  .careers-sidebar-state-wrap {
+    @apply flex flex-col items-start gap-4;
+  }
+
+  .careers-sidebar-state {
+    @apply text-base text-black/75;
+  }
+
+  .careers-sidebar-state-error {
+    @apply text-red-700;
+  }
+
+  .careers-job-list {
+    @apply space-y-4;
+  }
+
+  .careers-job-meta {
+    @apply flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-brand-secondary;
+  }
+
+  .careers-job-location {
+    @apply mt-2 text-sm text-black/60;
+  }
+
+  .careers-job-summary {
+    @apply mt-4 text-sm leading-relaxed text-black/80;
+  }
+
+  .careers-job-skills {
+    @apply mt-4 flex flex-wrap gap-2;
+  }
+
+  .careers-job-skills li {
+    @apply rounded-full bg-[#eef5ff] px-3 py-1 text-xs font-medium text-brand-secondary;
+  }
+
+  .careers-job-link {
+    @apply mt-5 no-underline;
   }
 
   .approach-section {

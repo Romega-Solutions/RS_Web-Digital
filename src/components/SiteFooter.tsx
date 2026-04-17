@@ -22,8 +22,9 @@ export function SiteFooter() {
           <Link href="/">Home</Link>
           <Link href="/about">About</Link>
           <Link href="/services">Services</Link>
-          <a href="#">Careers</a>
-          <a href="#">Talents</a>
+          <Link href="/careers">Careers</Link>
+          <Link href="/contact">Contact</Link>
+          <Link href="/talent">Talents</Link>
         </nav>
 
         <div className="site-footer-connect">
@@ -58,7 +59,7 @@ export function SiteFooter() {
           </p>
           <p className="site-footer-contact">
             <span aria-hidden="true">⌖</span>
-            <a href="mailto:info@romega-solutions.com">info@romega-solutions.com</a>
+            <span>222 Pacific Coast Hwy, #10, El Segundo, CA 90245</span>
           </p>
         </div>
 

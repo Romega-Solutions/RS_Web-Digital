@@ -191,7 +191,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="testimonial-section">
+        {/* <section className="testimonial-section">
           <div className="testimonial-backdrop" aria-hidden="true" />
           <div className="testimonial-overlay" aria-hidden="true" />
 
@@ -217,7 +217,7 @@ export default function Home() {
               <span className="testimonial-dot" />
             </div>
           </div>
-        </section>
+        </section> */}
 
         <section className="social-connect">
           <div className="social-connect-inner">
