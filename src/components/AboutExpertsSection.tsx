@@ -30,10 +30,6 @@ const experts = [
 export function AboutExpertsSection() {
   return (
     <section className="about-experts-section" aria-labelledby="about-experts-title">
-      <div className="about-experts-arrow" aria-hidden="true">
-        <span />
-      </div>
-
       <div className="about-experts-inner">
         <h2 id="about-experts-title" className="about-experts-title">
           Meet the Experts

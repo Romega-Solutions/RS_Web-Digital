@@ -106,7 +106,7 @@
 }
 
 .category {
-  color: #1f4f8d;
+  color: #378dee;
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -120,6 +120,7 @@
   border: 1.5px solid #378dee;
   border-radius: 6px;
   color: #378dee;
+  font-family: var(--font-body), "Poppins", "Aptos", "Segoe UI", Arial, sans-serif;
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.05em;

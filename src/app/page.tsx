@@ -1,8 +1,16 @@
+import type { Metadata } from "next";
+import Image from "next/image";
 import { ExploreServicesButton } from "../components/ExploreServicesButton";
 import { HomeHero } from "../components/HomeHero";
 import { ServiceStrip } from "../components/ServiceStrip";
 import { SiteFooter } from "../components/SiteFooter";
 import { SiteHeader } from "../components/SiteHeader";
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "/",
+  },
+};
 
 export default function Home() {
   const trustPillars = [
@@ -102,11 +110,13 @@ export default function Home() {
             <div className="trust-grid">
               {trustPillars.map((pillar) => (
                 <article key={pillar.title} className="trust-card">
-                  <img
+                  <Image
                     src={pillar.iconSrc}
                     alt={pillar.iconAlt}
+                    width={112}
+                    height={112}
+                    sizes="(max-width: 767px) 96px, 112px"
                     className="trust-icon-image"
-                    loading="lazy"
                   />
                   <h3 className="trust-card-title">{pillar.title}</h3>
                   <p className="trust-card-copy">{pillar.description}</p>
@@ -158,29 +168,35 @@ export default function Home() {
 
             <div className="services-spotlight-grid">
               <article className="services-spotlight-card services-card-talent">
-                <img
+                <Image
                   src="/2.0%20Website%20Assets/Image%201%20_%20Talent%20Solutions.png"
                   alt="Talent Solutions"
+                  width={2430}
+                  height={3038}
+                  sizes="(max-width: 767px) 100vw, 33vw"
                   className="services-spotlight-image"
-                  loading="lazy"
                 />
               </article>
 
               <article className="services-spotlight-card services-card-brand">
-                <img
+                <Image
                   src="/2.0%20Website%20Assets/Image%202%20_%20Brand%20%26%20Growth%20Support.png"
                   alt="Brand & Growth Support"
+                  width={2430}
+                  height={3038}
+                  sizes="(max-width: 767px) 100vw, 33vw"
                   className="services-spotlight-image"
-                  loading="lazy"
                 />
               </article>
 
               <article className="services-spotlight-card services-card-ops">
-                <img
+                <Image
                   src="/2.0%20Website%20Assets/Image%203%20_%20Strategic%20Operations.png"
                   alt="Strategic Operations"
+                  width={2430}
+                  height={3038}
+                  sizes="(max-width: 767px) 100vw, 33vw"
                   className="services-spotlight-image"
-                  loading="lazy"
                 />
               </article>
             </div>
@@ -241,11 +257,13 @@ export default function Home() {
             </div>
 
             <div className="social-connect-visual" aria-hidden="true">
-              <img
+              <Image
                 src="/stay-connected-transparent.png"
                 alt=""
+                width={2430}
+                height={2430}
+                sizes="(max-width: 767px) 100vw, 36rem"
                 className="social-connect-visual-image"
-                loading="lazy"
               />
             </div>
           </div>

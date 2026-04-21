@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   title: "Talent | Romega Solutions",
   description:
     "Browse a curated Romega talent pool across operations, brand, sales, and digital delivery.",
+  alternates: {
+    canonical: "/talent",
+  },
 };
 
 export default function TalentPage() {

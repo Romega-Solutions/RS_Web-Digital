@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   title: "Contact | Romega Solutions",
   description:
     "Get in touch with Romega Solutions for business inquiries, partnerships, and strategic support.",
+  alternates: {
+    canonical: "/contact",
+  },
 };
 
 export default function ContactPage() {

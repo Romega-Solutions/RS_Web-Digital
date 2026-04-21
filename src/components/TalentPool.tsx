@@ -17,7 +17,7 @@ export function TalentPool({ talents }: TalentPoolProps) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [visibleState, setVisibleState] = useState({ filterKey: "", count: PAGE_SIZE });
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const categories = useMemo(
@@ -39,6 +39,19 @@ export function TalentPool({ talents }: TalentPoolProps) {
 
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+
+  const filterKey = useMemo(
+    () =>
+      JSON.stringify([
+        search,
+        selectedCategories,
+        selectedLevels,
+        selectedLocations,
+        selectedRoles,
+        selectedSkills,
+      ]),
+    [search, selectedCategories, selectedLevels, selectedLocations, selectedRoles, selectedSkills],
+  );
 
   const activeFilterCount =
     selectedCategories.length +
@@ -112,10 +125,6 @@ export function TalentPool({ talents }: TalentPoolProps) {
   ]);
 
   useEffect(() => {
-    setVisibleCount(PAGE_SIZE);
-  }, [search, selectedCategories, selectedLevels, selectedLocations, selectedRoles, selectedSkills]);
-
-  useEffect(() => {
     if (!mobileFiltersOpen) {
       return;
     }
@@ -128,6 +137,7 @@ export function TalentPool({ talents }: TalentPoolProps) {
     };
   }, [mobileFiltersOpen]);
 
+  const visibleCount = visibleState.filterKey === filterKey ? visibleState.count : PAGE_SIZE;
   const visibleTalents = filteredTalents.slice(0, visibleCount);
 
   const clearAllFilters = () => {
@@ -137,7 +147,7 @@ export function TalentPool({ talents }: TalentPoolProps) {
     setSelectedLocations([]);
     setSelectedRoles([]);
     setSelectedSkills([]);
-    setVisibleCount(PAGE_SIZE);
+    setVisibleState({ filterKey: "", count: PAGE_SIZE });
   };
 
   const filterSection = (title: string, children: React.ReactNode) => (
@@ -329,7 +339,12 @@ export function TalentPool({ talents }: TalentPoolProps) {
               <button
                 type="button"
                 className={styles.loadMore}
-                onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}
+                onClick={() =>
+                  setVisibleState((state) => {
+                    const currentCount = state.filterKey === filterKey ? state.count : PAGE_SIZE;
+                    return { filterKey, count: currentCount + PAGE_SIZE };
+                  })
+                }
               >
                 Load More Talents
               </button>

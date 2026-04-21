@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
+import { absoluteUrl, siteConfig } from "../lib/seo";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -10,8 +11,46 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Romega Solutions",
-  description: "Built for growing businesses. Designed for what is next.",
+  metadataBase: siteConfig.url,
+  title: {
+    default: "Romega Solutions",
+    template: "%s",
+  },
+  description: siteConfig.description,
+  applicationName: siteConfig.name,
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "/",
+    siteName: siteConfig.name,
+    title: siteConfig.name,
+    description: siteConfig.description,
+    images: [
+      {
+        url: absoluteUrl(siteConfig.ogImage),
+        width: 1200,
+        height: 819,
+        alt: "Romega Solutions",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.name,
+    description: siteConfig.description,
+    images: [absoluteUrl(siteConfig.ogImage)],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
 };
 
 export default function RootLayout({

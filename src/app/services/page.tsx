@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
 import { ConsultationBanner } from "../../components/ConsultationBanner";
+import { ExploreServicesButton } from "../../components/ExploreServicesButton";
 import { ServiceStrip } from "../../components/ServiceStrip";
 import { SiteFooter } from "../../components/SiteFooter";
 import { SiteHeader } from "../../components/SiteHeader";
@@ -9,6 +10,9 @@ import { SiteHeader } from "../../components/SiteHeader";
 export const metadata: Metadata = {
   title: "Services | Romega Solutions",
   description: "Explore Romega Solutions services for talent, brand growth, and operations.",
+  alternates: {
+    canonical: "/services",
+  },
 };
 
 const detailedServices = [
@@ -74,7 +78,7 @@ export default function ServicesPage() {
               src="/2.0%20Website%20Assets/2.png"
               alt=""
               fill
-              priority
+              preload
               sizes="100vw"
               className="services-hero-image"
             />
@@ -139,9 +143,11 @@ export default function ServicesPage() {
             ))}
 
             <div className="services-detail-cta-wrap">
-              <Link href="#services-overview" className="services-detail-cta">
-                Discover How We Work
-              </Link>
+              <ExploreServicesButton
+                href="#services-overview"
+                className="services-detail-cta"
+                label="Discover How We Work"
+              />
             </div>
           </div>
         </section>

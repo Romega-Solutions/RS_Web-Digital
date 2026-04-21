@@ -14,6 +14,9 @@ import { SiteHeader } from "../../components/SiteHeader";
 export const metadata: Metadata = {
   title: "About | Romega Solutions",
   description: "Learn what Romega Solutions is built on and the people-first approach behind its growth.",
+  alternates: {
+    canonical: "/about",
+  },
 };
 
 export default function AboutPage() {
@@ -29,7 +32,7 @@ export default function AboutPage() {
                 src="/prompt-images/about/1_hero.png"
                 alt="Romega team collaborating around a table"
                 fill
-                priority
+                preload
                 sizes="(max-width: 767px) 100vw, 36vw"
                 className="about-hero-photo"
               />

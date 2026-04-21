@@ -24,7 +24,7 @@
 
 .title {
   margin: 0 0 0.75rem;
-  color: #1f4f8d;
+  color: #378dee;
   font-family: "Times New Roman", Times, Georgia, serif;
   font-size: clamp(2rem, 4vw, 3rem);
   line-height: 1;
@@ -51,6 +51,7 @@
   justify-content: center;
   border-radius: 999px;
   padding: 0.8rem 1.2rem;
+  font-family: var(--font-body), "Poppins", "Aptos", "Segoe UI", Arial, sans-serif;
   font-weight: 700;
   text-decoration: none;
 }

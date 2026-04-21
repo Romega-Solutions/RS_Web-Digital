@@ -6,25 +6,25 @@ type HomeHeroProps = {
 
 export function HomeHero({ buttonHref = "/services" }: HomeHeroProps) {
   return (
-    <section className="hero">
-      <div className="hero-overlay" aria-hidden="true" />
+    <section className="home-hero">
+      <div className="home-hero__overlay" aria-hidden="true" />
 
-      <div className="hero-content">
-        <h1 className="headline">
-          <span className="hero-line hero-line-one">
+      <div className="home-hero__content">
+        <h1 className="home-hero__headline">
+          <span className="home-hero__line home-hero__line--first">
             Built for <span className="growing-word">growing</span> businesses.
           </span>
         </h1>
-        <p className="hero-line hero-subtitle">
-          Designed for <span className="accent-slab">what&apos;s next.</span>
+        <p className="home-hero__line home-hero__subtitle">
+          Designed for <span className="home-hero__accent">what&apos;s next.</span>
         </p>
 
-        <p className="hero-copy">
+        <p className="home-hero__copy">
           Partnering with businesses to grow teams, strengthen brands, and scale with
           confidence.
         </p>
 
-        <ExploreServicesButton className="hero-action" href={buttonHref} />
+        <ExploreServicesButton className="home-hero__action" href={buttonHref} />
       </div>
     </section>
   );

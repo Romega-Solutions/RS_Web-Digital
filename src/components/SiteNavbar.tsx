@@ -38,13 +38,13 @@ export function SiteNavbar({
 
   return (
     <>
-      <nav className="nav-menu" aria-label="Primary navigation">
+      <nav className="site-nav__menu" aria-label="Primary navigation">
         {navItems.map((item) => (
           <Link
             key={item.label}
             href={item.href}
-            className={`menu-link site-navbar-link ${
-              item.label === activeItem ? "menu-link-active" : ""
+            className={`site-nav__link ${
+              item.label === activeItem ? "site-nav__link--active" : ""
             }`}
           >
             {item.label}
@@ -52,27 +52,27 @@ export function SiteNavbar({
         ))}
 
         <div
-          className="nav-dropdown"
+          className="site-nav__dropdown"
           onMouseEnter={() => setIsDropdownOpen(true)}
           onMouseLeave={() => setIsDropdownOpen(false)}
         >
           <button
             type="button"
-            className={`menu-link site-navbar-link nav-dropdown-trigger ${
-              activeItem === "Careers" || activeItem === "Careers & Talents" ? "menu-link-active" : ""
+            className={`site-nav__link site-nav__dropdown-trigger ${
+              activeItem === "Careers" || activeItem === "Careers & Talents" ? "site-nav__link--active" : ""
             }`}
             aria-expanded={isDropdownOpen}
             aria-haspopup="menu"
             onClick={() => setIsDropdownOpen((open) => !open)}
           >
             Careers
-            <span className="nav-dropdown-caret" aria-hidden="true">
+            <span className="site-nav__dropdown-caret" aria-hidden="true">
               ▾
             </span>
           </button>
 
           <div
-            className={`nav-dropdown-menu ${isDropdownOpen ? "nav-dropdown-menu-open" : ""}`}
+            className={`site-nav__dropdown-menu ${isDropdownOpen ? "site-nav__dropdown-menu--open" : ""}`}
             role="menu"
             aria-label="Careers and Talents"
           >
@@ -80,7 +80,7 @@ export function SiteNavbar({
               <Link
                 key={item.label}
                 href={item.href}
-                className="nav-dropdown-item"
+                className="site-nav__dropdown-item"
                 role="menuitem"
                 onClick={() => setIsDropdownOpen(false)}
               >
@@ -91,54 +91,54 @@ export function SiteNavbar({
         </div>
       </nav>
 
-      <div className="nav-cta-wrap">
-        <span className="nav-cta-arrow" aria-hidden="true">
+      <div className="site-nav__cta-wrap">
+        <span className="site-nav__cta-arrow" aria-hidden="true">
           →
         </span>
-        <Link href="/contact" className="cta-chip site-navbar-cta">
-          Contact us
+        <Link href="/contact" className="site-nav__cta">
+          Contact Us
         </Link>
         <button
           type="button"
-          className="nav-burger"
+          className="site-nav__burger"
           aria-label="Toggle navigation menu"
           aria-expanded={isMobileMenuOpen}
           aria-controls="mobile-nav-menu"
           onClick={onToggleMobileMenu}
         >
-          <span className="nav-burger-line" aria-hidden="true" />
-          <span className="nav-burger-line" aria-hidden="true" />
-          <span className="nav-burger-line" aria-hidden="true" />
+          <span className="site-nav__burger-line" aria-hidden="true" />
+          <span className="site-nav__burger-line" aria-hidden="true" />
+          <span className="site-nav__burger-line" aria-hidden="true" />
         </button>
       </div>
 
       <nav
         id="mobile-nav-menu"
-        className={`nav-menu-mobile ${isMobileMenuOpen ? "nav-menu-mobile-open" : ""}`}
+        className={`site-nav__mobile ${isMobileMenuOpen ? "site-nav__mobile--open" : ""}`}
         aria-label="Mobile navigation"
       >
         {navItems.map((item) => (
           <Link
             key={item.label}
             href={item.href}
-            className={`menu-link nav-menu-mobile-link site-navbar-link ${
-              item.label === activeItem ? "menu-link-active" : ""
+            className={`site-nav__link site-nav__mobile-link ${
+              item.label === activeItem ? "site-nav__link--active" : ""
             }`}
             onClick={onCloseMobileMenu}
           >
             {item.label}
           </Link>
         ))}
-        <div className="nav-menu-mobile-group">
-          <span className="menu-link nav-menu-mobile-link site-navbar-link nav-menu-mobile-group-label">
+        <div className="site-nav__mobile-group">
+          <span className="site-nav__link site-nav__mobile-link site-nav__mobile-group-label">
             Careers
           </span>
-          <div className="nav-menu-mobile-submenu">
+          <div className="site-nav__mobile-submenu">
             {careersMenuItems.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
-                className="menu-link nav-menu-mobile-sublink site-navbar-link"
+                className="site-nav__link site-nav__mobile-sublink"
                 onClick={onCloseMobileMenu}
               >
                 {item.label}
@@ -148,10 +148,10 @@ export function SiteNavbar({
         </div>
         <Link
           href="/contact"
-          className="cta-chip nav-menu-mobile-cta site-navbar-cta"
+          className="site-nav__cta site-nav__mobile-cta"
           onClick={onCloseMobileMenu}
         >
-          Contact us
+          Contact Us
         </Link>
       </nav>
     </>

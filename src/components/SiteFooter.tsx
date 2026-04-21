@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export function SiteFooter() {
@@ -6,11 +7,14 @@ export function SiteFooter() {
       <div className="site-footer-inner">
         <div className="site-footer-brand">
           <div className="site-footer-logo-wrap">
-            <span className="site-footer-logo-mark">RS</span>
-            <div className="site-footer-logo-text">
-              <strong>ROMEGA SOLUTIONS</strong>
-              <span>HR AND MARKETING SERVICES</span>
-            </div>
+            <Image
+              src="/RS_HORIZONTAL.png"
+              alt="Romega Solutions"
+              width={3732}
+              height={2546}
+              sizes="(max-width: 767px) 11.5rem, (max-width: 1023px) 12.5rem, 13.5rem"
+              className="site-footer-logo-image"
+            />
           </div>
           <p className="site-footer-tagline">
             We provide talent solutions, brand support, and strategic guidance
@@ -31,23 +35,32 @@ export function SiteFooter() {
           <h3>Connect With Us</h3>
           <div className="site-footer-socials">
             <a href="#" className="site-footer-social-link" aria-label="LinkedIn">
-              <img
+              <Image
                 src="/2.0%20Website%20Assets/20.png"
                 alt=""
+                width={44}
+                height={44}
+                sizes="(max-width: 767px) 40px, 44px"
                 className="site-footer-social-icon"
               />
             </a>
             <a href="#" className="site-footer-social-link" aria-label="Facebook">
-              <img
+              <Image
                 src="/2.0%20Website%20Assets/18.png"
                 alt=""
+                width={44}
+                height={44}
+                sizes="(max-width: 767px) 40px, 44px"
                 className="site-footer-social-icon"
               />
             </a>
             <a href="#" className="site-footer-social-link" aria-label="Instagram">
-              <img
+              <Image
                 src="/2.0%20Website%20Assets/19.png"
                 alt=""
+                width={44}
+                height={44}
+                sizes="(max-width: 767px) 40px, 44px"
                 className="site-footer-social-icon"
               />
             </a>

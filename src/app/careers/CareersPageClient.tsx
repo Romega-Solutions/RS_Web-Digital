@@ -133,7 +133,7 @@ export default function CareersPageClient() {
               src="/images/careers/bg-top.png"
               alt=""
               fill
-              priority
+              preload
               sizes="100vw"
               className="careers-hero-background-image"
             />
@@ -180,7 +180,7 @@ export default function CareersPageClient() {
                     src="/prompt-images/romega-talent.png"
                     alt="Romega talent and leadership collaboration"
                     fill
-                    priority
+                    preload
                     sizes="(max-width: 767px) 100vw, 40vw"
                     className="careers-hero-photo"
                   />
