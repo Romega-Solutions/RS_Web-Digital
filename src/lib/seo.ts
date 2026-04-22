@@ -5,7 +5,7 @@ export const siteConfig = {
   url: new URL(siteUrl),
   description:
     "Romega Solutions helps growing businesses build teams, strengthen brands, and scale with clarity.",
-  ogImage: "/RS_HORIZONTAL.png",
+  ogImage: "/favicon.ico",
 };
 
 export function absoluteUrl(path = "/") {
