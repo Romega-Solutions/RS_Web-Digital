@@ -1,11 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
-import { ConsultationBanner } from "../../components/ConsultationBanner";
-import { ExploreServicesButton } from "../../components/ExploreServicesButton";
-import { ServiceStrip } from "../../components/ServiceStrip";
-import { SiteFooter } from "../../components/SiteFooter";
-import { SiteHeader } from "../../components/SiteHeader";
+import { ExploreServicesButton } from "@/components/atoms/Button";
+import { ServiceStrip } from "@/components/organisms/home/ServiceStrip";
+import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
+import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
+import { ConsultationBanner } from "@/components/organisms/shared/ConsultationBanner";
 
 export const metadata: Metadata = {
   title: "Services | Romega Solutions",

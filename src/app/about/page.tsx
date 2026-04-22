@@ -1,15 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { AboutExpertsSection } from "../../components/AboutExpertsSection";
-import { AboutGrowthSection } from "../../components/AboutGrowthSection";
-import { AboutMissionSection } from "../../components/AboutMissionSection";
-import { AboutPartnersSection } from "../../components/AboutPartnersSection";
-import { AboutValuesSection } from "../../components/AboutValuesSection";
-import { AboutVisionSection } from "../../components/AboutVisionSection";
-import { ConsultationBanner } from "../../components/ConsultationBanner";
-import { SiteFooter } from "../../components/SiteFooter";
-import { SiteHeader } from "../../components/SiteHeader";
+import { AboutExpertsSection } from "@/components/organisms/about/AboutExpertsSection";
+import { AboutGrowthSection } from "@/components/organisms/about/AboutGrowthSection";
+import { AboutMissionSection } from "@/components/organisms/about/AboutMissionSection";
+import { AboutPartnersSection } from "@/components/organisms/about/AboutPartnersSection";
+import { AboutValuesSection } from "@/components/organisms/about/AboutValuesSection";
+import { AboutVisionSection } from "@/components/organisms/about/AboutVisionSection";
+import { ConsultationBanner } from "@/components/organisms/shared/ConsultationBanner";
+import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
+import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
 
 export const metadata: Metadata = {
   title: "About | Romega Solutions",

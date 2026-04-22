@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import type { CareerJob } from "../../lib/mock-careers";
+import type { CareerJob } from "@/lib/mock-careers";
 
 type JobsResponse = {
   jobs?: CareerJob[];

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { SiteFooter } from "../../components/SiteFooter";
-import { SiteHeader } from "../../components/SiteHeader";
+import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
+import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
 import CareersPageClient from "./CareersPageClient";
 
 export const metadata: Metadata = {

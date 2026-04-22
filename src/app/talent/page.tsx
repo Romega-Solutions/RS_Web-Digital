@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { SiteFooter } from "../../components/SiteFooter";
-import { SiteHeader } from "../../components/SiteHeader";
-import { TalentCTA } from "../../components/TalentCTA";
-import { TalentPool } from "../../components/TalentPool";
-import { talentProfiles } from "../../components/talentData";
+import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
+import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
+import { TalentCTA } from "@/components/organisms/talent/TalentCTA";
+import { TalentPool } from "@/components/organisms/talent/TalentPool";
+import { talentProfiles } from "@/components/organisms/talent/talentData";
 import TalentPageClient from "./TalentPageClient";
 
 export const metadata: Metadata = {

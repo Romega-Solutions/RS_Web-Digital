@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { ExploreServicesButton } from "../components/ExploreServicesButton";
-import { HomeHero } from "../components/HomeHero";
-import { ServiceStrip } from "../components/ServiceStrip";
-import { SiteFooter } from "../components/SiteFooter";
-import { SiteHeader } from "../components/SiteHeader";
+import { ExploreServicesButton } from "@/components/atoms/Button";
+import { HomeHero } from "@/components/organisms/home/HomeHero";
+import { ServiceStrip } from "@/components/organisms/home/ServiceStrip";
+import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
+import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
 
 export const metadata: Metadata = {
   alternates: {
