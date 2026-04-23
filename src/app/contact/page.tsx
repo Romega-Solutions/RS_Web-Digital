@@ -45,7 +45,7 @@ export default function ContactPage() {
           "@type": "PostalAddress",
           ...siteConfig.address,
         },
-        sameAs: [siteConfig.linkedIn],
+        sameAs: [siteConfig.linkedIn, siteConfig.instagram, siteConfig.facebook],
       },
       {
         "@type": "BreadcrumbList",

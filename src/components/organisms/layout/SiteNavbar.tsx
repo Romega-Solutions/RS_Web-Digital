@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { useAccessibleOverlay } from "@/components/accessibility/useAccessibleOverlay";
 import Link from "next/link";
 
 export type SiteHeaderActiveItem =
@@ -38,6 +39,36 @@ export function SiteNavbar({
   const [isMobileCareersOpen, setIsMobileCareersOpen] = useState(
     activeItem === "Careers" || activeItem === "Careers & Talents",
   );
+  const mobileNavRef = useRef<HTMLElement | null>(null);
+  const dropdownCloseTimeoutRef = useRef<number | null>(null);
+  const dropdownId = useId();
+
+  const clearDropdownCloseTimeout = useCallback(() => {
+    if (dropdownCloseTimeoutRef.current === null) {
+      return;
+    }
+
+    window.clearTimeout(dropdownCloseTimeoutRef.current);
+    dropdownCloseTimeoutRef.current = null;
+  }, []);
+
+  const openDropdown = useCallback(() => {
+    clearDropdownCloseTimeout();
+    setIsDropdownOpen(true);
+  }, [clearDropdownCloseTimeout]);
+
+  const closeDropdown = useCallback(() => {
+    clearDropdownCloseTimeout();
+    setIsDropdownOpen(false);
+  }, [clearDropdownCloseTimeout]);
+
+  const scheduleDropdownClose = useCallback(() => {
+    clearDropdownCloseTimeout();
+    dropdownCloseTimeoutRef.current = window.setTimeout(() => {
+      setIsDropdownOpen(false);
+      dropdownCloseTimeoutRef.current = null;
+    }, 120);
+  }, [clearDropdownCloseTimeout]);
 
   const handleCloseMobileMenu = useCallback(() => {
     onCloseMobileMenu();
@@ -54,12 +85,16 @@ export function SiteNavbar({
     setIsMobileCareersOpen(activeItem === "Careers" || activeItem === "Careers & Talents");
   }, [activeItem, handleCloseMobileMenu, isMobileMenuOpen, onToggleMobileMenu]);
 
+  useAccessibleOverlay({
+    isOpen: isMobileMenuOpen,
+    containerRef: mobileNavRef,
+    onClose: handleCloseMobileMenu,
+  });
+
   useEffect(() => {
     if (typeof window === "undefined") {
       return;
     }
-
-    document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
 
     function handleResize() {
       if (window.innerWidth >= 1024) {
@@ -67,22 +102,18 @@ export function SiteNavbar({
       }
     }
 
-    function handleEscape(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        handleCloseMobileMenu();
-        setIsDropdownOpen(false);
-      }
-    }
-
     window.addEventListener("resize", handleResize);
-    window.addEventListener("keydown", handleEscape);
 
     return () => {
-      document.body.style.overflow = "";
       window.removeEventListener("resize", handleResize);
-      window.removeEventListener("keydown", handleEscape);
     };
-  }, [handleCloseMobileMenu, isMobileMenuOpen]);
+  }, [handleCloseMobileMenu]);
+
+  useEffect(() => {
+    return () => {
+      clearDropdownCloseTimeout();
+    };
+  }, [clearDropdownCloseTimeout]);
 
   return (
     <div className="site-nav">
@@ -102,8 +133,21 @@ export function SiteNavbar({
 
           <div
             className="site-nav__dropdown"
-            onMouseEnter={() => setIsDropdownOpen(true)}
-            onMouseLeave={() => setIsDropdownOpen(false)}
+            onMouseEnter={openDropdown}
+            onMouseLeave={scheduleDropdownClose}
+            onFocusCapture={openDropdown}
+            onBlurCapture={(event) => {
+              const relatedTarget = event.relatedTarget as Node | null;
+              if (!relatedTarget || !event.currentTarget.contains(relatedTarget)) {
+                closeDropdown();
+              }
+            }}
+            onKeyDown={(event) => {
+              if (event.key === "Escape") {
+                event.preventDefault();
+                closeDropdown();
+              }
+            }}
           >
             <button
               type="button"
@@ -111,8 +155,14 @@ export function SiteNavbar({
                 activeItem === "Careers" || activeItem === "Careers & Talents" ? "site-nav__link--active" : ""
               }`}
               aria-expanded={isDropdownOpen}
-              aria-haspopup="menu"
-              onClick={() => setIsDropdownOpen((open) => !open)}
+              aria-controls={dropdownId}
+              onClick={() => {
+                if (isDropdownOpen) {
+                  closeDropdown();
+                  return;
+                }
+                openDropdown();
+              }}
             >
               Careers
               <span className="site-nav__dropdown-caret" aria-hidden="true">
@@ -121,17 +171,16 @@ export function SiteNavbar({
             </button>
 
             <div
+              id={dropdownId}
               className={`site-nav__dropdown-menu ${isDropdownOpen ? "site-nav__dropdown-menu--open" : ""}`}
-              role="menu"
-              aria-label="Careers and Talents"
+              hidden={!isDropdownOpen}
             >
               {careersMenuItems.map((item) => (
                 <Link
                   key={item.label}
                   href={item.href}
                   className="site-nav__dropdown-item"
-                  role="menuitem"
-                  onClick={() => setIsDropdownOpen(false)}
+                  onClick={closeDropdown}
                 >
                   {item.label}
                 </Link>
@@ -173,8 +222,10 @@ export function SiteNavbar({
 
       <nav
         id="mobile-nav-menu"
+        ref={mobileNavRef}
         className={`site-nav__mobile ${isMobileMenuOpen ? "site-nav__mobile--open" : ""}`}
         aria-label="Mobile navigation"
+        aria-hidden={!isMobileMenuOpen}
       >
         {navItems.map((item) => (
           <Link

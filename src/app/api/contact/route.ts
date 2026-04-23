@@ -5,10 +5,11 @@ type ContactBody = {
   firstName?: string;
   lastName?: string;
   email?: string;
-  phone?: string;
-  company?: string;
   subject?: string;
+  company?: string;
+  phone?: string;
   message?: string;
+  recaptchaToken?: string;
   botfield?: string;
 };
 
@@ -68,7 +69,56 @@ function hasMaliciousPattern(value: string) {
   return patterns.some((pattern) => pattern.test(value));
 }
 
-async function sendEmail(body: Required<Omit<ContactBody, "botfield">>) {
+const subjectLabelMap: Record<string, string> = {
+  general: "General Inquiry",
+  business: "Business Partnership",
+  support: "Technical Support",
+  careers: "Career Opportunities",
+};
+
+function normalizeSubject(value: string) {
+  const normalized = value.trim().toLowerCase();
+  if (subjectLabelMap[normalized]) {
+    return { code: normalized, label: subjectLabelMap[normalized] };
+  }
+
+  const matchedKey = Object.keys(subjectLabelMap).find(
+    (key) => subjectLabelMap[key].toLowerCase() === normalized,
+  );
+  if (matchedKey) {
+    return { code: matchedKey, label: subjectLabelMap[matchedKey] };
+  }
+
+  return null;
+}
+
+async function verifyRecaptcha(token: string) {
+  const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+  if (!secretKey) {
+    return true;
+  }
+
+  const response = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: `secret=${encodeURIComponent(secretKey)}&response=${encodeURIComponent(token)}`,
+  });
+
+  const data = (await response.json()) as { success?: boolean };
+  return data.success === true;
+}
+
+type ContactEmailPayload = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  subject: string;
+  company: string;
+  phone: string;
+  message: string;
+};
+
+async function sendEmail(body: ContactEmailPayload) {
   const apiKey = process.env.RESEND_API_KEY;
   const adminEmail = process.env.ADMIN_EMAIL || "info@romega-solutions.com";
 
@@ -132,7 +182,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: true, message: "Thank you. Your message has been sent." });
     }
 
-    const requiredFields: Array<keyof ContactBody> = ["firstName", "lastName", "email", "phone", "message"];
+    const requiredFields: Array<keyof ContactBody> = [
+      "firstName",
+      "lastName",
+      "email",
+      "subject",
+      "phone",
+      "message",
+    ];
     for (const field of requiredFields) {
       if (!body[field] || !String(body[field]).trim()) {
         return NextResponse.json(
@@ -150,6 +207,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, message: "Invalid phone number." }, { status: 400 });
     }
 
+    if (process.env.RECAPTCHA_SECRET_KEY) {
+      if (!body.recaptchaToken) {
+        return NextResponse.json({ success: false, message: "reCAPTCHA verification required." }, { status: 400 });
+      }
+
+      const recaptchaValid = await verifyRecaptcha(body.recaptchaToken);
+      if (!recaptchaValid) {
+        return NextResponse.json({ success: false, message: "reCAPTCHA verification failed." }, { status: 400 });
+      }
+    }
+
+    const normalizedSubject = normalizeSubject(body.subject!);
+    if (!normalizedSubject) {
+      return NextResponse.json({ success: false, message: "Invalid subject selection." }, { status: 400 });
+    }
+
     const inspectionFields = [body.firstName, body.lastName, body.company, body.subject, body.message].filter(
       Boolean,
     ) as string[];
@@ -164,7 +237,7 @@ export async function POST(request: NextRequest) {
       email: body.email!.trim().toLowerCase(),
       phone: sanitizeText(body.phone!, 40),
       company: sanitizeText(body.company || "", 120),
-      subject: sanitizeText(body.subject || "General inquiry", 160) || "General inquiry",
+      subject: normalizedSubject.label,
       message: sanitizeText(body.message!, 2000),
     };
 

@@ -70,7 +70,7 @@ export default function AboutPage() {
       <JsonLd id="about-structured-data" data={structuredData} />
       <SiteHeader activeItem="About" />
 
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <section className="about-hero">
           <div className="about-hero-inner">
             <div className="about-hero-photo-frame">

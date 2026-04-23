@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useAccessibleOverlay } from "@/components/accessibility/useAccessibleOverlay";
 import Link from "next/link";
 import Image from "next/image";
 import type { CareerJob } from "@/lib/mock-careers";
@@ -67,6 +68,8 @@ export default function CareersPageClient() {
   const [jobs, setJobs] = useState<CareerJob[]>([]);
   const [jobsState, setJobsState] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [jobsError, setJobsError] = useState("");
+  const jobsPanelRef = useRef<HTMLElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const updatedDate = useMemo(
     () =>
@@ -102,31 +105,27 @@ export default function CareersPageClient() {
     }
   }
 
+  const handleCloseJobs = useCallback(() => {
+    setIsJobsOpen(false);
+  }, []);
+
+  useAccessibleOverlay({
+    isOpen: isJobsOpen,
+    containerRef: jobsPanelRef,
+    initialFocusRef: closeButtonRef,
+    onClose: handleCloseJobs,
+  });
+
   useEffect(() => {
-    if (!isJobsOpen) {
-      document.body.style.overflow = "";
+    if (!isJobsOpen || jobsState !== "idle") {
       return;
     }
-
-    document.body.style.overflow = "hidden";
     void loadJobs();
-
-    function handleEscape(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setIsJobsOpen(false);
-      }
-    }
-
-    window.addEventListener("keydown", handleEscape);
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", handleEscape);
-    };
-  }, [isJobsOpen]);
+  }, [isJobsOpen, jobsState]);
 
   return (
     <>
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <section className="careers-hero-section">
           <div className="careers-hero-background" aria-hidden="true">
             <Image
@@ -310,16 +309,26 @@ export default function CareersPageClient() {
             type="button"
             className="careers-sidebar-overlay"
             aria-label="Close current roles panel"
-            onClick={() => setIsJobsOpen(false)}
+            onClick={handleCloseJobs}
           />
 
-          <aside className="careers-sidebar-panel">
+          <aside
+            ref={jobsPanelRef}
+            className="careers-sidebar-panel"
+            aria-describedby="careers-jobs-description"
+            tabIndex={-1}
+          >
             <div className="careers-sidebar-header">
               <div>
                 <h2 id="careers-jobs-title">Current Roles Open</h2>
-                <p>Mock data for now. Review time is typically one week.</p>
+                <p id="careers-jobs-description">Mock data for now. Review time is typically one week.</p>
               </div>
-              <button type="button" className="careers-sidebar-close" onClick={() => setIsJobsOpen(false)}>
+              <button
+                ref={closeButtonRef}
+                type="button"
+                className="careers-sidebar-close"
+                onClick={handleCloseJobs}
+              >
                 <Image src="/images/careers/close.svg" alt="" width={16} height={16} />
                 <span>Close</span>
               </button>
@@ -327,12 +336,16 @@ export default function CareersPageClient() {
 
             <div className="careers-sidebar-content">
               {jobsState === "loading" || jobsState === "idle" ? (
-                <p className="careers-sidebar-state">Loading current opportunities...</p>
+                <p className="careers-sidebar-state" role="status" aria-live="polite">
+                  Loading current opportunities...
+                </p>
               ) : null}
 
               {jobsState === "error" ? (
                 <div className="careers-sidebar-state-wrap">
-                  <p className="careers-sidebar-state careers-sidebar-state-error">{jobsError}</p>
+                  <p className="careers-sidebar-state careers-sidebar-state-error" role="alert">
+                    {jobsError}
+                  </p>
                   <button type="button" className="careers-sidebar-retry" onClick={() => void loadJobs()}>
                     Try Again
                   </button>
@@ -340,7 +353,9 @@ export default function CareersPageClient() {
               ) : null}
 
               {jobsState === "success" && jobs.length === 0 ? (
-                <p className="careers-sidebar-state">We&apos;re always growing. New opportunities coming soon.</p>
+                <p className="careers-sidebar-state" role="status">
+                  We&apos;re always growing. New opportunities coming soon.
+                </p>
               ) : null}
 
               {jobsState === "success" && jobs.length > 0 ? (

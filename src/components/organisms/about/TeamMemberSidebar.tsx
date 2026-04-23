@@ -1,8 +1,9 @@
 "use client";
 
+import { useAccessibleOverlay } from "@/components/accessibility/useAccessibleOverlay";
 import { TEAM_MEMBERS, type TeamMember } from "@/lib/constants";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useRef } from "react";
 
 type TeamMemberSidebarProps = {
   isOpen: boolean;
@@ -11,13 +12,15 @@ type TeamMemberSidebarProps = {
 };
 
 export function TeamMemberSidebar({ isOpen, member, onClose }: TeamMemberSidebarProps) {
-  useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "auto";
+  const panelRef = useRef<HTMLDivElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
 
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [isOpen]);
+  useAccessibleOverlay({
+    isOpen,
+    containerRef: panelRef,
+    initialFocusRef: closeButtonRef,
+    onClose,
+  });
 
   if (!member || !isOpen) {
     return null;
@@ -32,12 +35,16 @@ export function TeamMemberSidebar({ isOpen, member, onClose }: TeamMemberSidebar
       <div className="team-sidebar__overlay" onClick={onClose} aria-hidden="true" />
 
       <div
+        ref={panelRef}
         className={`team-sidebar__panel ${isOpen ? "team-sidebar__panel--open" : ""}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby="sidebar-member-name"
+        aria-describedby="sidebar-member-role"
+        tabIndex={-1}
       >
         <button
+          ref={closeButtonRef}
           type="button"
           onClick={onClose}
           className="team-sidebar__close"
@@ -65,7 +72,9 @@ export function TeamMemberSidebar({ isOpen, member, onClose }: TeamMemberSidebar
               <h3 id="sidebar-member-name" className="team-sidebar__name">
                 {member.name}
               </h3>
-              <p className="team-sidebar__role">{member.role}</p>
+              <p id="sidebar-member-role" className="team-sidebar__role">
+                {member.role}
+              </p>
             </div>
           </div>
 

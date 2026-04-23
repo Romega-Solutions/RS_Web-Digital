@@ -11,7 +11,9 @@ export const siteConfig = {
   ogImage: "/opengraph-image",
   logo: "/RS_Logo-Blue.png",
   email: "info@romega-solutions.com",
-  linkedIn: "https://www.linkedin.com/company/romega-solutions",
+  linkedIn: "https://www.linkedin.com/company/romega-solutions/posts/?feedView=all",
+  instagram: "https://www.instagram.com/romegasolutions/",
+  facebook: "https://www.facebook.com/romegasolutions",
   address: {
     streetAddress: "222 Pacific Coast Hwy, #10",
     addressLocality: "El Segundo",
@@ -99,7 +101,7 @@ export function createOrganizationSchema() {
     image: absoluteUrl(siteConfig.ogImage),
     description: siteConfig.description,
     email: siteConfig.email,
-    sameAs: [siteConfig.linkedIn],
+    sameAs: [siteConfig.linkedIn, siteConfig.instagram, siteConfig.facebook],
     address: {
       "@type": "PostalAddress",
       ...siteConfig.address,

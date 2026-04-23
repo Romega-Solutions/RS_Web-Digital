@@ -82,7 +82,7 @@ export default function TalentPage() {
     <div className="site-shell" id="top">
       <JsonLd id="talent-structured-data" data={structuredData} />
       <SiteHeader activeItem="Careers & Talents" />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <TalentPageClient />
         <TalentPool talents={talentProfiles} />
         <TalentCTA />

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { RouteAnnouncer } from "@/components/accessibility/RouteAnnouncer";
 import { Poppins } from "next/font/google";
 import { absoluteUrl, siteConfig } from "@/lib/seo";
 import "./globals.css";
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   applicationName: siteConfig.name,
-  keywords: siteConfig.defaultKeywords,
+  keywords: [...siteConfig.defaultKeywords],
   authors: [{ name: siteConfig.name, url: absoluteUrl("/") }],
   creator: siteConfig.name,
   publisher: siteConfig.name,
@@ -71,7 +72,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full antialiased">
-      <body className={`${poppins.variable} min-h-full flex flex-col`}>{children}</body>
+      <body className={`${poppins.variable} min-h-full flex flex-col`}>
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
+        <RouteAnnouncer />
+        {children}
+      </body>
     </html>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useAccessibleOverlay } from "@/components/accessibility/useAccessibleOverlay";
+import { useMemo, useRef, useState } from "react";
 import type { TalentProfile } from "./talentData";
 import { TalentCard } from "./TalentCard";
 
@@ -18,6 +19,8 @@ export function TalentPool({ talents }: TalentPoolProps) {
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
   const [visibleState, setVisibleState] = useState({ filterKey: "", count: PAGE_SIZE });
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const filterDrawerRef = useRef<HTMLElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const categories = useMemo(
     () => Array.from(new Set(talents.map((talent) => talent.category))).sort(),
@@ -123,18 +126,12 @@ export function TalentPool({ talents }: TalentPoolProps) {
     talents,
   ]);
 
-  useEffect(() => {
-    if (!mobileFiltersOpen) {
-      return;
-    }
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
-  }, [mobileFiltersOpen]);
+  useAccessibleOverlay({
+    isOpen: mobileFiltersOpen,
+    containerRef: filterDrawerRef,
+    initialFocusRef: closeButtonRef,
+    onClose: () => setMobileFiltersOpen(false),
+  });
 
   const visibleCount = visibleState.filterKey === filterKey ? visibleState.count : PAGE_SIZE;
   const visibleTalents = filteredTalents.slice(0, visibleCount);
@@ -164,6 +161,8 @@ export function TalentPool({ talents }: TalentPoolProps) {
             type="button"
             className="talent-pool__filter-toggle"
             onClick={() => setMobileFiltersOpen(true)}
+            aria-expanded={mobileFiltersOpen}
+            aria-controls="talent-filters-panel"
           >
             Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
           </button>
@@ -181,12 +180,18 @@ export function TalentPool({ talents }: TalentPoolProps) {
         ) : null}
 
         <aside
+          id="talent-filters-panel"
+          ref={filterDrawerRef}
           className={`talent-pool__sidebar ${
             mobileFiltersOpen ? "talent-pool__sidebar--open" : ""
           }`}
           aria-label="Talent filters"
+          role={mobileFiltersOpen ? "dialog" : undefined}
+          aria-modal={mobileFiltersOpen ? "true" : undefined}
+          tabIndex={mobileFiltersOpen ? -1 : undefined}
         >
           <button
+            ref={closeButtonRef}
             type="button"
             className="talent-pool__close-button"
             onClick={() => setMobileFiltersOpen(false)}
@@ -317,7 +322,7 @@ export function TalentPool({ talents }: TalentPoolProps) {
                 aria-label="Search talent"
               />
             </div>
-            <span id="talent-pool-heading" className="talent-pool__count-badge">
+            <span id="talent-pool-heading" className="talent-pool__count-badge" role="status" aria-live="polite">
               Available talents: {filteredTalents.length}
             </span>
           </div>

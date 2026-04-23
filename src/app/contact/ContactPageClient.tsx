@@ -1,54 +1,109 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { siteConfig } from "@/lib/seo";
 
 type FormState = {
   firstName: string;
   lastName: string;
   email: string;
-  phone: string;
-  company: string;
   subject: string;
+  company: string;
+  phone: string;
   message: string;
   botfield: string;
 };
+
+type FormErrors = Partial<
+  Record<"firstName" | "lastName" | "email" | "subject" | "phone" | "message", string>
+>;
 
 const initialFormState: FormState = {
   firstName: "",
   lastName: "",
   email: "",
-  phone: "",
+  subject: "",
   company: "",
-  subject: "General Inquiry",
+  phone: "",
   message: "",
   botfield: "",
 };
 
-const concernOptions = [
-  "General Inquiry",
-  "Business Partnership",
-  "Technical Support",
-  "Career Opportunities",
+const subjectOptions = [
+  { value: "general", label: "General Inquiry" },
+  { value: "business", label: "Business Partnership" },
+  { value: "support", label: "Technical Support" },
+  { value: "careers", label: "Career Opportunities" },
 ] as const;
+
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const phonePattern = /^\+?[0-9()\s.-]{7,}$/;
 
 export default function ContactPageClient() {
   const [form, setForm] = useState<FormState>(initialFormState);
+  const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState<{ type: "idle" | "success" | "error"; message: string }>({
     type: "idle",
     message: "",
   });
+  const statusRef = useRef<HTMLParagraphElement | null>(null);
+
+  useEffect(() => {
+    if (status.type !== "idle") {
+      statusRef.current?.focus();
+    }
+  }, [status]);
+
+  function validateForm() {
+    const nextErrors: FormErrors = {};
+
+    if (!form.firstName.trim()) {
+      nextErrors.firstName = "Enter your first name.";
+    }
+
+    if (!form.lastName.trim()) {
+      nextErrors.lastName = "Enter your last name.";
+    }
+
+    if (!form.email.trim()) {
+      nextErrors.email = "Enter your email address.";
+    } else if (!emailPattern.test(form.email.trim())) {
+      nextErrors.email = "Enter a valid email address.";
+    }
+
+    if (!form.subject) {
+      nextErrors.subject = "Select a subject.";
+    }
+
+    if (!form.phone.trim()) {
+      nextErrors.phone = "Enter your contact number.";
+    } else if (!phonePattern.test(form.phone.trim())) {
+      nextErrors.phone = "Enter a valid contact number.";
+    }
+
+    if (!form.message.trim()) {
+      nextErrors.message = "Enter a message.";
+    }
+
+    return nextErrors;
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const nextErrors = validateForm();
+    if (Object.keys(nextErrors).length > 0) {
+      setErrors(nextErrors);
+      setStatus({ type: "error", message: "Please correct the highlighted fields and try again." });
+      return;
+    }
+
     setIsSubmitting(true);
+    setErrors({});
     setStatus({ type: "idle", message: "" });
 
     try {
-      const firstName = form.firstName.trim();
-      const lastName = form.lastName.trim() || firstName;
-
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: {
@@ -56,9 +111,8 @@ export default function ContactPageClient() {
         },
         body: JSON.stringify({
           ...form,
-          firstName,
-          lastName,
-          subject: form.subject || "General Inquiry",
+          firstName: form.firstName.trim(),
+          lastName: form.lastName.trim(),
         }),
       });
 
@@ -84,27 +138,33 @@ export default function ContactPageClient() {
   }
 
   function updateField<K extends keyof FormState>(field: K, value: FormState[K]) {
+    if (status.type !== "idle") {
+      setStatus({ type: "idle", message: "" });
+    }
+
+    if (field === "email") {
+      setErrors((current) => ({ ...current, email: undefined }));
+    }
+    if (field === "firstName") {
+      setErrors((current) => ({ ...current, firstName: undefined }));
+    }
+    if (field === "lastName") {
+      setErrors((current) => ({ ...current, lastName: undefined }));
+    }
+    if (field === "subject") {
+      setErrors((current) => ({ ...current, subject: undefined }));
+    }
+    if (field === "phone") {
+      setErrors((current) => ({ ...current, phone: undefined }));
+    }
+    if (field === "message") {
+      setErrors((current) => ({ ...current, message: undefined }));
+    }
     setForm((current) => ({ ...current, [field]: value }));
   }
 
-  function updateName(value: string) {
-    const trimmed = value.trim();
-
-    if (!trimmed) {
-      setForm((current) => ({ ...current, firstName: "", lastName: "" }));
-      return;
-    }
-
-    const parts = trimmed.split(/\s+/);
-    const firstName = parts.shift() || "";
-    const lastName = parts.join(" ");
-    setForm((current) => ({ ...current, firstName, lastName }));
-  }
-
-  const fullName = [form.firstName, form.lastName].filter(Boolean).join(" ");
-
   return (
-    <main>
+    <main id="main-content" tabIndex={-1}>
       <section className="contact-page">
         <div className="contact-page-inner">
           <div className="contact-page-info">
@@ -130,7 +190,12 @@ export default function ContactPageClient() {
             <div className="contact-page-block">
               <h2>Connect with Us</h2>
               <div className="contact-page-socials">
-                <a href="#" aria-label="LinkedIn">
+                <a
+                  href={siteConfig.linkedIn}
+                  aria-label="LinkedIn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <Image
                     src="/2.0%20Website%20Assets/20.png"
                     alt=""
@@ -139,7 +204,12 @@ export default function ContactPageClient() {
                     className="contact-page-social-icon"
                   />
                 </a>
-                <a href="#" aria-label="Facebook">
+                <a
+                  href={siteConfig.facebook}
+                  aria-label="Facebook"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <Image
                     src="/2.0%20Website%20Assets/18.png"
                     alt=""
@@ -148,7 +218,12 @@ export default function ContactPageClient() {
                     className="contact-page-social-icon"
                   />
                 </a>
-                <a href="#" aria-label="Instagram">
+                <a
+                  href={siteConfig.instagram}
+                  aria-label="Instagram"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <Image
                     src="/2.0%20Website%20Assets/19.png"
                     alt=""
@@ -162,16 +237,41 @@ export default function ContactPageClient() {
           </div>
 
           <div className="contact-page-form-wrap">
-            <form className="contact-form" onSubmit={handleSubmit}>
+            <form className="contact-form" onSubmit={handleSubmit} noValidate>
               <label className="contact-field">
-                <span>Name*</span>
+                <span>First Name*</span>
                 <input
                   type="text"
-                  value={fullName}
-                  onChange={(event) => updateName(event.target.value)}
+                  value={form.firstName}
+                  onChange={(event) => updateField("firstName", event.target.value)}
                   required
-                  autoComplete="name"
+                  autoComplete="given-name"
+                  aria-invalid={errors.firstName ? "true" : "false"}
+                  aria-describedby={errors.firstName ? "contact-first-name-error" : undefined}
                 />
+                {errors.firstName ? (
+                  <span id="contact-first-name-error" className="contact-field-error">
+                    {errors.firstName}
+                  </span>
+                ) : null}
+              </label>
+
+              <label className="contact-field">
+                <span>Last Name*</span>
+                <input
+                  type="text"
+                  value={form.lastName}
+                  onChange={(event) => updateField("lastName", event.target.value)}
+                  required
+                  autoComplete="family-name"
+                  aria-invalid={errors.lastName ? "true" : "false"}
+                  aria-describedby={errors.lastName ? "contact-last-name-error" : undefined}
+                />
+                {errors.lastName ? (
+                  <span id="contact-last-name-error" className="contact-field-error">
+                    {errors.lastName}
+                  </span>
+                ) : null}
               </label>
 
               <label className="contact-field">
@@ -182,11 +282,41 @@ export default function ContactPageClient() {
                   onChange={(event) => updateField("email", event.target.value)}
                   required
                   autoComplete="email"
+                  aria-invalid={errors.email ? "true" : "false"}
+                  aria-describedby={errors.email ? "contact-email-error" : undefined}
                 />
+                {errors.email ? (
+                  <span id="contact-email-error" className="contact-field-error">
+                    {errors.email}
+                  </span>
+                ) : null}
               </label>
 
               <label className="contact-field">
-                <span>Company Name</span>
+                <span>Select Subject*</span>
+                <select
+                  value={form.subject}
+                  onChange={(event) => updateField("subject", event.target.value)}
+                  required
+                  aria-invalid={errors.subject ? "true" : "false"}
+                  aria-describedby={errors.subject ? "contact-subject-error" : undefined}
+                >
+                  <option value="">Select a subject</option>
+                  {subjectOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                {errors.subject ? (
+                  <span id="contact-subject-error" className="contact-field-error">
+                    {errors.subject}
+                  </span>
+                ) : null}
+              </label>
+
+              <label className="contact-field">
+                <span>Company Name (Optional)</span>
                 <input
                   type="text"
                   value={form.company}
@@ -203,25 +333,15 @@ export default function ContactPageClient() {
                   onChange={(event) => updateField("phone", event.target.value)}
                   required
                   autoComplete="tel"
+                  aria-invalid={errors.phone ? "true" : "false"}
+                  aria-describedby={errors.phone ? "contact-phone-error" : undefined}
                 />
+                {errors.phone ? (
+                  <span id="contact-phone-error" className="contact-field-error">
+                    {errors.phone}
+                  </span>
+                ) : null}
               </label>
-
-              <fieldset className="contact-concerns">
-                <legend>Concerns</legend>
-                <div className="contact-concerns-options">
-                  {concernOptions.map((option) => (
-                    <button
-                      key={option}
-                      type="button"
-                      className={`contact-concerns-option${form.subject === option ? " is-selected" : ""}`}
-                      onClick={() => updateField("subject", option)}
-                      aria-pressed={form.subject === option}
-                    >
-                      {option}
-                    </button>
-                  ))}
-                </div>
-              </fieldset>
 
               <label className="contact-field contact-honeypot" aria-hidden="true">
                 <span>Leave this field empty</span>
@@ -235,17 +355,31 @@ export default function ContactPageClient() {
               </label>
 
               <label className="contact-field">
-                <span>Message</span>
+                <span>Message*</span>
                 <textarea
                   value={form.message}
                   onChange={(event) => updateField("message", event.target.value)}
                   required
                   rows={4}
+                  aria-invalid={errors.message ? "true" : "false"}
+                  aria-describedby={errors.message ? "contact-message-error" : undefined}
                 />
+                {errors.message ? (
+                  <span id="contact-message-error" className="contact-field-error">
+                    {errors.message}
+                  </span>
+                ) : null}
               </label>
 
               {status.type !== "idle" ? (
-                <p className={`contact-form-status contact-form-status-${status.type}`}>{status.message}</p>
+                <p
+                  ref={statusRef}
+                  tabIndex={-1}
+                  role={status.type === "error" ? "alert" : "status"}
+                  className={`contact-form-status contact-form-status-${status.type}`}
+                >
+                  {status.message}
+                </p>
               ) : null}
 
               <button type="submit" className="contact-submit" disabled={isSubmitting}>

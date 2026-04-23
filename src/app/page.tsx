@@ -107,7 +107,7 @@ export default function Home() {
       <JsonLd id="home-structured-data" data={structuredData} />
       <SiteHeader activeItem="Home" />
 
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <HomeHero />
 
         <ServiceStrip />
@@ -264,9 +264,11 @@ export default function Home() {
               </article>
             </div>
 
-            <button type="button" className="services-spotlight-button">
-              See How We Can Help
-            </button>
+            <ExploreServicesButton
+              className="services-spotlight-button"
+              href="/services"
+              label="See How We Can Help"
+            />
           </div>
         </section>
 

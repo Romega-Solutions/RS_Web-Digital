@@ -128,7 +128,7 @@ export default function ServicesPage() {
       <JsonLd id="services-structured-data" data={structuredData} />
       <SiteHeader activeItem="Services" />
 
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <section className="services-hero">
           <div className="services-hero-media" aria-hidden="true">
             <Image
@@ -163,7 +163,11 @@ export default function ServicesPage() {
 
         <ServiceStrip />
 
-        <section className="services-detail-section" aria-labelledby="services-detail-title">
+        <section
+          id="services-overview"
+          className="services-detail-section"
+          aria-labelledby="services-detail-title"
+        >
           <div className="services-detail-inner">
             <h1 id="services-detail-title" className="sr-only">
               Service details
