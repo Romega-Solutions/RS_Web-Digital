@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { SiteNavbar, type SiteHeaderActiveItem } from "./SiteNavbar";
@@ -11,6 +11,12 @@ type SiteHeaderProps = {
 
 export function SiteHeader({ activeItem }: SiteHeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const handleToggleMobileMenu = useCallback(() => {
+    setIsMobileMenuOpen((open) => !open);
+  }, []);
+  const handleCloseMobileMenu = useCallback(() => {
+    setIsMobileMenuOpen(false);
+  }, []);
 
   return (
     <header className="site-header">
@@ -33,8 +39,8 @@ export function SiteHeader({ activeItem }: SiteHeaderProps) {
           <SiteNavbar
             activeItem={activeItem}
             isMobileMenuOpen={isMobileMenuOpen}
-            onToggleMobileMenu={() => setIsMobileMenuOpen((open) => !open)}
-            onCloseMobileMenu={() => setIsMobileMenuOpen(false)}
+            onToggleMobileMenu={handleToggleMobileMenu}
+            onCloseMobileMenu={handleCloseMobileMenu}
           />
         </div>
       </div>

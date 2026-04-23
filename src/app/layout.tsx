@@ -13,30 +13,37 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   metadataBase: siteConfig.url,
   title: {
-    default: "Romega Solutions",
-    template: "%s",
+    default: "Romega Solutions | Talent, Brand, and Operations Support",
+    template: "%s | Romega Solutions",
   },
   description: siteConfig.description,
   applicationName: siteConfig.name,
+  keywords: siteConfig.defaultKeywords,
+  authors: [{ name: siteConfig.name, url: absoluteUrl("/") }],
+  creator: siteConfig.name,
+  publisher: siteConfig.name,
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "/",
+    url: absoluteUrl("/"),
     siteName: siteConfig.name,
-    title: siteConfig.name,
+    title: "Romega Solutions | Talent, Brand, and Operations Support",
     description: siteConfig.description,
     images: [
       {
         url: absoluteUrl(siteConfig.ogImage),
-        width: 1200,
-        height: 819,
         alt: "Romega Solutions",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: siteConfig.name,
+    title: "Romega Solutions | Talent, Brand, and Operations Support",
     description: siteConfig.description,
     images: [absoluteUrl(siteConfig.ogImage)],
   },
@@ -51,6 +58,10 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
+  alternates: {
+    canonical: "/",
+  },
+  category: "business",
 };
 
 export default function RootLayout({
