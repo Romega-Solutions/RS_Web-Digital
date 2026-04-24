@@ -323,10 +323,10 @@ export default function Home() {
 
             <div className="social-connect-visual" aria-hidden="true">
               <Image
-                src="/stay-connected-transparent.png"
+                src="/phone.png"
                 alt=""
-                width={2430}
-                height={2430}
+                width={1080}
+                height={1080}
                 sizes="(max-width: 767px) 100vw, 36rem"
                 className="social-connect-visual-image"
               />

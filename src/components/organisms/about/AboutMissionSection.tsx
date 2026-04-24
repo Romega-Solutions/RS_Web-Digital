@@ -16,30 +16,30 @@ export function AboutMissionSection() {
 
         <div className="about-mission-photo about-mission-photo-main">
           <Image
-            src="/prompt-images/about/3_vision.png"
+            src="/why-1.png"
             alt="Team members reviewing work at a computer"
             fill
-            sizes="(max-width: 767px) 100vw, 42vw"
+            sizes="(max-width: 767px) 100vw, 44vw"
             className="about-mission-image"
           />
         </div>
 
         <div className="about-mission-photo about-mission-photo-mid">
           <Image
-            src="/2.0%20Website%20Assets/Image%201%20_%20Talent%20Solutions.png"
-            alt="Talent consultation in progress"
+            src="/why-2.png"
+            alt="Two team members collaborating over a laptop"
             fill
-            sizes="(max-width: 767px) 48vw, 14rem"
+            sizes="(max-width: 767px) 48vw, 15rem"
             className="about-mission-image"
           />
         </div>
 
         <div className="about-mission-photo about-mission-photo-low">
           <Image
-            src="/2.0%20Website%20Assets/Image%203%20_%20Strategic%20Operations.png"
-            alt="Strategic planning conversation"
+            src="/why-3.png"
+            alt="A team discussing work around a laptop"
             fill
-            sizes="(max-width: 767px) 52vw, 15rem"
+            sizes="(max-width: 767px) 52vw, 16rem"
             className="about-mission-image"
           />
         </div>

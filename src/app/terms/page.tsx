@@ -17,10 +17,7 @@ export default function TermsPage() {
   return (
     <div className="site-shell" id="top">
       <SiteHeader />
-      <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-4xl px-4 py-16 md:px-6">
-        <h1 className="text-3xl font-semibold text-gray-900 md:text-4xl">
-          Terms &amp; Conditions
-        </h1>
+      <main id="main-content" tabIndex={-1} className="legal-page-shell">
         <LegalPageCard>
           <TermsAndConditionsContent />
         </LegalPageCard>

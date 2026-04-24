@@ -16,10 +16,9 @@ export function PrivacyPolicyContent({
   return (
     <div className="prose prose-sm max-w-none">
       <p className="text-lg text-gray-800 font-medium mb-6">
-        This Applicant Data Privacy and Consent Policy explains how Romega
-        Solutions collects, processes, stores, retains, and shares applicant and
-        professional information for recruitment, engagement, and talent matching
-        purposes.
+        This Privacy and Consent Policy explains how Romega Solutions collects,
+        processes, stores, retains, and shares personal information from website
+        visitors, applicants, and professional contacts.
       </p>
 
       <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 mb-6 text-sm text-blue-900">
@@ -36,26 +35,26 @@ export function PrivacyPolicyContent({
       </h4>
       <p className="text-gray-700 mb-3">
         We collect personal and professional information voluntarily provided by
-        applicants, candidates, and contacts through website forms, recruitment
-        workflows, and related channels.
+        visitors and applicants through website forms, recruitment workflows, and
+        related communication channels.
       </p>
       <ul className="list-disc pl-6 text-gray-700 mb-6">
-        <li>Full name and contact details</li>
-        <li>Resume or CV and work history</li>
+        <li>Full name and contact details (email, phone number)</li>
+        <li>Company name and professional background</li>
+        <li>Resume or CV and work history (for applicants)</li>
         <li>Portfolio links, project samples, and certifications</li>
-        <li>Interview, assessment, and evaluation records</li>
-        <li>
-          Professional profile links (for example LinkedIn or portfolio pages)
-        </li>
+        <li>Inquiry details and message content</li>
       </ul>
 
       <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
         B. Purpose of Processing
       </h4>
       <p className="text-gray-700 mb-3">
-        We process information only for legitimate professional purposes.
+        We process information only for legitimate business and professional
+        purposes.
       </p>
       <ul className="list-disc pl-6 text-gray-700 mb-6">
+        <li>Responding to inquiries and providing requested information</li>
         <li>Recruitment and qualification assessment</li>
         <li>Communication about applications and opportunities</li>
         <li>Future talent pool consideration (when consented)</li>
@@ -63,88 +62,88 @@ export function PrivacyPolicyContent({
           Client and project matching based on relevant professional
           qualifications (when consented)
         </li>
-        <li>
-          Public talent showcase publication only with separate explicit
-          publication consent
-        </li>
       </ul>
 
       <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
-        C. Retention of Applicant Data
+        C. Cookies and Tracking
       </h4>
       <p className="text-gray-700 mb-3">
-        We retain data only for a reasonable period necessary for recruitment,
-        matching, legal, and operational requirements.
+        Our website uses minimal cookies to ensure technical functionality and
+        improve user experience.
       </p>
       <ul className="list-disc pl-6 text-gray-700 mb-6">
-        <li>Retention supports future role matching and business continuity</li>
-        <li>Data is reviewed and minimized periodically</li>
         <li>
-          Applicants may request deletion or removal, subject to legal limitations
+          <strong>Essential Cookies:</strong> Required for basic website
+          functionality and security.
         </li>
-      </ul>
-
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
-        D. Sharing and Disclosure of Information
-      </h4>
-      <p className="text-gray-700 mb-3">
-        We disclose only what is necessary and relevant for evaluation and
-        matching.
-      </p>
-      <ul className="list-disc pl-6 text-gray-700 mb-6">
-        <li>Authorized internal personnel involved in recruitment and staffing</li>
         <li>
-          Potential clients or partners for role/project matching with applicant
-          consent
+          <strong>Functional Cookies:</strong> Used to remember preferences and
+          enhance your visit.
         </li>
-        <li>Lawful disclosures required by legal or regulatory obligations</li>
+        <li>
+          <strong>Analytics:</strong> We may use anonymized analytics to
+          understand website traffic patterns without identifying individual
+          visitors.
+        </li>
       </ul>
       <p className="text-gray-700 mb-6">
-        Sensitive information not required for evaluation is not shared without
-        additional consent.
+        You can manage or disable cookies through your browser settings, though
+        some features of the site may not function correctly as a result.
       </p>
 
       <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
-        E. Data Protection and Security
+        D. Retention of Data
       </h4>
+      <p className="text-gray-700 mb-3">
+        We retain data only for a reasonable period necessary for the purposes
+        outlined above, or as required by legal and operational obligations.
+      </p>
       <ul className="list-disc pl-6 text-gray-700 mb-6">
-        <li>Administrative, technical, and organizational safeguards are implemented</li>
+        <li>Inquiry data is retained to facilitate ongoing communication</li>
+        <li>Applicant data supports future role matching and continuity</li>
+        <li>Data is reviewed and minimized periodically</li>
+      </ul>
+
+      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
+        E. Sharing and Disclosure of Information
+      </h4>
+      <p className="text-gray-700 mb-3">
+        We disclose only what is necessary and relevant for service delivery and
+        evaluation.
+      </p>
+      <ul className="list-disc pl-6 text-gray-700 mb-6">
+        <li>Authorized internal personnel involved in operations and recruitment</li>
         <li>
-          Access is limited to authorized personnel with confidentiality
-          responsibilities
+          Service providers who assist in our business operations (subject to
+          confidentiality)
         </li>
-        <li>Security controls are continuously monitored and improved</li>
+        <li>Lawful disclosures required by legal or regulatory obligations</li>
       </ul>
 
       <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
         F. Data Subject Rights
       </h4>
       <p className="text-gray-700 mb-3">
-        In line with applicable data privacy regulations, you may request to:
+        In line with GDPR and other applicable data privacy regulations, you may
+        request to:
       </p>
       <ul className="list-disc pl-6 text-gray-700 mb-6">
         <li>Be informed about data processing activities</li>
         <li>Access your personal information</li>
         <li>Correct inaccurate or incomplete records</li>
-        <li>Withdraw consent for optional processing scopes</li>
-        <li>
-          Request deletion, blocking, or removal subject to legal and operational
-          limits
-        </li>
+        <li>Withdraw consent for processing at any time</li>
+        <li>Request deletion, blocking, or removal of your data</li>
+        <li>Object to processing or request data portability</li>
       </ul>
 
       <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
-        G. Voluntary Consent and Public Showcase Rule
+        G. Voluntary Consent and Transparency
       </h4>
       <p className="text-gray-700 mb-3">
-        Consent must be informed, specific, and voluntary.
+        Consent must be informed, specific, and voluntary. By using our contact
+        forms or submitting applications, you acknowledge and agree to the terms
+        outlined in this policy.
       </p>
-      <ul className="list-disc pl-6 text-gray-700 mb-6">
-        <li>Required consent is used for core recruitment processing</li>
-        <li>Optional consent scopes are captured separately</li>
-        <li>Public profile publishing is always separate explicit opt-in</li>
-        <li>No publication consent means profile is not publicly listed</li>
-      </ul>
 
       <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
         Public Data Minimization Standards

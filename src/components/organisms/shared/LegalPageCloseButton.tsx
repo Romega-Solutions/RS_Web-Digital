@@ -19,13 +19,13 @@ export function LegalPageCloseButton() {
     <motion.button
       type="button"
       onClick={handleClose}
-      className="inline-flex items-center rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+      className="inline-flex items-center justify-center rounded-full bg-brand-secondary px-8 py-2.5 text-base font-semibold text-white shadow-md transition-colors hover:bg-[#2f76d8]"
       aria-label="Close legal page"
-      whileHover={{ y: -1, scale: 1.02 }}
+      whileHover={{ y: -1, scale: 1.02, boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)" }}
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.16, ease: "easeOut" }}
     >
-      Close
+      Close Page
     </motion.button>
   );
 }

@@ -11,15 +11,18 @@ interface LegalPageCardProps {
 export function LegalPageCard({ children }: LegalPageCardProps) {
   return (
     <motion.div
-      className="mt-8 rounded-2xl border border-gray-200 bg-white p-6 md:p-8"
-      initial={{ opacity: 0, y: 20, scale: 0.985 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+      className="legal-page-card"
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: [0.21, 1.11, 0.81, 0.99] }}
     >
-      <div className="mb-6 flex justify-end">
+      <div className="prose prose-sm max-w-none md:prose-base">
+        {children}
+      </div>
+      
+      <div className="mt-12 flex justify-center border-t border-gray-100 pt-8 md:justify-end">
         <LegalPageCloseButton />
       </div>
-      {children}
     </motion.div>
   );
 }

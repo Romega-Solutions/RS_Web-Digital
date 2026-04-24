@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { RouteAnnouncer } from "@/components/accessibility/RouteAnnouncer";
+import localFont from "next/font/local";
 import { Poppins } from "next/font/google";
 import { absoluteUrl, siteConfig } from "@/lib/seo";
 import "./globals.css";
@@ -9,6 +10,19 @@ const poppins = Poppins({
   weight: ["400", "500", "600", "700"],
   display: "swap",
   variable: "--font-poppins",
+});
+
+const seasonsStyle = localFont({
+  src: [
+    {
+      path: "../../public/season-webfont/Season-BF651e732546f7d.woff",
+      weight: "400",
+      style: "normal",
+    },
+  ],
+  display: "swap",
+  variable: "--font-seasons-style",
+  adjustFontFallback: false,
 });
 
 export const metadata: Metadata = {
@@ -72,7 +86,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full antialiased">
-      <body className={`${poppins.variable} min-h-full flex flex-col`}>
+      <body
+        className={`${poppins.variable} ${seasonsStyle.variable} min-h-full flex flex-col`}
+      >
         <a href="#main-content" className="skip-link">
           Skip to main content
         </a>

@@ -44,7 +44,7 @@ export function AboutValuesSection() {
       <div className="about-values-inner">
         <div className="about-values-photo-frame">
           <Image
-            src="/prompt-images/about/4_what_we_stand.png"
+            src="/stand-1.png"
             alt="A team collaborating around a laptop"
             fill
             sizes="(max-width: 767px) 100vw, 48vw"

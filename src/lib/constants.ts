@@ -73,8 +73,8 @@ export const TEAM_MEMBERS: TeamMember[] = [
   {
     id: "duane-vargas",
     name: "Duane Vargas",
-    title: "HR Business Partner & Recruiter",
-    role: "HR Business Partner & Recruiter",
+    title: "AI Lead",
+    role: "AI Lead",
     image: "/images/about/IC/IC_Recruiter_Duane.jpg",
     bio: "Recruiter specializing in identifying strong talent and aligning HR strategies with business needs.",
     expertise: ["Talent acquisition", "HR business partnering", "Recruitment strategy"],

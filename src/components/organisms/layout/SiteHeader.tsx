@@ -64,7 +64,7 @@ export function SiteHeader({ activeItem }: SiteHeaderProps) {
                 preload
               />
             </span>
-            <span className="site-header__brand-text">Romega Solutions</span>
+            <span className="site-header__brand-text">ROMEGA SOLUTIONS</span>
           </Link>
 
           <SiteNavbar

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAccessibleOverlay } from "@/components/accessibility/useAccessibleOverlay";
-import Link from "next/link";
+import { AppButton } from "@/components/atoms/Button";
 import Image from "next/image";
 import type { CareerJob } from "@/lib/mock-careers";
 
@@ -153,7 +153,7 @@ export default function CareersPageClient() {
                 </div>
 
                 <div className="careers-hero-actions">
-                  <Link
+                  <AppButton
                     href="https://www.linkedin.com/company/romega-solutions/jobs/"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -161,33 +161,15 @@ export default function CareersPageClient() {
                   >
                     <Image src="/images/careers/human.png" alt="" width={24} height={24} />
                     <span>Stay Connected for Future Roles</span>
-                  </Link>
-                  <button
+                  </AppButton>
+                  <AppButton
                     type="button"
                     className="careers-hero-action careers-hero-action-primary"
                     onClick={() => setIsJobsOpen(true)}
                   >
                     <Image src="/images/careers/bag-white.svg" alt="" width={24} height={24} />
                     <span>View Open Roles</span>
-                  </button>
-                </div>
-              </div>
-
-              <div className="careers-hero-media">
-                <div className="careers-hero-photo-frame">
-                  <Image
-                    src="/prompt-images/romega-talent.png"
-                    alt="Romega talent and leadership collaboration"
-                    fill
-                    preload
-                    sizes="(max-width: 767px) 100vw, 40vw"
-                    className="careers-hero-photo"
-                  />
-                </div>
-
-                <div className="careers-hero-stat-card">
-                  <strong>Candidate-first process</strong>
-                  <p>Discreet conversations, clear next steps, and real roles you can evaluate quickly.</p>
+                  </AppButton>
                 </div>
               </div>
             </div>
@@ -296,16 +278,16 @@ export default function CareersPageClient() {
           </div>
 
           <div className="careers-bottom-cta">
-            <Link href="/contact" className="careers-bottom-link">
+            <AppButton href="/contact" className="careers-bottom-link">
               Talk with Romega
-            </Link>
+            </AppButton>
           </div>
         </section>
       </main>
 
       {isJobsOpen ? (
         <div className="careers-sidebar-root" role="dialog" aria-modal="true" aria-labelledby="careers-jobs-title">
-          <button
+          <AppButton
             type="button"
             className="careers-sidebar-overlay"
             aria-label="Close current roles panel"
@@ -323,7 +305,7 @@ export default function CareersPageClient() {
                 <h2 id="careers-jobs-title">Current Roles Open</h2>
                 <p id="careers-jobs-description">Mock data for now. Review time is typically one week.</p>
               </div>
-              <button
+              <AppButton
                 ref={closeButtonRef}
                 type="button"
                 className="careers-sidebar-close"
@@ -331,7 +313,7 @@ export default function CareersPageClient() {
               >
                 <Image src="/images/careers/close.svg" alt="" width={16} height={16} />
                 <span>Close</span>
-              </button>
+              </AppButton>
             </div>
 
             <div className="careers-sidebar-content">
@@ -346,9 +328,9 @@ export default function CareersPageClient() {
                   <p className="careers-sidebar-state careers-sidebar-state-error" role="alert">
                     {jobsError}
                   </p>
-                  <button type="button" className="careers-sidebar-retry" onClick={() => void loadJobs()}>
+                  <AppButton type="button" className="careers-sidebar-retry" onClick={() => void loadJobs()}>
                     Try Again
-                  </button>
+                  </AppButton>
                 </div>
               ) : null}
 
@@ -374,9 +356,14 @@ export default function CareersPageClient() {
                           <li key={skill}>{skill}</li>
                         ))}
                       </ul>
-                      <Link href={job.applyUrl} target="_blank" rel="noopener noreferrer" className="careers-job-link">
+                      <AppButton
+                        href={job.applyUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="careers-job-link"
+                      >
                         View on LinkedIn
-                      </Link>
+                      </AppButton>
                     </article>
                   ))}
                 </div>
