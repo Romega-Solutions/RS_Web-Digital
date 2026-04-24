@@ -1,8 +1,9 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
+import { siteConfig } from "@/lib/seo";
 
-export const alt = "Romega Solutions | Talent, Brand, and Operations Support";
+export const alt = `${siteConfig.name} | Talent, Brand, and Operations Support`;
 
 export const size = {
   width: 1200,
@@ -12,7 +13,9 @@ export const size = {
 export const contentType = "image/png";
 
 export default async function OpenGraphImage() {
-  const logo = await readFile(join(process.cwd(), "public", "RS_Logo-Blue.png"), "base64");
+  // siteConfig.logo starts with /, so we remove it for join
+  const logoPath = siteConfig.logo.startsWith("/") ? siteConfig.logo.slice(1) : siteConfig.logo;
+  const logo = await readFile(join(process.cwd(), "public", logoPath), "base64");
   const logoSrc = `data:image/png;base64,${logo}`;
 
   // next/og renders standard img tags inside ImageResponse.
@@ -136,8 +139,7 @@ export default async function OpenGraphImage() {
                 maxWidth: 800,
               }}
             >
-              Romega Solutions supports scaling businesses with sharper hiring,
-              clearer brand positioning, and practical operational structure.
+              {siteConfig.description}
             </div>
           </div>
 

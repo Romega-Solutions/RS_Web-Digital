@@ -37,6 +37,11 @@ export const metadata: Metadata = {
   authors: [{ name: siteConfig.name, url: absoluteUrl("/") }],
   creator: siteConfig.name,
   publisher: siteConfig.name,
+  icons: {
+    icon: siteConfig.favicon,
+    shortcut: siteConfig.favicon,
+    apple: siteConfig.favicon,
+  },
   formatDetection: {
     email: false,
     address: false,
@@ -52,6 +57,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: absoluteUrl(siteConfig.ogImage),
+        width: 1200,
+        height: 630,
         alt: "Romega Solutions",
       },
     ],

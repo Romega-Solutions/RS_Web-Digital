@@ -10,6 +10,7 @@ export const siteConfig = {
     "Romega Solutions helps businesses build stronger teams, sharpen brand positioning, and improve operations with steady, strategic support.",
   ogImage: "/opengraph-image",
   logo: "/RS_Logo-Blue.png",
+  favicon: "/favicon.ico",
   email: "info@romega-solutions.com",
   linkedIn: "https://www.linkedin.com/company/romega-solutions/posts/?feedView=all",
   instagram: "https://www.instagram.com/romegasolutions/",
@@ -61,6 +62,11 @@ export function createMetadata({
     title,
     description,
     keywords: [...siteConfig.defaultKeywords, ...keywords],
+    icons: {
+      icon: siteConfig.favicon,
+      shortcut: siteConfig.favicon,
+      apple: siteConfig.favicon,
+    },
     alternates: {
       canonical: path,
     },
