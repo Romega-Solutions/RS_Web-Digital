@@ -103,7 +103,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="site-shell" id="top">
+    <div className="site-shell site-shell--home" id="top">
       <JsonLd id="home-structured-data" data={structuredData} />
       <SiteHeader activeItem="Home" />
 
