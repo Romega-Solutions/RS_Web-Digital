@@ -25,6 +25,7 @@ export const metadata: Metadata = createMetadata({
 
 const detailedServices = [
   {
+    id: "talent-solutions",
     title: "Talent Solutions",
     intro: "The right people change everything.",
     copy:
@@ -37,10 +38,11 @@ const detailedServices = [
       "Hiring workflow optimization",
       "Retention and team alignment strategies",
     ],
-    imageSrc: "/2.0%20Website%20Assets/Image%201%20_%20Talent%20Solutions.png",
+    imageSrc: "/2.0%20Website%20Assets/Image%201%20_%20Talent%20Solutions.webp",
     imageAlt: "Talent Solutions",
   },
   {
+    id: "brand-growth-support",
     title: "Brand & Growth Support",
     intro: "A strong brand builds trust before you speak.",
     copy:
@@ -53,10 +55,11 @@ const detailedServices = [
       "Market presence alignment",
       "Growth-focused brand insights",
     ],
-    imageSrc: "/2.0%20Website%20Assets/Image%202%20_%20Brand%20%26%20Growth%20Support.png",
+    imageSrc: "/2.0%20Website%20Assets/Image%202%20_%20Brand%20%26%20Growth%20Support.webp",
     imageAlt: "Brand and Growth Support",
   },
   {
+    id: "strategic-operations",
     title: "Strategic Operations",
     intro: "Build systems that support long-term success.",
     copy:
@@ -69,7 +72,7 @@ const detailedServices = [
       "Leadership support strategies",
       "Scalable systems for expanding teams",
     ],
-    imageSrc: "/2.0%20Website%20Assets/Image%203%20_%20Strategic%20Operations.png",
+    imageSrc: "/2.0%20Website%20Assets/Image%203%20_%20Strategic%20Operations.webp",
     imageAlt: "Strategic Operations",
   },
 ] as const;
@@ -99,7 +102,7 @@ export default function ServicesPage() {
             name: service.title,
             description: service.copy,
             serviceType: service.title,
-            url: absoluteUrl("/services"),
+            url: absoluteUrl(`/services#${service.id}`),
           },
         })),
       },
@@ -132,7 +135,7 @@ export default function ServicesPage() {
         <section className="services-hero">
           <div className="services-hero-media" aria-hidden="true">
             <Image
-              src="/2.0%20Website%20Assets/2.png"
+              src="/2.0%20Website%20Assets/2.webp"
               alt=""
               fill
               preload
@@ -175,6 +178,7 @@ export default function ServicesPage() {
 
             {detailedServices.map((service, index) => (
               <div
+                id={service.id}
                 key={service.title}
                 className={`services-detail-row ${
                   index % 2 === 1 ? "services-detail-row-reverse" : ""
@@ -206,7 +210,8 @@ export default function ServicesPage() {
             <div className="services-detail-cta-wrap">
               <ExploreServicesButton
                 href="#services-overview"
-                className="services-detail-cta"
+                variant="primary"
+                size="md"
                 label="Discover How We Work"
               />
             </div>
