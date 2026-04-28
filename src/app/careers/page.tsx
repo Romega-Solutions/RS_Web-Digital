@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { MainTemplate } from "@/components/templates/MainTemplate";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
 import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
@@ -79,11 +80,12 @@ export default function CareersPage() {
   };
 
   return (
-    <div className="site-shell" id="top">
-      <JsonLd id="careers-structured-data" data={structuredData} />
-      <SiteHeader activeItem="Careers" />
+    <MainTemplate
+      jsonLd={<JsonLd id="careers-structured-data" data={structuredData} />}
+      header={<SiteHeader activeItem="Careers" />}
+      footer={<SiteFooter />}
+    >
       <CareersPageClient />
-      <SiteFooter />
-    </div>
+    </MainTemplate>
   );
 }

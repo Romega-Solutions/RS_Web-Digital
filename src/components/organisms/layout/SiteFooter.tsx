@@ -1,30 +1,33 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { siteConfig } from "@/lib/seo";
+import styles from "./SiteFooter.module.css";
 
 export function SiteFooter() {
   return (
-    <footer className="site-footer">
-      <div className="site-footer-inner">
-        <div className="site-footer-brand">
-          <div className="site-footer-logo-wrap">
+    <footer className={styles.root}>
+      <div className={styles.inner}>
+        <div className={styles.brand}>
+          <div className={styles.logoWrap}>
             <Image
               src="/RS_HORIZONTAL.png"
               alt="Romega Solutions"
               width={3732}
               height={2546}
               sizes="(max-width: 767px) 11.5rem, (max-width: 1023px) 12.5rem, 13.5rem"
-              className="site-footer-logo-image"
+              className={styles.logoImage}
             />
           </div>
-          <p className="site-footer-tagline">
+          <p className={styles.tagline}>
             We provide talent solutions, brand support, and strategic guidance
             designed for sustainable growth in a global landscape.
           </p>
         </div>
 
-        <div className="site-footer-main-right">
-          <nav className="site-footer-links" aria-label="Footer navigation">
+        <div className={styles.mainRight}>
+          <nav className={styles.links} aria-label="Footer navigation">
             <Link href="/">Home</Link>
             <Link href="/about">About</Link>
             <Link href="/services">Services</Link>
@@ -33,64 +36,64 @@ export function SiteFooter() {
             <Link href="/talent">Talents</Link>
           </nav>
 
-          <div className="site-footer-connect">
+          <div className={styles.connect}>
             <h3>Connect With Us</h3>
-            <div className="site-footer-socials">
+            <div className={styles.socials}>
               <a
                 href={siteConfig.linkedIn}
-                className="site-footer-social-link"
+                className={styles.socialLink}
                 aria-label="LinkedIn"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <Image
-                  src="/2.0%20Website%20Assets/20.png"
+                  src="/2.0%20Website%20Assets/Icon%2006%20_%20Global%20Perspective.webp"
                   alt=""
                   width={44}
                   height={44}
                   sizes="(max-width: 767px) 40px, 44px"
-                  className="site-footer-social-icon"
+                  className={styles.socialIcon}
                 />
               </a>
               <a
                 href={siteConfig.facebook}
-                className="site-footer-social-link"
+                className={styles.socialLink}
                 aria-label="Facebook"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <Image
-                  src="/2.0%20Website%20Assets/18.png"
+                  src="/2.0%20Website%20Assets/Icon%2002%20_%20Stronger%20Brand%20Foundations.webp"
                   alt=""
                   width={44}
                   height={44}
                   sizes="(max-width: 767px) 40px, 44px"
-                  className="site-footer-social-icon"
+                  className={styles.socialIcon}
                 />
               </a>
               <a
                 href={siteConfig.instagram}
-                className="site-footer-social-link"
+                className={styles.socialLink}
                 aria-label="Instagram"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <Image
-                  src="/2.0%20Website%20Assets/19.png"
+                  src="/2.0%20Website%20Assets/Icon%2005%20_%20Long-Term%20Confidence.webp"
                   alt=""
                   width={44}
                   height={44}
                   sizes="(max-width: 767px) 40px, 44px"
-                  className="site-footer-social-icon"
+                  className={styles.socialIcon}
                 />
               </a>
             </div>
 
-            <p className="site-footer-contact">
+            <p className={styles.contact}>
               <svg
                 aria-hidden="true"
                 viewBox="0 0 24 24"
-                className="site-footer-contact-icon"
+                className={styles.contactIcon}
                 focusable="false"
               >
                 <path
@@ -112,11 +115,11 @@ export function SiteFooter() {
               </svg>
               <a href="mailto:info@romega-solutions.com">info@romega-solutions.com</a>
             </p>
-            <p className="site-footer-contact">
+            <p className={styles.contact}>
               <svg
                 aria-hidden="true"
                 viewBox="0 0 24 24"
-                className="site-footer-contact-icon"
+                className={styles.contactIcon}
                 focusable="false"
               >
                 <path
@@ -134,19 +137,18 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <a href="#top" className="site-footer-backtop">
-          <span className="site-footer-backtop-arrow">↑</span>
+        <a href="#top" className={styles.backtop}>
+          <span className={styles.backtopArrow}>↑</span>
           <span>back to top</span>
         </a>
-
       </div>
 
-      <div className="site-footer-legal">
+      <div className={styles.legal}>
         <p>
           © 2026 Romega Solutions. All rights reserved.
-          <span className="site-footer-legal-separator">|</span>
+          <span className={styles.legalSeparator}>|</span>
           <Link href="/privacy">Privacy Policy</Link>
-          <span className="site-footer-legal-separator">|</span>
+          <span className={styles.legalSeparator}>|</span>
           <Link href="/terms">Terms and Conditions</Link>
         </p>
       </div>

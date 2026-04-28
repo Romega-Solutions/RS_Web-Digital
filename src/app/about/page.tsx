@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { MainTemplate } from "@/components/templates/MainTemplate";
 import { AboutHero } from "@/components/organisms/about/AboutHero";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { AboutExpertsSection } from "@/components/organisms/about/AboutExpertsSection";
@@ -65,29 +66,19 @@ export default function AboutPage() {
   };
 
   return (
-    <div className="site-shell" id="top">
-      <JsonLd id="about-structured-data" data={structuredData} />
-      <SiteHeader activeItem="About" />
-
-      <main id="main-content" tabIndex={-1}>
-        <AboutHero />
-
-        <AboutMissionSection />
-
-        <AboutVisionSection />
-
-        <AboutValuesSection />
-
-        <AboutPartnersSection />
-
-        <AboutExpertsSection />
-
-        <AboutGrowthSection />
-
-        <ConsultationBanner />
-      </main>
-
-      <SiteFooter />
-    </div>
+    <MainTemplate
+      jsonLd={<JsonLd id="about-structured-data" data={structuredData} />}
+      header={<SiteHeader activeItem="About" />}
+      footer={<SiteFooter />}
+    >
+      <AboutHero />
+      <AboutMissionSection />
+      <AboutVisionSection />
+      <AboutValuesSection />
+      <AboutPartnersSection />
+      <AboutExpertsSection />
+      <AboutGrowthSection />
+      <ConsultationBanner />
+    </MainTemplate>
   );
 }

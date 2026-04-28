@@ -38,3 +38,4 @@
 .bottom {
   @apply mx-auto mt-10 flex w-full max-w-6xl justify-center;
 }
+@reference "../../../app/globals.css";

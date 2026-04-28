@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { MainTemplate } from "@/components/templates/MainTemplate";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
 import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
@@ -79,15 +80,14 @@ export default function TalentPage() {
   };
 
   return (
-    <div className="site-shell" id="top">
-      <JsonLd id="talent-structured-data" data={structuredData} />
-      <SiteHeader activeItem="Careers & Talents" />
-      <main id="main-content" tabIndex={-1}>
-        <TalentPageClient />
-        <TalentPool talents={talentProfiles} />
-        <TalentCTA />
-      </main>
-      <SiteFooter />
-    </div>
+    <MainTemplate
+      jsonLd={<JsonLd id="talent-structured-data" data={structuredData} />}
+      header={<SiteHeader activeItem="Careers & Talents" />}
+      footer={<SiteFooter />}
+    >
+      <TalentPageClient />
+      <TalentPool talents={talentProfiles} />
+      <TalentCTA />
+    </MainTemplate>
   );
 }

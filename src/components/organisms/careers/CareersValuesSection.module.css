@@ -49,3 +49,4 @@
   @apply mt-3 text-base leading-relaxed text-black/75;
   font-family: var(--font-body);
 }
+@reference "../../../app/globals.css";

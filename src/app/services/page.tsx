@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { MainTemplate } from "@/components/templates/MainTemplate";
 import { ServicesHero } from "@/components/organisms/services/ServicesHero";
 import { ServicesDetailSection } from "@/components/organisms/services/ServicesDetailSection";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -107,25 +108,22 @@ export default function ServicesPage() {
   };
 
   return (
-    <div className="site-shell" id="top">
-      <JsonLd id="services-structured-data" data={structuredData} />
-      <SiteHeader activeItem="Services" />
+    <MainTemplate
+      jsonLd={<JsonLd id="services-structured-data" data={structuredData} />}
+      header={<SiteHeader activeItem="Services" />}
+      footer={<SiteFooter />}
+    >
+      <ServicesHero />
 
-      <main id="main-content" tabIndex={-1}>
-        <ServicesHero />
+      <div id="services-overview">
+        <ServiceStrip />
+      </div>
 
-        <div id="services-overview">
-          <ServiceStrip />
-        </div>
+      <ServicesDetailSection services={detailedServices} />
 
-        <ServicesDetailSection services={detailedServices} />
-
-        <div id="consultation">
-          <ConsultationBanner />
-        </div>
-      </main>
-
-      <SiteFooter />
-    </div>
+      <div id="consultation">
+        <ConsultationBanner />
+      </div>
+    </MainTemplate>
   );
 }

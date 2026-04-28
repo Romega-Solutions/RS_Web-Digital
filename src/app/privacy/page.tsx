@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { LegalTemplate } from "@/components/templates/LegalTemplate";
 import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
 import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
 import { LegalPageCard } from "@/components/organisms/shared/LegalPageCard";
@@ -15,15 +16,14 @@ export const metadata: Metadata = createMetadata({
 
 export default function PrivacyPage() {
   return (
-    <div className="site-shell" id="top">
-      <SiteHeader />
-      <main id="main-content" tabIndex={-1} className="legal-page-shell">
-        <h1 className="sr-only">Privacy Policy</h1>
-        <LegalPageCard>
-          <PrivacyPolicyContent />
-        </LegalPageCard>
-      </main>
-      <SiteFooter />
-    </div>
+    <LegalTemplate
+      header={<SiteHeader />}
+      footer={<SiteFooter />}
+      title="Privacy Policy"
+    >
+      <LegalPageCard>
+        <PrivacyPolicyContent />
+      </LegalPageCard>
+    </LegalTemplate>
   );
 }

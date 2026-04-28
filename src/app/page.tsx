@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
+import { HomeTemplate } from "@/components/templates/HomeTemplate";
 import { GrowthSection } from "@/components/organisms/home/GrowthSection";
 import { TrustSection } from "@/components/organisms/home/TrustSection";
 import { ApproachSection } from "@/components/organisms/home/ApproachSection";
 import { ServicesSpotlight } from "@/components/organisms/home/ServicesSpotlight";
-import { SocialConnect } from "@/components/organisms/home/SocialConnect";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { HomeHero } from "@/components/organisms/home/HomeHero";
 import { ServiceStrip } from "@/components/organisms/home/ServiceStrip";
 import { TestimonialSection } from "@/components/organisms/home/TestimonialSection";
+import { SocialConnect } from "@/components/organisms/home/SocialConnect";
 import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
 import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
 import { createMetadata, createOrganizationSchema, createWebsiteSchema, absoluteUrl, siteConfig } from "@/lib/seo";
@@ -68,29 +69,18 @@ export default function Home() {
   };
 
   return (
-    <div className="site-shell site-shell--home" id="top">
-      <JsonLd id="home-structured-data" data={structuredData} />
-      <SiteHeader activeItem="Home" />
-
-      <main id="main-content" tabIndex={-1}>
-        <HomeHero />
-
-        <ServiceStrip />
-
-        <GrowthSection />
-
-        <TrustSection />
-
-        <ApproachSection />
-
-        <ServicesSpotlight />
-
-        <TestimonialSection />
-
-        <SocialConnect />
-
-        <SiteFooter />
-      </main>
-    </div>
+    <HomeTemplate
+      jsonLd={<JsonLd id="home-structured-data" data={structuredData} />}
+      header={<SiteHeader activeItem="Home" />}
+      hero={<HomeHero />}
+      serviceStrip={<ServiceStrip />}
+      growth={<GrowthSection />}
+      trust={<TrustSection />}
+      approach={<ApproachSection />}
+      spotlight={<ServicesSpotlight />}
+      testimonials={<TestimonialSection />}
+      social={<SocialConnect />}
+      footer={<SiteFooter />}
+    />
   );
 }
