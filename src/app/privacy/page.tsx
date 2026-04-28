@@ -18,6 +18,7 @@ export default function PrivacyPage() {
     <div className="site-shell" id="top">
       <SiteHeader />
       <main id="main-content" tabIndex={-1} className="legal-page-shell">
+        <h1 className="sr-only">Privacy Policy</h1>
         <LegalPageCard>
           <PrivacyPolicyContent />
         </LegalPageCard>

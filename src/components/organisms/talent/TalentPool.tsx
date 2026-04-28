@@ -156,6 +156,9 @@ export function TalentPool({ talents }: TalentPoolProps) {
 
   return (
     <section className="talent-pool" aria-labelledby="talent-pool-heading">
+      <h2 id="talent-pool-heading" className="sr-only">
+        Talent directory and filters
+      </h2>
       <div className="talent-pool__layout">
         <div className="talent-pool__mobile-filter-bar">
           <AppButton
@@ -323,7 +326,7 @@ export function TalentPool({ talents }: TalentPoolProps) {
                 aria-label="Search talent"
               />
             </div>
-            <span id="talent-pool-heading" className="talent-pool__count-badge" role="status" aria-live="polite">
+            <span className="talent-pool__count-badge" role="status" aria-live="polite">
               Available talents: {filteredTalents.length}
             </span>
           </div>

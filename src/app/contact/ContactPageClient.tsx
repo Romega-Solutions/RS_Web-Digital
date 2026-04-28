@@ -2,7 +2,8 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { FormInput, FormCheckbox } from "@/components/atoms/Form";
+import { AppButton } from "@/components/atoms/Button";
 import { siteConfig } from "@/lib/seo";
 
 type FormState = {
@@ -252,69 +253,49 @@ export default function ContactPageClient() {
           <div className="contact-page-form-wrap">
             <form className="contact-form" onSubmit={handleSubmit} noValidate>
               <div className="contact-form-grid">
-                <label className="contact-field">
-                  <span>First Name*</span>
-                  <input
-                    type="text"
-                    value={form.firstName}
-                    onChange={(event) => updateField("firstName", event.target.value)}
-                    required
-                    autoComplete="given-name"
-                    aria-invalid={errors.firstName ? "true" : "false"}
-                    aria-describedby={errors.firstName ? "contact-first-name-error" : undefined}
-                  />
-                  {errors.firstName ? (
-                    <span id="contact-first-name-error" className="contact-field-error">
-                      {errors.firstName}
-                    </span>
-                  ) : null}
-                </label>
+                <FormInput
+                  label="First Name*"
+                  type="text"
+                  value={form.firstName}
+                  onChange={(event) => updateField("firstName", event.target.value)}
+                  error={errors.firstName}
+                  required
+                  autoComplete="given-name"
+                />
 
-                <label className="contact-field">
-                  <span>Last Name*</span>
-                  <input
-                    type="text"
-                    value={form.lastName}
-                    onChange={(event) => updateField("lastName", event.target.value)}
-                    required
-                    autoComplete="family-name"
-                    aria-invalid={errors.lastName ? "true" : "false"}
-                    aria-describedby={errors.lastName ? "contact-last-name-error" : undefined}
-                  />
-                  {errors.lastName ? (
-                    <span id="contact-last-name-error" className="contact-field-error">
-                      {errors.lastName}
-                    </span>
-                  ) : null}
-                </label>
+                <FormInput
+                  label="Last Name*"
+                  type="text"
+                  value={form.lastName}
+                  onChange={(event) => updateField("lastName", event.target.value)}
+                  error={errors.lastName}
+                  required
+                  autoComplete="family-name"
+                />
               </div>
 
               <div className="contact-form-grid">
-                <label className="contact-field">
-                  <span>Email address*</span>
-                  <input
-                    type="email"
-                    value={form.email}
-                    onChange={(event) => updateField("email", event.target.value)}
-                    required
-                    autoComplete="email"
-                    aria-invalid={errors.email ? "true" : "false"}
-                    aria-describedby={errors.email ? "contact-email-error" : undefined}
-                  />
-                  {errors.email ? (
-                    <span id="contact-email-error" className="contact-field-error">
-                      {errors.email}
-                    </span>
-                  ) : null}
-                </label>
+                <FormInput
+                  label="Email address*"
+                  type="email"
+                  value={form.email}
+                  onChange={(event) => updateField("email", event.target.value)}
+                  error={errors.email}
+                  required
+                  autoComplete="email"
+                />
 
-                <label className="contact-field">
-                  <span>Select Subject*</span>
+                <div className="form-field">
+                  <label className="form-label" htmlFor="contact-subject">
+                    Select Subject*
+                  </label>
                   <select
+                    id="contact-subject"
+                    className={`form-input ${errors.subject ? "form-input--error" : ""}`}
                     value={form.subject}
                     onChange={(event) => updateField("subject", event.target.value)}
                     required
-                    aria-invalid={errors.subject ? "true" : "false"}
+                    aria-invalid={!!errors.subject}
                     aria-describedby={errors.subject ? "contact-subject-error" : undefined}
                   >
                     <option value="">Select a subject</option>
@@ -324,97 +305,77 @@ export default function ContactPageClient() {
                       </option>
                     ))}
                   </select>
-                  {errors.subject ? (
-                    <span id="contact-subject-error" className="contact-field-error">
+                  {errors.subject && (
+                    <span id="contact-subject-error" className="form-error">
                       {errors.subject}
                     </span>
-                  ) : null}
-                </label>
+                  )}
+                </div>
               </div>
 
               <div className="contact-form-grid">
-                <label className="contact-field">
-                  <span>Company Name (Optional)</span>
-                  <input
-                    type="text"
-                    value={form.company}
-                    onChange={(event) => updateField("company", event.target.value)}
-                    autoComplete="organization"
-                  />
-                </label>
+                <FormInput
+                  label="Company Name (Optional)"
+                  type="text"
+                  value={form.company}
+                  onChange={(event) => updateField("company", event.target.value)}
+                  autoComplete="organization"
+                />
 
-                <label className="contact-field">
-                  <span>Contact Number*</span>
-                  <input
-                    type="tel"
-                    value={form.phone}
-                    onChange={(event) => updateField("phone", event.target.value)}
-                    required
-                    autoComplete="tel"
-                    aria-invalid={errors.phone ? "true" : "false"}
-                    aria-describedby={errors.phone ? "contact-phone-error" : undefined}
-                  />
-                  {errors.phone ? (
-                    <span id="contact-phone-error" className="contact-field-error">
-                      {errors.phone}
-                    </span>
-                  ) : null}
-                </label>
+                <FormInput
+                  label="Contact Number*"
+                  type="tel"
+                  value={form.phone}
+                  onChange={(event) => updateField("phone", event.target.value)}
+                  error={errors.phone}
+                  required
+                  autoComplete="tel"
+                />
               </div>
 
-              <label className="contact-field contact-honeypot" aria-hidden="true">
-                <span>Leave this field empty</span>
+              {/* Honeypot */}
+              <div className="sr-only">
+                <label htmlFor="contact-botfield">Leave this field empty</label>
                 <input
+                  id="contact-botfield"
                   tabIndex={-1}
                   autoComplete="off"
                   type="text"
                   value={form.botfield}
                   onChange={(event) => updateField("botfield", event.target.value)}
                 />
-              </label>
+              </div>
 
-              <label className="contact-field">
-                <span>Message*</span>
+              <div className="form-field">
+                <label className="form-label" htmlFor="contact-message">
+                  Message*
+                </label>
                 <textarea
+                  id="contact-message"
+                  className={`form-input ${errors.message ? "form-input--error" : ""}`}
                   value={form.message}
                   onChange={(event) => updateField("message", event.target.value)}
                   required
                   rows={4}
-                  aria-invalid={errors.message ? "true" : "false"}
+                  aria-invalid={!!errors.message}
                   aria-describedby={errors.message ? "contact-message-error" : undefined}
                 />
-                {errors.message ? (
-                  <span id="contact-message-error" className="contact-field-error">
+                {errors.message && (
+                  <span id="contact-message-error" className="form-error">
                     {errors.message}
                   </span>
-                ) : null}
-              </label>
-
-              <div className="contact-consent-wrap">
-                <label className="contact-consent-label">
-                  <input
-                    type="checkbox"
-                    checked={form.privacyConsent}
-                    onChange={(event) => updateField("privacyConsent", event.target.checked)}
-                    required
-                    aria-invalid={errors.privacyConsent ? "true" : "false"}
-                    aria-describedby={errors.privacyConsent ? "contact-privacy-error" : undefined}
-                  />
-                  <span className="contact-consent-text">
-                    I agree to the{" "}
-                    <Link href="/privacy" target="_blank" className="contact-link">
-                      Privacy Policy
-                    </Link>{" "}
-                    and consent to the processing of my personal data for the purpose of handling this
-                    inquiry.*
-                  </span>
-                </label>
-                {errors.privacyConsent ? (
-                  <span id="contact-privacy-error" className="contact-field-error">
-                    {errors.privacyConsent}
-                  </span>
-                ) : null}
+                )}
               </div>
+
+              <FormCheckbox
+                label="I agree to the Privacy Policy and consent to the processing of my personal data for the purpose of handling this inquiry.*"
+                checked={form.privacyConsent}
+                onChange={(event) => updateField("privacyConsent", event.target.checked)}
+                required
+              />
+              {errors.privacyConsent && (
+                <span className="form-error -mt-3">{errors.privacyConsent}</span>
+              )}
 
               {status.type !== "idle" ? (
                 <p
@@ -427,9 +388,15 @@ export default function ContactPageClient() {
                 </p>
               ) : null}
 
-              <button type="submit" className="contact-submit" disabled={isSubmitting}>
+              <AppButton 
+                type="submit" 
+                variant="primary" 
+                size="lg" 
+                disabled={isSubmitting}
+                className="w-full md:w-fit"
+              >
                 {isSubmitting ? "Sending..." : "Submit"}
-              </button>
+              </AppButton>
             </form>
           </div>
         </div>

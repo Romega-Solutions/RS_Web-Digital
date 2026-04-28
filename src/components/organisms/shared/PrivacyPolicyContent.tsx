@@ -30,9 +30,9 @@ export function PrivacyPolicyContent({
         </p>
       </div>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
+      <h2 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
         A. Collection of Personal Information
-      </h4>
+      </h2>
       <p className="text-gray-700 mb-3">
         We collect personal and professional information voluntarily provided by
         visitors and applicants through website forms, recruitment workflows, and
@@ -46,9 +46,9 @@ export function PrivacyPolicyContent({
         <li>Inquiry details and message content</li>
       </ul>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
+      <h2 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
         B. Purpose of Processing
-      </h4>
+      </h2>
       <p className="text-gray-700 mb-3">
         We process information only for legitimate business and professional
         purposes.
@@ -64,9 +64,9 @@ export function PrivacyPolicyContent({
         </li>
       </ul>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
+      <h2 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
         C. Cookies and Tracking
-      </h4>
+      </h2>
       <p className="text-gray-700 mb-3">
         Our website uses minimal cookies to ensure technical functionality and
         improve user experience.
@@ -91,9 +91,9 @@ export function PrivacyPolicyContent({
         some features of the site may not function correctly as a result.
       </p>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
+      <h2 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
         D. Retention of Data
-      </h4>
+      </h2>
       <p className="text-gray-700 mb-3">
         We retain data only for a reasonable period necessary for the purposes
         outlined above, or as required by legal and operational obligations.
@@ -104,9 +104,9 @@ export function PrivacyPolicyContent({
         <li>Data is reviewed and minimized periodically</li>
       </ul>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
+      <h2 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
         E. Sharing and Disclosure of Information
-      </h4>
+      </h2>
       <p className="text-gray-700 mb-3">
         We disclose only what is necessary and relevant for service delivery and
         evaluation.
@@ -120,9 +120,9 @@ export function PrivacyPolicyContent({
         <li>Lawful disclosures required by legal or regulatory obligations</li>
       </ul>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
+      <h2 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
         F. Data Subject Rights
-      </h4>
+      </h2>
       <p className="text-gray-700 mb-3">
         In line with GDPR and other applicable data privacy regulations, you may
         request to:
@@ -136,27 +136,27 @@ export function PrivacyPolicyContent({
         <li>Object to processing or request data portability</li>
       </ul>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
+      <h2 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
         G. Voluntary Consent and Transparency
-      </h4>
+      </h2>
       <p className="text-gray-700 mb-3">
         Consent must be informed, specific, and voluntary. By using our contact
         forms or submitting applications, you acknowledge and agree to the terms
         outlined in this policy.
       </p>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
+      <h2 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
         Public Data Minimization Standards
-      </h4>
+      </h2>
       <ul className="list-disc pl-6 text-gray-700 mb-6">
         <li>Allowed public fields focus on professional qualifications only</li>
         <li>Direct personal contact details are excluded from public pages</li>
         <li>Sensitive identifiers and protected attributes are never published</li>
       </ul>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
+      <h2 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
         Contact and Requests
-      </h4>
+      </h2>
       <p className="text-gray-700 mb-2">
         For access, correction, withdrawal, deletion, and takedown requests,
         contact:

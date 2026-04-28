@@ -3,9 +3,9 @@ export function TermsAndConditionsContent() {
     <div className="prose prose-sm max-w-none">
       <p className="text-sm text-gray-500 mb-6">Last Updated: August 27, 2025</p>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
+      <h2 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
         AGREEMENT TO TERMS
-      </h4>
+      </h2>
       <p className="text-gray-700 mb-4">
         These Terms &amp; Conditions (&ldquo;Terms&rdquo;) are a legally binding
         agreement between you (&ldquo;you&rdquo; or &ldquo;user&rdquo;), whether
@@ -27,9 +27,9 @@ export function TermsAndConditionsContent() {
         changes.
       </p>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
+      <h2 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
         USE OF THE SITE
-      </h4>
+      </h2>
       <ul className="list-disc pl-6 text-gray-700 mb-6">
         <li className="mb-2">You must be at least 18 years old to use this Site.</li>
         <li className="mb-2">
@@ -42,9 +42,9 @@ export function TermsAndConditionsContent() {
         </li>
       </ul>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
+      <h2 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
         INFORMATION YOU PROVIDE
-      </h4>
+      </h2>
       <p className="text-gray-700 mb-3">
         By submitting information (such as a resume, job application, or business
         inquiry) you represent and warrant that:
@@ -62,9 +62,9 @@ export function TermsAndConditionsContent() {
         submitted by users.
       </p>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
+      <h2 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
         CLIENT SERVICES
-      </h4>
+      </h2>
       <p className="text-gray-700 mb-6">
         Clients engaging Romega Solutions for staffing, recruiting, or consulting
         services may be required to enter into separate agreements outlining scope,
@@ -72,9 +72,9 @@ export function TermsAndConditionsContent() {
         the event of conflict.
       </p>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
+      <h2 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
         INTELLECTUAL PROPERTY
-      </h4>
+      </h2>
       <p className="text-gray-700 mb-6">
         All content on the Site, including text, graphics, logos, and software, is
         the property of Romega Solutions or its licensors and is protected by
@@ -82,16 +82,16 @@ export function TermsAndConditionsContent() {
         any content without prior written permission.
       </p>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
+      <h2 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
         THIRD-PARTY LINKS & SERVICES
-      </h4>
+      </h2>
       <p className="text-gray-700 mb-6">
         The Site may contain links to third-party websites. We are not responsible
         for the content, policies, or practices of any third parties. Accessing
         these sites is at your own risk.
       </p>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">DISCLAIMERS</h4>
+      <h2 className="text-lg font-semibold text-gray-900 mt-6 mb-3">DISCLAIMERS</h2>
       <ul className="list-disc pl-6 text-gray-700 mb-6">
         <li className="mb-2">
           The Site is provided &ldquo;as is&rdquo; and &ldquo;as available.&rdquo; We
@@ -108,9 +108,9 @@ export function TermsAndConditionsContent() {
         </li>
       </ul>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
+      <h2 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
         INDEMNIFICATION
-      </h4>
+      </h2>
       <p className="text-gray-700 mb-6">
         You agree to defend, indemnify, and hold harmless Romega Solutions, its
         affiliates, employees, and partners from any claims, damages, or expenses
@@ -118,9 +118,9 @@ export function TermsAndConditionsContent() {
         these Terms.
       </p>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
+      <h2 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
         GOVERNING LAW & DISPUTE RESOLUTION
-      </h4>
+      </h2>
       <p className="text-gray-700 mb-4">
         These Terms are governed by the laws of the State of California, without
         regard to conflict of laws principles.
@@ -131,14 +131,14 @@ export function TermsAndConditionsContent() {
         California, except where prohibited by law.
       </p>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">TERMINATION</h4>
+      <h2 className="text-lg font-semibold text-gray-900 mt-6 mb-3">TERMINATION</h2>
       <p className="text-gray-700 mb-6">
         We reserve the right to suspend or terminate your access to the Site at any
         time, without notice, for conduct that violates these Terms or is otherwise
         harmful to our business interests.
       </p>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">CONTACT US</h4>
+      <h2 className="text-lg font-semibold text-gray-900 mt-6 mb-3">CONTACT US</h2>
       <p className="text-gray-700 mb-2">
         For questions or concerns regarding these Terms, please contact us:
       </p>

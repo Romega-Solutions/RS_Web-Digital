@@ -26,7 +26,7 @@ export function ConsultationBanner() {
           that help you scale with confidence.
         </p>
 
-        <AppButton href="#top" variant="primary" size="lg">
+        <AppButton href="#top" variant="primary" size="lg" className="services-consultation-cta">
           Schedule a Consultation
         </AppButton>
       </div>

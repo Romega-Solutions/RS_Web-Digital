@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { ExploreServicesButton } from "@/components/atoms/Button";
+import { ServiceCard } from "@/components/molecules/Card/ServiceCard";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { HomeHero } from "@/components/organisms/home/HomeHero";
 import { ServiceStrip } from "@/components/organisms/home/ServiceStrip";
+import { TestimonialSection } from "@/components/organisms/home/TestimonialSection";
 import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
 import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
 import { createMetadata, createOrganizationSchema, createWebsiteSchema, absoluteUrl, siteConfig } from "@/lib/seo";
@@ -230,38 +232,26 @@ export default function Home() {
             </p>
 
             <div className="services-spotlight-grid">
-              <article className="services-spotlight-card services-card-talent">
-                <Image
-                  src="/2.0%20Website%20Assets/Image%201%20_%20Talent%20Solutions.webp"
-                  alt="Talent Solutions"
-                  width={2430}
-                  height={3038}
-                  sizes="(max-width: 767px) 100vw, 33vw"
-                  className="services-spotlight-image"
-                />
-              </article>
+              <ServiceCard
+                title="Talent Solutions"
+                imageSrc="/2.0%20Website%20Assets/Image%201%20_%20Talent%20Solutions.webp"
+                imageAlt="Talent Solutions"
+                className="services-card-talent"
+              />
 
-              <article className="services-spotlight-card services-card-brand">
-                <Image
-                  src="/2.0%20Website%20Assets/Image%202%20_%20Brand%20%26%20Growth%20Support.webp"
-                  alt="Brand & Growth Support"
-                  width={2430}
-                  height={3038}
-                  sizes="(max-width: 767px) 100vw, 33vw"
-                  className="services-spotlight-image"
-                />
-              </article>
+              <ServiceCard
+                title="Brand & Growth Support"
+                imageSrc="/2.0%20Website%20Assets/Image%202%20_%20Brand%20%26%20Growth%20Support.webp"
+                imageAlt="Brand & Growth Support"
+                className="services-card-brand"
+              />
 
-              <article className="services-spotlight-card services-card-ops">
-                <Image
-                  src="/2.0%20Website%20Assets/Image%203%20_%20Strategic%20Operations.webp"
-                  alt="Strategic Operations"
-                  width={2430}
-                  height={3038}
-                  sizes="(max-width: 767px) 100vw, 33vw"
-                  className="services-spotlight-image"
-                />
-              </article>
+              <ServiceCard
+                title="Strategic Operations"
+                imageSrc="/2.0%20Website%20Assets/Image%203%20_%20Strategic%20Operations.webp"
+                imageAlt="Strategic Operations"
+                className="services-card-ops"
+              />
             </div>
 
             <ExploreServicesButton
@@ -272,34 +262,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* <section className="testimonial-section">
-          <div className="testimonial-backdrop" aria-hidden="true" />
-          <div className="testimonial-overlay" aria-hidden="true" />
-
-          <button className="testimonial-arrow testimonial-arrow-left" aria-label="Previous testimonial">
-            &lt;
-          </button>
-          <button className="testimonial-arrow testimonial-arrow-right" aria-label="Next testimonial">
-            &gt;
-          </button>
-
-          <div className="testimonial-content">
-            <blockquote className="testimonial-quote">
-              &ldquo;Romega placed three VP-level executives in record time, helping
-              us avoid months of lost revenue&rdquo;
-            </blockquote>
-            <p className="testimonial-author">Martin Reyes, CEO</p>
-
-            <div className="testimonial-dots" aria-hidden="true">
-              <span className="testimonial-dot testimonial-dot-active" />
-              <span className="testimonial-dot" />
-              <span className="testimonial-dot" />
-              <span className="testimonial-dot" />
-              <span className="testimonial-dot" />
-            </div>
-          </div>
-        </section> */}
-
+        <TestimonialSection />
         <section className="social-connect">
           <div className="social-connect-inner">
             <div className="social-connect-copy">

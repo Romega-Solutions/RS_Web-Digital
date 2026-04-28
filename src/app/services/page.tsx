@@ -172,9 +172,9 @@ export default function ServicesPage() {
           aria-labelledby="services-detail-title"
         >
           <div className="services-detail-inner">
-            <h1 id="services-detail-title" className="sr-only">
+            <h2 id="services-detail-title" className="sr-only">
               Service details
-            </h1>
+            </h2>
 
             {detailedServices.map((service, index) => (
               <div
