@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useAccessibleOverlay } from "@/components/accessibility/useAccessibleOverlay";
 import { AppButton } from "@/components/atoms/Button";
 import Image from "next/image";
@@ -81,7 +81,7 @@ export default function CareersPageClient() {
     [],
   );
 
-  async function loadJobs() {
+  const loadJobs = useCallback(async () => {
     setJobsState("loading");
     setJobsError("");
 
@@ -103,11 +103,18 @@ export default function CareersPageClient() {
       setJobsState("error");
       setJobsError(error instanceof Error ? error.message : "Unable to load current opportunities.");
     }
-  }
+  }, []);
 
   const handleCloseJobs = useCallback(() => {
     setIsJobsOpen(false);
   }, []);
+
+  const handleOpenJobs = useCallback(() => {
+    setIsJobsOpen(true);
+    if (jobsState === "idle") {
+      void loadJobs();
+    }
+  }, [jobsState, loadJobs]);
 
   useAccessibleOverlay({
     isOpen: isJobsOpen,
@@ -115,13 +122,6 @@ export default function CareersPageClient() {
     initialFocusRef: closeButtonRef,
     onClose: handleCloseJobs,
   });
-
-  useEffect(() => {
-    if (!isJobsOpen || jobsState !== "idle") {
-      return;
-    }
-    void loadJobs();
-  }, [isJobsOpen, jobsState]);
 
   return (
     <>
@@ -165,7 +165,7 @@ export default function CareersPageClient() {
                   <AppButton
                     type="button"
                     className="careers-hero-action careers-hero-action-primary"
-                    onClick={() => setIsJobsOpen(true)}
+                    onClick={handleOpenJobs}
                   >
                     <Image src="/images/careers/bag-white.svg" alt="" width={24} height={24} />
                     <span>View Open Roles</span>
