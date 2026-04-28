@@ -103,7 +103,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="site-shell" id="top">
+    <div className="site-shell site-shell--home" id="top">
       <JsonLd id="home-structured-data" data={structuredData} />
       <SiteHeader activeItem="Home" />
 
@@ -149,7 +149,7 @@ export default function Home() {
             <div className="growth-banner-overlay" aria-hidden="true" />
             <div className="growth-banner-content">
               <h3 className="growth-banner-title">Let&apos;s Build What&apos;s Next</h3>
-              <ExploreServicesButton className="growth-banner-cta" />
+              <ExploreServicesButton variant="primary" size="lg" />
             </div>
           </div>
         </section>
@@ -232,7 +232,7 @@ export default function Home() {
             <div className="services-spotlight-grid">
               <article className="services-spotlight-card services-card-talent">
                 <Image
-                  src="/2.0%20Website%20Assets/Image%201%20_%20Talent%20Solutions.png"
+                  src="/2.0%20Website%20Assets/Image%201%20_%20Talent%20Solutions.webp"
                   alt="Talent Solutions"
                   width={2430}
                   height={3038}
@@ -243,7 +243,7 @@ export default function Home() {
 
               <article className="services-spotlight-card services-card-brand">
                 <Image
-                  src="/2.0%20Website%20Assets/Image%202%20_%20Brand%20%26%20Growth%20Support.png"
+                  src="/2.0%20Website%20Assets/Image%202%20_%20Brand%20%26%20Growth%20Support.webp"
                   alt="Brand & Growth Support"
                   width={2430}
                   height={3038}
@@ -254,7 +254,7 @@ export default function Home() {
 
               <article className="services-spotlight-card services-card-ops">
                 <Image
-                  src="/2.0%20Website%20Assets/Image%203%20_%20Strategic%20Operations.png"
+                  src="/2.0%20Website%20Assets/Image%203%20_%20Strategic%20Operations.webp"
                   alt="Strategic Operations"
                   width={2430}
                   height={3038}

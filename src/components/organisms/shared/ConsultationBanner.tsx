@@ -1,12 +1,12 @@
+import { AppButton } from "@/components/atoms/Button";
 import Image from "next/image";
-import Link from "next/link";
 
 export function ConsultationBanner() {
   return (
     <section className="services-consultation">
       <div className="services-consultation-media" aria-hidden="true">
         <Image
-          src="/2.0%20Website%20Assets/3.png"
+          src="/2.0%20Website%20Assets/3.webp"
           alt=""
           fill
           sizes="100vw"
@@ -26,9 +26,9 @@ export function ConsultationBanner() {
           that help you scale with confidence.
         </p>
 
-        <Link href="#top" className="services-consultation-cta">
+        <AppButton href="#top" variant="primary" size="lg">
           Schedule a Consultation
-        </Link>
+        </AppButton>
       </div>
     </section>
   );

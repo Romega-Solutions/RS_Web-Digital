@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ExploreServicesButton } from "@/components/atoms/Button";
 
 type HomeHeroProps = {
@@ -7,6 +8,15 @@ type HomeHeroProps = {
 export function HomeHero({ buttonHref = "/services" }: HomeHeroProps) {
   return (
     <section className="home-hero">
+      <Image
+        src="/2.0%20Website%20Assets/Hero%20Background.webp"
+        alt=""
+        fill
+        priority
+        className="object-cover"
+        sizes="100vw"
+        quality={85}
+      />
       <div className="home-hero__overlay" aria-hidden="true" />
 
       <div className="home-hero__content">
@@ -20,11 +30,15 @@ export function HomeHero({ buttonHref = "/services" }: HomeHeroProps) {
         </p>
 
         <p className="home-hero__copy">
-          Partnering with businesses to grow teams, strengthen brands, and scale with
-          confidence.
+          <span className="home-hero__copy-line">
+            Partnering with businesses to grow teams,
+          </span>
+          <span className="home-hero__copy-line">
+            strengthen brands, and scale with confidence.
+          </span>
         </p>
 
-        <ExploreServicesButton className="home-hero__action" href={buttonHref} />
+        <ExploreServicesButton variant="primary" size="lg" href={buttonHref} />
       </div>
     </section>
   );
