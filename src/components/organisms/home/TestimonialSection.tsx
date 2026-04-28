@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import styles from "./TestimonialSection.module.css";
 
 type Testimonial = {
   quote: string;
@@ -47,18 +48,18 @@ export function TestimonialSection() {
 
   return (
     <section
-      className="testimonial-section"
+      className={styles.root}
       aria-labelledby="testimonial-heading"
     >
       <h2 id="testimonial-heading" className="sr-only">
         Client testimonials
       </h2>
-      <div className="testimonial-backdrop" aria-hidden="true" />
-      <div className="testimonial-overlay" aria-hidden="true" />
+      <div className={styles.backdrop} aria-hidden="true" />
+      <div className={styles.overlay} aria-hidden="true" />
 
       <button
         type="button"
-        className="testimonial-arrow testimonial-arrow-left"
+        className={`${styles.arrow} ${styles.arrowLeft}`}
         aria-label="Previous testimonial"
         onClick={previous}
       >
@@ -66,26 +67,26 @@ export function TestimonialSection() {
       </button>
       <button
         type="button"
-        className="testimonial-arrow testimonial-arrow-right"
+        className={`${styles.arrow} ${styles.arrowRight}`}
         aria-label="Next testimonial"
         onClick={next}
       >
         &gt;
       </button>
 
-      <div className="testimonial-content">
-        <blockquote className="testimonial-quote" aria-live="polite">
+      <div className={styles.content}>
+        <blockquote className={styles.quote} aria-live="polite">
           &ldquo;{activeTestimonial.quote}&rdquo;
         </blockquote>
-        <p className="testimonial-author">{activeTestimonial.author}</p>
+        <p className={styles.author}>{activeTestimonial.author}</p>
 
-        <div className="testimonial-dots" aria-label="Select testimonial">
+        <div className={styles.dots} aria-label="Select testimonial">
           {testimonials.map((testimonial, index) => (
             <button
               key={testimonial.author}
               type="button"
-              className={`testimonial-dot ${
-                index === activeIndex ? "testimonial-dot-active" : ""
+              className={`${styles.dot} ${
+                index === activeIndex ? styles.dotActive : ""
               }`}
               aria-label={`Show testimonial ${index + 1}`}
               aria-pressed={index === activeIndex}
