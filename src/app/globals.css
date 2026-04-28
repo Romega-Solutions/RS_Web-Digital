@@ -3,9 +3,13 @@
 :root {
   --color-primary: #febd18;
   --color-secondary: #358df0;
+  --color-secondary-accessible: #1c5fa5;
   --color-tertiary: #a89ff8;
   --color-accent: #fd755e;
   --color-neutral: #424861;
+  --color-action: #1c5fa5;
+  --color-action-hover: #245fa2;
+  --color-action-text: #ffffff;
   --color-page: #f4f6fb;
   --color-surface: #ffffff;
   --color-text: #f3f5fa;
@@ -1658,7 +1662,7 @@ body {
   --color-background: var(--color-neutral);
   --color-foreground: var(--color-text);
   --color-brand-primary: var(--color-primary);
-  --color-brand-secondary: var(--color-secondary);
+  --color-brand-secondary: var(--color-secondary-accessible);
   --color-brand-tertiary: var(--color-tertiary);
   --color-page: var(--color-page);
   --color-surface: var(--color-surface);
@@ -1796,7 +1800,7 @@ body {
   }
 
   .site-header__brand-text {
-    @apply text-3xl leading-none font-semibold tracking-tight text-brand-primary md:text-3xl lg:text-4xl;
+    @apply text-3xl leading-none font-semibold tracking-tight text-brand-secondary md:text-3xl lg:text-4xl;
     font-family: var(--font-body);
     font-weight: 600;
     text-transform: none;
@@ -1844,7 +1848,8 @@ body {
   }
 
   .site-nav__mobile-sublink {
-    @apply rounded-lg px-3 py-2 text-sm text-brand-secondary/90 hover:bg-brand-secondary/8 hover:text-brand-primary;
+    @apply rounded-lg px-3 py-2 text-sm text-brand-secondary/90 hover:bg-brand-secondary/8;
+    transition: color 150ms ease, background-color 150ms ease;
   }
 
   .site-nav__mobile-caret {
@@ -1856,12 +1861,16 @@ body {
   }
 
   .site-nav__link {
-    @apply text-sm font-medium uppercase tracking-tight text-brand-secondary transition-colors hover:text-brand-primary lg:text-base xl:text-lg;
+    @apply text-sm font-medium uppercase tracking-tight text-brand-secondary transition-colors lg:text-base xl:text-lg;
     font-family: var(--font-poppins), "Poppins", "Aptos", "Segoe UI", Arial, sans-serif;
   }
 
   .site-nav__link--active {
-    @apply font-semibold text-brand-primary;
+    @apply font-semibold text-brand-secondary;
+    text-decoration: underline;
+    text-decoration-color: var(--color-primary);
+    text-decoration-thickness: 0.18em;
+    text-underline-offset: 0.32em;
   }
 
   .site-nav__dropdown {
@@ -1899,7 +1908,7 @@ body {
   }
 
   .site-nav__dropdown-item {
-    @apply block rounded-md px-3 py-2 text-sm font-medium uppercase text-brand-secondary transition-colors hover:bg-brand-secondary/8 hover:text-brand-primary;
+    @apply block rounded-md px-3 py-2 text-sm font-medium uppercase text-brand-secondary transition-colors hover:bg-brand-secondary/8;
     font-family: var(--font-poppins), "Poppins", "Aptos", "Segoe UI", Arial, sans-serif;
   }
 
@@ -1908,7 +1917,7 @@ body {
   }
 
   .site-nav__cta-arrow {
-    @apply hidden text-3xl leading-none text-brand-secondary lg:inline;
+    @apply text-lg leading-none;
   }
 
   .site-nav__burger {
@@ -1916,7 +1925,9 @@ body {
   }
 
   .site-nav__burger--open {
-    @apply border-brand-primary bg-brand-primary text-white;
+    border-color: var(--color-action);
+    background-color: var(--color-action);
+    color: var(--color-action-text);
   }
 
   .site-nav__burger-line {
@@ -1924,8 +1935,14 @@ body {
   }
 
   .site-nav__cta {
-    @apply rounded-full bg-brand-secondary px-3 py-1.5 text-sm font-semibold uppercase text-white transition-colors hover:bg-[#2f76d8] md:px-4 md:text-base;
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold uppercase no-underline transition-colors md:px-4 md:text-base;
+    background-color: var(--color-action);
+    color: var(--color-action-text);
     font-family: var(--font-poppins), "Poppins", "Aptos", "Segoe UI", Arial, sans-serif;
+  }
+
+  .site-nav__cta:hover {
+    background-color: var(--color-action-hover);
   }
 
   .site-nav__mobile-cta {
@@ -2004,11 +2021,21 @@ body {
   }
 
   .home-hero__accent {
-    @apply inline-flex items-center rounded-full bg-brand-primary px-6 py-1.5 text-white md:px-8 md:py-2;
-    font-family: var(--font-body);
-    font-size: 0.82em;
-    font-weight: 600;
-    letter-spacing: 0.02em;
+    background-image: linear-gradient(
+      to top,
+      rgb(254 189 25 / 0.86) 0%,
+      rgb(254 189 25 / 0.86) 28%,
+      transparent 28%,
+      transparent 100%
+    );
+    background-repeat: no-repeat;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    @apply inline px-2 text-white;
+    font-family: inherit;
+    font-size: 1em;
+    font-weight: inherit;
+    letter-spacing: 0;
   }
 
   .home-hero__copy {
@@ -2018,8 +2045,14 @@ body {
   }
 
   .home-hero__action {
-    @apply mt-10 inline-block w-fit rounded-full bg-brand-primary px-10 py-4 text-xl font-bold text-white no-underline transition-colors hover:bg-[#ffd24b] md:px-12 md:py-4 md:text-2xl;
+    @apply mt-10 inline-block w-fit rounded-full px-10 py-4 text-xl font-bold no-underline transition-colors md:px-12 md:py-4 md:text-2xl;
+    background-color: var(--color-action);
+    color: var(--color-action-text);
     font-family: var(--font-cta);
+  }
+
+  .home-hero__action:hover {
+    background-color: var(--color-action-hover);
   }
 
   @media (max-width: 980px) {
@@ -2086,8 +2119,8 @@ body {
 
     .home-hero__headline,
     .home-hero__subtitle {
-      font-size: 3rem;
-      line-height: 1.04;
+      font-size: clamp(2.55rem, 12vw, 3rem);
+      line-height: 1.06;
     }
 
     .home-hero__copy {
@@ -2099,11 +2132,11 @@ body {
     }
 
     .home-hero__accent {
-      @apply px-5 py-1.5;
+      @apply px-1.5;
     }
 
     .growing-word::after {
-      @apply -bottom-2;
+      display: none;
     }
 
     .growth-title {
@@ -2324,8 +2357,14 @@ body {
 
   .growth-banner-cta {
     box-shadow: 0 14px 28px rgb(184 115 32 / 0.24);
-    @apply mt-6 inline-flex w-fit rounded-full bg-brand-primary px-8 py-3 text-lg font-bold text-white no-underline transition-colors hover:bg-[#ffd24b] md:px-10 md:py-4 md:text-3xl;
+    @apply mt-6 inline-flex w-fit rounded-full px-8 py-3 text-lg font-bold no-underline transition-colors md:px-10 md:py-4 md:text-3xl;
+    background-color: var(--color-action);
+    color: var(--color-action-text);
     font-family: var(--font-cta);
+  }
+
+  .growth-banner-cta:hover {
+    background-color: var(--color-action-hover);
   }
 
   /* Home Trust */
@@ -2380,7 +2419,7 @@ body {
   }
 
   .trust-card-title {
-    @apply mt-5 max-w-52 text-[1.7rem] leading-[1.05] font-semibold text-[#d99f00] md:text-[2.25rem];
+    @apply mt-5 max-w-52 text-[1.7rem] leading-[1.05] font-semibold text-brand-secondary md:text-[2.25rem];
   }
 
   .trust-card-copy {
@@ -2389,13 +2428,17 @@ body {
 
   /* Service Strip */
   .service-strip {
-    @apply overflow-hidden bg-brand-tertiary py-5;
+    @apply overflow-x-auto bg-brand-tertiary py-5;
     font-family: var(--font-body);
+    scrollbar-width: none;
+  }
+
+  .service-strip::-webkit-scrollbar {
+    display: none;
   }
 
   .service-strip__track {
-    @apply flex w-max items-center whitespace-nowrap text-sm font-medium uppercase tracking-wide text-white md:text-4xl;
-    animation: service-marquee 22s linear infinite;
+    @apply flex w-max items-center whitespace-nowrap px-4 text-base font-semibold uppercase tracking-wide text-white md:w-full md:justify-center md:px-8 md:text-xl lg:text-[1.45rem] xl:text-2xl;
   }
 
   .service-strip__item {
@@ -2404,13 +2447,15 @@ body {
   }
 
   .service-strip__separator {
-    @apply mx-10 inline-flex items-center justify-center text-center text-white/90 md:mx-16;
+    @apply mx-10 inline-flex items-center justify-center text-center text-white/90 md:mx-5 lg:mx-6 xl:mx-8;
     font-family: inherit;
     transform: translateY(0.16em);
   }
 
-  .service-strip:hover .service-strip__track {
-    animation-play-state: paused;
+  @media (max-width: 767px) {
+    .service-strip__separator {
+      @apply mx-6;
+    }
   }
 
   /* About Hero */
@@ -2469,8 +2514,14 @@ body {
   }
 
   .about-hero-cta {
-    @apply mt-10 inline-flex items-center justify-center rounded-full bg-brand-primary px-8 py-3 text-xl font-bold text-white no-underline transition-colors hover:bg-[#ffd24b] md:px-12 md:py-4 md:text-2xl;
+    @apply mt-10 inline-flex items-center justify-center rounded-full px-8 py-3 text-xl font-bold no-underline transition-colors md:px-12 md:py-4 md:text-2xl;
+    background-color: var(--color-action);
+    color: var(--color-action-text);
     font-family: var(--font-cta);
+  }
+
+  .about-hero-cta:hover {
+    background-color: var(--color-action-hover);
   }
 
   /* About Mission */
@@ -2586,8 +2637,14 @@ body {
   }
 
   .about-vision-cta {
-    @apply mt-8 inline-flex items-center justify-center rounded-full bg-brand-primary px-7 py-3 text-base font-bold text-white no-underline transition-colors hover:bg-[#ffd24b] md:px-9 md:text-lg;
+    @apply mt-8 inline-flex items-center justify-center rounded-full px-7 py-3 text-base font-bold no-underline transition-colors md:px-9 md:text-lg;
+    background-color: var(--color-action);
+    color: var(--color-action-text);
     font-family: var(--font-cta);
+  }
+
+  .about-vision-cta:hover {
+    background-color: var(--color-action-hover);
   }
 
   .about-vision-photo-frame {
@@ -3120,8 +3177,14 @@ body {
   }
 
   .services-hero-cta {
-    @apply mt-10 inline-flex items-center justify-center rounded-full bg-brand-primary px-8 py-3 text-xl font-bold text-white no-underline transition-colors hover:bg-[#ffd24b] md:px-12 md:py-4 md:text-2xl;
+    @apply mt-10 inline-flex items-center justify-center rounded-full px-8 py-3 text-xl font-bold no-underline transition-colors md:px-12 md:py-4 md:text-2xl;
+    background-color: var(--color-action);
+    color: var(--color-action-text);
     font-family: var(--font-cta);
+  }
+
+  .services-hero-cta:hover {
+    background-color: var(--color-action-hover);
   }
 
   /* Services Detail */
@@ -3202,8 +3265,14 @@ body {
   }
 
   .services-detail-cta {
-    @apply inline-block rounded-full bg-brand-primary px-8 py-3 text-base font-bold text-white no-underline transition-colors hover:bg-[#ffd24b] md:px-10 md:text-lg;
+    @apply inline-block rounded-full px-8 py-3 text-base font-bold no-underline transition-colors md:px-10 md:text-lg;
+    background-color: var(--color-action);
+    color: var(--color-action-text);
     font-family: var(--font-cta);
+  }
+
+  .services-detail-cta:hover {
+    background-color: var(--color-action-hover);
   }
 
   /* Services Consultation */
@@ -3253,17 +3322,28 @@ body {
   }
 
   .services-consultation-cta {
-    @apply mt-8 inline-flex items-center justify-center rounded-full bg-brand-primary px-8 py-3 text-lg font-bold text-white no-underline transition-colors hover:bg-[#ffd24b] md:mt-10 md:px-12 md:py-4 md:text-2xl;
+    @apply mt-8 inline-flex items-center justify-center rounded-full px-8 py-3 text-lg font-bold no-underline transition-colors md:mt-10 md:px-12 md:py-4 md:text-2xl;
+    background-color: var(--color-action);
+    color: var(--color-action-text);
     font-family: var(--font-cta);
+  }
+
+  .services-consultation-cta:hover {
+    background-color: var(--color-action-hover);
   }
 
   /* Contact */
   .contact-page {
-    @apply bg-white;
+    background:
+      linear-gradient(90deg, rgb(28 95 165 / 0.06) 1px, transparent 1px),
+      linear-gradient(180deg, rgb(28 95 165 / 0.06) 1px, transparent 1px),
+      radial-gradient(circle at 90% 12%, rgb(254 189 24 / 0.18), transparent 22rem),
+      linear-gradient(180deg, #f8fbff 0%, #ffffff 48%, #f4f6fb 100%);
+    background-size: 74px 74px, 74px 74px, auto, auto;
   }
 
   .contact-page-inner {
-    @apply mx-auto grid w-full max-w-7xl gap-10 py-8 md:grid-cols-[0.9fr_1.1fr] md:items-start md:gap-14 md:py-12;
+    @apply mx-auto grid w-full max-w-7xl gap-8 py-8 md:grid-cols-[0.9fr_1.1fr] md:items-start md:gap-14 md:py-12;
   }
 
   .contact-page-info {
@@ -3278,8 +3358,8 @@ body {
   }
 
   .contact-page-copy {
-    @apply mt-6 max-w-md text-[1.28rem] leading-tight text-black/85;
-    font-family: var(--font-nav);
+    @apply mt-6 max-w-md text-lg leading-relaxed text-black/80 md:text-xl;
+    font-family: var(--font-body);
   }
 
   .contact-page-divider {
@@ -3298,8 +3378,8 @@ body {
 
   .contact-page-block p,
   .contact-page-block a {
-    @apply mt-2 block text-[1.32rem] leading-tight text-black/85;
-    font-family: var(--font-nav);
+    @apply mt-2 block text-lg leading-snug text-black/80 md:text-xl;
+    font-family: var(--font-body);
   }
 
   .contact-page-socials {
@@ -3307,16 +3387,16 @@ body {
   }
 
   .contact-page-socials a {
-    @apply inline-flex items-center justify-center rounded-full bg-transparent ring-0 transition-transform hover:scale-105;
+    @apply inline-flex h-14 w-14 items-center justify-center rounded-full bg-white ring-1 ring-brand-secondary/15 shadow-[0_8px_20px_rgba(16,24,40,0.08)] transition-transform hover:scale-105;
   }
 
   .contact-page-social-icon {
-    @apply h-14 w-14 object-contain;
+    @apply h-11 w-11 object-contain;
   }
 
   .contact-page-form-wrap {
-    @apply text-black;
-    font-family: var(--font-nav);
+    @apply rounded-lg border border-brand-secondary/12 bg-white/95 p-5 text-black shadow-[0_22px_60px_rgba(16,24,40,0.12)] md:p-7;
+    font-family: var(--font-body);
   }
 
   .contact-form {
@@ -3332,13 +3412,13 @@ body {
   }
 
   .contact-field span {
-    @apply text-[1.1rem] font-semibold text-brand-secondary;
+    @apply text-base font-semibold text-brand-secondary;
   }
 
   .contact-field input,
   .contact-field select,
   .contact-field textarea {
-    @apply w-full rounded-[4px] border border-brand-secondary/35 bg-white px-4 py-2.5 text-[1.05rem] text-black outline-none transition-colors;
+    @apply min-h-11 w-full rounded-md border border-brand-secondary/35 bg-white px-4 py-2.5 text-base text-black outline-none transition-colors;
   }
 
   .contact-field input:focus,
@@ -3376,7 +3456,7 @@ body {
   }
 
   .contact-concerns legend {
-    @apply text-[1.1rem] font-semibold text-brand-secondary;
+    @apply text-base font-semibold text-brand-secondary;
   }
 
   .contact-concerns-options {
@@ -3384,7 +3464,7 @@ body {
   }
 
   .contact-concerns-option {
-    @apply rounded-[4px] border border-transparent bg-[#dcdcdc] px-3 py-2 text-left text-[0.95rem] text-black/80 transition-colors;
+    @apply rounded-md border border-transparent bg-[#eef3fb] px-3 py-2 text-left text-sm text-black/80 transition-colors;
   }
 
   .contact-concerns-option.is-selected {
@@ -3412,7 +3492,7 @@ body {
   }
 
   .contact-submit {
-    @apply mt-1 inline-flex items-center justify-center rounded-[10px] bg-brand-secondary px-8 py-2.5 text-[1.1rem] font-semibold text-white transition-colors hover:bg-[#2f76d8] disabled:cursor-not-allowed disabled:opacity-70;
+    @apply mt-1 inline-flex min-h-11 items-center justify-center rounded-lg bg-brand-secondary px-8 py-2.5 text-base font-semibold text-white transition-colors hover:bg-[#245fa2] disabled:cursor-not-allowed disabled:opacity-70;
   }
 
   /* Careers */
@@ -3592,8 +3672,14 @@ body {
   }
 
   .careers-bottom-link {
-    @apply inline-flex items-center justify-center rounded-full bg-brand-primary px-8 py-3 text-base font-bold text-white no-underline transition-colors hover:bg-[#ffd24b];
+    @apply inline-flex items-center justify-center rounded-full px-8 py-3 text-base font-bold no-underline transition-colors;
+    background-color: var(--color-action);
+    color: var(--color-action-text);
     font-family: var(--font-body);
+  }
+
+  .careers-bottom-link:hover {
+    background-color: var(--color-action-hover);
   }
 
   .careers-sidebar-root {
@@ -3790,8 +3876,14 @@ body {
   }
 
   .services-spotlight-button {
-    @apply mt-10 inline-flex items-center justify-center rounded-full bg-brand-primary px-8 py-3 text-xl font-bold text-white transition-colors hover:bg-[#ffd24b] md:mt-12 md:px-11 md:py-4 md:text-3xl;
+    @apply mt-10 inline-flex items-center justify-center rounded-full px-8 py-3 text-xl font-bold transition-colors md:mt-12 md:px-11 md:py-4 md:text-3xl;
+    background-color: var(--color-action);
+    color: var(--color-action-text);
     font-family: var(--font-body);
+  }
+
+  .services-spotlight-button:hover {
+    background-color: var(--color-action-hover);
   }
 
   /* Testimonial */
@@ -3940,7 +4032,7 @@ body {
   }
 
   .site-footer-links a {
-    @apply text-base font-medium text-brand-secondary transition-colors hover:text-brand-primary md:text-[1.15rem];
+    @apply text-base font-medium text-brand-secondary transition-colors hover:underline md:text-[1.15rem];
   }
 
   .site-footer-connect h3 {

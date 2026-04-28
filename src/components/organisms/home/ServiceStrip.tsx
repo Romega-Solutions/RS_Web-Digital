@@ -10,17 +10,17 @@ const defaultItems = [
 ];
 
 export function ServiceStrip({ items = defaultItems }: ServiceStripProps) {
-  const marqueeItems = [...items, ...items];
-
   return (
     <section className="service-strip">
       <div className="service-strip__track">
-        {marqueeItems.map((item, index) => (
-          <span key={`${item}-${index}`} className="service-strip__item">
+        {items.map((item, index) => (
+          <span key={item} className="service-strip__item">
             {item}
-            <span className="service-strip__separator" aria-hidden="true">
-              *
-            </span>
+            {index < items.length - 1 ? (
+              <span className="service-strip__separator" aria-hidden="true">
+                *
+              </span>
+            ) : null}
           </span>
         ))}
       </div>

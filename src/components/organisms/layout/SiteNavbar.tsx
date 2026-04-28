@@ -72,7 +72,9 @@ export function SiteNavbar({
 
   const handleCloseMobileMenu = useCallback(() => {
     onCloseMobileMenu();
-    setIsMobileCareersOpen(activeItem === "Careers" || activeItem === "Careers & Talents");
+    setIsMobileCareersOpen(
+      activeItem === "Careers" || activeItem === "Careers & Talents",
+    );
   }, [activeItem, onCloseMobileMenu]);
 
   const handleToggleMobileMenu = useCallback(() => {
@@ -82,7 +84,9 @@ export function SiteNavbar({
     }
 
     onToggleMobileMenu();
-    setIsMobileCareersOpen(activeItem === "Careers" || activeItem === "Careers & Talents");
+    setIsMobileCareersOpen(
+      activeItem === "Careers" || activeItem === "Careers & Talents",
+    );
   }, [activeItem, handleCloseMobileMenu, isMobileMenuOpen, onToggleMobileMenu]);
 
   useAccessibleOverlay({
@@ -138,7 +142,10 @@ export function SiteNavbar({
             onFocusCapture={openDropdown}
             onBlurCapture={(event) => {
               const relatedTarget = event.relatedTarget as Node | null;
-              if (!relatedTarget || !event.currentTarget.contains(relatedTarget)) {
+              if (
+                !relatedTarget ||
+                !event.currentTarget.contains(relatedTarget)
+              ) {
                 closeDropdown();
               }
             }}
@@ -152,7 +159,9 @@ export function SiteNavbar({
             <button
               type="button"
               className={`site-nav__link site-nav__dropdown-trigger ${
-                activeItem === "Careers" || activeItem === "Careers & Talents" ? "site-nav__link--active" : ""
+                activeItem === "Careers" || activeItem === "Careers & Talents"
+                  ? "site-nav__link--active"
+                  : ""
               }`}
               aria-expanded={isDropdownOpen}
               aria-controls={dropdownId}
@@ -190,11 +199,14 @@ export function SiteNavbar({
         </nav>
 
         <div className="site-nav__cta-wrap">
-          <span className="site-nav__cta-arrow" aria-hidden="true">
-            →
-          </span>
           <Link href="/contact" className="site-nav__cta">
             Contact Us
+            <span
+              className="site-nav__cta-arrow color-white"
+              aria-hidden="true"
+            >
+              →
+            </span>
           </Link>
           <button
             type="button"
@@ -248,7 +260,9 @@ export function SiteNavbar({
             onClick={() => setIsMobileCareersOpen((open) => !open)}
           >
             Careers
-            <span className={`site-nav__mobile-caret ${isMobileCareersOpen ? "site-nav__mobile-caret--open" : ""}`}>
+            <span
+              className={`site-nav__mobile-caret ${isMobileCareersOpen ? "site-nav__mobile-caret--open" : ""}`}
+            >
               ▾
             </span>
           </button>
