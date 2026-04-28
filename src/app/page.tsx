@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { ExploreServicesButton } from "@/components/atoms/Button";
+import { GrowthSection } from "@/components/organisms/home/GrowthSection";
+import { TrustSection } from "@/components/organisms/home/TrustSection";
+import { ApproachSection } from "@/components/organisms/home/ApproachSection";
 import { ServiceCard } from "@/components/molecules/Card/ServiceCard";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { HomeHero } from "@/components/organisms/home/HomeHero";
@@ -65,45 +68,6 @@ export default function Home() {
     ],
   };
 
-  const trustPillars = [
-    {
-      title: "Strategic Team Growth",
-      description: "Build teams aligned with your goals, culture, and long-term vision.",
-      iconSrc: "/2.0%20Website%20Assets/Icon%2001%20_%20Strategic%20Team%20Growth.png",
-      iconAlt: "Strategic Team Growth icon",
-    },
-    {
-      title: "Stronger Brand Foundations",
-      description: "Clarify your message and create a brand that builds trust across markets.",
-      iconSrc: "/2.0%20Website%20Assets/Icon%2002%20_%20Stronger%20Brand%20Foundations.png",
-      iconAlt: "Stronger Brand Foundations icon",
-    },
-    {
-      title: "Operational Clarity",
-      description: "Simplified processes that give leaders more time to focus on impact.",
-      iconSrc: "/2.0%20Website%20Assets/Icon%2003%20_%20Operational%20Clarity.png",
-      iconAlt: "Operational Clarity icon",
-    },
-    {
-      title: "Cost-Smart Growth",
-      description: "Invest wisely while protecting revenue and momentum.",
-      iconSrc: "/2.0%20Website%20Assets/Icon%2004%20_%20Cost-Smart%20Growth.png",
-      iconAlt: "Cost-Smart Growth icon",
-    },
-    {
-      title: "Long-Term Confidence",
-      description: "Teams that stay. Brands that last. Growth that is sustainable.",
-      iconSrc: "/2.0%20Website%20Assets/Icon%2005%20_%20Long-Term%20Confidence.png",
-      iconAlt: "Long-Term Confidence icon",
-    },
-    {
-      title: "Global Perspective",
-      description: "Supporting businesses across borders with insight and experience.",
-      iconSrc: "/2.0%20Website%20Assets/Icon%2006%20_%20Global%20Perspective.png",
-      iconAlt: "Global Perspective icon",
-    },
-  ];
-
   return (
     <div className="site-shell site-shell--home" id="top">
       <JsonLd id="home-structured-data" data={structuredData} />
@@ -114,109 +78,11 @@ export default function Home() {
 
         <ServiceStrip />
 
-        <section className="growth-section">
-          <div className="growth-grid" aria-hidden="true" />
+        <GrowthSection />
 
-          <div className="growth-inner">
-            <div className="growth-copy-wrap">
-              <h2 className="growth-title">
-                Growth feels easier when you have the right <span className="growing-word">partner.</span>
-              </h2>
-            </div>
+        <TrustSection />
 
-            <div className="growth-side">
-              <div className="growth-media" aria-hidden="true">
-                <video
-                  className="growth-video"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                  poster="/growth.png"
-                >
-                  <source src="/romega-video-web.mp4" type="video/mp4" />
-                </video>
-              </div>
-              <p className="growth-text">
-                We work alongside founders and leaders who want to scale
-                without chaos. <strong>From talent and operations to brand support,</strong>
-                Romega brings structure, perspective, and steady guidance so
-                growth feels intentional, not overwhelming.
-              </p>
-            </div>
-          </div>
-
-          <div className="growth-banner">
-            <div className="growth-banner-overlay" aria-hidden="true" />
-            <div className="growth-banner-content">
-              <h3 className="growth-banner-title">Let&apos;s Build What&apos;s Next</h3>
-              <ExploreServicesButton variant="primary" size="lg" />
-            </div>
-          </div>
-        </section>
-
-        <section className="trust-section">
-          <div className="trust-inner">
-            <h2 className="trust-title">
-              <span className="trust-title-highlight">Why Businesses Trust Romega</span>
-            </h2>
-            <p className="trust-kicker">
-              Not just another service provider.
-              <span className="trust-kicker-emphasis"> A long-term growth partner.</span>
-            </p>
-            <p className="trust-intro">
-              Businesses choose Romega because we do not offer one-size-fits-all
-              solutions. We take the time to understand your goals, your
-              challenges, and where you are headed, then build the teams and
-              brand foundations that support real, lasting growth.
-            </p>
-
-            <div className="trust-grid">
-              {trustPillars.map((pillar) => (
-                <article key={pillar.title} className="trust-card">
-                  <Image
-                    src={pillar.iconSrc}
-                    alt={pillar.iconAlt}
-                    width={112}
-                    height={112}
-                    sizes="(max-width: 767px) 96px, 112px"
-                    className="trust-icon-image"
-                  />
-                  <h3 className="trust-card-title">{pillar.title}</h3>
-                  <p className="trust-card-copy">{pillar.description}</p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="approach-section">
-          <div className="approach-grid" aria-hidden="true" />
-
-          <div className="approach-inner">
-            <div className="approach-left">
-              <h2 className="approach-title">
-                We don&apos;t
-                <br />
-                rush growth.
-                <br />
-                <span className="approach-emphasis">We build it</span>
-                <br />
-                <span className="approach-circled">right.</span>
-              </h2>
-            </div>
-
-            <div className="approach-right">
-              <h3 className="approach-heading">Our approach is simple:</h3>
-              <p className="approach-copy">
-                Understand your business, align people and brand, and support
-                every step with clarity and care. We believe growth works best
-                when teams and brands are built side by side, with intention.
-              </p>
-            </div>
-          </div>
-        </section>
+        <ApproachSection />
 
         <section className="services-spotlight">
           <div className="services-spotlight-arrow" aria-hidden="true">

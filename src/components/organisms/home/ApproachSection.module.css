@@ -1,0 +1,66 @@
+@reference "../../../app/globals.css";
+
+.root {
+  @apply relative overflow-hidden bg-brand-secondary text-white;
+  padding-block: var(--section-space);
+  padding-inline: var(--layout-gutter);
+}
+
+.grid {
+  @apply absolute inset-0;
+  background-image: linear-gradient(to right, rgb(255 255 255 / 0.12) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.12) 1px, transparent 1px);
+  background-size: 84px 84px;
+}
+
+.inner {
+  @apply relative z-10 mx-auto grid w-full max-w-6xl;
+  gap: var(--space-8);
+  @apply md:grid-cols-[1fr_1fr] md:gap-14;
+}
+
+.left {
+  @apply flex items-start justify-center md:justify-start;
+}
+
+.title {
+  @apply text-center font-normal text-white md:text-left;
+  font-family: var(--font-growth-title);
+  font-size: var(--type-display-xl);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+}
+
+.emphasis {
+  @apply font-semibold;
+}
+
+.circled {
+  @apply relative inline-block font-semibold;
+}
+
+.circled::after {
+  content: "";
+  @apply pointer-events-none absolute -inset-x-6 -inset-y-2;
+  border: 4px solid rgb(255 255 255 / 0.9);
+  border-radius: 60% 45% 55% 50% / 55% 45% 55% 45%;
+  transform: rotate(-4deg);
+}
+
+.right {
+  @apply max-w-xl;
+}
+
+.heading {
+  @apply font-semibold;
+  font-family: var(--font-growth-copy);
+  font-size: var(--type-heading-lg);
+  line-height: var(--leading-heading);
+}
+
+.copy {
+  @apply mt-4;
+  font-family: var(--font-growth-copy);
+  font-size: var(--type-heading-md);
+  line-height: var(--leading-heading);
+}

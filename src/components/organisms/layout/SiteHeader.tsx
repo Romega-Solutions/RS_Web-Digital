@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { SiteNavbar, type SiteHeaderActiveItem } from "./SiteNavbar";
+import styles from "./SiteHeader.module.css";
 
 type SiteHeaderProps = {
   activeItem?: SiteHeaderActiveItem;
@@ -50,21 +51,21 @@ export function SiteHeader({ activeItem }: SiteHeaderProps) {
   }, []);
 
   return (
-    <header ref={headerRef} className="site-header">
-      <div className="site-header__inner">
-        <div className="site-header__main">
-          <Link href="/" className="site-header__brand" aria-label="Romega Solutions home">
-            <span className="site-header__brand-icon" aria-hidden="true">
+    <header ref={headerRef} className={styles.root}>
+      <div className={styles.inner}>
+        <div className={styles.main}>
+          <Link href="/" className={styles.brand} aria-label="Romega Solutions home">
+            <span className={styles.brandIcon} aria-hidden="true">
               <Image
                 src="/RS_Logo-Blue.png"
                 alt=""
                 width={1601}
                 height={1600}
-                className="site-header__brand-logo"
-                preload
+                className={styles.brandLogo}
+                priority
               />
             </span>
-            <span className="site-header__brand-text">ROMEGA SOLUTIONS</span>
+            <span className={styles.brandText}>ROMEGA SOLUTIONS</span>
           </Link>
 
           <SiteNavbar

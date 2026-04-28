@@ -1,0 +1,107 @@
+@reference "../../../app/globals.css";
+
+.root {
+  @apply relative overflow-hidden bg-surface;
+}
+
+.grid {
+  @apply pointer-events-none absolute inset-0 z-0;
+  background-image: linear-gradient(to right, rgb(121 152 240 / 0.16) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(121 152 240 / 0.16) 1px, transparent 1px);
+  background-size: 74px 74px;
+}
+
+.inner {
+  @apply relative z-10 mx-auto grid w-full max-w-6xl;
+  gap: var(--space-7);
+  @apply md:grid-cols-[1.05fr_0.95fr];
+  grid-gap: var(--space-8);
+}
+
+.copyWrap {
+  @apply pt-2;
+}
+
+.title {
+  @apply max-w-2xl font-medium tracking-tight text-brand-tertiary;
+  font-family: var(--font-growth-title);
+  font-size: var(--type-display-xl);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+}
+
+/* Reusing growing word effect logic locally to section */
+.growingWord {
+  @apply relative inline-block px-1 z-0;
+}
+
+.growingWord::after {
+  content: "";
+  @apply absolute bottom-[0.03em] left-[-2%] h-[0.18em] w-[104%] -z-10;
+  background:
+    radial-gradient(ellipse at 4% 52%, rgb(255 230 132 / 0.9) 0 9%, transparent 10%),
+    radial-gradient(ellipse at 10% 47%, rgb(254 189 25 / 0.95) 0 11%, transparent 12%),
+    radial-gradient(ellipse at 17% 55%, rgb(255 218 94 / 0.9) 0 12%, transparent 13%),
+    radial-gradient(ellipse at 25% 45%, rgb(244 169 0 / 0.86) 0 10%, transparent 11%),
+    radial-gradient(ellipse at 34% 58%, rgb(255 225 118 / 0.92) 0 13%, transparent 14%),
+    radial-gradient(ellipse at 44% 48%, rgb(254 189 25 / 0.95) 0 12%, transparent 13%),
+    radial-gradient(ellipse at 55% 56%, rgb(255 211 75 / 0.88) 0 11%, transparent 12%),
+    radial-gradient(ellipse at 66% 45%, rgb(242 164 0 / 0.82) 0 13%, transparent 14%),
+    radial-gradient(ellipse at 77% 55%, rgb(255 224 121 / 0.9) 0 12%, transparent 13%),
+    radial-gradient(ellipse at 88% 47%, rgb(254 189 25 / 0.92) 0 11%, transparent 12%),
+    radial-gradient(ellipse at 97% 55%, rgb(244 169 0 / 0.82) 0 9%, transparent 10%),
+    linear-gradient(90deg, rgb(255 214 91 / 0.86), rgb(254 189 25 / 0.9) 45%, rgb(241 162 0 / 0.84));
+  border-radius: 999px;
+  filter: drop-shadow(0 1px 2px rgb(138 87 0 / 0.14));
+  transform: rotate(-0.8deg);
+}
+
+.side {
+  @apply flex flex-col gap-5;
+}
+
+.media {
+  @apply relative min-h-72 w-full overflow-hidden rounded-2xl border border-brand-tertiary/35 shadow-[0_20px_50px_rgba(168,159,248,0.15)];
+  background-color: #d7d4ce;
+  aspect-ratio: 16 / 9;
+}
+
+.video {
+  @apply h-full w-full object-cover;
+  background: linear-gradient(135deg, #e0ddd8 0%, #d7d4ce 100%);
+}
+
+.text {
+  @apply max-w-2xl text-xl leading-tight font-semibold text-black/90 md:text-[1.65rem];
+  font-family: var(--font-growth-copy);
+}
+
+.banner {
+  @apply relative z-10 mx-auto mt-12 flex min-h-64 w-full max-w-6xl items-center justify-center overflow-hidden md:mt-14 md:min-h-72;
+  background-color: #8ea8db;
+  background-image: url("/bg-lets-build.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.bannerOverlay {
+  @apply absolute inset-0;
+  background: linear-gradient(90deg, rgb(184 199 255 / 0.5), rgb(154 177 243 / 0.5));
+}
+
+.bannerContent {
+  @apply relative z-10 flex max-w-5xl flex-col items-center px-6 py-10 text-center md:px-10;
+}
+
+.bannerTitle {
+  @apply text-5xl leading-[0.96] font-medium tracking-tight text-white md:text-[4.6rem];
+  font-family: var(--font-display);
+  text-wrap: balance;
+}
+
+@media (max-width: 767px) {
+  .growingWord::after {
+    @apply hidden;
+  }
+}
