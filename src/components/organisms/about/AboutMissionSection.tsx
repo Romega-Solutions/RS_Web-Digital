@@ -1,50 +1,51 @@
 import Image from "next/image";
+import styles from "./AboutMissionSection.module.css";
 
 export function AboutMissionSection() {
   return (
-    <section className="about-mission-section" aria-labelledby="about-mission-title">
-      <div className="about-mission-inner">
-        <div className="about-mission-grid" aria-hidden="true" />
+    <section className={styles.root} aria-labelledby="about-mission-title">
+      <div className={styles.inner}>
+        <div className={styles.grid} aria-hidden="true" />
 
-        <div className="about-mission-heading">
-          <h2 id="about-mission-title" className="about-mission-title">
+        <div className={styles.heading}>
+          <h2 id="about-mission-title" className={styles.title}>
             Why we <em>do</em>
             <br />
             What we <em>do</em>
           </h2>
         </div>
 
-        <div className="about-mission-photo about-mission-photo-main">
+        <div className={`${styles.photo} ${styles.photoMain}`}>
           <Image
-            src="/why-1.png"
+            src="/why-1.webp"
             alt="Team members reviewing work at a computer"
             fill
             sizes="(max-width: 767px) 100vw, 44vw"
-            className="about-mission-image"
+            className={styles.image}
           />
         </div>
 
-        <div className="about-mission-photo about-mission-photo-mid">
+        <div className={`${styles.photo} ${styles.photoMid}`}>
           <Image
-            src="/why-2.png"
+            src="/why-2.webp"
             alt="Two team members collaborating over a laptop"
             fill
             sizes="(max-width: 767px) 48vw, 15rem"
-            className="about-mission-image"
+            className={styles.image}
           />
         </div>
 
-        <div className="about-mission-photo about-mission-photo-low">
+        <div className={`${styles.photo} ${styles.photoLow}`}>
           <Image
-            src="/why-3.png"
+            src="/why-3.webp"
             alt="A team discussing work around a laptop"
             fill
             sizes="(max-width: 767px) 52vw, 16rem"
-            className="about-mission-image"
+            className={styles.image}
           />
         </div>
 
-        <div className="about-mission-copy">
+        <div className={styles.copy}>
           <p>
             We believe businesses grow best when people, purpose, and clarity
             are aligned. Too many companies plateau not because opportunity, but
@@ -60,7 +61,7 @@ export function AboutMissionSection() {
           </p>
         </div>
 
-        <div className="about-mission-statement">
+        <div className={styles.statement}>
           <p>
             Our <em>Mission</em> is to be a steady growth partner for businesses
             by building strong teams and credible brands that last.

@@ -1,0 +1,38 @@
+.root {
+  @apply relative text-white;
+  background:
+    linear-gradient(to right, rgb(255 255 255 / 0.14) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.14) 1px, transparent 1px),
+    linear-gradient(180deg, #94c6f3 0%, #75b4ee 100%);
+  background-size: 92px 92px, 92px 92px, auto;
+  padding-block: var(--section-space);
+  padding-inline: var(--layout-gutter);
+}
+
+.inner {
+  @apply relative mx-auto flex w-full max-w-6xl flex-col items-center text-center;
+}
+
+.title {
+  @apply text-[2.35rem] leading-none font-medium md:text-[3.5rem];
+  font-family: var(--font-display);
+}
+
+.copy {
+  @apply mt-5 max-w-5xl space-y-4 text-base leading-tight text-white md:text-lg;
+  font-family: var(--font-body);
+}
+
+.copy strong {
+  @apply font-black text-white;
+}
+
+.map {
+  @apply relative mt-8 w-full max-w-6xl overflow-hidden md:mt-12;
+  aspect-ratio: 1920 / 1080;
+}
+
+.world {
+  @apply object-contain;
+}
+@reference "../../../app/globals.css";

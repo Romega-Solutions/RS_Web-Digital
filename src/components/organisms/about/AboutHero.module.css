@@ -1,0 +1,69 @@
+.root {
+  @apply relative overflow-hidden;
+  background: linear-gradient(180deg, #4b91e8 0%, #76acef 58%, #9dc4f3 100%);
+  min-height: var(--page-hero-min-height);
+}
+
+.inner {
+  @apply mx-auto grid w-full max-w-7xl items-center gap-8 md:grid-cols-[0.88fr_1.12fr] md:gap-10;
+  background-image: linear-gradient(to right, rgb(255 255 255 / 0.12) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.12) 1px, transparent 1px);
+  background-size: 92px 92px;
+  min-height: var(--page-hero-content-min-height);
+  padding-inline: var(--layout-gutter);
+}
+
+.photoFrame {
+  @apply relative mx-auto min-h-88 w-full max-w-82 overflow-hidden rounded-4xl md:mx-0 md:min-h-112 md:max-w-[24rem];
+  box-shadow: 0 26px 70px rgb(18 55 110 / 0.18);
+}
+
+.photo {
+  @apply object-cover;
+}
+
+.copy {
+  @apply px-1 text-white md:px-0;
+}
+
+.title {
+  @apply text-[2.65rem] leading-[0.92] tracking-tight text-white sm:text-[3.2rem] md:text-[5.2rem];
+  font-family: var(--font-display);
+}
+
+.highlight {
+  @apply inline px-2 font-black text-white;
+  background-image: linear-gradient(to top,
+      rgb(254 189 25 / 0.96) 0%,
+      rgb(254 189 25 / 0.96) 38%,
+      transparent 38%,
+      transparent 100%);
+  background-repeat: no-repeat;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.text {
+  @apply mt-8 max-w-3xl space-y-7 text-lg leading-tight text-white/95 md:text-[1.1rem];
+  font-family: var(--font-body);
+}
+
+.text strong {
+  @apply font-extrabold text-white;
+}
+
+.button {
+  @apply mt-10;
+}
+
+@media (max-width: 767px) {
+  .title {
+    font-size: 3rem;
+    line-height: 0.94;
+  }
+
+  .text {
+    @apply text-lg;
+  }
+}
+@reference "../../../app/globals.css";

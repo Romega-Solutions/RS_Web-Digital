@@ -107,7 +107,7 @@ export function ServiceStrip({ items = defaultItems }: ServiceStripProps) {
     label: string;
     text: string;
     left: number;
-    top: number;
+    bottom: number;
   } | null>(null);
   const tooltipId = useId();
 
@@ -146,7 +146,7 @@ export function ServiceStrip({ items = defaultItems }: ServiceStripProps) {
       label: item.label,
       text: item.tooltip,
       left: Math.min(Math.max(centeredLeft, horizontalPadding), maxLeft),
-      top: linkRect.bottom - viewportRect.top + 14,
+      bottom: viewportRect.bottom - linkRect.top + 14,
     });
   };
 
@@ -216,7 +216,7 @@ export function ServiceStrip({ items = defaultItems }: ServiceStripProps) {
             role="tooltip"
             style={{
               left: `${activeTooltip.left}px`,
-              top: `${activeTooltip.top}px`,
+              bottom: `${activeTooltip.bottom}px`,
             }}
           >
             {activeTooltip.text}

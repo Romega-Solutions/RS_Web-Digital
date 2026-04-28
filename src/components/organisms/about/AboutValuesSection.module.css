@@ -1,0 +1,50 @@
+.root {
+  @apply bg-white text-black;
+  padding-block: var(--section-space);
+  padding-inline: var(--layout-gutter);
+}
+
+.inner {
+  @apply mx-auto grid w-full max-w-6xl items-stretch gap-8 sm:grid-cols-[0.9fr_1.1fr] md:grid-cols-[0.95fr_1.05fr] md:gap-10;
+}
+
+.photoFrame {
+  @apply relative min-h-80 overflow-hidden bg-surface sm:min-h-[26rem] md:min-h-[32rem] rounded-2xl;
+}
+
+.photo {
+  @apply object-cover;
+  object-position: left center;
+}
+
+.copy {
+  @apply flex flex-col justify-center md:pl-2;
+}
+
+.title {
+  @apply text-[2.2rem] leading-none font-medium text-brand-secondary md:text-[3rem];
+  font-family: var(--font-display);
+}
+
+.list {
+  @apply mt-9 flex flex-col gap-8;
+  font-family: var(--font-body);
+}
+
+.item h3 {
+  @apply max-w-md text-[1.55rem] leading-[0.96] font-semibold text-brand-secondary md:text-[2rem];
+}
+
+.phrase {
+  @apply sm:whitespace-nowrap;
+}
+
+.initial {
+  @apply inline-block text-[1.85rem] leading-[0.78] font-bold md:text-[2.45rem];
+}
+
+.item p {
+  @apply mt-3 max-w-md text-base leading-tight text-black md:text-lg;
+  font-family: var(--font-body);
+}
+@reference "../../../app/globals.css";

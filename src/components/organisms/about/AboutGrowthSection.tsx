@@ -4,6 +4,7 @@ import { TESTIMONIALS } from "@/lib/constants";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { useMemo, useState } from "react";
+import styles from "./AboutGrowthSection.module.css";
 
 export function AboutGrowthSection() {
   const totalTestimonials = TESTIMONIALS.length;
@@ -38,9 +39,9 @@ export function AboutGrowthSection() {
   };
 
   return (
-    <section className="about-growth-section" aria-labelledby="about-growth-title">
-      <div className="about-growth-heading">
-        <h2 id="about-growth-title" className="about-growth-title">
+    <section className={styles.root} aria-labelledby="about-growth-title">
+      <div className={styles.heading}>
+        <h2 id="about-growth-title" className={styles.title}>
           Where Growth Begins
         </h2>
         <p>
@@ -51,10 +52,10 @@ export function AboutGrowthSection() {
         </p>
       </div>
 
-      <div className="about-growth-inner">
+      <div className={styles.inner}>
         <button
           type="button"
-          className="about-growth-nav about-growth-nav-left"
+          className={`${styles.nav} ${styles.navLeft}`}
           aria-label="Previous testimonials"
           onClick={showPrevious}
         >
@@ -64,7 +65,7 @@ export function AboutGrowthSection() {
         <AnimatePresence mode="wait" initial={false} custom={direction}>
           <motion.div
             key={startIndex}
-            className="about-growth-grid"
+            className={styles.grid}
             aria-live="polite"
             custom={direction}
             initial={{ opacity: 0, x: direction > 0 ? 64 : -64 }}
@@ -87,33 +88,33 @@ export function AboutGrowthSection() {
             {testimonials.map((testimonial, offset) => (
               <motion.article
                 key={`${testimonial.id}-${startIndex}-${offset}`}
-                className="about-growth-card"
+                className={styles.card}
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0, transition: { duration: 0.26, ease: "easeOut" } }}
                 exit={{ opacity: 0, y: -10, transition: { duration: 0.16, ease: "easeIn" } }}
                 whileHover={{ y: -3 }}
               >
-                <div className="about-growth-stars" aria-label={`${testimonial.rating} out of 5 rating`}>
+                <div className={styles.stars} aria-label={`${testimonial.rating} out of 5 rating`}>
                   {Array.from({ length: 5 }, (_, index) => (
                     <span
                       key={index}
-                      className={index < testimonial.rating ? "is-filled" : ""}
+                      className={index < testimonial.rating ? styles.isFilled : ""}
                       aria-hidden="true"
                     >
                       ★
                     </span>
                   ))}
                 </div>
-                <p className="about-growth-quote">{testimonial.quote}</p>
-                <div className="about-growth-person">
-                  <div className="about-growth-avatar">
+                <p className={styles.quote}>{testimonial.quote}</p>
+                <div className={styles.person}>
+                  <div className={styles.avatar}>
                     {testimonial.image ? (
                       <Image
                         src={testimonial.image}
                         alt={testimonial.name}
                         width={56}
                         height={56}
-                        className="about-growth-avatar-image"
+                        className={styles.avatarImage}
                       />
                     ) : null}
                   </div>
@@ -123,7 +124,7 @@ export function AboutGrowthSection() {
                     <p>{testimonial.title}</p>
                   </div>
                 </div>
-                <span className="about-growth-mark" aria-hidden="true">
+                <span className={styles.mark} aria-hidden="true">
                   &quot;
                 </span>
               </motion.article>
@@ -133,7 +134,7 @@ export function AboutGrowthSection() {
 
         <button
           type="button"
-          className="about-growth-nav about-growth-nav-right"
+          className={`${styles.nav} ${styles.navRight}`}
           aria-label="Next testimonials"
           onClick={showNext}
         >

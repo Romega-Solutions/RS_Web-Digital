@@ -1,0 +1,94 @@
+.root {
+  @apply bg-white text-black;
+  padding-bottom: 2rem;
+  padding-top: var(--section-space);
+  padding-inline: var(--layout-gutter);
+}
+
+.inner {
+  @apply relative mx-auto grid w-full max-w-6xl grid-cols-1 overflow-hidden pb-10 md:min-h-[56rem] md:pb-28;
+}
+
+.grid {
+  @apply pointer-events-none absolute left-[-1%] top-29 h-88 w-[54%];
+  background-image: linear-gradient(to right, rgb(55 141 238 / 0.13) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(55 141 238 / 0.13) 1px, transparent 1px);
+  background-size: 82px 82px;
+}
+
+.heading {
+  @apply relative z-10 md:absolute md:left-[8%] md:top-3;
+}
+
+.title {
+  @apply text-[3rem] leading-[0.92] font-medium tracking-tight text-brand-secondary md:text-[5rem];
+  font-family: var(--font-display);
+}
+
+.title em {
+  @apply italic;
+}
+
+.photo {
+  @apply relative z-10 overflow-hidden bg-surface;
+  box-shadow: 0 18px 38px rgb(24 35 52 / 0.1);
+}
+
+.photoMain {
+  @apply mt-8 h-64 w-full justify-self-end md:mt-0 md:h-72 md:w-[50%];
+}
+
+.photoMid {
+  @apply mt-6 h-32 w-[50%] md:absolute md:left-[19%] md:top-52 md:mt-0 md:h-46 md:w-62;
+}
+
+.photoLow {
+  @apply mt-6 h-36 w-[58%] md:absolute md:left-[4%] md:top-[25.5rem] md:mt-0 md:h-48 md:w-68;
+}
+
+.image {
+  @apply object-cover;
+}
+
+.photoMain .image {
+  object-position: center 38%;
+}
+
+.photoMid .image {
+  object-position: center 20%;
+}
+
+.photoLow .image {
+  object-position: center 18%;
+}
+
+.copy {
+  @apply relative z-10 mt-10 max-w-xl space-y-5 text-base leading-[1.16] text-black md:absolute md:left-[40%] md:top-[26.5rem] md:mt-0 md:max-w-136 md:text-[1.15rem];
+  font-family: var(--font-body);
+}
+
+.copy strong {
+  @apply font-black text-black;
+}
+
+.statement {
+  @apply relative z-10 mt-28 bg-[#fff0cb] px-6 py-9 text-center text-[2rem] leading-[1.05] text-brand-secondary md:absolute md:bottom-0 md:left-[4%] md:mt-0 md:w-[92%] md:px-12 md:py-11 md:text-[2.75rem];
+  font-family: var(--font-display);
+}
+
+.statement::before {
+  content: "";
+  @apply absolute left-1/2 top-0 h-5 w-8 -translate-x-1/2 -translate-y-full bg-[#fff0cb];
+  clip-path: polygon(50% 0, 0 100%, 100% 100%);
+}
+
+.statement em {
+  @apply italic;
+}
+
+@media (max-width: 767px) {
+  .root {
+    @apply pb-8;
+  }
+}
+@reference "../../../app/globals.css";

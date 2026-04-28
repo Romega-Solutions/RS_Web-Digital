@@ -15,7 +15,7 @@
 }
 
 .container {
-  @apply relative z-20 mx-auto w-full max-w-[80rem];
+  @apply relative z-20 mx-auto w-full max-w-7xl;
 }
 
 .header {
@@ -29,7 +29,7 @@
 }
 
 .description {
-  @apply mx-auto max-w-[700px] text-[1.125rem] leading-relaxed text-black;
+  @apply mx-auto max-w-175 text-[1.125rem] leading-relaxed text-black;
   font-family: var(--font-body);
 }
 
@@ -78,9 +78,20 @@
 }
 
 @keyframes centerPulse {
-  0% { opacity: 0; transform: scale(0.95); }
-  40% { opacity: 1; transform: scale(1.02); }
-  100% { opacity: 1; transform: scale(1); }
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  40% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .item--center .card:hover {
@@ -114,7 +125,8 @@
 }
 
 .cta {
-  @apply absolute left-1/2 top-1/2 z-[5] flex min-w-[180px] -translate-x-1/2 -translate-y-1/2 scale-[0.8] items-center justify-center rounded-xl border border-brand-secondary bg-brand-secondary px-6 py-3 text-white opacity-0 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] pointer-events-auto;
+  @apply absolute left-1/2 top-1/2 z-5 flex min-w-45 -translate-x-1/2 -translate-y-1/2 scale-[0.8] items-center justify-center rounded-xl border border-brand-secondary bg-brand-secondary px-6 py-3 text-white opacity-0 transition-all duration-300 pointer-events-auto;
+  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
   box-shadow: 0 2.5px 18.75px 5.5px rgba(18, 91, 161, 0.3);
   font-family: var(--font-body);
 }
@@ -150,7 +162,7 @@
 }
 
 .dot {
-  @apply h-3 w-3 min-h-[24px] min-w-[24px] cursor-pointer rounded-full border-none bg-brand-secondary/45 p-0 transition-all duration-300;
+  @apply h-3 w-3 min-h-6 min-w-6 cursor-pointer rounded-full border-none bg-brand-secondary/45 p-0 transition-all duration-300;
   transition-timing-function: ease;
 }
 
@@ -164,7 +176,7 @@
 
 /* Sidebar Styles */
 .sidebar {
-  @apply fixed inset-0 z-[60] hidden;
+  @apply fixed inset-0 z-60 hidden;
 }
 
 .sidebar--open {
@@ -172,11 +184,11 @@
 }
 
 .sidebar__overlay {
-  @apply fixed inset-0 z-[60] bg-black/50;
+  @apply fixed inset-0 z-60 bg-black/50;
 }
 
 .sidebar__panel {
-  @apply fixed inset-y-0 right-0 z-[70] h-full w-full translate-x-full overflow-x-hidden overflow-y-auto transition-transform duration-300 ease-in-out;
+  @apply fixed inset-y-0 right-0 z-70 h-full w-full translate-x-full overflow-x-hidden overflow-y-auto transition-transform duration-300 ease-in-out;
   background: linear-gradient(to right, #d4e9f7, #e8f4f9);
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.3);
 }
@@ -205,7 +217,7 @@
 }
 
 .sidebar__image-container {
-  @apply h-[120px] w-[120px] shrink-0 overflow-hidden rounded-[126px] border-b-[1.5px] border-l border-r border-[#0076e5];
+  @apply h-30 w-30 shrink-0 overflow-hidden rounded-[126px] border-b-[1.5px] border-l border-r border-[#0076e5];
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
@@ -256,7 +268,7 @@
 }
 
 .sidebar__bio {
-  @apply m-0 pr-4 font-medium leading-[1.25] text-[#69728a];
+  @apply m-0 pr-4 font-medium leading-tight text-[#69728a];
   font-family: var(--font-body);
   font-size: 16px;
 }
@@ -300,7 +312,7 @@
 }
 
 .sidebar__icon-button {
-  @apply flex w-auto min-w-[48px] items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-lg border-none bg-blue-200 p-3 text-[#0066cc] no-underline transition-all duration-300;
+  @apply flex w-auto min-w-12 items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-lg border-none bg-blue-200 p-3 text-[#0066cc] no-underline transition-all duration-300;
   transition-timing-function: ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -315,7 +327,7 @@
 }
 
 .sidebar__icon-button:hover .sidebar__button-label {
-  @apply max-w-[200px] opacity-100;
+  @apply max-w-50 opacity-100;
 }
 
 .sidebar__carousel {
@@ -341,68 +353,238 @@
 }
 
 @media (min-width: 640px) {
-  .sidebar__panel { @apply w-[380px]; }
-  .track-wrapper { height: 350px; }
+  .sidebar__panel {
+    @apply w-95;
+  }
+
+  .track-wrapper {
+    height: 350px;
+  }
 }
 
 @media (max-width: 639px) {
-  .item--position-0, .item--position-1, .item--position-2,
-  .item--position-4, .item--position-5, .item--position-6 { @apply hidden; }
-  .item--position-3 { @apply z-[50] opacity-100; }
-  .item--position-3 .card { width: 280px; height: 300px; }
+
+  .item--position-0,
+  .item--position-1,
+  .item--position-2,
+  .item--position-4,
+  .item--position-5,
+  .item--position-6 {
+    @apply hidden;
+  }
+
+  .item--position-3 {
+    @apply z-50 opacity-100;
+  }
+
+  .item--position-3 .card {
+    width: 280px;
+    height: 300px;
+  }
 }
 
 @media (min-width: 640px) and (max-width: 767px) {
-  .item--position-0, .item--position-1, .item--position-5, .item--position-6 { @apply hidden; }
-  .item--position-2 { @apply mr-[-20px] z-[2] opacity-70; }
-  .item--position-2 .card { width: 150px; height: 180px; }
-  .item--position-3 { @apply mr-[-20px] z-[50] opacity-100; }
-  .item--position-3 .card { width: 280px; height: 320px; }
-  .item--position-4 { @apply mr-0 z-[2] opacity-70; }
-  .item--position-4 .card { width: 150px; height: 180px; }
+
+  .item--position-0,
+  .item--position-1,
+  .item--position-5,
+  .item--position-6 {
+    @apply hidden;
+  }
+
+  .item--position-2 {
+    @apply -mr-5 z-2 opacity-70;
+  }
+
+  .item--position-2 .card {
+    width: 150px;
+    height: 180px;
+  }
+
+  .item--position-3 {
+    @apply -mr-5 z-50 opacity-100;
+  }
+
+  .item--position-3 .card {
+    width: 280px;
+    height: 320px;
+  }
+
+  .item--position-4 {
+    @apply mr-0 z-2 opacity-70;
+  }
+
+  .item--position-4 .card {
+    width: 150px;
+    height: 180px;
+  }
 }
 
 @media (min-width: 768px) {
-  .title { font-size: 2.5rem; }
-  .track-wrapper { @apply mb-12; height: 400px; }
-  .name { font-size: 2rem; }
-  .role { font-size: 1.125rem; }
-  .controls { @apply mt-8 gap-8; }
-  .button { @apply h-12 w-12; }
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .track-wrapper {
+    @apply mb-12;
+    height: 400px;
+  }
+
+  .name {
+    font-size: 2rem;
+  }
+
+  .role {
+    font-size: 1.125rem;
+  }
+
+  .controls {
+    @apply mt-8 gap-8;
+  }
+
+  .button {
+    @apply h-12 w-12;
+  }
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
-  .item--position-0, .item--position-6 { @apply hidden; }
-  .item--position-1 { @apply mr-[-25px] z-[1] opacity-60; }
-  .item--position-1 .card { width: 140px; height: 160px; }
-  .item--position-2 { @apply mr-[-30px] z-[3] opacity-80; }
-  .item--position-2 .card { width: 200px; height: 230px; }
-  .item--position-3 { @apply mr-[-30px] z-[50] opacity-100; }
-  .item--position-3 .card { width: 300px; height: 340px; }
-  .item--position-4 { @apply mr-[-25px] z-[3] opacity-80; }
-  .item--position-4 .card { width: 200px; height: 230px; }
-  .item--position-5 { @apply mr-0 z-[1] opacity-60; }
-  .item--position-5 .card { width: 140px; height: 160px; }
+
+  .item--position-0,
+  .item--position-6 {
+    @apply hidden;
+  }
+
+  .item--position-1 {
+    @apply -mr-6.25 z-1 opacity-60;
+  }
+
+  .item--position-1 .card {
+    width: 140px;
+    height: 160px;
+  }
+
+  .item--position-2 {
+    @apply -mr-7.5 z-3 opacity-80;
+  }
+
+  .item--position-2 .card {
+    width: 200px;
+    height: 230px;
+  }
+
+  .item--position-3 {
+    @apply -mr-7.5 z-50 opacity-100;
+  }
+
+  .item--position-3 .card {
+    width: 300px;
+    height: 340px;
+  }
+
+  .item--position-4 {
+    @apply -mr-6.25 z-3 opacity-80;
+  }
+
+  .item--position-4 .card {
+    width: 200px;
+    height: 230px;
+  }
+
+  .item--position-5 {
+    @apply mr-0 z-1 opacity-60;
+  }
+
+  .item--position-5 .card {
+    width: 140px;
+    height: 160px;
+  }
 }
 
 @media (min-width: 1024px) {
-  .track-wrapper { height: 450px; }
-  .item--position-0 { @apply mr-[-30px] z-[1] opacity-50; }
-  .item--position-0 .card { width: 140px; height: 140px; }
-  .item--position-1 { @apply mr-[-40px] z-[2] opacity-70; }
-  .item--position-1 .card { width: 200px; height: 215px; }
-  .item--position-2 { @apply mr-[-50px] z-[3] opacity-90; }
-  .item--position-2 .card { width: 270px; height: 288px; }
-  .item--position-3 { @apply mr-[-50px] z-[50] opacity-100; }
-  .item--position-3 .card { width: 340px; height: 365px; }
-  .item--position-4 { @apply mr-[-40px] z-[3] opacity-90; }
-  .item--position-4 .card { width: 270px; height: 288px; }
-  .item--position-5 { @apply mr-[-30px] z-[2] opacity-70; }
-  .item--position-5 .card { width: 200px; height: 215px; }
-  .item--position-6 { @apply mr-0 z-[1] opacity-50; }
-  .item--position-6 .card { width: 140px; height: 140px; }
-  .item--position-0 .name, .item--position-6 .name { @apply text-[0.875rem]; }
-  .item--position-0 .role, .item--position-6 .role { @apply text-[0.625rem]; }
-  .item--position-1 .name, .item--position-5 .name { @apply text-[1.25rem]; }
-  .item--position-1 .role, .item--position-5 .role { @apply text-[0.875rem]; }
+  .track-wrapper {
+    height: 450px;
+  }
+
+  .item--position-0 {
+    @apply -mr-7.5 z-1 opacity-50;
+  }
+
+  .item--position-0 .card {
+    width: 140px;
+    height: 140px;
+  }
+
+  .item--position-1 {
+    @apply -mr-10 z-2 opacity-70;
+  }
+
+  .item--position-1 .card {
+    width: 200px;
+    height: 215px;
+  }
+
+  .item--position-2 {
+    @apply -mr-12.5 z-3 opacity-90;
+  }
+
+  .item--position-2 .card {
+    width: 270px;
+    height: 288px;
+  }
+
+  .item--position-3 {
+    @apply -mr-12.5 z-50 opacity-100;
+  }
+
+  .item--position-3 .card {
+    width: 340px;
+    height: 365px;
+  }
+
+  .item--position-4 {
+    @apply -mr-10 z-3 opacity-90;
+  }
+
+  .item--position-4 .card {
+    width: 270px;
+    height: 288px;
+  }
+
+  .item--position-5 {
+    @apply -mr-7.5 z-2 opacity-70;
+  }
+
+  .item--position-5 .card {
+    width: 200px;
+    height: 215px;
+  }
+
+  .item--position-6 {
+    @apply mr-0 z-1 opacity-50;
+  }
+
+  .item--position-6 .card {
+    width: 140px;
+    height: 140px;
+  }
+
+  .item--position-0 .name,
+  .item--position-6 .name {
+    @apply text-[0.875rem];
+  }
+
+  .item--position-0 .role,
+  .item--position-6 .role {
+    @apply text-[0.625rem];
+  }
+
+  .item--position-1 .name,
+  .item--position-5 .name {
+    @apply text-[1.25rem];
+  }
+
+  .item--position-1 .role,
+  .item--position-5 .role {
+    @apply text-[0.875rem];
+  }
 }

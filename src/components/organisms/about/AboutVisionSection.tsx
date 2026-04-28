@@ -1,32 +1,33 @@
 import Image from "next/image";
-import Link from "next/link";
+import { AppButton } from "@/components/atoms/Button";
+import styles from "./AboutVisionSection.module.css";
 
 export function AboutVisionSection() {
   return (
-    <section className="about-vision-section" aria-labelledby="about-vision-title">
-      <div className="about-vision-inner">
-        <div className="about-vision-copy">
-          <h2 id="about-vision-title" className="about-vision-title">
+    <section className={styles.root} aria-labelledby="about-vision-title">
+      <div className={styles.inner}>
+        <div className={styles.copy}>
+          <h2 id="about-vision-title" className={styles.title}>
             Our Vision
           </h2>
-          <p className="about-vision-text">
+          <p className={styles.text}>
             To shape a future where businesses grow with clarity, consistency,
             and purpose, scaling not just by moving fast, but by building teams
             that perform with intention and brands that connect with trust,
             relevance, and long-term value.
           </p>
-          <Link href="/services" className="about-vision-cta">
+          <AppButton href="/services" variant="primary" size="md" className={styles.button}>
             Connect with Us today!
-          </Link>
+          </AppButton>
         </div>
 
-        <div className="about-vision-photo-frame">
+        <div className={styles.photoFrame}>
           <Image
-            src="/vision-1.png"
+            src="/vision-1.webp"
             alt="A professional working from a laptop"
             fill
             sizes="(max-width: 767px) 100vw, 42vw"
-            className="about-vision-photo"
+            className={styles.photo}
           />
         </div>
       </div>

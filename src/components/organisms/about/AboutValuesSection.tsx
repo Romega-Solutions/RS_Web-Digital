@@ -1,12 +1,13 @@
 import Image from "next/image";
+import styles from "./AboutValuesSection.module.css";
 
 const values = [
   {
     title: (
       <>
-        <span className="about-values-initial">R</span>eliable &amp;
+        <span className={styles.initial}>R</span>eliable &amp;
         <br />
-        <span className="about-values-initial">O</span>pportunity-Driven
+        <span className={styles.initial}>O</span>pportunity-Driven
       </>
     ),
     description:
@@ -15,11 +16,11 @@ const values = [
   {
     title: (
       <>
-        <span className="about-values-phrase">
-          <span className="about-values-initial">M</span>eaningful Collaboration &amp;
+        <span className={styles.phrase}>
+          <span className={styles.initial}>M</span>eaningful Collaboration &amp;
         </span>
         <br />
-        <span className="about-values-initial">E</span>xcellence
+        <span className={styles.initial}>E</span>xcellence
       </>
     ),
     description:
@@ -28,9 +29,9 @@ const values = [
   {
     title: (
       <>
-        <span className="about-values-initial">G</span>rowth-Focused &amp;
+        <span className={styles.initial}>G</span>rowth-Focused &amp;
         <br />
-        <span className="about-values-initial">A</span>daptable
+        <span className={styles.initial}>A</span>daptable
       </>
     ),
     description:
@@ -40,26 +41,26 @@ const values = [
 
 export function AboutValuesSection() {
   return (
-    <section className="about-values-section" aria-labelledby="about-values-title">
-      <div className="about-values-inner">
-        <div className="about-values-photo-frame">
+    <section className={styles.root} aria-labelledby="about-values-title">
+      <div className={styles.inner}>
+        <div className={styles.photoFrame}>
           <Image
-            src="/stand-1.png"
+            src="/stand-1.webp"
             alt="A team collaborating around a laptop"
             fill
             sizes="(max-width: 767px) 100vw, 48vw"
-            className="about-values-photo"
+            className={styles.photo}
           />
         </div>
 
-        <div className="about-values-copy">
-          <h2 id="about-values-title" className="about-values-title">
+        <div className={styles.copy}>
+          <h2 id="about-values-title" className={styles.title}>
             What We Stand For
           </h2>
 
-          <div className="about-values-list">
+          <div className={styles.list}>
             {values.map((value) => (
-              <article key={value.description} className="about-values-item">
+              <article key={value.description} className={styles.item}>
                 <h3>{value.title}</h3>
                 <p>{value.description}</p>
               </article>
