@@ -22,7 +22,7 @@ export function AboutVisionSection() {
 
         <div className="about-vision-photo-frame">
           <Image
-            src="/prompt-images/about/3_vision.png"
+            src="/vision-1.png"
             alt="A professional working from a laptop"
             fill
             sizes="(max-width: 767px) 100vw, 42vw"

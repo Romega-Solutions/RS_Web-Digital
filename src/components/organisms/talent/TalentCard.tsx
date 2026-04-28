@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { AppButton } from "@/components/atoms/Button";
 import type { TalentProfile } from "./talentData";
 
 type TalentCardProps = {
@@ -54,9 +54,9 @@ export function TalentCard({ talent }: TalentCardProps) {
 
       <div className="talent-card__footer">
         <span className="talent-card__category">{talent.category}</span>
-        <Link href="/contact" className="talent-card__cta">
+        <AppButton href="/contact" className="talent-card__cta">
           REQUEST INTRO
-        </Link>
+        </AppButton>
       </div>
     </article>
   );

@@ -23,7 +23,7 @@ export function AboutPartnersSection() {
 
         <div className="about-partners-map" aria-label="Romega partner regions">
           <Image
-            src="/maps_part.png"
+            src="/map.png"
             alt="World map showing Romega partner regions"
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1200px"

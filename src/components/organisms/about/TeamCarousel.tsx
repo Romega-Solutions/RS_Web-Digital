@@ -2,7 +2,7 @@
 
 import { TEAM_MEMBERS, type TeamMember } from "@/lib/constants";
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState, type TouchEvent } from "react";
+import { useCallback, useRef, useState, type KeyboardEvent, type TouchEvent } from "react";
 
 type TeamCarouselProps = {
   onMemberClick?: (member: TeamMember) => void;
@@ -76,21 +76,17 @@ export function TeamCarousel({ onMemberClick }: TeamCarouselProps) {
     }
   };
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "ArrowLeft") {
-        handleScroll(-1);
-      }
+  const handleTrackKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      handleScroll(-1);
+    }
 
-      if (event.key === "ArrowRight") {
-        handleScroll(1);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleScroll]);
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      handleScroll(1);
+    }
+  };
 
   const visibleMembers = Array.from({ length: 7 }, (_, offset) => {
     const relativePosition = offset - 3;
@@ -119,6 +115,8 @@ export function TeamCarousel({ onMemberClick }: TeamCarouselProps) {
 
         <div
           className="team-carousel__track-wrapper"
+          tabIndex={0}
+          onKeyDown={handleTrackKeyDown}
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}

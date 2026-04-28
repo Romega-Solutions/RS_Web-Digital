@@ -7,6 +7,11 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
+        disallow: ["/api/", "/_next/"],
+      },
+      {
+        userAgent: ["Googlebot", "Bingbot"],
+        allow: "/",
       },
       {
         userAgent: "OAI-SearchBot",
@@ -18,6 +23,10 @@ export default function robots(): MetadataRoute.Robots {
       },
       {
         userAgent: "ChatGPT-User",
+        allow: "/",
+      },
+      {
+        userAgent: ["ClaudeBot", "PerplexityBot", "Google-Extended"],
         allow: "/",
       },
     ],

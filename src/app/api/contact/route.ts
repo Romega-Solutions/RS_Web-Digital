@@ -5,10 +5,11 @@ type ContactBody = {
   firstName?: string;
   lastName?: string;
   email?: string;
-  phone?: string;
-  company?: string;
   subject?: string;
+  company?: string;
+  phone?: string;
   message?: string;
+  recaptchaToken?: string;
   botfield?: string;
 };
 
@@ -68,7 +69,56 @@ function hasMaliciousPattern(value: string) {
   return patterns.some((pattern) => pattern.test(value));
 }
 
-async function sendEmail(body: Required<Omit<ContactBody, "botfield">>) {
+const subjectLabelMap: Record<string, string> = {
+  general: "General Inquiry",
+  business: "Business Partnership",
+  support: "Technical Support",
+  careers: "Career Opportunities",
+};
+
+function normalizeSubject(value: string) {
+  const normalized = value.trim().toLowerCase();
+  if (subjectLabelMap[normalized]) {
+    return { code: normalized, label: subjectLabelMap[normalized] };
+  }
+
+  const matchedKey = Object.keys(subjectLabelMap).find(
+    (key) => subjectLabelMap[key].toLowerCase() === normalized,
+  );
+  if (matchedKey) {
+    return { code: matchedKey, label: subjectLabelMap[matchedKey] };
+  }
+
+  return null;
+}
+
+async function verifyRecaptcha(token: string) {
+  const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+  if (!secretKey) {
+    return true;
+  }
+
+  const response = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: `secret=${encodeURIComponent(secretKey)}&response=${encodeURIComponent(token)}`,
+  });
+
+  const data = (await response.json()) as { success?: boolean };
+  return data.success === true;
+}
+
+type ContactEmailPayload = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  subject: string;
+  company: string;
+  phone: string;
+  message: string;
+};
+
+async function sendEmail(body: ContactEmailPayload) {
   const apiKey = process.env.RESEND_API_KEY;
   const adminEmail = process.env.ADMIN_EMAIL || "info@romega-solutions.com";
 
@@ -88,25 +138,25 @@ async function sendEmail(body: Required<Omit<ContactBody, "botfield">>) {
     replyTo: body.email,
     subject: `New Contact: ${body.subject}`,
     html: `
-      <div style="font-family: Arial, sans-serif; background: #f4f7fb; padding: 32px;">
+      <div style="font-family: Arial, sans-serif; background: #f4f6fb; padding: 32px;">
         <div style="max-width: 720px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #d7e3f4;">
-          <div style="background: linear-gradient(135deg, #378dee, #7998f0); color: #ffffff; padding: 28px 32px;">
+          <div style="background: linear-gradient(135deg, #358df0, #a89ff8); color: #ffffff; padding: 28px 32px;">
             <h1 style="margin: 0; font-size: 28px;">Romega Solutions</h1>
             <p style="margin: 8px 0 0; font-size: 15px;">New contact form submission</p>
           </div>
           <div style="padding: 32px;">
-            <p style="margin-top: 0; color: #1a1c1e; font-size: 16px;">A new inquiry was submitted through the RS Web Digital contact page.</p>
+            <p style="margin-top: 0; color: #424861; font-size: 16px;">A new inquiry was submitted through the RS Web Digital contact page.</p>
             <table style="width: 100%; border-collapse: collapse; margin: 24px 0;">
-              <tr><td style="padding: 10px 0; font-weight: 700; color: #378dee;">Name</td><td style="padding: 10px 0; color: #1a1c1e;">${body.firstName} ${body.lastName}</td></tr>
-              <tr><td style="padding: 10px 0; font-weight: 700; color: #378dee;">Email</td><td style="padding: 10px 0; color: #1a1c1e;">${body.email}</td></tr>
-              <tr><td style="padding: 10px 0; font-weight: 700; color: #378dee;">Phone</td><td style="padding: 10px 0; color: #1a1c1e;">${body.phone}</td></tr>
-              <tr><td style="padding: 10px 0; font-weight: 700; color: #378dee;">Company</td><td style="padding: 10px 0; color: #1a1c1e;">${body.company || "Not provided"}</td></tr>
-              <tr><td style="padding: 10px 0; font-weight: 700; color: #378dee;">Subject</td><td style="padding: 10px 0; color: #1a1c1e;">${body.subject}</td></tr>
-              <tr><td style="padding: 10px 0; font-weight: 700; color: #378dee;">Submitted</td><td style="padding: 10px 0; color: #1a1c1e;">${submittedAt}</td></tr>
+              <tr><td style="padding: 10px 0; font-weight: 700; color: #358df0;">Name</td><td style="padding: 10px 0; color: #424861;">${body.firstName} ${body.lastName}</td></tr>
+              <tr><td style="padding: 10px 0; font-weight: 700; color: #358df0;">Email</td><td style="padding: 10px 0; color: #424861;">${body.email}</td></tr>
+              <tr><td style="padding: 10px 0; font-weight: 700; color: #358df0;">Phone</td><td style="padding: 10px 0; color: #424861;">${body.phone}</td></tr>
+              <tr><td style="padding: 10px 0; font-weight: 700; color: #358df0;">Company</td><td style="padding: 10px 0; color: #424861;">${body.company || "Not provided"}</td></tr>
+              <tr><td style="padding: 10px 0; font-weight: 700; color: #358df0;">Subject</td><td style="padding: 10px 0; color: #424861;">${body.subject}</td></tr>
+              <tr><td style="padding: 10px 0; font-weight: 700; color: #358df0;">Submitted</td><td style="padding: 10px 0; color: #424861;">${submittedAt}</td></tr>
             </table>
             <div style="padding: 20px; border-radius: 12px; background: #f7f9fc; border: 1px solid #d7e3f4;">
-              <p style="margin: 0 0 12px; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #378dee; font-weight: 700;">Message</p>
-              <p style="margin: 0; white-space: pre-wrap; color: #1a1c1e; line-height: 1.7;">${body.message}</p>
+              <p style="margin: 0 0 12px; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #358df0; font-weight: 700;">Message</p>
+              <p style="margin: 0; white-space: pre-wrap; color: #424861; line-height: 1.7;">${body.message}</p>
             </div>
           </div>
         </div>
@@ -132,7 +182,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: true, message: "Thank you. Your message has been sent." });
     }
 
-    const requiredFields: Array<keyof ContactBody> = ["firstName", "lastName", "email", "phone", "message"];
+    const requiredFields: Array<keyof ContactBody> = [
+      "firstName",
+      "lastName",
+      "email",
+      "subject",
+      "phone",
+      "message",
+    ];
     for (const field of requiredFields) {
       if (!body[field] || !String(body[field]).trim()) {
         return NextResponse.json(
@@ -150,6 +207,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, message: "Invalid phone number." }, { status: 400 });
     }
 
+    if (process.env.RECAPTCHA_SECRET_KEY) {
+      if (!body.recaptchaToken) {
+        return NextResponse.json({ success: false, message: "reCAPTCHA verification required." }, { status: 400 });
+      }
+
+      const recaptchaValid = await verifyRecaptcha(body.recaptchaToken);
+      if (!recaptchaValid) {
+        return NextResponse.json({ success: false, message: "reCAPTCHA verification failed." }, { status: 400 });
+      }
+    }
+
+    const normalizedSubject = normalizeSubject(body.subject!);
+    if (!normalizedSubject) {
+      return NextResponse.json({ success: false, message: "Invalid subject selection." }, { status: 400 });
+    }
+
     const inspectionFields = [body.firstName, body.lastName, body.company, body.subject, body.message].filter(
       Boolean,
     ) as string[];
@@ -164,7 +237,7 @@ export async function POST(request: NextRequest) {
       email: body.email!.trim().toLowerCase(),
       phone: sanitizeText(body.phone!, 40),
       company: sanitizeText(body.company || "", 120),
-      subject: sanitizeText(body.subject || "General inquiry", 160) || "General inquiry",
+      subject: normalizedSubject.label,
       message: sanitizeText(body.message!, 2000),
     };
 

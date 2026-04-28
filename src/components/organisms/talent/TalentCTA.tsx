@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { AppButton } from "@/components/atoms/Button";
 
 export function TalentCTA() {
   return (
@@ -14,12 +14,12 @@ export function TalentCTA() {
             brief, source the right profile, and guide the next conversation.
           </p>
           <div className="talent-cta__actions">
-            <Link href="/contact" className="talent-cta__action talent-cta__action--primary">
+            <AppButton href="/contact" className="talent-cta__action talent-cta__action--primary">
               Contact us
-            </Link>
-            <Link href="/services" className="talent-cta__action talent-cta__action--secondary">
+            </AppButton>
+            <AppButton href="/services" className="talent-cta__action talent-cta__action--secondary">
               Explore services
-            </Link>
+            </AppButton>
           </div>
         </div>
 
@@ -28,8 +28,8 @@ export function TalentCTA() {
         <div className="talent-cta__right">
           <div className="talent-cta__avatar-wrap">
             <Image
-              src="/prompt-images/romega-talent.png"
-              alt="Romega talent specialist"
+              src="/images/about/IC/IC_CEO_Robbie.png"
+              alt="Sir Robbie"
               fill
               sizes="96px"
               className="talent-cta__avatar"
