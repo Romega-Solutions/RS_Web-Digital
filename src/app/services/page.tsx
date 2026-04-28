@@ -1,19 +1,27 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
-import { ConsultationBanner } from "../../components/ConsultationBanner";
-import { ExploreServicesButton } from "../../components/ExploreServicesButton";
-import { ServiceStrip } from "../../components/ServiceStrip";
-import { SiteFooter } from "../../components/SiteFooter";
-import { SiteHeader } from "../../components/SiteHeader";
+import { ExploreServicesButton } from "@/components/atoms/Button";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { ServiceStrip } from "@/components/organisms/home/ServiceStrip";
+import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
+import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
+import { ConsultationBanner } from "@/components/organisms/shared/ConsultationBanner";
+import { absoluteUrl, createMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Services | Romega Solutions",
-  description: "Explore Romega Solutions services for talent, brand growth, and operations.",
-  alternates: {
-    canonical: "/services",
-  },
-};
+export const metadata: Metadata = createMetadata({
+  title: "Services for Talent, Brand, and Operations",
+  description:
+    "Explore Romega Solutions services across talent acquisition, brand and growth support, and strategic operations for scaling businesses.",
+  path: "/services",
+  keywords: [
+    "talent solutions",
+    "brand strategy services",
+    "strategic operations consulting",
+    "remote hiring support",
+    "business growth services",
+  ],
+});
 
 const detailedServices = [
   {
@@ -67,11 +75,60 @@ const detailedServices = [
 ] as const;
 
 export default function ServicesPage() {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "@id": absoluteUrl("/services#webpage"),
+        url: absoluteUrl("/services"),
+        name: "Romega Solutions Services",
+        description:
+          "Explore Romega Solutions services across talent acquisition, brand and growth support, and strategic operations for scaling businesses.",
+        isPartOf: {
+          "@id": absoluteUrl("/#website"),
+        },
+      },
+      {
+        "@type": "OfferCatalog",
+        name: "Romega Solutions Service Catalog",
+        itemListElement: detailedServices.map((service) => ({
+          "@type": "Offer",
+          itemOffered: {
+            "@type": "Service",
+            name: service.title,
+            description: service.copy,
+            serviceType: service.title,
+            url: absoluteUrl("/services"),
+          },
+        })),
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: absoluteUrl("/"),
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Services",
+            item: absoluteUrl("/services"),
+          },
+        ],
+      },
+    ],
+  };
+
   return (
     <div className="site-shell" id="top">
+      <JsonLd id="services-structured-data" data={structuredData} />
       <SiteHeader activeItem="Services" />
 
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <section className="services-hero">
           <div className="services-hero-media" aria-hidden="true">
             <Image
@@ -106,7 +163,11 @@ export default function ServicesPage() {
 
         <ServiceStrip />
 
-        <section className="services-detail-section" aria-labelledby="services-detail-title">
+        <section
+          id="services-overview"
+          className="services-detail-section"
+          aria-labelledby="services-detail-title"
+        >
           <div className="services-detail-inner">
             <h1 id="services-detail-title" className="sr-only">
               Service details
