@@ -2,15 +2,15 @@
 
 ## Color Palette
 
-Our design system utilizes a `light` color mode. The primary brand color is `FEBD19`, a vibrant yellow that signifies energy and prominence. It's used for primary actions and key interactive elements.
+Our design system utilizes a `light` color mode. The primary brand color is `FEBD18`, a vibrant yellow that signifies energy and prominence. It's used for primary actions and key interactive elements.
 
-A complementary `secondary color` of `378DEE` (a bright blue) supports less prominent UI elements and secondary actions, ensuring visual hierarchy. An additional `tertiary color` of `7998F0` (a softer blue) provides an accent for highlights and decorative elements.
+A complementary `secondary color` of `358DF0` (a bright blue) supports less prominent UI elements and secondary actions, ensuring visual hierarchy. A `tertiary color` of `A89FF8` adds a softer editorial accent, while `FD755E` is reserved for warm callouts and supporting promotional moments.
 
-For backgrounds and neutral surfaces, we use `1A1C1E` as our `neutral color`, providing a consistent dark base that contrasts effectively with the vibrant brand colors.
+For backgrounds and neutral surfaces, we use `424861` as our `neutral color`, paired with `FFFFFF` surfaces to keep the interface clean and airy.
 
 ## Typography
 
-The typography for our design system is anchored by the `Public Sans` font family across all major text elements.
+The typography for our design system is anchored by `Poppins` for body and interface text, with a high-contrast editorial serif for headings that reflects the `The Seasons` mood board direction.
 
 Additional approved font families:
 
@@ -21,8 +21,8 @@ Additional approved font families:
 - `TT Ramillas`
 - `Work Sans`
 
-- **Headlines:** All headlines are set in `Public Sans`, chosen for its modern and highly legible characteristics, ensuring strong impact and readability for titles and headings.
-- **Body Text:** The main body text uses `Public Sans`, providing a clean, accessible, and comfortable reading experience for longer content.
-- **Labels:** Interactive labels and smaller text elements also use `Public Sans`, maintaining a consistent and unified typographic voice throughout the UI.
+- **Headlines:** All primary headlines use a `The Seasons`-style serif treatment for a more refined, editorial brand voice.
+- **Body Text:** The main body text uses `Poppins`, providing a clean, accessible, and comfortable reading experience for longer content.
+- **Labels:** Interactive labels, buttons, and supporting UI text use `Poppins` to preserve clarity and consistency.
 
 ## Shape and Form
