@@ -1,6 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
 import type { Metadata } from "next";
+import { AppButton } from "@/components/atoms/Button";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { AboutExpertsSection } from "@/components/organisms/about/AboutExpertsSection";
 import { AboutGrowthSection } from "@/components/organisms/about/AboutGrowthSection";
@@ -110,9 +110,9 @@ export default function AboutPage() {
                 </p>
               </div>
 
-              <Link href="/services" className="about-hero-cta">
+              <AppButton href="/services" variant="primary" size="lg">
                 Connect with Us today!
-              </Link>
+              </AppButton>
             </div>
           </div>
         </section>
