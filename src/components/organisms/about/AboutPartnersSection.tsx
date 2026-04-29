@@ -11,14 +11,14 @@ export function AboutPartnersSection() {
 
         <div className={styles.copy}>
           <p>
-            We work with founders, executives, and growing teams from startups to
-            established organizations, all who share one thing in common: a
-            commitment to build growth that&apos;s intentional, confident, and strategic.
+            We work with founders, executives, and growing teams, from startups
+            to established organizations, who share one common goal: building
+            growth that feels intentional, confident, and well-directed.
           </p>
           <p>
-            Whether you&apos;re expanding into new markets, building internal
-            capabilities, or strengthening your brand identity,{" "}
-            <strong>Romega stands with you as a growth partner.</strong>
+            Whether you&apos;re entering new markets, building internal
+            capability, or strengthening your brand,{" "}
+            <strong>Romega works alongside you as a growth partner.</strong>
           </p>
         </div>
 

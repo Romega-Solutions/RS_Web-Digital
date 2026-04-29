@@ -11,13 +11,12 @@ export function AboutVisionSection() {
             Our Vision
           </h2>
           <p className={styles.text}>
-            To shape a future where businesses grow with clarity, consistency,
-            and purpose, scaling not just by moving fast, but by building teams
-            that perform with intention and brands that connect with trust,
-            relevance, and long-term value.
+            We want to help businesses scale with clarity, consistency, and
+            purpose by building teams that perform well, brands people trust,
+            and growth that holds up over time.
           </p>
           <AppButton href="/services" variant="primary" size="md" className={styles.button}>
-            Connect with Us today!
+            Explore Our Services
           </AppButton>
         </div>
 

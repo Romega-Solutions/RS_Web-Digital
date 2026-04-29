@@ -1,12 +1,22 @@
 import { AppButton } from "@/components/atoms/Button";
-import type { TalentProfile } from "./talentData";
 import styles from "./TalentCard.module.css";
 
-type TalentCardProps = {
-  talent: TalentProfile;
+type TalentCardData = {
+  id: string;
+  name: string;
+  role: string;
+  location: string;
+  category: string;
+  experienceLevel: "Junior" | "Mid-Level" | "Senior" | "Lead" | "Principal";
+  tagline: string;
+  skills: string[];
 };
 
-function getSeniorityLabel(level: TalentProfile["experienceLevel"]) {
+type TalentCardProps = {
+  talent: TalentCardData;
+};
+
+function getSeniorityLabel(level: TalentCardData["experienceLevel"]) {
   switch (level) {
     case "Junior":
       return "JUNIOR";
@@ -24,6 +34,10 @@ function getSeniorityLabel(level: TalentProfile["experienceLevel"]) {
 }
 
 export function TalentCard({ talent }: TalentCardProps) {
+  const contactHref = `/contact?role=${encodeURIComponent(talent.role)}&talentId=${encodeURIComponent(
+    talent.id,
+  )}`;
+
   return (
     <article className={styles.root}>
       <div className={styles.header}>
@@ -47,15 +61,13 @@ export function TalentCard({ talent }: TalentCardProps) {
           </span>
         ))}
         {talent.skills.length > 3 ? (
-          <span className={`${styles.skill} ${styles.skillMore}`}>
-            +{talent.skills.length - 3} more
-          </span>
+          <span className={`${styles.skill} ${styles.skillMore}`}>+{talent.skills.length - 3} more</span>
         ) : null}
       </div>
 
       <div className={styles.footer}>
         <span className={styles.category}>{talent.category}</span>
-        <AppButton href="/contact" className={styles.cta}>
+        <AppButton href={contactHref} className={styles.cta}>
           REQUEST INTRO
         </AppButton>
       </div>

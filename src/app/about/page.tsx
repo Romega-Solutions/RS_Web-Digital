@@ -59,6 +59,7 @@ export default function AboutPage() {
       jsonLd={<JsonLd id="about-structured-data" data={structuredData} />}
       header={<SiteHeader activeItem="About" />}
       footer={<SiteFooter />}
+      shellVariant="hero"
     >
       <AboutHero />
       <AboutMissionSection />

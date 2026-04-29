@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { MainTemplate } from "@/components/templates/MainTemplate";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
@@ -76,9 +77,12 @@ export default function TalentPage() {
       jsonLd={<JsonLd id="talent-structured-data" data={structuredData} />}
       header={<SiteHeader activeItem="Careers & Talents" />}
       footer={<SiteFooter />}
+      shellVariant="hero"
     >
-      <TalentPageClient />
-      <TalentPool talents={talentProfiles} />
+      <TalentPageClient talents={talentProfiles} />
+      <Suspense fallback={null}>
+        <TalentPool talents={talentProfiles} />
+      </Suspense>
       <TalentCTA />
     </MainTemplate>
   );

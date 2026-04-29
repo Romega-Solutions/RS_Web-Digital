@@ -21,11 +21,11 @@
 }
 
 .content {
-  @apply relative z-10 mx-auto flex min-h-80 w-full max-w-5xl flex-col items-center justify-center text-center text-white md:min-h-92;
+  @apply relative z-10 mx-auto flex min-h-72 w-full max-w-4xl flex-col items-center justify-center text-center text-white md:min-h-84;
 }
 
 .title {
-  @apply text-4xl leading-[0.94] tracking-tight md:text-[5rem];
+  @apply text-[2.8rem] leading-[0.96] tracking-tight md:text-[4.2rem];
   font-family: var(--font-display);
 }
 
@@ -42,21 +42,40 @@
 }
 
 .copy {
-  @apply mt-5 max-w-4xl text-xl leading-tight text-white/95 md:text-[2rem];
+  @apply mt-4 text-[1rem] leading-[1.5] text-white/95 md:text-[1.35rem];
   font-family: var(--font-body);
+  max-width: min(100%, var(--measure-readable));
 }
 
 .button {
-  @apply mt-8;
+  @apply mt-6;
 }
 
 @media (max-width: 767px) {
+  .root {
+    @apply px-0;
+  }
+
+  .content {
+    @apply min-h-64 px-5;
+  }
+
   .title {
-    font-size: 3rem;
-    line-height: 0.94;
+    font-size: 2.35rem;
+    line-height: 0.98;
   }
 
   .copy {
-    @apply text-lg;
+    @apply text-[0.98rem];
+    max-width: min(100%, var(--measure-readable-mobile));
+  }
+
+  .emphasis::after {
+    @apply -inset-x-4 -inset-y-1.5;
+    border-width: 2px;
+  }
+
+  .button {
+    @apply w-full max-w-xs justify-center;
   }
 }

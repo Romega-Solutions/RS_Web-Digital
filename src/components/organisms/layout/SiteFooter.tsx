@@ -5,11 +5,66 @@ import Link from "next/link";
 import { siteConfig } from "@/lib/seo";
 import styles from "./SiteFooter.module.css";
 
+const officeAddressQuery = "222 Pacific Coast Hwy #10 El Segundo CA 90245";
+const googleMapsEmbedKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_API_KEY;
+const googleMapsEmbedSrc = googleMapsEmbedKey
+  ? `https://www.google.com/maps/embed/v1/place?key=${googleMapsEmbedKey}&q=${encodeURIComponent(officeAddressQuery)}`
+  : `https://www.google.com/maps?q=${encodeURIComponent(officeAddressQuery)}&output=embed`;
+
+function LinkedInIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      focusable="false"
+      className={styles.socialIcon}
+    >
+      <path
+        d="M6.94 6.5A1.94 1.94 0 1 1 3.06 6.5a1.94 1.94 0 0 1 3.88 0Zm.06 3H3v12h4V9.5Zm6.5 0H9.5v12h4v-6.68c0-1.76.33-3.46 2.51-3.46 2.15 0 2.18 2.01 2.18 3.57V21.5h4v-7.42c0-3.64-.78-6.43-5.04-6.43-2.05 0-3.42 1.12-3.95 2.18h-.06V9.5Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+function FacebookIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      focusable="false"
+      className={styles.socialIcon}
+    >
+      <path
+        d="M14 8.5V7.1c0-.66.44-1.1 1.1-1.1H16V2h-1.9C11.4 2 10 3.4 10 5.7V8.5H7v3.5h3V22h4v-10h3l.5-3.5H14Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+function InstagramIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      focusable="false"
+      className={styles.socialIcon}
+    >
+      <path
+        d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9Zm4.5 3.25A4.25 4.25 0 1 1 7.75 11.5 4.25 4.25 0 0 1 12 7.25Zm0 2A2.25 2.25 0 1 0 14.25 11.5 2.25 2.25 0 0 0 12 9.25Zm5.5-2.55a1.2 1.2 0 1 1-1.2 1.2 1.2 1.2 0 0 1 1.2-1.2Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
 export function SiteFooter() {
   return (
     <footer className={styles.root}>
       <div className={styles.inner}>
         <div className={styles.brand}>
+          <p className={styles.brandEyebrow}>Romega Solutions</p>
           <div className={styles.logoWrap}>
             <Image
               src="/RS_HORIZONTAL.png"
@@ -21,75 +76,87 @@ export function SiteFooter() {
             />
           </div>
           <p className={styles.tagline}>
-            We provide talent solutions, brand support, and strategic guidance
-            designed for sustainable growth in a global landscape.
+            We help businesses grow through talent support, brand direction, and
+            practical guidance built for steady, long-term progress.
           </p>
         </div>
 
         <div className={styles.mainRight}>
           <nav className={styles.links} aria-label="Footer navigation">
-            <Link href="/">Home</Link>
-            <Link href="/about">About</Link>
-            <Link href="/services">Services</Link>
-            <Link href="/careers">Careers</Link>
-            <Link href="/contact">Contact</Link>
-            <Link href="/talent">Talents</Link>
+            <div className={styles.navGroups}>
+              <div className={styles.navGroup}>
+                <h4 className={styles.navGroupTitle}>Company</h4>
+                <ul className={styles.navList}>
+                  <li>
+                    <Link href="/">Home</Link>
+                  </li>
+                  <li>
+                    <Link href="/about">About</Link>
+                  </li>
+                  <li>
+                    <Link href="/careers">Careers</Link>
+                  </li>
+                  <li>
+                    <Link href="/contact">Contact</Link>
+                  </li>
+                </ul>
+              </div>
+
+              <div className={styles.navGroup}>
+                <h4 className={styles.navGroupTitle}>Solutions</h4>
+                <ul className={styles.navList}>
+                  <li>
+                    <Link href="/services">Services</Link>
+                  </li>
+                  <li>
+                    <Link href="/talent">Talent</Link>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </nav>
 
           <div className={styles.connect}>
             <h3>Connect With Us</h3>
+
             <div className={styles.socials}>
               <a
                 href={siteConfig.linkedIn}
                 className={styles.socialLink}
-                aria-label="LinkedIn"
+                data-tooltip="LinkedIn"
+                aria-label="Romega Solutions on LinkedIn"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Image
-                  src="/2.0%20Website%20Assets/Icon%2006%20_%20Global%20Perspective.webp"
-                  alt=""
-                  width={44}
-                  height={44}
-                  sizes="(max-width: 767px) 40px, 44px"
-                  className={styles.socialIcon}
-                />
+                <LinkedInIcon />
               </a>
               <a
                 href={siteConfig.facebook}
                 className={styles.socialLink}
-                aria-label="Facebook"
+                data-tooltip="Facebook"
+                aria-label="Romega Solutions on Facebook"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Image
-                  src="/2.0%20Website%20Assets/Icon%2002%20_%20Stronger%20Brand%20Foundations.webp"
-                  alt=""
-                  width={44}
-                  height={44}
-                  sizes="(max-width: 767px) 40px, 44px"
-                  className={styles.socialIcon}
-                />
+                <FacebookIcon />
               </a>
               <a
                 href={siteConfig.instagram}
                 className={styles.socialLink}
-                aria-label="Instagram"
+                data-tooltip="Instagram"
+                aria-label="Romega Solutions on Instagram"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Image
-                  src="/2.0%20Website%20Assets/Icon%2005%20_%20Long-Term%20Confidence.webp"
-                  alt=""
-                  width={44}
-                  height={44}
-                  sizes="(max-width: 767px) 40px, 44px"
-                  className={styles.socialIcon}
-                />
+                <InstagramIcon />
               </a>
             </div>
 
-            <p className={styles.contact}>
+            <a
+              href="mailto:info@romega-solutions.com"
+              className={styles.contactBlock}
+              aria-label="Email info@romega-solutions.com"
+            >
               <svg
                 aria-hidden="true"
                 viewBox="0 0 24 24"
@@ -113,9 +180,14 @@ export function SiteFooter() {
                   strokeLinejoin="round"
                 />
               </svg>
-              <a href="mailto:info@romega-solutions.com">info@romega-solutions.com</a>
-            </p>
-            <p className={styles.contact}>
+              <div className={styles.contactCopy}>
+                <span className={styles.contactLabel}>Email</span>
+                <span className={styles.contactText}>
+                  info@romega-solutions.com
+                </span>
+              </div>
+            </a>
+            <address className={styles.contactBlock}>
               <svg
                 aria-hidden="true"
                 viewBox="0 0 24 24"
@@ -130,10 +202,37 @@ export function SiteFooter() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
-                <circle cx="12" cy="10" r="2.6" fill="none" stroke="currentColor" strokeWidth="1.8" />
+                <circle
+                  cx="12"
+                  cy="10"
+                  r="2.6"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                />
               </svg>
-              <span>222 Pacific Coast Hwy, #10, El Segundo, CA 90245</span>
-            </p>
+              <div className={styles.contactCopy}>
+                <span className={styles.contactLabel}>Office</span>
+                <a
+                  href="https://www.google.com/maps/search/?api=1&query=222+Pacific+Coast+Hwy+%2310+El+Segundo+CA+90245"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span>222 Pacific Coast Hwy, #10</span>
+                  <span>El Segundo, CA 90245</span>
+                </a>
+              </div>
+            </address>
+          </div>
+
+          <div className={styles.mapCard}>
+            <iframe
+              title="Romega Solutions office location in Google Maps"
+              src={googleMapsEmbedSrc}
+              className={styles.mapFrame}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
           </div>
         </div>
 

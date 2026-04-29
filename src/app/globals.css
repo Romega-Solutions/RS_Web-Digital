@@ -61,6 +61,9 @@
   --layout-gutter-wide: clamp(1.25rem, 5vw, 4rem);
   --layout-content: 72rem;
   --layout-content-wide: 80rem;
+  --measure-readable: 62ch;
+  --measure-readable-tight: 54ch;
+  --measure-readable-mobile: 38ch;
   --section-space: clamp(3.5rem, 7vw, 6rem);
   --section-space-compact: clamp(2.75rem, 5vw, 4.5rem);
   --page-hero-min-height: clamp(34rem, calc(100svh - 4.5rem), 46rem);

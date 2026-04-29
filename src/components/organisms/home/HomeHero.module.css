@@ -92,12 +92,13 @@
 }
 
 .copy {
-  @apply mt-8 max-w-4xl text-center;
+  @apply mt-8 text-center;
   color: rgb(232 238 248 / 0.9);
   font-family: var(--font-body);
   font-size: var(--type-body-lg);
   font-weight: 500;
   line-height: var(--leading-copy);
+  max-width: min(100%, var(--measure-readable));
   text-shadow: 0 2px 16px rgb(0 0 0 / 0.36);
 }
 
@@ -135,6 +136,7 @@
 
   .copy {
     @apply mt-6 text-lg;
+    max-width: min(100%, var(--measure-readable-mobile));
   }
 
   .accent {

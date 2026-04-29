@@ -73,6 +73,7 @@ export default function CareersPage() {
       jsonLd={<JsonLd id="careers-structured-data" data={structuredData} />}
       header={<SiteHeader activeItem="Careers" />}
       footer={<SiteFooter />}
+      shellVariant="hero"
     >
       <CareersPageClient />
     </MainTemplate>

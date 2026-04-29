@@ -14,8 +14,9 @@
 }
 
 .copy {
-  @apply mt-6 max-w-4xl text-lg leading-tight text-black/80 md:text-[1.3rem];
+  @apply mt-6 text-lg leading-tight text-black/80 md:text-[1.3rem];
   font-family: var(--font-body);
+  max-width: min(100%, var(--measure-readable));
 }
 
 .grid {

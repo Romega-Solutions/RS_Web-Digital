@@ -1,7 +1,8 @@
 @reference "../../../app/globals.css";
 
 .root {
-  @apply relative overflow-hidden bg-[#f6e4b9];
+  @apply relative overflow-hidden;
+  background-color: #f6e4b9;
   padding-block: var(--section-space);
   padding-inline: var(--layout-gutter);
 }
@@ -15,7 +16,6 @@
 .inner {
   @apply relative mx-auto grid w-full max-w-6xl items-start;
   gap: var(--space-7);
-  @apply md:grid-cols-[0.95fr_1.05fr] md:gap-10;
 }
 
 .copy {
@@ -35,14 +35,37 @@
 }
 
 .text {
-  @apply mt-7 max-w-xl text-brand-secondary;
+  @apply mt-7 text-brand-secondary;
   font-family: var(--font-body);
   font-size: var(--type-heading-md);
   line-height: 1.5;
+  max-width: min(100%, var(--measure-readable-tight));
 }
 
 .textLast {
   @apply mt-8;
+}
+
+.followRow {
+  @apply mt-6;
+}
+
+.linkedinButton {
+  @apply inline-flex items-center gap-3 rounded-md px-4 py-2 text-white no-underline;
+  align-items: center;
+  background-color: #0a66c2;
+  box-shadow: 0 8px 20px rgb(10 102 194 / 0.12);
+}
+
+.linkedinButton svg {
+  flex: 0 0 auto;
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.followText {
+  font-weight: 600;
+  font-size: 0.9375rem;
 }
 
 .visual {
@@ -50,12 +73,20 @@
 }
 
 .image {
-  @apply block h-auto w-full rounded-2xl shadow-[0_20px_50px_rgba(28,95,165,0.15)];
+  @apply block h-auto w-full rounded-2xl;
+  box-shadow: 0 20px 50px rgb(28 95 165 / 0.15);
+}
+
+@media (min-width: 768px) {
+  .inner {
+    grid-template-columns: 0.95fr 1.05fr;
+    gap: 2.5rem;
+  }
 }
 
 @media (max-width: 980px) {
   .title {
-    @apply text-[3rem];
+    font-size: 3rem;
   }
 
   .text {
@@ -80,6 +111,7 @@
   .text {
     @apply mt-5 text-lg;
     line-height: 1.45;
+    max-width: min(100%, var(--measure-readable-mobile));
   }
 
   .textLast {

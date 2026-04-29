@@ -19,8 +19,10 @@
 }
 
 .copy {
-  @apply mt-5 max-w-5xl space-y-4 text-base leading-tight text-white md:text-lg;
+  @apply mt-5 space-y-4 text-base text-white md:text-[1.05rem];
   font-family: var(--font-body);
+  line-height: 1.55;
+  max-width: min(100%, var(--measure-readable));
 }
 
 .copy strong {
@@ -34,5 +36,27 @@
 
 .world {
   @apply object-contain;
+}
+
+@media (max-width: 767px) {
+  .root {
+    padding-block: var(--section-space-compact);
+  }
+
+  .title {
+    @apply text-[2.15rem];
+    line-height: 1;
+  }
+
+  .copy {
+    @apply mt-4 text-[0.98rem];
+    line-height: 1.5;
+    max-width: min(100%, var(--measure-readable-mobile));
+  }
+
+  .map {
+    @apply mt-6;
+    aspect-ratio: 4 / 3;
+  }
 }
 @reference "../../../app/globals.css";

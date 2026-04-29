@@ -11,11 +11,13 @@
 }
 
 .root {
-  @apply relative overflow-visible bg-brand-tertiary;
+  @apply relative bg-brand-tertiary;
+  overflow-x: hidden;
   font-family: var(--font-body);
   isolation: isolate;
   z-index: 20;
-  padding-block: 0.25rem;
+  padding-top: 0.85rem;
+  padding-bottom: 0.5rem;
 }
 
 .root::before,
@@ -40,8 +42,9 @@
 }
 
 .viewport {
+  /* prevent marquee duplicate groups from extending layout and creating blank gutters */
   overflow: visible;
-  padding: 1rem 0;
+  padding: 3rem 0 1rem;
   position: relative;
   z-index: 1;
 }
@@ -49,9 +52,9 @@
 .featuredWrap {
   position: absolute;
   left: 50%;
-  top: 0;
+  top: 0.85rem;
   z-index: 5;
-  transform: translate(-50%, -62%);
+  transform: translateX(-50%);
   display: flex;
   justify-content: center;
   width: max-content;
@@ -82,14 +85,17 @@
 }
 
 .track {
-  overflow: hidden;
-  @apply flex w-max items-center;
-  animation: marquee 22s linear infinite;
-  will-change: transform;
+  @apply flex w-full items-center justify-center;
 }
 
 .group {
-  @apply m-0 flex list-none items-center whitespace-nowrap px-4;
+  @apply m-0 flex list-none items-center justify-center whitespace-normal px-4;
+  flex-wrap: wrap;
+  row-gap: 0.45rem;
+}
+
+.groupDuplicate {
+  display: none;
 }
 
 .item {
@@ -169,8 +175,14 @@
 }
 
 @media (max-width: 767px) {
+  .root {
+    padding-top: 1.35rem;
+  }
+
   .viewport {
     padding: 0.55rem 0 0.75rem;
+    mask-image: none;
+    -webkit-mask-image: none;
   }
 
   .group {
@@ -201,7 +213,12 @@
   }
 
   .featuredLink {
-    @apply min-h-10 w-full px-4 py-2 text-[0.72rem];
+    /* keep link inline on small screens instead of full-width button */
+    width: auto;
+    min-height: auto;
+    padding-inline: 0.75rem;
+    padding-block: 0.45rem;
+    font-size: 0.72rem;
     letter-spacing: 0.14em;
   }
 

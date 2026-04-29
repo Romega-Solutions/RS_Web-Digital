@@ -108,8 +108,8 @@ export function TeamCarousel({ onMemberClick }: TeamCarouselProps) {
         <SectionIntro
           align="center"
           className={styles.header}
-          title={<span id="team-heading">Meet the Experts Behind Your Success</span>}
-          body="Our team brings a blend of strategic insight, market perspective, and practical experience in team building and brand support."
+          title={<span id="team-heading" className={styles.headingTitle}>Meet the People Behind Romega</span>}
+          body="A team shaped by practical experience in talent, brand support, and steady business growth."
         />
 
         <div

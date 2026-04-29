@@ -1,3 +1,5 @@
+@reference "../../../app/globals.css";
+
 .root {
   @apply relative overflow-hidden;
   background: linear-gradient(180deg, #4b91e8 0%, #76acef 58%, #9dc4f3 100%);
@@ -5,17 +7,22 @@
 }
 
 .inner {
-  @apply mx-auto grid w-full max-w-7xl items-center gap-8 md:grid-cols-[0.88fr_1.12fr] md:gap-10;
-  background-image: linear-gradient(to right, rgb(255 255 255 / 0.12) 1px, transparent 1px),
+  @apply mx-auto grid w-full max-w-7xl items-center gap-8;
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.12) 1px, transparent 1px),
     linear-gradient(to bottom, rgb(255 255 255 / 0.12) 1px, transparent 1px);
   background-size: 92px 92px;
   min-height: var(--page-hero-content-min-height);
+  padding-top: calc(var(--site-header-height, 5rem) + var(--space-6));
+  padding-bottom: var(--space-7);
   padding-inline: var(--layout-gutter);
 }
 
 .photoFrame {
-  @apply relative mx-auto min-h-88 w-full max-w-82 overflow-hidden rounded-4xl md:mx-0 md:min-h-112 md:max-w-[24rem];
-  box-shadow: 0 26px 70px rgb(18 55 110 / 0.18);
+  @apply relative mx-auto w-full overflow-hidden rounded-[2rem] md:mx-0;
+  min-height: 22rem;
+  max-width: 25rem;
+  box-shadow: 0 26px 70px rgb(18 55 110 / 0.16);
 }
 
 .photo {
@@ -26,44 +33,139 @@
   @apply px-1 text-white md:px-0;
 }
 
+.eyebrowRow {
+  @apply flex items-center gap-3;
+}
+
+.eyebrowLine {
+  @apply h-px w-12 bg-white/72;
+}
+
+.eyebrow {
+  @apply text-sm font-semibold uppercase tracking-[0.24em] text-white/88;
+}
+
 .title {
-  @apply text-[2.65rem] leading-[0.92] tracking-tight text-white sm:text-[3.2rem] md:text-[5.2rem];
+  @apply mt-5 text-white;
   font-family: var(--font-display);
+  font-size: clamp(3rem, 5.8vw, 4.8rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.titleLine {
+  @apply block;
 }
 
 .highlight {
-  @apply inline px-2 font-black text-white;
-  background-image: linear-gradient(to top,
-      rgb(254 189 25 / 0.96) 0%,
-      rgb(254 189 25 / 0.96) 38%,
-      transparent 38%,
-      transparent 100%);
-  background-repeat: no-repeat;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
+  @apply inline font-semibold text-brand-primary;
 }
 
 .text {
-  @apply mt-8 max-w-3xl space-y-7 text-lg leading-tight text-white/95 md:text-[1.1rem];
+  @apply mt-7 space-y-5 text-white/96;
   font-family: var(--font-body);
+  font-size: clamp(1rem, 1.25vw, 1.14rem);
+  line-height: 1.66;
+  max-width: min(100%, var(--measure-readable));
 }
 
 .text strong {
-  @apply font-extrabold text-white;
+  @apply font-bold text-white;
 }
 
 .button {
-  @apply mt-10;
+  @apply mt-9;
 }
 
-@media (max-width: 767px) {
+@media (min-width: 1024px) {
+  .inner {
+    grid-template-columns: 0.88fr 1.12fr;
+    gap: 2.5rem;
+  }
+
+  .photoFrame {
+    min-height: 27rem;
+    max-width: 23.5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .inner {
+    grid-template-columns: 0.86fr 1.14fr;
+    gap: 3.25rem;
+  }
+
+  .photoFrame {
+    max-width: 26rem;
+  }
+}
+
+@media (max-width: 1023px) {
+  .inner {
+    @apply gap-6;
+  }
+
+  .photoFrame {
+    min-height: 20rem;
+    max-width: 26rem;
+  }
+
+  .copy {
+    @apply pb-2;
+  }
+
   .title {
-    font-size: 3rem;
-    line-height: 0.94;
+    max-width: 14ch;
   }
 
   .text {
-    @apply text-lg;
+    max-width: min(100%, var(--measure-readable));
   }
 }
-@reference "../../../app/globals.css";
+
+@media (max-width: 767px) {
+  .inner {
+    @apply gap-5;
+    padding-top: calc(var(--site-header-height, 4.75rem) + var(--space-5));
+    padding-bottom: var(--space-6);
+  }
+
+  .photoFrame {
+    min-height: 17rem;
+    max-width: none;
+    border-radius: 1.75rem;
+  }
+
+  .copy {
+    @apply px-0;
+  }
+
+  .eyebrowRow {
+    @apply gap-2;
+  }
+
+  .eyebrowLine {
+    @apply w-9;
+  }
+
+  .title {
+    font-size: clamp(2.7rem, 10.8vw, 3.35rem);
+    line-height: 1.03;
+    max-width: none;
+  }
+
+  .highlight {
+    @apply px-0;
+  }
+
+  .text {
+    @apply mt-5;
+    font-size: 1rem;
+    line-height: 1.56;
+    max-width: min(100%, var(--measure-readable-mobile));
+  }
+
+  .button {
+    @apply mt-7 w-full justify-center;
+  }
+}

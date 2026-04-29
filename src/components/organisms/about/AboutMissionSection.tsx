@@ -9,9 +9,9 @@ export function AboutMissionSection() {
 
         <div className={styles.heading}>
           <h2 id="about-mission-title" className={styles.title}>
-            Why we <em>do</em>
+            Why We <em>Do</em>
             <br />
-            What we <em>do</em>
+            What We <em>Do</em>
           </h2>
         </div>
 
@@ -48,23 +48,22 @@ export function AboutMissionSection() {
         <div className={styles.copy}>
           <p>
             We believe businesses grow best when people, purpose, and clarity
-            are aligned. Too many companies plateau not because opportunity, but
-            because systems, teams, or brand identity aren&apos;t working in
-            harmony.
+            are aligned. Too often, momentum stalls not because opportunity is
+            missing, but because teams, systems, and brand direction are moving
+            out of sync.
           </p>
           <p>
             <strong>
-              Romega exists to help founders, leaders, and teams build growth
-              that feels structured, confident, and purposeful, not chaotic or
-              reactive.
+              Romega exists to help founders, leaders, and teams grow with more
+              structure, confidence, and intention, not constant catch-up.
             </strong>
           </p>
         </div>
 
         <div className={styles.statement}>
           <p>
-            Our <em>Mission</em> is to be a steady growth partner for businesses
-            by building strong teams and credible brands that last.
+            Our <em>mission</em> is to help businesses grow with stronger teams,
+            clearer direction, and support that lasts.
           </p>
         </div>
       </div>

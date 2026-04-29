@@ -1,0 +1,114 @@
+.root {
+  --talent-border: color-mix(in srgb, var(--color-brand-secondary) 18%, white);
+  --talent-border-strong: color-mix(in srgb, var(--color-brand-secondary) 34%, white);
+  --talent-copy: color-mix(in srgb, var(--color-brand-secondary) 78%, #0f172a);
+  --talent-muted: color-mix(in srgb, var(--color-brand-secondary) 64%, #1f2937);
+  @apply flex flex-col gap-4 rounded-lg border bg-white p-4 transition-all duration-200 ease-in-out;
+  border-color: var(--talent-border);
+}
+
+.root:hover {
+  @apply -translate-y-[3px];
+  border-color: var(--talent-border-strong);
+  box-shadow: 0 14px 30px color-mix(in srgb, var(--color-brand-secondary) 14%, transparent);
+}
+
+.root:focus-within {
+  @apply border-brand-secondary shadow-[0_0_0_3px_rgba(14,116,144,0.2)];
+}
+
+.header {
+  @apply flex items-start gap-3;
+}
+
+.info {
+  @apply min-w-0 flex-1;
+}
+
+.nameRow {
+  @apply flex flex-wrap items-center gap-[0.4rem];
+}
+
+.name {
+  @apply text-base font-medium;
+  color: var(--talent-copy);
+  font-family: var(--font-heading);
+}
+
+.location {
+  @apply rounded-[4px] px-[0.5rem] py-[0.2rem] text-[0.78rem] font-semibold tracking-wider;
+  background-color: color-mix(in srgb, var(--color-brand-secondary) 7%, white);
+  color: var(--talent-muted);
+}
+
+.role {
+  @apply mt-[0.2rem] font-semibold text-brand-secondary;
+}
+
+.level {
+  @apply mt-[0.15rem] text-[0.78rem] font-bold tracking-widest;
+  color: var(--talent-muted);
+}
+
+.id {
+  @apply whitespace-nowrap text-[0.78rem];
+  color: var(--talent-muted);
+}
+
+.tagline {
+  @apply m-0 leading-[1.7];
+  color: var(--talent-copy);
+}
+
+.skills {
+  @apply flex flex-wrap gap-[0.35rem];
+}
+
+.skill {
+  @apply rounded-[5px] border px-[0.62rem] py-[0.32rem] text-[0.8rem];
+  border-color: var(--talent-border);
+  background-color: color-mix(in srgb, var(--color-brand-secondary) 5%, white);
+  color: var(--talent-copy);
+}
+
+.skillMore {
+  color: var(--talent-muted);
+}
+
+.footer {
+  @apply flex items-center justify-between gap-3 border-t pt-[0.8rem];
+  border-color: color-mix(in srgb, var(--color-brand-secondary) 9%, white);
+}
+
+.category {
+  @apply text-[0.84rem] font-bold uppercase tracking-wider text-brand-secondary;
+}
+
+.cta {
+  @apply inline-flex min-h-11 items-center justify-center rounded-[6px] border-[1.5px] border-brand-secondary px-[1.05rem] py-[0.6rem] text-[0.84rem] font-bold tracking-wider text-brand-secondary no-underline transition-all duration-200;
+  font-family: var(--font-body);
+}
+
+.cta:hover {
+  @apply bg-brand-secondary text-white;
+}
+
+.cta:focus-visible {
+  @apply outline-none ring-2 ring-brand-secondary ring-offset-2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root {
+    @apply transition-none;
+  }
+
+  .root:hover {
+    @apply translate-y-0;
+  }
+
+  .cta {
+    @apply transition-none;
+  }
+}
+
+@reference "../../../app/globals.css";

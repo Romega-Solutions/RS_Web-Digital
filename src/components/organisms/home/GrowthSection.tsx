@@ -3,12 +3,6 @@ import { ScrollReveal } from "@/components/atoms/Motion";
 import { ActionCluster } from "@/components/molecules/actions/ActionCluster";
 import styles from "./GrowthSection.module.css";
 
-const growthFocusAreas = [
-  "Talent support",
-  "Operational clarity",
-  "Brand guidance",
-] as const;
-
 export function GrowthSection() {
   return (
     <section id="growth-section" className={styles.root}>
@@ -20,13 +14,16 @@ export function GrowthSection() {
             <ScrollReveal variant="slideRight">
               <div className={styles.eyebrowRow}>
                 <span className={styles.eyebrowLine} aria-hidden="true" />
-                <p className={styles.eyebrow}>Growth support for founders and leadership teams</p>
+                <p className={styles.eyebrow}>
+                  Growth support for founders and leadership teams
+                </p>
               </div>
             </ScrollReveal>
 
             <ScrollReveal variant="slideRight" delay={0.08}>
               <h2 className={styles.title}>
-                Growth feels easier when you have the right <span className={styles.growingWord}>partner.</span>
+                Growth feels easier when you have the right{" "}
+                <span className={styles.growingWord}>partner.</span>
               </h2>
             </ScrollReveal>
 
@@ -41,17 +38,11 @@ export function GrowthSection() {
 
             <ScrollReveal variant="fade" delay={0.2}>
               <p className={styles.supportNote}>
-                Support designed around your stage, priorities, and pace of growth.
+                Built around the areas that shape sustainable growth.
               </p>
             </ScrollReveal>
 
-            <ScrollReveal variant="slideUp" delay={0.22} className={styles.focusList}>
-              {growthFocusAreas.map((area) => (
-                <p key={area} className={styles.focusItem}>
-                  {area}
-                </p>
-              ))}
-            </ScrollReveal>
+            {/* focus list removed per user request */}
           </div>
 
           <ScrollReveal variant="slideUp" delay={0.2} className={styles.side}>
@@ -79,7 +70,9 @@ export function GrowthSection() {
       <ScrollReveal variant="fade" delay={0.3} className={styles.banner}>
         <div className={styles.bannerOverlay} aria-hidden="true" />
         <div className={styles.bannerContent}>
-          <h3 className={styles.bannerTitle}>Let&apos;s Build What&apos;s Next</h3>
+          <h3 className={styles.bannerTitle}>
+            Let&apos;s Build What&apos;s Next
+          </h3>
           <ActionCluster align="center" className={styles.bannerActions}>
             <AppButton href="/services" variant="primary" size="lg">
               Explore Our Services

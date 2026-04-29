@@ -45,10 +45,9 @@ export function AboutGrowthSection() {
           Where Growth Begins
         </h2>
         <p>
-          At Romega, we believe growth isn&apos;t limited to clients, it extends to
-          every individual we work with. Our interns are given the space to
-          learn, contribute, and gain real-world experience that prepares them
-          for the next stage of their careers.
+          Growth at Romega extends beyond client work. Our interns are given
+          real responsibility, practical mentorship, and space to build
+          confidence through meaningful work.
         </p>
       </div>
 

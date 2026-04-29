@@ -15,11 +15,13 @@
 }
 
 .inner {
-  @apply relative z-10 mx-auto w-full max-w-[82rem] px-[var(--layout-gutter)];
+  @apply relative z-10 mx-auto w-full;
+  max-width: 82rem;
+  padding-inline: var(--layout-gutter);
 }
 
 .contentGrid {
-  @apply grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-12;
+  @apply grid items-start gap-8;
 }
 
 .copyWrap {
@@ -32,11 +34,13 @@
 }
 
 .eyebrowLine {
-  @apply h-px w-10 bg-brand-primary/70;
+  @apply h-px w-10;
+  background-color: #d39a00;
 }
 
 .eyebrow {
-  @apply text-sm font-semibold uppercase tracking-[0.24em] text-brand-primary/80;
+  @apply text-sm font-semibold uppercase tracking-[0.24em];
+  color: #b88400;
 }
 
 .title {
@@ -73,14 +77,16 @@
 }
 
 .text {
-  @apply max-w-2xl text-lg text-black/82 md:text-[1.28rem];
+  @apply text-lg text-black/82 md:text-[1.28rem];
   font-family: var(--font-growth-copy);
   line-height: 1.68;
+  max-width: min(100%, var(--measure-readable));
 }
 
 .supportNote {
-  @apply max-w-xl text-[0.98rem] font-medium text-brand-tertiary/64 md:text-base;
+  @apply text-[0.98rem] font-medium text-brand-tertiary/86 md:text-base;
   line-height: 1.6;
+  max-width: min(100%, var(--measure-readable-tight));
 }
 
 .focusList {
@@ -88,8 +94,8 @@
 }
 
 .focusItem {
-  @apply rounded-full border border-brand-tertiary/12 px-4 py-2 text-sm font-semibold text-brand-tertiary/88 md:text-[0.95rem];
-  background: rgb(255 255 255 / 0.38);
+  @apply rounded-full border border-brand-primary/24 px-4 py-2 text-sm font-semibold text-brand-secondary md:text-[0.95rem];
+  background: rgb(255 255 255 / 0.72);
 }
 
 .side {
@@ -97,7 +103,7 @@
 }
 
 .media {
-  @apply relative isolate w-full overflow-hidden rounded-[2rem] border border-brand-tertiary/18;
+  @apply relative isolate w-full overflow-hidden rounded-4xl border border-brand-tertiary/18;
   aspect-ratio: 16 / 10;
   box-shadow: 0 28px 70px rgb(30 58 138 / 0.12);
   background:
@@ -127,7 +133,7 @@
 }
 
 .mediaNote {
-  @apply mt-4 max-w-md text-sm font-medium uppercase tracking-[0.16em] text-brand-tertiary/62 md:text-[0.82rem];
+  @apply mt-4 max-w-md text-sm font-medium uppercase tracking-[0.16em] text-brand-secondary/78 md:text-[0.82rem];
   line-height: 1.6;
 }
 
@@ -169,6 +175,17 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .contentGrid {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 2.75rem;
+  }
+
+  .media {
+    aspect-ratio: 16 / 10.6;
+  }
+}
+
 @media (min-width: 1280px) {
   .contentGrid {
     grid-template-columns: minmax(0, 1.34fr) minmax(24rem, 0.66fr);
@@ -181,7 +198,7 @@
   }
 
   .text {
-    max-width: 50rem;
+    max-width: min(100%, var(--measure-readable));
   }
 
   .supportNote {

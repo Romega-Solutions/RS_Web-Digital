@@ -5,6 +5,7 @@ import Image from "next/image";
 import { FormCheckbox, FormInput, FormSelect, FormTextarea } from "@/components/atoms/Form";
 import { AppButton } from "@/components/atoms/Button";
 import { siteConfig } from "@/lib/seo";
+import styles from "./ContactPageClient.module.css";
 
 type FormState = {
   firstName: string;
@@ -178,31 +179,31 @@ export default function ContactPageClient() {
   }
 
   return (
-      <section className="contact-page">
-        <div className="contact-page-inner">
-          <div className="contact-page-info">
-            <h1 className="contact-page-title">Contact Us</h1>
-            <p className="contact-page-copy">
+      <section className={styles.page}>
+        <div className={styles.inner}>
+          <div className={styles.info}>
+            <h1 className={styles.title}>Contact Us</h1>
+            <p className={styles.copy}>
               If you&apos;re looking to build your team, strengthen your brand, or explore new
               opportunities for growth, we&apos;d love to hear from you. Share your details and our team
               will be in touch soon.
             </p>
 
-            <div className="contact-page-divider" />
+            <div className={styles.divider} />
 
-            <div className="contact-page-block">
+            <div className={styles.block}>
               <h2>Location</h2>
               <p>222 Pacific Coast Hwy, #10 in El Segundo, California 90245</p>
             </div>
 
-            <div className="contact-page-block">
+            <div className={styles.block}>
               <h2>Email</h2>
               <a href="mailto:info@romega-solutions.com">info@romega-solutions.com</a>
             </div>
 
-            <div className="contact-page-block">
+            <div className={styles.block}>
               <h2>Connect with Us</h2>
-              <div className="contact-page-socials">
+              <div className={styles.socials}>
                 <a
                   href={siteConfig.linkedIn}
                   aria-label="LinkedIn"
@@ -214,7 +215,7 @@ export default function ContactPageClient() {
                     alt=""
                     width={56}
                     height={56}
-                    className="contact-page-social-icon"
+                    className={styles.socialIcon}
                   />
                 </a>
                 <a
@@ -228,7 +229,7 @@ export default function ContactPageClient() {
                     alt=""
                     width={56}
                     height={56}
-                    className="contact-page-social-icon"
+                    className={styles.socialIcon}
                   />
                 </a>
                 <a
@@ -242,16 +243,16 @@ export default function ContactPageClient() {
                     alt=""
                     width={56}
                     height={56}
-                    className="contact-page-social-icon"
+                    className={styles.socialIcon}
                   />
                 </a>
               </div>
             </div>
           </div>
 
-          <div className="contact-page-form-wrap">
-            <form className="contact-form" onSubmit={handleSubmit} noValidate>
-              <div className="contact-form-grid">
+          <div className={styles.formWrap}>
+            <form className={styles.form} onSubmit={handleSubmit} noValidate>
+              <div className={styles.formGrid}>
                 <FormInput
                   label="First Name*"
                   type="text"
@@ -273,7 +274,7 @@ export default function ContactPageClient() {
                 />
               </div>
 
-              <div className="contact-form-grid">
+              <div className={styles.formGrid}>
                 <FormInput
                   label="Email address*"
                   type="email"
@@ -300,7 +301,7 @@ export default function ContactPageClient() {
                 </FormSelect>
               </div>
 
-              <div className="contact-form-grid">
+              <div className={styles.formGrid}>
                 <FormInput
                   label="Company Name (Optional)"
                   type="text"
@@ -355,7 +356,9 @@ export default function ContactPageClient() {
                   ref={statusRef}
                   tabIndex={-1}
                   role={status.type === "error" ? "alert" : "status"}
-                  className={`contact-form-status contact-form-status-${status.type}`}
+                  className={`${styles.status} ${
+                    status.type === "success" ? styles.statusSuccess : styles.statusError
+                  }`}
                 >
                   {status.message}
                 </p>
@@ -366,7 +369,7 @@ export default function ContactPageClient() {
                 variant="primary" 
                 size="lg" 
                 disabled={isSubmitting}
-                className="w-full md:w-fit"
+                className={styles.submitButton}
               >
                 {isSubmitting ? "Sending..." : "Submit"}
               </AppButton>

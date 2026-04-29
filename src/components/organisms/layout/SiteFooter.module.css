@@ -10,48 +10,92 @@
 }
 
 .inner {
-  @apply relative mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 pb-10;
-  @apply md:grid-cols-[minmax(0,1fr)_auto] md:items-start md:gap-x-4 md:gap-y-4;
-  @apply lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:gap-x-5;
+  @apply relative mx-auto grid w-full max-w-7xl grid-cols-1 gap-7 pb-10;
   padding-inline: var(--layout-gutter);
 }
 
 .brand {
-  @apply mx-auto flex max-w-sm flex-col items-center gap-2 text-center;
+  @apply mx-auto flex max-w-sm flex-col items-center gap-3 text-center;
   @apply md:mx-0 md:items-start md:text-left;
 }
 
+.brandEyebrow {
+  @apply text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-brand-secondary/58;
+}
+
 .mainRight {
-  @apply grid justify-items-center gap-4;
-  @apply md:grid-cols-[minmax(8rem,0.5fr)_minmax(0,0.9fr)] md:items-start md:justify-items-stretch md:gap-x-4;
-  @apply lg:gap-x-5;
+  @apply grid justify-items-center gap-5;
 }
 
 .logoWrap {
-  @apply flex shrink-0 items-start justify-center;
+  @apply flex shrink-0 items-start justify-center overflow-hidden;
   @apply md:justify-start;
+  width: 11.5rem;
 }
 
 .logoImage {
-  @apply block h-auto w-full max-w-46 object-contain;
-  @apply sm:max-w-50;
-  @apply md:max-w-54;
+  @apply block h-auto w-auto max-w-none object-contain;
+  height: 2.2rem;
+  transform: scale(1.16);
+  transform-origin: left center;
+}
+
+@media (min-width: 640px) {
+  .logoWrap {
+    width: 12.25rem;
+  }
+
+  .logoImage {
+    height: 2.35rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .logoWrap {
+    width: 13rem;
+  }
+
+  .logoImage {
+    height: 2.5rem;
+  }
 }
 
 .tagline {
-  @apply max-w-68 text-center text-[0.78rem] leading-tight text-brand-secondary;
-  @apply md:text-left md:text-[0.82rem];
+  @apply max-w-72 text-center text-[0.84rem] leading-[1.6] text-brand-secondary/88;
+  @apply md:text-left md:text-[0.9rem];
 }
 
 .links {
-  @apply flex flex-col items-center gap-1 text-center text-brand-secondary;
+  @apply flex flex-col items-center gap-3 text-center text-brand-secondary;
   @apply md:items-start md:text-left;
-  @apply lg:border-r lg:border-brand-secondary lg:pr-4;
+  @apply lg:border-r lg:border-brand-secondary/12 lg:pr-5;
 }
 
 .links a {
   @apply text-base font-medium transition-all duration-200;
   color: rgb(28 95 165 / 0.75);
+}
+
+.navGroups {
+  @apply flex w-full flex-col gap-4;
+  width: 100%;
+  justify-content: center;
+}
+
+.navGroup {
+  @apply flex flex-col items-center gap-2 px-1 py-1;
+}
+
+.navGroupTitle {
+  @apply text-[0.68rem] font-bold uppercase tracking-[0.2em] text-brand-secondary/62;
+}
+
+.navList {
+  @apply m-0 flex list-none flex-col gap-1.5 p-0 text-center;
+}
+
+.navList li a {
+  @apply text-[0.98rem] font-medium leading-none;
 }
 
 .links a:hover {
@@ -61,11 +105,11 @@
 
 .connect {
   @apply flex flex-col items-center gap-4;
-  @apply md:items-start;
+  @apply md:items-stretch;
 }
 
 .connect h3 {
-  @apply text-sm font-bold uppercase tracking-wider text-brand-secondary;
+  @apply text-[0.72rem] font-bold uppercase tracking-[0.2em] text-brand-secondary/62;
 }
 
 .socials {
@@ -73,19 +117,112 @@
 }
 
 .socialLink {
-  @apply inline-flex h-10 w-10 items-center justify-center rounded-full bg-white ring-1 ring-brand-secondary/15 transition-all;
+  @apply relative inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-brand-secondary ring-1 ring-brand-secondary/15 transition-all;
 }
 
 .socialLink:hover {
-  @apply scale-110 shadow-md;
+  @apply scale-110 shadow-md text-brand-primary;
+}
+
+.socialLink::after {
+  content: attr(data-tooltip);
+  @apply pointer-events-none absolute -top-9 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-full bg-brand-secondary px-2.5 py-1 text-[0.68rem] font-medium tracking-wide text-white opacity-0 shadow-lg transition-all duration-200;
+}
+
+.socialLink::before {
+  content: "";
+  @apply pointer-events-none absolute -top-2 left-1/2 z-10 -translate-x-1/2 border-4 border-transparent border-t-brand-secondary opacity-0 transition-all duration-200;
+}
+
+.socialLink:hover::after,
+.socialLink:hover::before,
+.socialLink:focus-visible::after,
+.socialLink:focus-visible::before {
+  @apply opacity-100;
+}
+
+.socialLink:focus-visible {
+  @apply outline-none ring-2 ring-brand-primary ring-offset-2 ring-offset-white;
 }
 
 .socialIcon {
   @apply h-6 w-6 object-contain;
 }
 
-.contact {
-  @apply mt-4 flex items-center justify-center gap-3 text-center text-[0.82rem] text-brand-secondary;
+.mapCard {
+  @apply w-full max-w-sm overflow-hidden rounded-2xl border border-brand-secondary/10 bg-brand-secondary/5 shadow-sm;
+  @apply md:max-w-none md:justify-self-stretch;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.mapLink {
+  @apply block overflow-hidden;
+}
+
+.mapFrame {
+  @apply block w-full object-cover;
+  border: 0;
+  height: 100%;
+  min-height: 11rem;
+}
+
+@media (min-width: 768px) {
+  .inner {
+    grid-template-columns: minmax(0, 1fr) minmax(19rem, 1.05fr);
+    align-items: stretch;
+    column-gap: 1.25rem;
+    row-gap: 1.25rem;
+  }
+
+  .mainRight {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+    justify-items: stretch;
+    row-gap: 1.25rem;
+  }
+
+  .mapFrame {
+    min-height: 15rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .inner {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    column-gap: 1.5rem;
+  }
+
+  .mainRight {
+    grid-template-columns: minmax(12rem, 0.65fr) minmax(11rem, 0.65fr) minmax(18rem, 1.4fr);
+    column-gap: 1.25rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .mapFrame {
+    min-height: 17rem;
+  }
+}
+
+.mapMeta {
+  grid-template-columns: minmax(12rem, 0.65fr) minmax(11rem, 0.65fr) minmax(18rem, 1.4fr);
+  @apply flex flex-col gap-1 px-4 py-3 text-center;
+  row-gap: 0;
+  @apply md:text-left;
+}
+
+.mapLabel {
+  @apply text-[0.68rem] font-bold uppercase tracking-[0.18em] text-brand-secondary/70;
+}
+
+.mapMeta a {
+  @apply text-[0.82rem] leading-snug text-brand-secondary underline-offset-2 hover:underline;
+}
+
+.contactBlock {
+  @apply mt-4 flex items-start justify-center gap-3 text-center text-[0.82rem] text-brand-secondary;
   @apply md:justify-start md:text-left md:text-[0.9rem];
 }
 
@@ -93,7 +230,36 @@
   @apply h-[1.05rem] w-[1.05rem] shrink-0 text-brand-secondary;
 }
 
-.contact a {
+.contactCopy {
+  @apply flex flex-col gap-0.5;
+}
+
+.contactLabel {
+  @apply text-[0.68rem] font-bold uppercase tracking-[0.18em] text-brand-secondary/70;
+}
+
+.contactText {
+  @apply text-brand-secondary underline-offset-2;
+}
+
+.contactBlock:focus-visible {
+  @apply outline-none ring-2 ring-brand-primary ring-offset-2 ring-offset-white;
+}
+
+.contactBlock:hover .contactText {
+  @apply underline;
+}
+
+.contactBlock address {
+  font-style: normal;
+}
+
+.contactCopy a,
+.contactCopy span:last-child {
+  @apply leading-snug;
+}
+
+.contactCopy a:hover {
   @apply underline-offset-2 hover:underline;
 }
 
@@ -132,17 +298,22 @@
 
 @media (max-width: 767px) {
   .inner {
-    @apply gap-8;
+    @apply gap-6;
   }
 
   .brand,
   .links,
   .connect {
     @apply max-w-none border-none pr-0;
+    width: 100%;
+  }
+
+  .mapCard {
+    @apply hidden;
   }
 
   .links {
-    @apply gap-1;
+    @apply gap-2;
   }
 
   .links a,
@@ -150,11 +321,73 @@
     @apply text-sm;
   }
 
-  .contact {
-    @apply text-xs;
+  .navGroups {
+    @apply gap-3;
+  }
+
+  .navGroup {
+    @apply w-full rounded-2xl border border-brand-secondary/10 bg-brand-secondary/5 px-4 py-3;
+  }
+
+  .navGroupTitle {
+    @apply text-[0.62rem];
+  }
+
+  .navList li a {
+    @apply text-[0.95rem];
+  }
+
+  .contactBlock {
+    @apply mt-3 w-full justify-start rounded-2xl border border-brand-secondary/10 bg-white px-4 py-3 text-xs shadow-sm;
   }
 
   .tagline {
-    @apply max-w-xs text-xs;
+    @apply max-w-xs text-[0.82rem] leading-[1.6];
+  }
+
+  .socials {
+    @apply flex-wrap justify-center gap-3;
+  }
+
+  .mapCard {
+    @apply max-w-none rounded-3xl;
+  }
+
+  .mapFrame {
+    min-height: 13rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+
+  .navGroups,
+  .links,
+  .connect {
+    width: 100%;
+  }
+
+  .navGroups {
+    @apply flex-row flex-wrap justify-center;
+  }
+
+  .navGroup {
+    @apply min-w-40 flex-1 rounded-2xl border border-brand-secondary/10 bg-brand-secondary/5 px-4 py-3;
+  }
+
+  .connect {
+    @apply gap-5;
+  }
+
+  .contactBlock {
+    @apply mt-3 rounded-2xl border border-brand-secondary/10 bg-white px-4 py-3 shadow-sm;
+  }
+
+  .mapCard {
+    @apply max-w-none;
+    min-height: 17rem;
+  }
+
+  .mapFrame {
+    min-height: 17rem;
   }
 }

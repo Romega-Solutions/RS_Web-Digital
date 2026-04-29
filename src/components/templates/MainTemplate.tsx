@@ -7,7 +7,7 @@ interface MainTemplateProps {
   children: React.ReactNode;
   footer: React.ReactNode;
   className?: string;
-  shellVariant?: "default" | "home";
+  shellVariant?: "default" | "home" | "hero";
   mainClassName?: string;
 }
 
@@ -22,7 +22,7 @@ export function MainTemplate({
 }: MainTemplateProps) {
   const rootClassName = [
     styles.root,
-    shellVariant === "home" ? styles.rootHome : "",
+    shellVariant === "home" || shellVariant === "hero" ? styles.rootHome : "",
     className,
   ]
     .filter(Boolean)

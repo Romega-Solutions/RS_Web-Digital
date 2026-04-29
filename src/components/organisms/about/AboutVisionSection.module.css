@@ -9,7 +9,7 @@
 }
 
 .inner {
-  @apply mx-auto grid w-full max-w-6xl items-center gap-9 sm:grid-cols-[0.9fr_1.1fr] md:grid-cols-[0.82fr_1.18fr] md:gap-14;
+  @apply mx-auto grid w-full max-w-6xl items-center gap-8;
 }
 
 .copy {
@@ -22,8 +22,9 @@
 }
 
 .text {
-  @apply mt-7 max-w-sm text-[1.2rem] leading-[1.12] text-black md:text-[1.72rem];
+  @apply mt-5 text-[1.02rem] leading-[1.55] text-black md:text-[1.08rem];
   font-family: var(--font-body);
+  max-width: min(100%, var(--measure-readable-tight));
 }
 
 .button {
@@ -31,11 +32,52 @@
 }
 
 .photoFrame {
-  @apply relative min-h-68 w-full overflow-hidden bg-surface md:min-h-80;
+  @apply relative min-h-68 w-full overflow-hidden rounded-[1.75rem] bg-surface md:min-h-80;
 }
 
 .photo {
   @apply object-cover;
   object-position: right bottom;
+}
+
+@media (min-width: 1024px) {
+  .inner {
+    grid-template-columns: 0.88fr 1.12fr;
+    gap: 3rem;
+  }
+
+  .text {
+    max-width: min(100%, var(--measure-readable-mobile));
+    font-size: 1.12rem;
+    line-height: 1.58;
+  }
+}
+
+@media (max-width: 767px) {
+  .root {
+    padding-block: var(--section-space-compact);
+  }
+
+  .inner {
+    @apply gap-6;
+  }
+
+  .title {
+    @apply text-[2.15rem];
+  }
+
+  .text {
+    @apply mt-4 text-[1rem];
+    line-height: 1.5;
+    max-width: min(100%, var(--measure-readable-mobile));
+  }
+
+  .button {
+    @apply mt-5 w-full justify-center;
+  }
+
+  .photoFrame {
+    @apply min-h-60;
+  }
 }
 @reference "../../../app/globals.css";

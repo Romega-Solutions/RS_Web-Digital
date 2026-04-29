@@ -21,8 +21,9 @@
 }
 
 .body {
-  @apply max-w-4xl text-black/78;
+  @apply text-black/78;
   font-family: var(--font-body);
   font-size: var(--type-body-md);
   line-height: 1.55;
+  max-width: min(100%, var(--measure-readable));
 }

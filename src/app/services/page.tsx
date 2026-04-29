@@ -118,6 +118,7 @@ export default function ServicesPage() {
       jsonLd={<JsonLd id="services-structured-data" data={structuredData} />}
       header={<SiteHeader activeItem="Services" />}
       footer={<SiteFooter />}
+      shellVariant="hero"
     >
       <ServicesHero />
 

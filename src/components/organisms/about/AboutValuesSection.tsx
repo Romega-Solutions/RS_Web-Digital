@@ -11,7 +11,7 @@ const values = [
       </>
     ),
     description:
-      "We honor our commitments and create meaningful growth, delivering with integrity, consistency, and long-term vision.",
+      "We do what we say we will do and look for opportunities that create meaningful, lasting progress.",
   },
   {
     title: (
@@ -24,7 +24,7 @@ const values = [
       </>
     ),
     description:
-      "We work hand-in-hand with our partners, executing every project with clarity, quality, and purpose.",
+      "We work closely with our partners and hold every project to a standard of clarity, care, and quality.",
   },
   {
     title: (
@@ -35,7 +35,7 @@ const values = [
       </>
     ),
     description:
-      "We innovate boldly and stay agile, building teams and brands that thrive in a changing world.",
+      "We stay adaptable, think long term, and help teams and brands grow with the realities of a changing market.",
   },
 ];
 
@@ -57,6 +57,10 @@ export function AboutValuesSection() {
           <h2 id="about-values-title" className={styles.title}>
             What We Stand For
           </h2>
+          <p className={styles.lead}>
+            The principles behind how we support clients, talent, and steady
+            long-term growth.
+          </p>
 
           <div className={styles.list}>
             {values.map((value) => (

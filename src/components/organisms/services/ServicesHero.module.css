@@ -17,8 +17,10 @@
 }
 
 .inner {
-  @apply relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center justify-center py-20 text-center text-white;
+  @apply relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center justify-center text-center text-white;
   min-height: var(--page-hero-content-min-height);
+  padding-top: calc(var(--site-header-height, 5rem) + var(--space-7));
+  padding-bottom: var(--space-8);
   padding-inline: var(--layout-gutter);
 }
 
@@ -32,8 +34,9 @@
 }
 
 .copy {
-  @apply mt-8 max-w-4xl text-xl leading-tight text-white/95 md:text-[2rem];
+  @apply mt-8 text-xl leading-tight text-white/95 md:text-[2rem];
   font-family: var(--font-body);
+  max-width: min(100%, var(--measure-readable));
 }
 
 .button {
@@ -41,6 +44,11 @@
 }
 
 @media (max-width: 767px) {
+  .inner {
+    padding-top: calc(var(--site-header-height, 4.75rem) + var(--space-6));
+    padding-bottom: var(--space-7);
+  }
+
   .title {
     font-size: 3rem;
     line-height: 0.94;
@@ -48,6 +56,7 @@
 
   .copy {
     @apply text-lg;
+    max-width: min(100%, var(--measure-readable-mobile));
   }
 }
 @reference "../../../app/globals.css";

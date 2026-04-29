@@ -18,38 +18,46 @@ export function AboutHero() {
         </div>
 
         <div className={styles.copy}>
+          <div className={styles.eyebrowRow}>
+            <span className={styles.eyebrowLine} aria-hidden="true" />
+            <p className={styles.eyebrow}>About Romega Solutions</p>
+          </div>
+
           <h1 className={styles.title}>
-            Built on <span className={styles.highlight}>Purpose,</span>
-            <br />
-            Driven by <span className={styles.highlight}>People</span>
+            <span className={styles.titleLine}>
+              Built on <span className={styles.highlight}>Purpose,</span>
+            </span>
+            <span className={styles.titleLine}>
+              Driven by <span className={styles.highlight}>People</span>
+            </span>
           </h1>
 
           <div className={styles.text}>
             <p>
-              Romega Solutions was founded on a simple insight{" "}
-              <strong>Growth shouldn&apos;t feel overwhelming or disconnected.</strong>{" "}
-              Too often, businesses struggle with hiring the right people,
-              clarifying their brand message, and aligning operations, all at
-              the same time. We saw an opportunity to bring those elements
-              together, not separately, but as an integrated approach to
-              intentional growth.
+              Romega Solutions was founded on one simple belief:
+              <strong> growth should feel clear, connected, and sustainable.</strong>
+              Many businesses face the same challenge at once: finding the
+              right people, clarifying their message, and keeping operations
+              aligned. We built Romega to bring those moving parts together in
+              one practical approach to growth.
             </p>
 
             <p>
-              We started by helping Philippine-based talent connect with
-              global opportunity. Today, we&apos;ve grown into a trusted
-              partner for businesses worldwide, supporting teams, refining
-              brand presence, and powering sustainable growth.
+              What started by connecting Philippine-based talent with global
+              opportunity has grown into broader support for businesses
+              worldwide. Today, we help teams scale with people-first strategy,
+              stronger brand direction, and operational support that keeps
+              progress steady.
             </p>
           </div>
 
-          <AppButton 
-            href="/services" 
-            variant="primary" 
+          <AppButton
+            href="/services"
+            variant="primary"
             size="lg"
             className={styles.button}
           >
-            Connect with Us today!
+            Explore Our Services
           </AppButton>
         </div>
       </div>

@@ -2,65 +2,210 @@
 
 .root {
   @apply relative overflow-hidden bg-brand-secondary text-white;
-  padding-block: var(--section-space);
+  padding-block: clamp(4.5rem, 8vw, 7.5rem);
   padding-inline: var(--layout-gutter);
 }
 
+.root::before {
+  content: "";
+  @apply pointer-events-none absolute inset-x-0 top-0 h-px;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.34), transparent);
+}
+
+.root::after {
+  content: "";
+  @apply pointer-events-none absolute inset-x-0 bottom-0 h-px;
+  background: linear-gradient(90deg, transparent, rgb(254 189 25 / 0.48), transparent);
+}
+
 .grid {
-  @apply absolute inset-0;
-  background-image: linear-gradient(to right, rgb(255 255 255 / 0.12) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(255 255 255 / 0.12) 1px, transparent 1px);
-  background-size: 84px 84px;
+  @apply pointer-events-none absolute inset-0;
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.08) 1px, transparent 1px);
+  background-size: 78px 78px;
+  mask-image: linear-gradient(90deg, transparent, rgb(0 0 0 / 0.9) 12%, rgb(0 0 0 / 0.9) 88%, transparent);
+}
+
+.glow {
+  @apply pointer-events-none absolute -right-24 top-10 h-96 w-96 rounded-full bg-brand-primary/18 blur-3xl;
 }
 
 .inner {
-  @apply relative z-10 mx-auto grid w-full max-w-6xl;
-  gap: var(--space-8);
-  @apply md:grid-cols-[1fr_1fr] md:gap-14;
+  @apply relative z-10 mx-auto grid w-full max-w-6xl items-center;
+  gap: clamp(3rem, 7vw, 6rem);
+  @apply lg:grid-cols-[minmax(0,0.88fr)_minmax(24rem,1.12fr)];
 }
 
 .left {
-  @apply flex items-start justify-center md:justify-start;
+  @apply relative flex flex-col items-center md:items-start;
+}
+
+.left::before {
+  content: "";
+  @apply absolute -left-6 top-3 hidden h-[82%] w-px bg-white/18 md:block;
+}
+
+.eyebrow {
+  @apply mb-5 text-center text-xs font-semibold uppercase text-brand-primary md:text-left;
+  font-family: var(--font-growth-copy);
+  letter-spacing: 0.22em;
 }
 
 .title {
   @apply text-center font-normal text-white md:text-left;
   font-family: var(--font-growth-title);
-  font-size: var(--type-display-xl);
-  line-height: var(--leading-display);
-  letter-spacing: var(--tracking-display);
+  font-size: clamp(3.05rem, 7.4vw, 6.35rem);
+  line-height: 0.91;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
 }
 
 .emphasis {
-  @apply font-semibold;
+  @apply font-semibold text-brand-primary;
 }
 
 .circled {
-  @apply relative inline-block font-semibold;
+  @apply relative inline-block font-semibold text-white;
 }
 
 .circled::after {
   content: "";
-  @apply pointer-events-none absolute -inset-x-6 -inset-y-2;
-  border: 4px solid rgb(255 255 255 / 0.9);
+  @apply pointer-events-none absolute -inset-x-5 -inset-y-2;
+  border: clamp(3px, 0.4vw, 5px) solid rgb(254 189 25 / 0.92);
   border-radius: 60% 45% 55% 50% / 55% 45% 55% 45%;
-  transform: rotate(-4deg);
+  transform: rotate(-3deg);
+}
+
+.focusAreas {
+  @apply mt-8 flex max-w-lg flex-wrap justify-center gap-3 md:justify-start;
+}
+
+.focusArea {
+  @apply border border-white/18 bg-white/8 px-4 py-2 text-sm font-semibold text-white/82;
+  border-radius: 999px;
+  font-family: var(--font-growth-copy);
 }
 
 .right {
-  @apply max-w-xl;
+  @apply w-full;
+}
+
+.panel {
+  @apply relative overflow-hidden border border-white/18 bg-white/10 p-6 shadow-2xl backdrop-blur-md md:p-8 lg:p-10;
+  border-radius: 1.25rem;
+  box-shadow:
+    0 32px 80px rgb(8 31 68 / 0.26),
+    inset 0 1px 0 rgb(255 255 255 / 0.2);
+}
+
+.panel::before {
+  content: "";
+  @apply pointer-events-none absolute inset-x-0 top-0 h-1 bg-brand-primary;
+}
+
+.panel::after {
+  content: "";
+  @apply pointer-events-none absolute -right-24 -top-24 h-56 w-56 rounded-full bg-white/12 blur-3xl;
+}
+
+.panelLabel {
+  @apply text-sm font-semibold uppercase text-white/72;
+  font-family: var(--font-growth-copy);
+  letter-spacing: 0.18em;
 }
 
 .heading {
-  @apply font-semibold;
+  @apply mt-4 max-w-xl font-semibold text-white;
   font-family: var(--font-growth-copy);
-  font-size: var(--type-heading-lg);
-  line-height: var(--leading-heading);
+  font-size: clamp(1.8rem, 3.2vw, 3rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
 }
 
 .copy {
-  @apply mt-4;
+  @apply mt-5 text-white/86;
   font-family: var(--font-growth-copy);
-  font-size: var(--type-heading-md);
-  line-height: var(--leading-heading);
+  font-size: clamp(1.05rem, 1.65vw, 1.35rem);
+  line-height: 1.55;
+  max-width: min(100%, var(--measure-readable));
+}
+
+.principles {
+  @apply relative mt-8 grid gap-4 border-t border-white/16 pt-6;
+}
+
+.principles::before {
+  content: "";
+  @apply absolute bottom-5 left-[1.35rem] top-8 w-px bg-brand-primary/28;
+}
+
+.principle {
+  @apply relative grid items-start gap-4 border-b border-white/12 pb-4;
+  grid-template-columns: 2.75rem minmax(0, 1fr);
+}
+
+.principle:last-child {
+  @apply border-b-0 pb-0;
+}
+
+.principleIndex {
+  @apply relative z-10 flex h-11 w-11 items-center justify-center rounded-full border border-brand-primary/52 bg-brand-secondary text-sm font-semibold text-brand-primary;
+  font-family: var(--font-growth-copy);
+}
+
+.principleLabel {
+  @apply text-base font-semibold text-white md:text-lg;
+  line-height: 1.25;
+}
+
+.principleText {
+  @apply mt-1 text-sm text-white/72 md:text-base;
+  line-height: 1.55;
+}
+
+@media (max-width: 767px) {
+  .root {
+    padding-block: clamp(3.25rem, 12vw, 4.75rem);
+    padding-inline: clamp(1.25rem, 5vw, 1.75rem);
+  }
+
+  .glow {
+    @apply -right-32 top-24 h-64 w-64;
+  }
+
+  .title {
+    font-size: clamp(2.8rem, 12.6vw, 3.9rem);
+    line-height: 0.94;
+    letter-spacing: -0.018em;
+  }
+
+  .circled::after {
+    @apply -inset-x-4 -inset-y-1;
+  }
+
+  .focusAreas {
+    @apply mt-6 gap-2;
+  }
+
+  .focusArea {
+    @apply px-3 py-1.5 text-xs;
+  }
+
+  .panel {
+    @apply p-5;
+    border-radius: 1rem;
+  }
+
+  .principle {
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+  }
+
+  .principleIndex {
+    @apply h-10 w-10;
+  }
+
+  .principles::before {
+    @apply left-5;
+  }
 }

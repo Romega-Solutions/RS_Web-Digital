@@ -43,8 +43,9 @@
 }
 
 .text {
-  @apply mt-4 max-w-xl text-sm leading-relaxed text-black/75 md:text-[1.06rem];
+  @apply mt-4 text-sm leading-relaxed text-black/75 md:text-[1.06rem];
   font-family: var(--font-body);
+  max-width: min(100%, var(--measure-readable-tight));
 }
 
 .offer {

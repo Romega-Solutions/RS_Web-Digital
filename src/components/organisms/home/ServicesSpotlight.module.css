@@ -40,10 +40,11 @@
 }
 
 .intro {
-  @apply max-w-4xl text-center font-semibold text-brand-secondary;
+  @apply text-center font-semibold text-brand-secondary;
   font-family: var(--font-body);
   font-size: var(--type-heading-md);
   line-height: var(--leading-heading);
+  max-width: min(100%, var(--measure-readable));
 }
 
 .grid {
@@ -63,6 +64,7 @@
   .intro {
     @apply text-base;
     line-height: 1.45;
+    max-width: min(100%, var(--measure-readable-mobile));
   }
 
   .grid {

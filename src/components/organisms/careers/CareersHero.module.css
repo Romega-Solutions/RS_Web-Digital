@@ -2,7 +2,8 @@
 
 .root {
   @apply relative isolate overflow-hidden text-black;
-  padding-block: var(--section-space);
+  padding-top: calc(var(--site-header-height, 5rem) + var(--space-6));
+  padding-bottom: var(--section-space);
   font-family: var(--font-body);
 }
 
@@ -52,8 +53,9 @@
 }
 
 .copy {
-  @apply mt-6 max-w-4xl text-lg leading-tight text-black/80 md:text-[1.3rem];
+  @apply mt-6 text-lg leading-tight text-black/80 md:text-[1.3rem];
   font-family: var(--font-body);
+  max-width: min(100%, var(--measure-readable));
 }
 
 .date {

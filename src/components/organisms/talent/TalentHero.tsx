@@ -1,3 +1,4 @@
+import { AppButton } from "@/components/atoms/Button";
 import styles from "./TalentHero.module.css";
 
 const features = [
@@ -15,7 +16,19 @@ const features = [
   },
 ];
 
-export function TalentHero() {
+type TalentHeroProps = {
+  totalTalents: number;
+  totalCategories: number;
+  totalLocations: number;
+};
+
+export function TalentHero({ totalTalents, totalCategories, totalLocations }: TalentHeroProps) {
+  const stats = [
+    { label: "Talent profiles", value: totalTalents.toString() },
+    { label: "Specializations", value: totalCategories.toString() },
+    { label: "Locations", value: totalLocations.toString() },
+  ];
+
   return (
     <section className={styles.root} aria-labelledby="talent-hero-heading">
       <div className={styles.container}>
@@ -38,6 +51,24 @@ export function TalentHero() {
             product, and technical delivery. The structure mirrors the Romega talent
             experience, adapted here for the digital site with local mock profiles.
           </p>
+
+          <div className={styles.actions}>
+            <AppButton href="#talent-pool" className={styles.primaryAction}>
+              Browse talent pool
+            </AppButton>
+            <AppButton href="/contact" variant="outline" className={styles.secondaryAction}>
+              Talk to a talent specialist
+            </AppButton>
+          </div>
+
+          <dl className={styles.stats}>
+            {stats.map((stat) => (
+              <div key={stat.label} className={styles.statItem}>
+                <dt className={styles.statLabel}>{stat.label}</dt>
+                <dd className={styles.statValue}>{stat.value}</dd>
+              </div>
+            ))}
+          </dl>
 
           <div className={styles.features}>
             {features.map((feature) => (

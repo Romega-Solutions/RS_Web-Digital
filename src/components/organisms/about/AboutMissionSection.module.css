@@ -6,7 +6,7 @@
 }
 
 .inner {
-  @apply relative mx-auto grid w-full max-w-6xl grid-cols-1 overflow-hidden pb-10 md:min-h-[56rem] md:pb-28;
+  @apply relative mx-auto grid w-full max-w-6xl grid-cols-1 overflow-visible pb-10 md:min-h-[56rem] md:pb-28;
 }
 
 .grid {
@@ -17,11 +17,11 @@
 }
 
 .heading {
-  @apply relative z-10 md:absolute md:left-[8%] md:top-3;
+  @apply relative z-10 md:absolute md:left-[8%] md:top-4;
 }
 
 .title {
-  @apply text-[3rem] leading-[0.92] font-medium tracking-tight text-brand-secondary md:text-[5rem];
+  @apply text-[3rem] leading-[0.92] font-medium tracking-tight text-brand-secondary md:text-[4.6rem];
   font-family: var(--font-display);
 }
 
@@ -35,15 +35,15 @@
 }
 
 .photoMain {
-  @apply mt-8 h-64 w-full justify-self-end md:mt-0 md:h-72 md:w-[50%];
+  @apply mt-8 h-64 w-full justify-self-end md:mt-0 md:h-72 md:w-[51%];
 }
 
 .photoMid {
-  @apply mt-6 h-32 w-[50%] md:absolute md:left-[19%] md:top-52 md:mt-0 md:h-46 md:w-62;
+  @apply mt-6 h-32 w-[50%] md:absolute md:left-[18%] md:top-52 md:mt-0 md:h-44 md:w-60;
 }
 
 .photoLow {
-  @apply mt-6 h-36 w-[58%] md:absolute md:left-[4%] md:top-[25.5rem] md:mt-0 md:h-48 md:w-68;
+  @apply mt-6 h-36 w-[58%] md:absolute md:left-[4%] md:top-[24.75rem] md:mt-0 md:h-46 md:w-64;
 }
 
 .image {
@@ -63,8 +63,10 @@
 }
 
 .copy {
-  @apply relative z-10 mt-10 max-w-xl space-y-5 text-base leading-[1.16] text-black md:absolute md:left-[40%] md:top-[26.5rem] md:mt-0 md:max-w-136 md:text-[1.15rem];
+  @apply relative z-10 mt-10 space-y-5 text-base text-black md:absolute md:left-[41%] md:top-[25.75rem] md:mt-0 md:text-[1.08rem];
   font-family: var(--font-body);
+  line-height: 1.48;
+  max-width: min(100%, var(--measure-readable-tight));
 }
 
 .copy strong {
@@ -72,7 +74,7 @@
 }
 
 .statement {
-  @apply relative z-10 mt-28 bg-[#fff0cb] px-6 py-9 text-center text-[2rem] leading-[1.05] text-brand-secondary md:absolute md:bottom-0 md:left-[4%] md:mt-0 md:w-[92%] md:px-12 md:py-11 md:text-[2.75rem];
+  @apply relative left-1/2 z-10 mt-18 flex w-screen -translate-x-1/2 items-center justify-center bg-[#fff0cb] px-6 py-12 text-center text-[2rem] leading-[1.05] text-brand-secondary md:absolute md:bottom-0 md:mt-0 md:px-12 md:py-10 md:text-[2.4rem];
   font-family: var(--font-display);
 }
 
@@ -82,6 +84,10 @@
   clip-path: polygon(50% 0, 0 100%, 100% 100%);
 }
 
+.statement p {
+  @apply mx-auto max-w-5xl;
+}
+
 .statement em {
   @apply italic;
 }
@@ -89,6 +95,42 @@
 @media (max-width: 767px) {
   .root {
     @apply pb-8;
+  }
+
+  .inner {
+    @apply gap-4 pb-12;
+  }
+
+  .grid {
+    @apply left-0 top-24 h-64 w-[72%];
+    background-size: 58px 58px;
+  }
+
+  .title {
+    @apply text-[2.55rem];
+    line-height: 0.96;
+  }
+
+  .photoMain {
+    @apply mt-6 h-56;
+  }
+
+  .photoMid {
+    @apply mt-4 h-28 w-[43%];
+  }
+
+  .photoLow {
+    @apply mt-4 h-30 w-[48%];
+  }
+
+  .copy {
+    @apply mt-8 space-y-4 text-[1rem];
+    line-height: 1.45;
+  }
+
+  .statement {
+    @apply mt-14 px-5 py-10 text-[1.6rem];
+    line-height: 1.12;
   }
 }
 @reference "../../../app/globals.css";

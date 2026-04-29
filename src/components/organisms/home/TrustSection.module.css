@@ -55,8 +55,9 @@
 }
 
 .kicker {
-  @apply mt-5 max-w-3xl text-xl font-medium text-black/90 md:text-2xl;
+  @apply mt-5 text-xl font-medium text-black/90 md:text-2xl;
   line-height: 1.35;
+  max-width: min(100%, var(--measure-readable));
 }
 
 .kickerEmphasis {
@@ -64,8 +65,9 @@
 }
 
 .intro {
-  @apply mt-5 max-w-3xl text-lg text-black/78 md:text-[1.3rem];
+  @apply mt-5 text-lg text-black/78 md:text-[1.3rem];
   line-height: 1.62;
+  max-width: min(100%, var(--measure-readable));
 }
 
 .signalPanel {
@@ -139,7 +141,14 @@
   }
 
   .title {
-    max-width: 16ch;
+    max-width: none;
+    font-size: clamp(2rem, 11vw, 2.8rem);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+  }
+
+  .titleHighlight {
+    @apply px-1;
   }
 
   .kicker {
@@ -148,5 +157,6 @@
 
   .intro {
     @apply text-base;
+    max-width: min(100%, var(--measure-readable-mobile));
   }
 }
