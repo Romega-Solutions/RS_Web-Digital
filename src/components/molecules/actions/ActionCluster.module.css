@@ -1,0 +1,14 @@
+@reference "../../../app/globals.css";
+
+.root {
+  @apply flex flex-wrap items-center;
+  gap: var(--space-3);
+}
+
+.center {
+  @apply justify-center;
+}
+
+.end {
+  @apply justify-end;
+}

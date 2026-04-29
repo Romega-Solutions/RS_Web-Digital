@@ -5,6 +5,7 @@ import { AppButton } from "@/components/atoms/Button";
 import { useMemo, useRef, useState } from "react";
 import type { TalentProfile } from "./talentData";
 import { TalentCard } from "./TalentCard";
+import styles from "./TalentPool.module.css";
 
 type TalentPoolProps = {
   talents: TalentProfile[];
@@ -148,36 +149,36 @@ export function TalentPool({ talents }: TalentPoolProps) {
   };
 
   const filterSection = (title: string, children: React.ReactNode) => (
-    <section className="talent-pool__sidebar-section">
-      <h2 className="talent-pool__sidebar-heading">{title}</h2>
+    <section className={styles.sidebarSection}>
+      <h2 className={styles.sidebarHeading}>{title}</h2>
       {children}
     </section>
   );
 
   return (
-    <section className="talent-pool" aria-labelledby="talent-pool-heading">
+    <section className={styles.root} aria-labelledby="talent-pool-heading">
       <h2 id="talent-pool-heading" className="sr-only">
         Talent directory and filters
       </h2>
-      <div className="talent-pool__layout">
-        <div className="talent-pool__mobile-filter-bar">
+      <div className={styles.layout}>
+        <div className={styles.mobileFilterBar}>
           <AppButton
             type="button"
-            className="talent-pool__filter-toggle"
+            className={styles.filterToggle}
             onClick={() => setMobileFiltersOpen(true)}
             aria-expanded={mobileFiltersOpen}
             aria-controls="talent-filters-panel"
           >
             Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
           </AppButton>
-          <span className="talent-pool__count-badge talent-pool__count-badge--mobile">
+          <span className={styles.countBadgeMobile}>
             {filteredTalents.length} talents
           </span>
         </div>
 
         {mobileFiltersOpen ? (
           <div
-            className="talent-pool__overlay"
+            className={styles.overlay}
             aria-hidden="true"
             onClick={() => setMobileFiltersOpen(false)}
           />
@@ -186,27 +187,27 @@ export function TalentPool({ talents }: TalentPoolProps) {
         <aside
           id="talent-filters-panel"
           ref={filterDrawerRef}
-          className={`talent-pool__sidebar ${
-            mobileFiltersOpen ? "talent-pool__sidebar--open" : ""
+          className={`${styles.sidebar} ${
+            mobileFiltersOpen ? styles.sidebarOpen : ""
           }`}
           aria-label="Talent filters"
           role={mobileFiltersOpen ? "dialog" : undefined}
           aria-modal={mobileFiltersOpen ? "true" : undefined}
           tabIndex={mobileFiltersOpen ? -1 : undefined}
         >
-          <AppButton
+          <button
             ref={closeButtonRef}
             type="button"
-            className="talent-pool__close-button"
+            className={styles.closeButton}
             onClick={() => setMobileFiltersOpen(false)}
             aria-label="Close filters"
           >
             ×
-          </AppButton>
+          </button>
 
           {activeFilterCount > 0 || search ? (
-            <div className="talent-pool__sidebar-section">
-              <AppButton type="button" className="talent-pool__clear-filters" onClick={clearAllFilters}>
+            <div className={styles.sidebarSection}>
+              <AppButton type="button" className={styles.clearFilters} onClick={clearAllFilters}>
                 Clear all filters
               </AppButton>
             </div>
@@ -214,29 +215,29 @@ export function TalentPool({ talents }: TalentPoolProps) {
 
           {filterSection(
             "Specialization",
-            <div className="talent-pool__pills">
+            <div className={styles.pills}>
               {categories.map((category) => (
-                <AppButton
+                <button
                   key={category}
                   type="button"
                   onClick={() =>
                     toggleSelection(selectedCategories, category, setSelectedCategories)
                   }
-                  className={`talent-pool__pill ${
-                    selectedCategories.includes(category) ? "talent-pool__pill--active" : ""
+                  className={`${styles.pill} ${
+                    selectedCategories.includes(category) ? styles.pillActive : ""
                   }`}
                 >
                   {category}
-                </AppButton>
+                </button>
               ))}
             </div>,
           )}
 
           {filterSection(
             "Seniority",
-            <div className="talent-pool__check-list">
+            <div className={styles.checkList}>
               {SENIORITY_LEVELS.map((level) => (
-                <label key={level} className="talent-pool__checkbox-row">
+                <label key={level} className={styles.checkboxRow}>
                   <input
                     type="checkbox"
                     checked={selectedLevels.includes(level)}
@@ -250,9 +251,9 @@ export function TalentPool({ talents }: TalentPoolProps) {
 
           {filterSection(
             "Roles",
-            <div className="talent-pool__check-list">
+            <div className={styles.checkList}>
               {roles.map((role) => (
-                <label key={role} className="talent-pool__checkbox-row">
+                <label key={role} className={styles.checkboxRow}>
                   <input
                     type="checkbox"
                     checked={selectedRoles.includes(role)}
@@ -266,27 +267,27 @@ export function TalentPool({ talents }: TalentPoolProps) {
 
           {filterSection(
             "Skills",
-            <div className="talent-pool__pills">
+            <div className={styles.pills}>
               {skills.map((skill) => (
-                <AppButton
+                <button
                   key={skill}
                   type="button"
                   onClick={() => toggleSelection(selectedSkills, skill, setSelectedSkills)}
-                  className={`talent-pool__pill ${
-                    selectedSkills.includes(skill) ? "talent-pool__pill--active" : ""
+                  className={`${styles.pill} ${
+                    selectedSkills.includes(skill) ? styles.pillActive : ""
                   }`}
                 >
                   {skill}
-                </AppButton>
+                </button>
               ))}
             </div>,
           )}
 
           {filterSection(
             "Location",
-            <div className="talent-pool__check-list">
+            <div className={styles.checkList}>
               {locations.map((location) => (
-                <label key={location} className="talent-pool__checkbox-row">
+                <label key={location} className={styles.checkboxRow}>
                   <input
                     type="checkbox"
                     checked={selectedLocations.includes(location)}
@@ -300,10 +301,10 @@ export function TalentPool({ talents }: TalentPoolProps) {
             </div>,
           )}
 
-          <div className="talent-pool__mobile-actions">
+          <div className={styles.mobileActions}>
             <AppButton
               type="button"
-              className="talent-pool__apply-button"
+              className={styles.applyButton}
               onClick={() => setMobileFiltersOpen(false)}
             >
               View results ({filteredTalents.length})
@@ -311,46 +312,46 @@ export function TalentPool({ talents }: TalentPoolProps) {
           </div>
         </aside>
 
-        <div className="talent-pool__main">
-          <div className="talent-pool__search-row">
-            <div className="talent-pool__search-wrap">
-              <span className="talent-pool__search-icon" aria-hidden="true">
-                ⌕
+        <div className={styles.main}>
+          <div className={styles.searchRow}>
+            <div className={styles.searchWrap}>
+              <span className={styles.searchIcon} aria-hidden="true">
+                🔍
               </span>
               <input
                 type="search"
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="Search by role, skill, location, or keyword..."
-                className="talent-pool__search-input"
+                className={styles.searchInput}
                 aria-label="Search talent"
               />
             </div>
-            <span className="talent-pool__count-badge" role="status" aria-live="polite">
+            <span className={styles.countBadge} role="status" aria-live="polite">
               Available talents: {filteredTalents.length}
             </span>
           </div>
 
           {visibleTalents.length > 0 ? (
-            <div className="talent-pool__grid">
+            <div className={styles.grid}>
               {visibleTalents.map((talent) => (
                 <TalentCard key={talent.id} talent={talent} />
               ))}
             </div>
           ) : (
-            <div className="talent-pool__empty-state">
-              <p className="talent-pool__empty-title">No matching talents</p>
-              <p className="talent-pool__empty-copy">
+            <div className={styles.emptyState}>
+              <p className={styles.emptyTitle}>No matching talents</p>
+              <p className={styles.emptyCopy}>
                 Try adjusting your search or removing a few filters.
               </p>
             </div>
           )}
 
           {visibleCount < filteredTalents.length ? (
-            <div className="talent-pool__load-more-wrap">
+            <div className={styles.loadMoreWrap}>
               <AppButton
                 type="button"
-                className="talent-pool__load-more"
+                className={styles.loadMore}
                 onClick={() =>
                   setVisibleState((state) => {
                     const currentCount = state.filterKey === filterKey ? state.count : PAGE_SIZE;

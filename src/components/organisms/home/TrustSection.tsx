@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ScrollReveal } from "@/components/atoms/Motion";
 import styles from "./TrustSection.module.css";
 
 const trustPillars = [
@@ -44,34 +45,49 @@ export function TrustSection() {
   return (
     <section className={styles.root}>
       <div className={styles.inner}>
-        <h2 className={styles.title}>
-          <span className={styles.titleHighlight}>Why Businesses Trust Romega</span>
-        </h2>
-        <p className={styles.kicker}>
-          Not just another service provider.
-          <span className={styles.kickerEmphasis}> A long-term growth partner.</span>
-        </p>
-        <p className={styles.intro}>
-          Businesses choose Romega because we do not offer one-size-fits-all
-          solutions. We take the time to understand your goals, your
-          challenges, and where you are headed, then build the teams and
-          brand foundations that support real, lasting growth.
-        </p>
+        <ScrollReveal variant="slideUp">
+          <h2 className={styles.title}>
+            <span className={styles.titleHighlight}>Why Businesses Trust Romega</span>
+          </h2>
+        </ScrollReveal>
+
+        <ScrollReveal variant="slideUp" delay={0.1}>
+          <p className={styles.kicker}>
+            Not just another service provider.
+            <span className={styles.kickerEmphasis}> A long-term growth partner.</span>
+          </p>
+        </ScrollReveal>
+
+        <ScrollReveal variant="fade" delay={0.2}>
+          <p className={styles.intro}>
+            Businesses choose Romega because we do not offer one-size-fits-all
+            solutions. We take the time to understand your goals, your
+            challenges, and where you are headed, then build the teams and
+            brand foundations that support real, lasting growth.
+          </p>
+        </ScrollReveal>
 
         <div className={styles.grid}>
-          {trustPillars.map((pillar) => (
-            <article key={pillar.title} className={styles.card}>
-              <Image
-                src={pillar.iconSrc}
-                alt={pillar.iconAlt}
-                width={112}
-                height={112}
-                sizes="(max-width: 767px) 96px, 112px"
-                className={styles.iconImage}
-              />
-              <h3 className={styles.cardTitle}>{pillar.title}</h3>
-              <p className={styles.cardCopy}>{pillar.description}</p>
-            </article>
+          {trustPillars.map((pillar, index) => (
+            <ScrollReveal
+              key={pillar.title}
+              variant="scale"
+              delay={0.1 * index}
+              duration={0.5}
+            >
+              <article className={styles.card}>
+                <Image
+                  src={pillar.iconSrc}
+                  alt={pillar.iconAlt}
+                  width={112}
+                  height={112}
+                  sizes="(max-width: 767px) 96px, 112px"
+                  className={styles.iconImage}
+                />
+                <h3 className={styles.cardTitle}>{pillar.title}</h3>
+                <p className={styles.cardCopy}>{pillar.description}</p>
+              </article>
+            </ScrollReveal>
           ))}
         </div>
       </div>

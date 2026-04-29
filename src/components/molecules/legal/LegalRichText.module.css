@@ -1,0 +1,25 @@
+@reference "../../../app/globals.css";
+
+.root {
+  @apply max-w-none text-black/80;
+  line-height: 1.6;
+}
+
+.root h2,
+.root h3,
+.root h4 {
+  @apply mb-4 mt-8 text-xl font-bold text-brand-secondary;
+  font-family: var(--font-heading);
+}
+
+.root p {
+  @apply mb-4;
+}
+
+.root ul {
+  @apply mb-6 list-disc space-y-2 pl-6;
+}
+
+.root strong {
+  @apply font-semibold text-black;
+}

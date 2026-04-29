@@ -5,6 +5,7 @@ import {
   PRIVACY_POLICY_VERSION,
   PRIVACY_REQUEST_SLA_BUSINESS_DAYS,
 } from "@/lib/legal/privacy-policy";
+import { LegalRichText } from "@/components/molecules/legal/LegalRichText";
 
 interface PrivacyPolicyContentProps {
   showCanonicalLink?: boolean;
@@ -14,7 +15,7 @@ export function PrivacyPolicyContent({
   showCanonicalLink = false,
 }: PrivacyPolicyContentProps) {
   return (
-    <div className="prose prose-sm max-w-none">
+    <LegalRichText>
       <p className="text-lg text-gray-800 font-medium mb-6">
         This Privacy and Consent Policy explains how Romega Solutions collects,
         processes, stores, retains, and shares personal information from website
@@ -181,6 +182,6 @@ export function PrivacyPolicyContent({
           </Link>
         </div>
       )}
-    </div>
+    </LegalRichText>
   );
 }

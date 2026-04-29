@@ -3,7 +3,7 @@ import { LegalTemplate } from "@/components/templates/LegalTemplate";
 import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
 import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
 import { LegalPageCard } from "@/components/organisms/shared/LegalPageCard";
-import { TermsConditionsContent } from "@/components/organisms/shared/TermsConditionsContent";
+import { TermsAndConditionsContent } from "@/components/organisms/shared/TermsAndConditionsContent";
 import { createMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = createMetadata({
@@ -22,7 +22,7 @@ export default function TermsPage() {
       title="Terms and Conditions"
     >
       <LegalPageCard>
-        <TermsConditionsContent />
+        <TermsAndConditionsContent />
       </LegalPageCard>
     </LegalTemplate>
   );

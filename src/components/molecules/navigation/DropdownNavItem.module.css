@@ -1,0 +1,22 @@
+@reference "../../../app/globals.css";
+
+.link {
+  @apply relative z-10 flex flex-row items-start gap-3 rounded-md px-4 py-3 text-sm font-medium capitalize text-brand-secondary no-underline transition-colors hover:bg-brand-secondary/8;
+  font-family: var(--font-poppins), "Poppins", "Aptos", "Segoe UI", Arial, sans-serif;
+}
+
+.active {
+  @apply bg-brand-secondary/10 font-semibold;
+}
+
+.content {
+  @apply flex flex-col;
+}
+
+.title {
+  @apply font-semibold;
+}
+
+.description {
+  @apply mt-1 text-xs font-normal opacity-70 normal-case leading-snug;
+}

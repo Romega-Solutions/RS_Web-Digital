@@ -1,4 +1,4 @@
-import { ExploreServicesButton } from "@/components/atoms/Button";
+import { AppButton } from "@/components/atoms/Button";
 import { ServiceCard } from "@/components/molecules/Card/ServiceCard";
 import styles from "./ServicesSpotlight.module.css";
 
@@ -22,34 +22,24 @@ export function ServicesSpotlight() {
             title="Talent Solutions"
             imageSrc="/2.0%20Website%20Assets/Image%201%20_%20Talent%20Solutions.webp"
             imageAlt="Talent Solutions"
-            className={styles.card}
-            imageClassName={styles.image}
           />
 
           <ServiceCard
             title="Brand & Growth Support"
             imageSrc="/2.0%20Website%20Assets/Image%202%20_%20Brand%20%26%20Growth%20Support.webp"
             imageAlt="Brand & Growth Support"
-            className={styles.card}
-            imageClassName={styles.image}
           />
 
           <ServiceCard
             title="Strategic Operations"
             imageSrc="/2.0%20Website%20Assets/Image%203%20_%20Strategic%20Operations.webp"
             imageAlt="Strategic Operations"
-            className={styles.card}
-            imageClassName={styles.image}
           />
         </div>
 
-        <ExploreServicesButton
-          className={styles.button}
-          href="/services"
-          label="See How We Can Help"
-          variant="primary"
-          size="lg"
-        />
+        <AppButton className={styles.button} href="/services" variant="primary" size="lg">
+          See How We Can Help
+        </AppButton>
       </div>
     </section>
   );

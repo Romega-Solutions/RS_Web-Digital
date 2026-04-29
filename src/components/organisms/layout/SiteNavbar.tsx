@@ -2,8 +2,10 @@
 
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { useAccessibleOverlay } from "@/components/accessibility/useAccessibleOverlay";
+import { DropdownNavItem } from "@/components/molecules/navigation/DropdownNavItem";
+import { NavMenuLink } from "@/components/molecules/navigation/NavMenuLink";
 import Link from "next/link";
-import styles from "./SiteHeader.module.css";
+import styles from "./SiteNavbar.module.css";
 
 export type SiteHeaderActiveItem =
   | "Home"
@@ -219,15 +221,13 @@ export function SiteNavbar({
       <div className={styles.navDesktopRow}>
         <nav className={styles.menu} aria-label="Primary navigation">
           {navItems.map((item) => (
-            <Link
+            <NavMenuLink
               key={item.label}
               href={item.href}
-              className={`${styles.navLink} ${
-                item.label === activeItem ? styles.navLinkActive : ""
-              }`}
+              isActive={item.label === activeItem}
             >
               {item.label}
-            </Link>
+            </NavMenuLink>
           ))}
 
           <div
@@ -253,16 +253,16 @@ export function SiteNavbar({
           >
             <Link
               href="/services#services-overview"
-              className={`${styles.navLink} ${styles.dropdownTrigger} ${
-                activeItem === "Services" ? styles.navLinkActive : ""
-              }`}
+              className={styles.dropdownTrigger}
               aria-expanded={isServicesDropdownOpen}
               aria-controls={servicesDropdownId}
               aria-haspopup="menu"
               role="button"
               onClick={closeServicesDropdown}
             >
-              Services
+              <span className={activeItem === "Services" ? styles.dropdownTriggerActive : ""}>
+                Services
+              </span>
               <span className={styles.dropdownCaret} aria-hidden="true">
                 ▾
               </span>
@@ -275,19 +275,14 @@ export function SiteNavbar({
               role="menu"
             >
               {servicesMenuItems.map((item) => (
-                <Link
+                <DropdownNavItem
                   key={item.label}
                   href={item.href}
                   role="menuitem"
-                  className={`${styles.dropdownItem} ${
-                    isHrefActive(item.href)
-                      ? styles.dropdownItemActive
-                      : ""
-                  }`}
+                  isActive={isHrefActive(item.href)}
                   onClick={closeServicesDropdown}
-                >
-                  {item.label}
-                </Link>
+                  title={item.label}
+                />
               ))}
             </div>
           </div>
@@ -315,18 +310,22 @@ export function SiteNavbar({
           >
             <Link
               href="/careers"
-              className={`${styles.navLink} ${styles.dropdownTrigger} ${
-                activeItem === "Careers" || activeItem === "Careers & Talents"
-                  ? styles.navLinkActive
-                  : ""
-              }`}
+              className={styles.dropdownTrigger}
               aria-expanded={isCareersDropdownOpen}
               aria-controls={careersDropdownId}
               aria-haspopup="menu"
               role="button"
               onClick={closeCareersDropdown}
             >
-              Careers
+              <span
+                className={
+                  activeItem === "Careers" || activeItem === "Careers & Talents"
+                    ? styles.dropdownTriggerActive
+                    : ""
+                }
+              >
+                Careers
+              </span>
               <span className={styles.dropdownCaret} aria-hidden="true">
                 ▾
               </span>
@@ -339,19 +338,14 @@ export function SiteNavbar({
               role="menu"
             >
               {careersMenuItems.map((item) => (
-                <Link
+                <DropdownNavItem
                   key={item.label}
                   href={item.href}
                   role="menuitem"
-                  className={`${styles.dropdownItem} ${
-                    isHrefActive(item.href)
-                      ? styles.dropdownItemActive
-                      : ""
-                  }`}
+                  isActive={isHrefActive(item.href)}
                   onClick={closeCareersDropdown}
-                >
-                  {item.label}
-                </Link>
+                  title={item.label}
+                />
               ))}
             </div>
           </div>
@@ -399,21 +393,20 @@ export function SiteNavbar({
         aria-hidden={!isMobileMenuOpen}
       >
         {navItems.map((item) => (
-          <Link
+          <NavMenuLink
             key={item.label}
             href={item.href}
-            className={`${styles.navLink} ${styles.mobileLink} ${
-              item.label === activeItem ? styles.navLinkActive : ""
-            }`}
+            className={styles.mobileLink}
+            isActive={item.label === activeItem}
             onClick={handleCloseMobileMenu}
           >
             {item.label}
-          </Link>
+          </NavMenuLink>
         ))}
         <div className={styles.mobileGroup}>
           <button
             type="button"
-            className={`${styles.navLink} ${styles.mobileLink} ${styles.mobileGroupLabel} ${
+            className={`${styles.mobileLink} ${styles.mobileGroupLabel} ${
               activeItem === "Services" ? styles.navLinkActive : ""
             }`}
             aria-expanded={isMobileServicesOpen}
@@ -437,7 +430,7 @@ export function SiteNavbar({
               <Link
                 key={item.label}
                 href={item.href}
-                className={`${styles.navLink} ${styles.mobileSublink} ${
+                className={`${styles.mobileSublink} ${
                   isHrefActive(item.href) ? styles.navLinkActive : ""
                 }`}
                 onClick={handleCloseMobileMenu}
@@ -450,7 +443,7 @@ export function SiteNavbar({
         <div className={styles.mobileGroup}>
           <button
             type="button"
-            className={`${styles.navLink} ${styles.mobileLink} ${styles.mobileGroupLabel}`}
+            className={`${styles.mobileLink} ${styles.mobileGroupLabel}`}
             aria-expanded={isMobileCareersOpen}
             aria-controls="mobile-careers-submenu"
             onClick={() => setIsMobileCareersOpen((open) => !open)}
@@ -472,7 +465,7 @@ export function SiteNavbar({
               <Link
                 key={item.label}
                 href={item.href}
-                className={`${styles.navLink} ${styles.mobileSublink}`}
+                className={styles.mobileSublink}
                 onClick={handleCloseMobileMenu}
               >
                 {item.label}

@@ -23,16 +23,6 @@
   @apply relative z-10 mx-auto flex min-h-144 w-full max-w-5xl flex-col items-center justify-center text-center;
 }
 
-.quote {
-  @apply max-w-4xl text-[2.5rem] leading-[0.92] font-semibold tracking-tight text-white md:text-[4rem];
-  font-family: var(--font-ui);
-}
-
-.author {
-  @apply mt-8 text-lg font-medium text-white/90 md:text-[1.7rem];
-  font-family: var(--font-ui);
-}
-
 .arrow {
   @apply absolute top-1/2 z-20 -translate-y-1/2 border-none bg-transparent text-5xl font-medium leading-none text-white/95 cursor-pointer transition-all hover:scale-110 md:text-6xl;
   font-family: var(--font-ui);
@@ -62,11 +52,6 @@
   .root,
   .content {
     min-height: 32rem;
-  }
-
-  .quote {
-    font-size: 2rem;
-    line-height: 0.95;
   }
 
   .arrow {

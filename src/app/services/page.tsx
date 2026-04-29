@@ -7,12 +7,12 @@ import { ServiceStrip } from "@/components/organisms/home/ServiceStrip";
 import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
 import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
 import { ConsultationBanner } from "@/components/organisms/shared/ConsultationBanner";
-import { absoluteUrl, createMetadata } from "@/lib/seo";
+import { absoluteUrl, createMetadata, createBreadcrumbSchema } from "@/lib/seo";
 
 export const metadata: Metadata = createMetadata({
-  title: "Services for Talent, Brand, and Operations",
+  title: "Our Services",
   description:
-    "Explore Romega Solutions services across talent acquisition, brand and growth support, and strategic operations for scaling businesses.",
+    "Expert talent acquisition, brand and growth support, and strategic operations for businesses ready to scale.",
   path: "/services",
   keywords: [
     "talent solutions",
@@ -78,9 +78,15 @@ const detailedServices = [
 ] as const;
 
 export default function ServicesPage() {
+  const breadcrumbData = createBreadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "Services", path: "/services" },
+  ]);
+
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
+      breadcrumbData,
       {
         "@type": "CollectionPage",
         "@id": absoluteUrl("/services#webpage"),

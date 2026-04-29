@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { forwardRef } from "react";
+import styles from "./Button.module.css";
 
 type ButtonVariant = "primary" | "secondary" | "outline" | "ghost";
 type ButtonSize = "sm" | "md" | "lg";
@@ -35,10 +36,9 @@ export const AppButton = forwardRef<HTMLButtonElement, AppButtonProps>(function 
     ...rest
   } = props;
 
-  const baseClass = "btn";
-  const variantClass = `btn--${variant}`;
-  const sizeClass = `btn--${size}`;
-  const combinedClassName = `${baseClass} ${variantClass} ${sizeClass} ${className}`.trim();
+  const combinedClassName = [styles.root, styles[variant], styles[size], className]
+    .filter(Boolean)
+    .join(" ");
 
   const content = children ?? label;
 
@@ -58,29 +58,3 @@ export const AppButton = forwardRef<HTMLButtonElement, AppButtonProps>(function 
     </button>
   );
 });
-
-type ExploreServicesButtonProps = {
-  className?: string;
-  href?: string;
-  label?: string;
-  variant?: ButtonVariant;
-  size?: ButtonSize;
-};
-
-export function ExploreServicesButton({
-  className = "home-hero__action",
-  href = "/services",
-  label = "Explore Our Services",
-  variant = "primary",
-  size = "md",
-}: ExploreServicesButtonProps) {
-  return (
-    <AppButton
-      href={href}
-      label={label}
-      variant={variant}
-      size={size}
-      className={className}
-    />
-  );
-}

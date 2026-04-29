@@ -1,6 +1,7 @@
 "use client";
 
 import { TEAM_MEMBERS, type TeamMember } from "@/lib/constants";
+import { SectionIntro } from "@/components/molecules/content/SectionIntro";
 import Image from "next/image";
 import { useCallback, useRef, useState, type KeyboardEvent, type TouchEvent } from "react";
 import styles from "./TeamCarousel.module.css";
@@ -104,15 +105,12 @@ export function TeamCarousel({ onMemberClick }: TeamCarouselProps) {
       <div className={styles["bg-grid"]} aria-hidden="true" />
 
       <div className={styles.container}>
-        <div className={styles.header}>
-          <h2 id="team-heading" className={styles.title}>
-            Meet the Experts Behind Your Success
-          </h2>
-          <p className={styles.description}>
-            Our team brings a blend of strategic insight, market perspective, and
-            practical experience in team building and brand support.
-          </p>
-        </div>
+        <SectionIntro
+          align="center"
+          className={styles.header}
+          title={<span id="team-heading">Meet the Experts Behind Your Success</span>}
+          body="Our team brings a blend of strategic insight, market perspective, and practical experience in team building and brand support."
+        />
 
         <div
           className={styles["track-wrapper"]}

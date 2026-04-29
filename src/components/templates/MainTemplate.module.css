@@ -1,0 +1,14 @@
+@reference "../../app/globals.css";
+
+.root {
+  @apply relative min-h-screen overflow-x-hidden bg-background;
+  padding-top: var(--site-header-height, clamp(4.25rem, 3.95rem + 1vw, 5rem));
+}
+
+.rootHome {
+  @apply pt-0;
+}
+
+.main {
+  @apply block;
+}

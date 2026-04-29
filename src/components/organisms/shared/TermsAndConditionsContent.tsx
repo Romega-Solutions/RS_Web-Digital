@@ -1,6 +1,8 @@
+import { LegalRichText } from "@/components/molecules/legal/LegalRichText";
+
 export function TermsAndConditionsContent() {
   return (
-    <div className="prose prose-sm max-w-none">
+    <LegalRichText>
       <p className="text-sm text-gray-500 mb-6">Last Updated: August 27, 2025</p>
 
       <h2 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
@@ -147,6 +149,6 @@ export function TermsAndConditionsContent() {
         <p className="text-gray-700 mb-2">www.romega-solutions.com</p>
         <p className="text-gray-700">222 Pacific Coast Hwy, #10, El Segundo, CA 90245</p>
       </div>
-    </div>
+    </LegalRichText>
   );
 }

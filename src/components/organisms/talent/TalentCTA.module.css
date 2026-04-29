@@ -1,0 +1,86 @@
+.root {
+  @apply bg-[#eef4fb] py-[0_1rem_4rem];
+}
+
+.card {
+  @apply mx-auto grid max-w-[75rem] grid-cols-1 gap-6 rounded-lg border border-[#d7e2ef] bg-white p-6 shadow-[0_16px_40px_rgba(34,72,115,0.08)];
+}
+
+.left {
+  @apply flex flex-col justify-center;
+}
+
+.title {
+  @apply mb-3 leading-none text-brand-secondary;
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.copy {
+  @apply m-0 max-w-[34rem] leading-[1.8] text-[#4f6072];
+}
+
+.actions {
+  @apply mt-5 flex flex-wrap gap-3;
+}
+
+.action {
+  @apply inline-flex items-center justify-center rounded-full px-[1.2rem] py-[0.8rem] font-bold no-underline;
+  font-family: var(--font-body);
+}
+
+.actionPrimary {
+  @apply bg-brand-secondary text-white;
+}
+
+.actionSecondary {
+  @apply border border-brand-secondary text-brand-secondary;
+}
+
+.divider {
+  @apply hidden w-px bg-[#e5edf7];
+}
+
+.right {
+  @apply flex flex-col items-start justify-center;
+}
+
+.avatarWrap {
+  @apply relative h-[5.5rem] w-[5.5rem] overflow-hidden rounded-lg;
+}
+
+.avatar {
+  @apply object-cover;
+}
+
+.expertLabel {
+  @apply mb-[0.2rem] mt-[0.9rem] text-[0.72rem] font-bold tracking-widest text-[#64748b];
+}
+
+.expertName {
+  @apply m-0 text-[1.35rem] text-black/72;
+  font-family: var(--font-heading);
+}
+
+.expertTitle {
+  @apply mt-[0.2rem] text-[#526376];
+}
+
+@media (min-width: 900px) {
+  .root {
+    @apply px-6 pb-[4.5rem] pt-0;
+  }
+
+  .card {
+    @apply grid-cols-[minmax(0,1.6fr)_1px_minmax(16rem,0.8fr)] gap-7 p-8;
+  }
+
+  .divider {
+    @apply block;
+  }
+
+  .right {
+    @apply items-center text-center;
+  }
+}
+@reference "../../../app/globals.css";

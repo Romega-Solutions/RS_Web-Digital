@@ -105,6 +105,10 @@
   @apply block;
 }
 
+.action {
+  @apply mt-8;
+}
+
 @media (max-width: 980px) {
 
   .headline,

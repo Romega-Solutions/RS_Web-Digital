@@ -1,0 +1,60 @@
+@reference "../../../app/globals.css";
+
+.root {
+  @apply inline-flex cursor-pointer items-center justify-center rounded-full font-bold no-underline transition-all duration-200;
+  font-family: var(--font-cta);
+}
+
+.root:disabled {
+  @apply cursor-not-allowed opacity-50 grayscale;
+}
+
+.primary {
+  @apply text-white;
+  background: linear-gradient(90deg, rgb(35 108 183) 0%, rgb(30 112 206) 50%, rgb(77 150 236) 100%);
+  box-shadow: 0 10px 30px rgb(4 12 22 / 0.18);
+  text-shadow: 0 1px 8px rgb(0 0 0 / 0.2);
+}
+
+.primary:hover:not(:disabled) {
+  @apply -translate-y-px;
+  background: linear-gradient(90deg, rgb(27 92 164) 0%, rgb(23 102 194) 50%, rgb(61 135 226) 100%);
+  box-shadow: 0 15px 40px rgb(4 12 22 / 0.26);
+}
+
+.secondary {
+  @apply bg-brand-primary text-brand-secondary;
+}
+
+.secondary:hover:not(:disabled) {
+  @apply -translate-y-px;
+  box-shadow: 0 12px 26px rgb(254 189 24 / 0.18);
+}
+
+.outline {
+  @apply border-2 border-brand-secondary bg-transparent text-brand-secondary;
+}
+
+.outline:hover:not(:disabled) {
+  @apply -translate-y-px bg-brand-secondary text-white;
+}
+
+.ghost {
+  @apply bg-transparent text-brand-secondary;
+}
+
+.ghost:hover:not(:disabled) {
+  @apply bg-brand-secondary/10;
+}
+
+.sm {
+  @apply px-5 py-2 text-sm;
+}
+
+.md {
+  @apply px-7 py-3 text-base;
+}
+
+.lg {
+  @apply px-9 py-4 text-lg;
+}

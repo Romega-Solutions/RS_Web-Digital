@@ -1,4 +1,5 @@
 import { ExploreServicesButton } from "@/components/atoms/Button";
+import { ScrollReveal } from "@/components/atoms/Motion";
 import styles from "./GrowthSection.module.css";
 
 export function GrowthSection() {
@@ -7,13 +8,13 @@ export function GrowthSection() {
       <div className={styles.grid} aria-hidden="true" />
 
       <div className={styles.inner}>
-        <div className={styles.copyWrap}>
+        <ScrollReveal variant="slideRight" className={styles.copyWrap}>
           <h2 className={styles.title}>
             Growth feels easier when you have the right <span className={styles.growingWord}>partner.</span>
           </h2>
-        </div>
+        </ScrollReveal>
 
-        <div className={styles.side}>
+        <ScrollReveal variant="slideUp" delay={0.2} className={styles.side}>
           <div className={styles.media} aria-hidden="true">
             <video
               className={styles.video}
@@ -33,16 +34,16 @@ export function GrowthSection() {
             Romega brings structure, perspective, and steady guidance so
             growth feels intentional, not overwhelming.
           </p>
-        </div>
+        </ScrollReveal>
       </div>
 
-      <div className={styles.banner}>
+      <ScrollReveal variant="fade" delay={0.3} className={styles.banner}>
         <div className={styles.bannerOverlay} aria-hidden="true" />
         <div className={styles.bannerContent}>
           <h3 className={styles.bannerTitle}>Let&apos;s Build What&apos;s Next</h3>
           <ExploreServicesButton variant="primary" size="lg" />
         </div>
-      </div>
+      </ScrollReveal>
     </section>
   );
 }

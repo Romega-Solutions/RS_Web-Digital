@@ -7,11 +7,12 @@ export const siteConfig = {
   legalName: "Romega Solutions",
   url: new URL(siteUrl),
   description:
-    "Romega Solutions helps businesses build stronger teams, sharpen brand positioning, and improve operations with steady, strategic support.",
+    "Romega Solutions provides expert talent acquisition, brand growth support, and strategic operations consulting for businesses ready to scale with intention.",
   ogImage: "/opengraph-image",
   logo: "/RS_Logo-Blue.png",
   favicon: "/favicon.ico",
   email: "info@romega-solutions.com",
+  phone: "+1 (310) 955-1444", // Example phone
   linkedIn: "https://www.linkedin.com/company/romega-solutions/posts/?feedView=all",
   instagram: "https://www.instagram.com/romegasolutions/",
   facebook: "https://www.facebook.com/romegasolutions",
@@ -57,21 +58,22 @@ export function createMetadata({
 }: BuildMetadataInput): Metadata {
   const url = absoluteUrl(path);
   const imageUrl = absoluteUrl(image);
+  const fullTitle = `${title} | ${siteConfig.name}`;
 
   return {
-    title,
+    title: fullTitle,
     description,
     keywords: [...siteConfig.defaultKeywords, ...keywords],
     icons: {
       icon: siteConfig.favicon,
       shortcut: siteConfig.favicon,
-      apple: siteConfig.favicon,
+      apple: "/apple-touch-icon.png",
     },
     alternates: {
       canonical: path,
     },
     openGraph: {
-      title,
+      title: fullTitle,
       description,
       url,
       siteName: siteConfig.name,
@@ -88,7 +90,7 @@ export function createMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: fullTitle,
       description,
       images: [imageUrl],
     },
@@ -107,6 +109,7 @@ export function createOrganizationSchema() {
     image: absoluteUrl(siteConfig.ogImage),
     description: siteConfig.description,
     email: siteConfig.email,
+    telephone: siteConfig.phone,
     sameAs: [siteConfig.linkedIn, siteConfig.instagram, siteConfig.facebook],
     address: {
       "@type": "PostalAddress",
@@ -119,6 +122,46 @@ export function createOrganizationSchema() {
       availableLanguage: ["English"],
       areaServed: ["US", "APAC"],
     },
+  };
+}
+
+export function createLocalBusinessSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": absoluteUrl("/#localbusiness"),
+    name: siteConfig.name,
+    image: absoluteUrl(siteConfig.ogImage),
+    url: absoluteUrl("/"),
+    telephone: siteConfig.phone,
+    address: {
+      "@type": "PostalAddress",
+      ...siteConfig.address,
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: 33.9192,
+      longitude: -118.4165,
+    },
+    openingHoursSpecification: {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      opens: "09:00",
+      closes: "17:00",
+    },
+  };
+}
+
+export function createBreadcrumbSchema(items: { name: string; path: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: absoluteUrl(item.path),
+    })),
   };
 }
 

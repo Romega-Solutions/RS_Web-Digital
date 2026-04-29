@@ -1,4 +1,5 @@
 import React from "react";
+import styles from "./MainTemplate.module.css";
 
 interface MainTemplateProps {
   jsonLd?: React.ReactNode;
@@ -6,6 +7,8 @@ interface MainTemplateProps {
   children: React.ReactNode;
   footer: React.ReactNode;
   className?: string;
+  shellVariant?: "default" | "home";
+  mainClassName?: string;
 }
 
 export function MainTemplate({
@@ -14,13 +17,27 @@ export function MainTemplate({
   children,
   footer,
   className = "",
+  shellVariant = "default",
+  mainClassName = "",
 }: MainTemplateProps) {
+  const rootClassName = [
+    styles.root,
+    shellVariant === "home" ? styles.rootHome : "",
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <div className={`site-shell ${className}`} id="top">
+    <div className={rootClassName} data-shell-variant={shellVariant} id="top">
       {jsonLd}
       {header}
 
-      <main id="main-content" tabIndex={-1}>
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className={[styles.main, mainClassName].filter(Boolean).join(" ")}
+      >
         {children}
       </main>
 

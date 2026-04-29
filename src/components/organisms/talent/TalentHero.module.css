@@ -1,0 +1,67 @@
+.root {
+  @apply relative isolate overflow-hidden text-black;
+  padding: calc(3rem + 96px) 1rem 3.5rem;
+  background: linear-gradient(180deg, #f7f9fc 0%, #eef4fb 100%);
+}
+
+.container {
+  @apply mx-auto max-w-[75rem];
+}
+
+.content {
+  @apply mx-auto max-w-[58rem] text-center;
+}
+
+.badge {
+  @apply mb-4 inline-flex flex-wrap items-center justify-center gap-2 text-[0.95rem] text-[#5d6b7c];
+}
+
+.stars {
+  @apply tracking-widest text-brand-secondary;
+}
+
+.title {
+  @apply mb-4 leading-[0.98] text-brand-secondary;
+  font-family: var(--font-heading);
+  font-size: clamp(2.3rem, 5vw, 4.2rem);
+}
+
+.description {
+  @apply mx-auto max-w-[48rem] text-[1.05rem] leading-[1.8] text-[#415163];
+}
+
+.features {
+  @apply mt-10 grid grid-cols-1 gap-4;
+}
+
+.featureCard {
+  @apply rounded-lg border border-[#d7e2ef] bg-white p-[1.35rem_1.1rem] shadow-[0_10px_30px_rgba(34,72,115,0.08)];
+}
+
+.featureIcon {
+  @apply inline-flex h-11 w-11 items-center justify-center rounded-lg bg-brand-secondary/12 text-brand-secondary;
+}
+
+.featureIcon svg {
+  @apply h-6 w-6;
+}
+
+.featureTitle {
+  @apply mb-2 mt-[0.9rem] text-[1.25rem] text-black/70;
+  font-family: var(--font-heading);
+}
+
+.featureCopy {
+  @apply m-0 leading-[1.7] text-[#56677a];
+}
+
+@media (min-width: 700px) {
+  .root {
+    @apply py-[calc(4rem+96px)_1.5rem_4rem];
+  }
+
+  .features {
+    @apply grid-cols-3;
+  }
+}
+@reference "../../../app/globals.css";

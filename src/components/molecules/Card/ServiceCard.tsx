@@ -1,4 +1,5 @@
 import Image from "next/image";
+import styles from "./ServiceCard.module.css";
 
 interface ServiceCardProps {
   title: string;
@@ -13,19 +14,18 @@ export function ServiceCard({
   imageSrc,
   imageAlt,
   className = "",
-  imageClassName = "services-spotlight-image",
+  imageClassName = "",
 }: ServiceCardProps) {
   return (
-    <article className={`services-spotlight-card ${className}`}>
+    <article className={[styles.root, className].filter(Boolean).join(" ")}>
       <Image
         src={imageSrc}
         alt={imageAlt}
         width={2430}
         height={3038}
         sizes="(max-width: 767px) 100vw, 33vw"
-        className={imageClassName}
+        className={[styles.image, imageClassName].filter(Boolean).join(" ")}
       />
-      {/* Note: Title is visually hidden in current design but included for accessibility if needed */}
       <h3 className="sr-only">{title}</h3>
     </article>
   );

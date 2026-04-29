@@ -1,5 +1,6 @@
 import { AppButton } from "@/components/atoms/Button";
 import type { TalentProfile } from "./talentData";
+import styles from "./TalentCard.module.css";
 
 type TalentCardProps = {
   talent: TalentProfile;
@@ -24,37 +25,37 @@ function getSeniorityLabel(level: TalentProfile["experienceLevel"]) {
 
 export function TalentCard({ talent }: TalentCardProps) {
   return (
-    <article className="talent-card">
-      <div className="talent-card__header">
-        <div className="talent-card__info">
-          <div className="talent-card__name-row">
-            <span className="talent-card__name">{talent.name}</span>
-            <span className="talent-card__location">{talent.location.toUpperCase()}</span>
+    <article className={styles.root}>
+      <div className={styles.header}>
+        <div className={styles.info}>
+          <div className={styles.nameRow}>
+            <span className={styles.name}>{talent.name}</span>
+            <span className={styles.location}>{talent.location.toUpperCase()}</span>
           </div>
-          <p className="talent-card__role">{talent.role}</p>
-          <p className="talent-card__level">{getSeniorityLabel(talent.experienceLevel)}</p>
+          <p className={styles.role}>{talent.role}</p>
+          <p className={styles.level}>{getSeniorityLabel(talent.experienceLevel)}</p>
         </div>
-        <span className="talent-card__id">ID: {talent.id}</span>
+        <span className={styles.id}>ID: {talent.id}</span>
       </div>
 
-      <p className="talent-card__tagline">{talent.tagline}</p>
+      <p className={styles.tagline}>{talent.tagline}</p>
 
-      <div className="talent-card__skills">
+      <div className={styles.skills}>
         {talent.skills.slice(0, 3).map((skill) => (
-          <span key={skill} className="talent-card__skill">
+          <span key={skill} className={styles.skill}>
             {skill}
           </span>
         ))}
         {talent.skills.length > 3 ? (
-          <span className="talent-card__skill talent-card__skill--more">
+          <span className={`${styles.skill} ${styles.skillMore}`}>
             +{talent.skills.length - 3} more
           </span>
         ) : null}
       </div>
 
-      <div className="talent-card__footer">
-        <span className="talent-card__category">{talent.category}</span>
-        <AppButton href="/contact" className="talent-card__cta">
+      <div className={styles.footer}>
+        <span className={styles.category}>{talent.category}</span>
+        <AppButton href="/contact" className={styles.cta}>
           REQUEST INTRO
         </AppButton>
       </div>

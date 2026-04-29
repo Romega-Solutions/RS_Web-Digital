@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { HomeTemplate } from "@/components/templates/HomeTemplate";
+import { MainTemplate } from "@/components/templates/MainTemplate";
 import { GrowthSection } from "@/components/organisms/home/GrowthSection";
 import { TrustSection } from "@/components/organisms/home/TrustSection";
 import { ApproachSection } from "@/components/organisms/home/ApproachSection";
@@ -11,12 +11,19 @@ import { TestimonialSection } from "@/components/organisms/home/TestimonialSecti
 import { SocialConnect } from "@/components/organisms/home/SocialConnect";
 import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
 import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
-import { createMetadata, createOrganizationSchema, createWebsiteSchema, absoluteUrl, siteConfig } from "@/lib/seo";
+import {
+  createMetadata,
+  createOrganizationSchema,
+  createWebsiteSchema,
+  createLocalBusinessSchema,
+  absoluteUrl,
+  siteConfig,
+} from "@/lib/seo";
 
 export const metadata: Metadata = createMetadata({
-  title: "Smart Talent, Brand, and Operations Support",
+  title: "Talent, Brand, and Operations Support",
   description:
-    "Romega Solutions helps founders and growth teams build stronger talent pipelines, clearer brands, and steadier operations.",
+    "Expert talent acquisition, brand growth support, and strategic operations consulting for businesses ready to scale with intention.",
   path: "/",
   keywords: [
     "strategic team growth",
@@ -34,6 +41,7 @@ export default function Home() {
     "@graph": [
       createOrganizationSchema(),
       createWebsiteSchema(),
+      createLocalBusinessSchema(),
       {
         "@type": "ProfessionalService",
         "@id": absoluteUrl("/#service"),
@@ -57,7 +65,7 @@ export default function Home() {
         url: absoluteUrl("/"),
         name: "Romega Solutions Home",
         description:
-          "Romega Solutions helps founders and growth teams build stronger talent pipelines, clearer brands, and steadier operations.",
+          "Expert talent acquisition, brand growth support, and strategic operations consulting for businesses ready to scale with intention.",
         isPartOf: {
           "@id": absoluteUrl("/#website"),
         },
@@ -69,18 +77,20 @@ export default function Home() {
   };
 
   return (
-    <HomeTemplate
+    <MainTemplate
       jsonLd={<JsonLd id="home-structured-data" data={structuredData} />}
       header={<SiteHeader activeItem="Home" />}
-      hero={<HomeHero />}
-      serviceStrip={<ServiceStrip />}
-      growth={<GrowthSection />}
-      trust={<TrustSection />}
-      approach={<ApproachSection />}
-      spotlight={<ServicesSpotlight />}
-      testimonials={<TestimonialSection />}
-      social={<SocialConnect />}
       footer={<SiteFooter />}
-    />
+      shellVariant="home"
+    >
+      <HomeHero />
+      <ServiceStrip />
+      <GrowthSection />
+      <TrustSection />
+      <ApproachSection />
+      <ServicesSpotlight />
+      <TestimonialSection />
+      <SocialConnect />
+    </MainTemplate>
   );
 }

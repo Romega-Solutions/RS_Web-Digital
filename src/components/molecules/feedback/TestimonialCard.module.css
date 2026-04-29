@@ -1,0 +1,11 @@
+@reference "../../../app/globals.css";
+
+.quote {
+  @apply max-w-4xl text-[2.5rem] leading-[0.92] font-semibold tracking-tight text-white md:text-[4rem];
+  font-family: var(--font-ui);
+}
+
+.author {
+  @apply mt-8 text-lg font-medium text-white/90 md:text-[1.7rem];
+  font-family: var(--font-ui);
+}

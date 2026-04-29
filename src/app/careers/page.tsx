@@ -4,13 +4,13 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
 import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
 import { mockCareerJobs } from "@/lib/mock-careers";
-import { absoluteUrl, createMetadata, siteConfig } from "@/lib/seo";
+import { absoluteUrl, createMetadata, siteConfig, createBreadcrumbSchema } from "@/lib/seo";
 import CareersPageClient from "./CareersPageClient";
 
 export const metadata: Metadata = createMetadata({
-  title: "Careers and Leadership Opportunities",
+  title: "Careers",
   description:
-    "Explore Romega Solutions career opportunities, learn how the hiring process works, and review leadership and growth-focused roles.",
+    "Explore career opportunities and review leadership and growth-focused roles at Romega Solutions.",
   path: "/careers",
   keywords: [
     "romega careers",
@@ -22,9 +22,15 @@ export const metadata: Metadata = createMetadata({
 });
 
 export default function CareersPage() {
+  const breadcrumbData = createBreadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "Careers", path: "/careers" },
+  ]);
+
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
+      breadcrumbData,
       {
         "@type": "CollectionPage",
         "@id": absoluteUrl("/careers#webpage"),
@@ -58,23 +64,6 @@ export default function CareersPage() {
             url: job.applyUrl,
           },
         })),
-      },
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          {
-            "@type": "ListItem",
-            position: 1,
-            name: "Home",
-            item: absoluteUrl("/"),
-          },
-          {
-            "@type": "ListItem",
-            position: 2,
-            name: "Careers",
-            item: absoluteUrl("/careers"),
-          },
-        ],
       },
     ],
   };

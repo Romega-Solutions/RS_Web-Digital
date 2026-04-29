@@ -2,6 +2,8 @@
 
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
+import { LegalActionRow } from "@/components/molecules/legal/LegalActionRow";
+import { LegalRichText } from "@/components/molecules/legal/LegalRichText";
 import { LegalPageCloseButton } from "@/components/organisms/shared/LegalPageCloseButton";
 
 interface LegalPageCardProps {
@@ -16,13 +18,13 @@ export function LegalPageCard({ children }: LegalPageCardProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.21, 1.11, 0.81, 0.99] }}
     >
-      <div className="prose prose-sm max-w-none md:prose-base">
+      <LegalRichText>
         {children}
-      </div>
-      
-      <div className="mt-12 flex justify-center border-t border-gray-100 pt-8 md:justify-end">
+      </LegalRichText>
+
+      <LegalActionRow>
         <LegalPageCloseButton />
-      </div>
+      </LegalActionRow>
     </motion.div>
   );
 }

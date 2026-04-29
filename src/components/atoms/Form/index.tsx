@@ -1,4 +1,5 @@
 import { ComponentPropsWithoutRef, useId } from "react";
+import styles from "./Form.module.css";
 
 interface FormInputProps extends ComponentPropsWithoutRef<"input"> {
   label: string;
@@ -10,19 +11,19 @@ export function FormInput({ label, error, className = "", ...props }: FormInputP
   const errorId = `${id}-error`;
 
   return (
-    <div className={`form-field ${className}`}>
-      <label htmlFor={id} className="form-label">
+    <div className={[styles.field, className].filter(Boolean).join(" ")}>
+      <label htmlFor={id} className={styles.label}>
         {label}
       </label>
       <input
         id={id}
-        className={`form-input ${error ? "form-input--error" : ""}`}
+        className={[styles.control, error ? styles.controlError : ""].filter(Boolean).join(" ")}
         aria-invalid={!!error}
         aria-describedby={error ? errorId : undefined}
         {...props}
       />
       {error && (
-        <span id={errorId} className="form-error" aria-live="polite">
+        <span id={errorId} className={styles.error} aria-live="polite">
           {error}
         </span>
       )}
@@ -30,24 +31,97 @@ export function FormInput({ label, error, className = "", ...props }: FormInputP
   );
 }
 
-interface FormCheckboxProps extends ComponentPropsWithoutRef<"input"> {
+interface FormSelectProps extends ComponentPropsWithoutRef<"select"> {
   label: string;
+  error?: string;
 }
 
-export function FormCheckbox({ label, className = "", ...props }: FormCheckboxProps) {
+export function FormSelect({ label, error, className = "", ...props }: FormSelectProps) {
   const id = useId();
+  const errorId = `${id}-error`;
 
   return (
-    <div className={`form-checkbox-field ${className}`}>
+    <div className={[styles.field, className].filter(Boolean).join(" ")}>
+      <label htmlFor={id} className={styles.label}>
+        {label}
+      </label>
+      <select
+        id={id}
+        className={[styles.control, error ? styles.controlError : ""].filter(Boolean).join(" ")}
+        aria-invalid={!!error}
+        aria-describedby={error ? errorId : undefined}
+        {...props}
+      />
+      {error ? (
+        <span id={errorId} className={styles.error} aria-live="polite">
+          {error}
+        </span>
+      ) : null}
+    </div>
+  );
+}
+
+interface FormTextareaProps extends ComponentPropsWithoutRef<"textarea"> {
+  label: string;
+  error?: string;
+}
+
+export function FormTextarea({ label, error, className = "", ...props }: FormTextareaProps) {
+  const id = useId();
+  const errorId = `${id}-error`;
+
+  return (
+    <div className={[styles.field, className].filter(Boolean).join(" ")}>
+      <label htmlFor={id} className={styles.label}>
+        {label}
+      </label>
+      <textarea
+        id={id}
+        className={[styles.control, styles.textarea, error ? styles.controlError : ""]
+          .filter(Boolean)
+          .join(" ")}
+        aria-invalid={!!error}
+        aria-describedby={error ? errorId : undefined}
+        {...props}
+      />
+      {error ? (
+        <span id={errorId} className={styles.error} aria-live="polite">
+          {error}
+        </span>
+      ) : null}
+    </div>
+  );
+}
+
+interface FormCheckboxProps extends ComponentPropsWithoutRef<"input"> {
+  label: string;
+  error?: string;
+}
+
+export function FormCheckbox({ label, error, className = "", ...props }: FormCheckboxProps) {
+  const id = useId();
+  const errorId = `${id}-error`;
+
+  return (
+    <div className={[styles.field, className].filter(Boolean).join(" ")}>
+      <div className={styles.checkboxField}>
       <input
         id={id}
         type="checkbox"
-        className="form-checkbox"
+        className={styles.checkbox}
+        aria-invalid={!!error}
+        aria-describedby={error ? errorId : undefined}
         {...props}
       />
-      <label htmlFor={id} className="form-checkbox-label">
+      <label htmlFor={id} className={styles.checkboxLabel}>
         {label}
       </label>
+      </div>
+      {error ? (
+        <span id={errorId} className={styles.error} aria-live="polite">
+          {error}
+        </span>
+      ) : null}
     </div>
   );
 }

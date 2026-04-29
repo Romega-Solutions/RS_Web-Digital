@@ -1,6 +1,9 @@
 import React from "react";
+import styles from "./LegalTemplate.module.css";
+import { MainTemplate } from "./MainTemplate";
 
 interface LegalTemplateProps {
+  jsonLd?: React.ReactNode;
   header: React.ReactNode;
   footer: React.ReactNode;
   title: string;
@@ -8,21 +11,21 @@ interface LegalTemplateProps {
 }
 
 export function LegalTemplate({
+  jsonLd,
   header,
   footer,
   title,
   children,
 }: LegalTemplateProps) {
   return (
-    <div className="site-shell" id="top">
-      {header}
-
-      <main id="main-content" tabIndex={-1} className="legal-page-shell">
+    <MainTemplate
+      jsonLd={jsonLd}
+      header={header}
+      footer={footer}
+      mainClassName={styles.main}
+    >
         <h1 className="sr-only">{title}</h1>
         {children}
-      </main>
-
-      {footer}
-    </div>
+    </MainTemplate>
   );
 }

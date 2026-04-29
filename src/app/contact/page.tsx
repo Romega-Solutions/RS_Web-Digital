@@ -3,7 +3,7 @@ import { MainTemplate } from "@/components/templates/MainTemplate";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
 import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
-import { absoluteUrl, createMetadata, siteConfig } from "@/lib/seo";
+import { absoluteUrl, createMetadata } from "@/lib/seo";
 import ContactPageClient from "./ContactPageClient";
 
 export const metadata: Metadata = createMetadata({

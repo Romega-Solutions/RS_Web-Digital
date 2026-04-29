@@ -11,10 +11,10 @@ import { AboutVisionSection } from "@/components/organisms/about/AboutVisionSect
 import { ConsultationBanner } from "@/components/organisms/shared/ConsultationBanner";
 import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
 import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
-import { absoluteUrl, createMetadata } from "@/lib/seo";
+import { absoluteUrl, createMetadata, createBreadcrumbSchema } from "@/lib/seo";
 
 export const metadata: Metadata = createMetadata({
-  title: "About Romega Solutions",
+  title: "About Us",
   description:
     "Learn how Romega Solutions helps businesses grow through people-first strategy, global talent experience, and practical operational support.",
   path: "/about",
@@ -28,9 +28,15 @@ export const metadata: Metadata = createMetadata({
 });
 
 export default function AboutPage() {
+  const breadcrumbData = createBreadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "About", path: "/about" },
+  ]);
+
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
+      breadcrumbData,
       {
         "@type": "AboutPage",
         "@id": absoluteUrl("/about#webpage"),
@@ -44,23 +50,6 @@ export default function AboutPage() {
         about: {
           "@id": absoluteUrl("/#organization"),
         },
-      },
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          {
-            "@type": "ListItem",
-            position: 1,
-            name: "Home",
-            item: absoluteUrl("/"),
-          },
-          {
-            "@type": "ListItem",
-            position: 2,
-            name: "About",
-            item: absoluteUrl("/about"),
-          },
-        ],
       },
     ],
   };

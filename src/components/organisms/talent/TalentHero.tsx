@@ -1,3 +1,5 @@
+import styles from "./TalentHero.module.css";
+
 const features = [
   {
     title: "Curated Talent",
@@ -15,32 +17,32 @@ const features = [
 
 export function TalentHero() {
   return (
-    <section className="talent-hero" aria-labelledby="talent-hero-heading">
-      <div className="talent-hero__container">
-        <div className="talent-hero__content">
-          <p className="talent-hero__badge">
-            <span className="talent-hero__stars" aria-hidden="true">
+    <section className={styles.root} aria-labelledby="talent-hero-heading">
+      <div className={styles.container}>
+        <div className={styles.content}>
+          <p className={styles.badge}>
+            <span className={styles.stars} aria-hidden="true">
               ★★★★★
             </span>
             <span>Trusted by growing teams across markets</span>
           </p>
 
-          <h1 id="talent-hero-heading" className="talent-hero__title">
+          <h1 id="talent-hero-heading" className={styles.title}>
             Explore Talent Ready To
             <br />
             Move Your Business Forward
           </h1>
 
-          <p className="talent-hero__description">
+          <p className={styles.description}>
             Browse a curated pool of professionals across operations, brand, sales,
             product, and technical delivery. The structure mirrors the Romega talent
             experience, adapted here for the digital site with local mock profiles.
           </p>
 
-          <div className="talent-hero__features">
+          <div className={styles.features}>
             {features.map((feature) => (
-              <article key={feature.title} className="talent-hero__feature-card">
-                <div className="talent-hero__feature-icon" aria-hidden="true">
+              <article key={feature.title} className={styles.featureCard}>
+                <div className={styles.featureIcon} aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="none">
                     <path
                       d="M5 12.5 9.2 16.5 19 7.5"
@@ -51,8 +53,8 @@ export function TalentHero() {
                     />
                   </svg>
                 </div>
-                <h2 className="talent-hero__feature-title">{feature.title}</h2>
-                <p className="talent-hero__feature-copy">{feature.description}</p>
+                <h2 className={styles.featureTitle}>{feature.title}</h2>
+                <p className={styles.featureCopy}>{feature.description}</p>
               </article>
             ))}
           </div>

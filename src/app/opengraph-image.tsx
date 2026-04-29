@@ -29,9 +29,8 @@ export default async function OpenGraphImage() {
           display: "flex",
           position: "relative",
           overflow: "hidden",
-          background:
-            "linear-gradient(135deg, #f7f2e8 0%, #efe5d2 42%, #d6e4f0 100%)",
-          color: "#123458",
+          background: "linear-gradient(135deg, #1c5fa5 0%, #123458 100%)",
+          color: "#ffffff",
           fontFamily: "sans-serif",
         }}
       >
@@ -41,7 +40,19 @@ export default async function OpenGraphImage() {
             inset: 0,
             display: "flex",
             background:
-              "radial-gradient(circle at top right, rgba(249, 189, 46, 0.22), transparent 34%), radial-gradient(circle at bottom left, rgba(18, 52, 88, 0.14), transparent 38%)",
+              "radial-gradient(circle at top right, rgba(254, 189, 24, 0.15), transparent 40%), radial-gradient(circle at bottom left, rgba(53, 141, 240, 0.1), transparent 40%)",
+          }}
+        />
+
+        {/* Grid pattern overlay */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            opacity: 0.1,
+            backgroundImage: "radial-gradient(circle, #ffffff 1px, transparent 1px)",
+            backgroundSize: "40px 40px",
           }}
         />
 
@@ -51,7 +62,7 @@ export default async function OpenGraphImage() {
             flexDirection: "column",
             justifyContent: "space-between",
             width: "100%",
-            padding: "56px 64px",
+            padding: "64px 72px",
           }}
         >
           <div
@@ -66,20 +77,31 @@ export default async function OpenGraphImage() {
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 20,
+                gap: 24,
               }}
             >
-              <img src={logoSrc} width={220} height={64} alt="" />
               <div
                 style={{
                   display: "flex",
-                  padding: "10px 16px",
+                  padding: "12px",
+                  backgroundColor: "rgba(255, 255, 255, 0.95)",
+                  borderRadius: "12px",
+                }}
+              >
+                <img src={logoSrc} width={180} height={52} style={{ objectFit: "contain" }} alt="" />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  padding: "10px 18px",
                   borderRadius: 999,
-                  backgroundColor: "rgba(18, 52, 88, 0.08)",
+                  backgroundColor: "rgba(254, 189, 24, 0.15)",
+                  color: "#febd18",
                   fontSize: 20,
-                  fontWeight: 600,
+                  fontWeight: 700,
                   letterSpacing: "0.08em",
                   textTransform: "uppercase",
+                  border: "1px solid rgba(254, 189, 24, 0.3)",
                 }}
               >
                 Strategic Growth Partner
@@ -89,14 +111,13 @@ export default async function OpenGraphImage() {
             <div
               style={{
                 display: "flex",
-                borderRadius: 999,
-                border: "2px solid rgba(18, 52, 88, 0.12)",
-                padding: "10px 18px",
                 fontSize: 20,
                 fontWeight: 600,
+                color: "rgba(255, 255, 255, 0.7)",
+                letterSpacing: "0.02em",
               }}
             >
-              www.romega-solutions.com
+              romega-solutions.com
             </div>
           </div>
 
@@ -104,39 +125,41 @@ export default async function OpenGraphImage() {
             style={{
               display: "flex",
               flexDirection: "column",
-              maxWidth: 860,
-              gap: 18,
+              maxWidth: 920,
+              gap: 20,
             }}
           >
             <div
               style={{
                 display: "flex",
-                fontSize: 28,
+                fontSize: 26,
                 fontWeight: 700,
-                letterSpacing: "0.06em",
+                letterSpacing: "0.12em",
                 textTransform: "uppercase",
-                color: "#f5a000",
+                color: "#febd18",
               }}
             >
-              Talent. Brand. Operations.
+              Talent • Brand • Operations
             </div>
             <div
               style={{
                 display: "flex",
-                fontSize: 72,
-                lineHeight: 1.02,
+                fontSize: 78,
+                lineHeight: 1.05,
                 fontWeight: 800,
+                letterSpacing: "-0.02em",
               }}
             >
-              Build stronger teams and steadier business growth.
+              Build stronger teams and steadier growth.
             </div>
             <div
               style={{
                 display: "flex",
-                fontSize: 30,
-                lineHeight: 1.3,
-                color: "rgba(18, 52, 88, 0.86)",
-                maxWidth: 800,
+                fontSize: 28,
+                lineHeight: 1.4,
+                color: "rgba(255, 255, 255, 0.85)",
+                maxWidth: 820,
+                fontWeight: 500,
               }}
             >
               {siteConfig.description}
@@ -146,21 +169,22 @@ export default async function OpenGraphImage() {
           <div
             style={{
               display: "flex",
-              gap: 18,
+              gap: 16,
               flexWrap: "wrap",
             }}
           >
-            {["Talent Solutions", "Brand Growth Support", "Strategic Operations"].map((label) => (
+            {["Talent Acquisition", "Brand Growth", "Strategic Operations"].map((label) => (
               <div
                 key={label}
                 style={{
                   display: "flex",
-                  padding: "14px 20px",
-                  borderRadius: 999,
-                  backgroundColor: "#123458",
-                  color: "#f7f2e8",
-                  fontSize: 22,
+                  padding: "12px 24px",
+                  borderRadius: 12,
+                  backgroundColor: "rgba(255, 255, 255, 0.1)",
+                  color: "#ffffff",
+                  fontSize: 20,
                   fontWeight: 700,
+                  border: "1px solid rgba(255, 255, 255, 0.2)",
                 }}
               >
                 {label}

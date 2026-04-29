@@ -3,7 +3,7 @@
 import { TEAM_MEMBERS, type TeamMember } from "@/lib/constants";
 import Image from "next/image";
 import { useCallback, useEffect, useRef } from "react";
-import styles from "./TeamCarousel.module.css";
+import styles from "./TeamMemberSidebar.module.css";
 
 type TeamMemberSidebarProps = {
   isOpen: boolean;

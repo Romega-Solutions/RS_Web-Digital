@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { TestimonialCard } from "@/components/molecules/feedback/TestimonialCard";
 import styles from "./TestimonialSection.module.css";
 
 type Testimonial = {
@@ -75,10 +76,7 @@ export function TestimonialSection() {
       </button>
 
       <div className={styles.content}>
-        <blockquote className={styles.quote} aria-live="polite">
-          &ldquo;{activeTestimonial.quote}&rdquo;
-        </blockquote>
-        <p className={styles.author}>{activeTestimonial.author}</p>
+        <TestimonialCard quote={activeTestimonial.quote} author={activeTestimonial.author} />
 
         <div className={styles.dots} aria-label="Select testimonial">
           {testimonials.map((testimonial, index) => (

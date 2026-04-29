@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { FormInput, FormCheckbox } from "@/components/atoms/Form";
+import { FormCheckbox, FormInput, FormSelect, FormTextarea } from "@/components/atoms/Form";
 import { AppButton } from "@/components/atoms/Button";
 import { siteConfig } from "@/lib/seo";
 
@@ -178,7 +178,6 @@ export default function ContactPageClient() {
   }
 
   return (
-    <main id="main-content" tabIndex={-1}>
       <section className="contact-page">
         <div className="contact-page-inner">
           <div className="contact-page-info">
@@ -285,32 +284,20 @@ export default function ContactPageClient() {
                   autoComplete="email"
                 />
 
-                <div className="form-field">
-                  <label className="form-label" htmlFor="contact-subject">
-                    Select Subject*
-                  </label>
-                  <select
-                    id="contact-subject"
-                    className={`form-input ${errors.subject ? "form-input--error" : ""}`}
-                    value={form.subject}
-                    onChange={(event) => updateField("subject", event.target.value)}
-                    required
-                    aria-invalid={!!errors.subject}
-                    aria-describedby={errors.subject ? "contact-subject-error" : undefined}
-                  >
+                <FormSelect
+                  label="Select Subject*"
+                  value={form.subject}
+                  onChange={(event) => updateField("subject", event.target.value)}
+                  error={errors.subject}
+                  required
+                >
                     <option value="">Select a subject</option>
                     {subjectOptions.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
                       </option>
                     ))}
-                  </select>
-                  {errors.subject && (
-                    <span id="contact-subject-error" className="form-error">
-                      {errors.subject}
-                    </span>
-                  )}
-                </div>
+                </FormSelect>
               </div>
 
               <div className="contact-form-grid">
@@ -346,36 +333,22 @@ export default function ContactPageClient() {
                 />
               </div>
 
-              <div className="form-field">
-                <label className="form-label" htmlFor="contact-message">
-                  Message*
-                </label>
-                <textarea
-                  id="contact-message"
-                  className={`form-input ${errors.message ? "form-input--error" : ""}`}
-                  value={form.message}
-                  onChange={(event) => updateField("message", event.target.value)}
-                  required
-                  rows={4}
-                  aria-invalid={!!errors.message}
-                  aria-describedby={errors.message ? "contact-message-error" : undefined}
-                />
-                {errors.message && (
-                  <span id="contact-message-error" className="form-error">
-                    {errors.message}
-                  </span>
-                )}
-              </div>
+              <FormTextarea
+                label="Message*"
+                value={form.message}
+                onChange={(event) => updateField("message", event.target.value)}
+                error={errors.message}
+                required
+                rows={4}
+              />
 
               <FormCheckbox
                 label="I agree to the Privacy Policy and consent to the processing of my personal data for the purpose of handling this inquiry.*"
                 checked={form.privacyConsent}
                 onChange={(event) => updateField("privacyConsent", event.target.checked)}
+                error={errors.privacyConsent}
                 required
               />
-              {errors.privacyConsent && (
-                <span className="form-error -mt-3">{errors.privacyConsent}</span>
-              )}
 
               {status.type !== "idle" ? (
                 <p
@@ -401,6 +374,5 @@ export default function ContactPageClient() {
           </div>
         </div>
       </section>
-    </main>
   );
 }

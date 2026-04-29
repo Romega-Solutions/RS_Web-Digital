@@ -29,7 +29,7 @@
 }
 
 /* Home specific overrides handled via global context or class */
-:global(.site-shell--home) .main {
+:global([data-shell-variant="home"]) .main {
   background:
     linear-gradient(135deg, rgb(8 20 36 / 0.72), rgb(8 20 36 / 0.5)),
     linear-gradient(90deg, rgb(255 255 255 / 0.1), rgb(55 141 238 / 0.08));
@@ -59,7 +59,7 @@
   @apply h-full w-full object-contain;
 }
 
-:global(.site-shell--home) .brandLogo {
+:global([data-shell-variant="home"]) .brandLogo {
   filter: brightness(1.25) saturate(1.08) drop-shadow(0 1px 10px rgb(0 0 0 / 0.22));
 }
 
@@ -189,6 +189,27 @@
   @apply inline-flex items-center gap-0.5 border-0 bg-transparent p-0;
 }
 
+.dropdownTrigger,
+.mobileLink,
+.mobileGroupLabel,
+.mobileSublink {
+  text-shadow: 0 1px 12px rgb(0 0 0 / 0.3);
+}
+
+.dropdownTrigger,
+.mobileLink,
+.mobileGroupLabel {
+  color: rgb(255 255 255 / 0.96);
+  font-family: var(--font-poppins), "Poppins", "Aptos", "Segoe UI", Arial, sans-serif;
+}
+
+.dropdownTriggerActive {
+  @apply font-semibold underline;
+  text-decoration-color: var(--color-primary);
+  text-decoration-thickness: 0.18em;
+  text-underline-offset: 0.32em;
+}
+
 .dropdownCaret {
   @apply inline-block text-[0.65rem] leading-none no-underline opacity-80;
 }
@@ -230,31 +251,6 @@
 .dropdownMenuOpen {
   @apply visible translate-y-0 opacity-100;
   pointer-events: auto;
-}
-
-.dropdownItem {
-  @apply relative z-10 flex flex-row items-start gap-3 rounded-md px-4 py-3 text-sm font-medium capitalize text-brand-secondary no-underline transition-colors hover:bg-brand-secondary/8;
-  font-family: var(--font-poppins), "Poppins", "Aptos", "Segoe UI", Arial, sans-serif;
-}
-
-.dropdownItemIcon {
-  @apply mt-0.5 shrink-0 text-brand-secondary;
-}
-
-.dropdownItemText {
-  @apply flex flex-col;
-}
-
-.dropdownItemTitle {
-  @apply font-semibold;
-}
-
-.dropdownItemDesc {
-  @apply mt-1 text-xs font-normal opacity-70 normal-case leading-snug;
-}
-
-.dropdownItemActive {
-  @apply bg-brand-secondary/10 font-semibold;
 }
 
 .ctaWrap {
@@ -347,31 +343,31 @@
     width: min(22rem, calc(100vw - 1.5rem));
   }
 
-  :global(.site-shell--home) .inner {
+  :global([data-shell-variant="home"]) .inner {
     box-sizing: border-box;
     max-width: 100%;
     padding-inline: 0.75rem;
     width: 100%;
   }
 
-  :global(.site-shell--home) .main {
+  :global([data-shell-variant="home"]) .main {
     @apply relative pr-14;
   }
 
-  :global(.site-shell--home) .brand {
+  :global([data-shell-variant="home"]) .brand {
     max-width: calc(100% - 3.25rem);
   }
 
-  :global(.site-shell--home) .nav {
+  :global([data-shell-variant="home"]) .nav {
     @apply absolute right-2 top-1/2 -translate-y-1/2;
   }
 
-  :global(.site-shell--home) .burger {
+  :global([data-shell-variant="home"]) .burger {
     @apply fixed right-5 top-6 z-90 flex;
     display: flex !important;
   }
 
-  :global(.site-shell--home) .brandText {
+  :global([data-shell-variant="home"]) .brandText {
     font-size: clamp(0.95rem, 4.35vw, 1.06rem);
   }
 }

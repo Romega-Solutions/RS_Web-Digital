@@ -51,15 +51,6 @@
   gap: var(--space-6);
 }
 
-/* Molecule override if needed, but keeping BEM structure */
-.card {
-  @apply flex flex-col items-center;
-}
-
-.image {
-  @apply h-112 w-full rounded-2xl object-cover shadow-[0_20px_50px_rgba(28,95,165,0.12)] md:h-136;
-}
-
 .button {
   @apply mt-8;
 }
@@ -76,9 +67,5 @@
 
   .grid {
     @apply mt-7 gap-4;
-  }
-
-  .image {
-    @apply h-80;
   }
 }

@@ -6,13 +6,13 @@ import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
 import { TalentCTA } from "@/components/organisms/talent/TalentCTA";
 import { TalentPool } from "@/components/organisms/talent/TalentPool";
 import { talentProfiles } from "@/components/organisms/talent/talentData";
-import { absoluteUrl, createMetadata } from "@/lib/seo";
+import { absoluteUrl, createMetadata, createBreadcrumbSchema } from "@/lib/seo";
 import TalentPageClient from "./TalentPageClient";
 
 export const metadata: Metadata = createMetadata({
-  title: "Curated Talent Pool for Growth Teams",
+  title: "Talent Pool",
   description:
-    "Browse Romega Solutions talent across operations, sales, design, software, AI, and executive support for fast-moving teams.",
+    "Browse curated Romega Solutions talent across operations, sales, design, and software for fast-moving teams.",
   path: "/talent",
   keywords: [
     "curated talent pool",
@@ -25,9 +25,15 @@ export const metadata: Metadata = createMetadata({
 });
 
 export default function TalentPage() {
+  const breadcrumbData = createBreadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "Talent", path: "/talent" },
+  ]);
+
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
+      breadcrumbData,
       {
         "@type": "CollectionPage",
         "@id": absoluteUrl("/talent#webpage"),
@@ -37,6 +43,9 @@ export default function TalentPage() {
           "Browse Romega Solutions talent across operations, sales, design, software, AI, and executive support for fast-moving teams.",
         isPartOf: {
           "@id": absoluteUrl("/#website"),
+        },
+        about: {
+          "@id": absoluteUrl("/#organization"),
         },
       },
       {
@@ -58,23 +67,6 @@ export default function TalentPage() {
             knowsAbout: talent.skills,
           },
         })),
-      },
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          {
-            "@type": "ListItem",
-            position: 1,
-            name: "Home",
-            item: absoluteUrl("/"),
-          },
-          {
-            "@type": "ListItem",
-            position: 2,
-            name: "Talent",
-            item: absoluteUrl("/talent"),
-          },
-        ],
       },
     ],
   };

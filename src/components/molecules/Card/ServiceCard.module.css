@@ -1,0 +1,15 @@
+@reference "../../../app/globals.css";
+
+.root {
+  @apply flex flex-col items-center;
+}
+
+.image {
+  @apply h-112 w-full rounded-2xl object-cover shadow-[0_20px_50px_rgba(28,95,165,0.12)] md:h-136;
+}
+
+@media (max-width: 767px) {
+  .image {
+    @apply h-80;
+  }
+}
