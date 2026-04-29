@@ -104,6 +104,7 @@ function normalizeItems(items: Array<string | ServiceItem>): ServiceItem[] {
 
 export function ServiceStrip({ items = defaultItems }: ServiceStripProps) {
   const normalizedItems = normalizeItems(items);
+  const [featuredItem, ...marqueeItems] = normalizedItems;
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const [activeTooltip, setActiveTooltip] = useState<{
     label: string;
@@ -163,15 +164,38 @@ export function ServiceStrip({ items = defaultItems }: ServiceStripProps) {
       onMouseLeave={hideTooltip}
       onBlur={hideTooltip}
     >
+      {featuredItem ? (
+        <div className={styles.featuredWrap}>
+          <Link
+            className={styles.featuredLink}
+            href={featuredItem.href ?? "/services"}
+            title={featuredItem.tooltip}
+            aria-describedby={
+              activeTooltip?.label === featuredItem.label && featuredItem.tooltip
+                ? tooltipId
+                : undefined
+            }
+            aria-label={
+              featuredItem.tooltip
+                ? `${featuredItem.label}. ${featuredItem.tooltip}`
+                : featuredItem.label
+            }
+            onMouseEnter={(event) => showTooltip(event, featuredItem)}
+            onFocus={(event) => showTooltip(event, featuredItem)}
+          >
+            {featuredItem.label}
+          </Link>
+        </div>
+      ) : null}
       <div ref={viewportRef} className={styles.viewport}>
         <div className={styles.track}>
-          {[0, 1].map((groupIndex) => (
+          {marqueeItems.length > 0 ? [0, 1].map((groupIndex) => (
             <ul
               key={groupIndex}
               className={`${styles.group} ${groupIndex === 1 ? styles.groupDuplicate : ""}`}
               aria-hidden={groupIndex === 1}
             >
-              {normalizedItems.map((item, index) => (
+              {marqueeItems.map((item, index) => (
                 <li
                   key={`${item.label}-${groupIndex}`}
                   className={styles.item}
@@ -202,7 +226,7 @@ export function ServiceStrip({ items = defaultItems }: ServiceStripProps) {
                     )}
                     {item.label}
                   </Link>
-                  {index < normalizedItems.length - 1 ? (
+                  {index < marqueeItems.length - 1 ? (
                     <span
                       className={styles.separator}
                       aria-hidden="true"
@@ -213,7 +237,7 @@ export function ServiceStrip({ items = defaultItems }: ServiceStripProps) {
                 </li>
               ))}
             </ul>
-          ))}
+          )) : null}
         </div>
         {activeTooltip ? (
           <div

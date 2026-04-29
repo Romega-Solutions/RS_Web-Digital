@@ -59,6 +59,34 @@
   transition: color 150ms ease, background-color 150ms ease;
 }
 
+.mobileSublinkChild {
+  @apply relative pl-9;
+}
+
+.mobileSublinkChild::after {
+  content: "";
+  @apply absolute bottom-2 left-6 top-2 w-px;
+  background: rgb(255 255 255 / 0.14);
+}
+
+.mobileSublinkChild::before {
+  content: "";
+  @apply absolute left-6 top-1/2 z-[1] h-px w-3;
+  background: rgb(255 255 255 / 0.24);
+}
+
+.mobileSublinkChild .mobileSublinkTitle {
+  @apply text-[0.92rem] font-medium;
+}
+
+.mobileSublinkChild .mobileSublinkDesc {
+  color: rgb(255 255 255 / 0.48);
+}
+
+.mobileSublinkChild .mobileSublinkIcon {
+  @apply opacity-70;
+}
+
 .mobileSublinkText {
   @apply min-w-0 flex-1;
 }
@@ -97,7 +125,14 @@
 }
 
 .dropdownCareers .dropdownMenu {
-  @apply min-w-32;
+  @apply min-w-72;
+  left: auto;
+  right: 0;
+}
+
+.dropdownCareers .dropdownMenu::after {
+  left: auto;
+  right: 1.1rem;
 }
 
 .dropdownTrigger {
@@ -164,9 +199,37 @@
 }
 
 .dropdownItem {
-  @apply flex items-start gap-4 rounded-xl p-3 text-sm no-underline transition-all duration-200;
+  @apply flex items-start gap-2 rounded-xl p-3 text-sm no-underline transition-all duration-200;
   background: transparent;
   color: rgb(255 255 255 / 0.94);
+}
+
+.dropdownItemChild {
+  @apply relative pl-9;
+}
+
+.dropdownItemChild::after {
+  content: "";
+  @apply absolute bottom-2 left-6 top-2 w-px;
+  background: rgb(255 255 255 / 0.14);
+}
+
+.dropdownItemChild::before {
+  content: "";
+  @apply absolute left-6 top-1/2 z-[1] h-px w-3;
+  background: rgb(255 255 255 / 0.24);
+}
+
+.dropdownItemChild .dropdownItemTitle {
+  @apply text-[0.92rem] font-medium;
+}
+
+.dropdownItemChild .dropdownItemDesc {
+  color: rgb(255 255 255 / 0.5);
+}
+
+.dropdownItemChild .dropdownItemIcon {
+  @apply opacity-70;
 }
 
 .dropdownItem * {
@@ -178,11 +241,11 @@
 }
 
 .dropdownItemIcon {
-  @apply mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10 text-brand-primary;
+  @apply mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center text-brand-primary;
 }
 
 .dropdownItemActive .dropdownItemIcon {
-  @apply bg-brand-secondary text-white;
+  @apply text-white;
 }
 
 .dropdownItemContent {

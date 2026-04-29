@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { CareersHero } from "@/components/organisms/careers/CareersHero";
 import { CareersValuesSection } from "@/components/organisms/careers/CareersValuesSection";
 import { CareersPrivacySection } from "@/components/organisms/careers/CareersPrivacySection";
@@ -109,6 +109,28 @@ export default function CareersPageClient() {
       loadJobs();
     }
   }, [jobsState, loadJobs]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const triggerFromHash = () => {
+      if (window.location.hash === "#open-opportunities") {
+        window.setTimeout(() => {
+          openJobs();
+        }, 120);
+      }
+
+      if (window.location.hash === "#send-profile") {
+        window.setTimeout(() => {
+          window.location.href = "mailto:careers@romega-solutions.com";
+        }, 120);
+      }
+    };
+
+    triggerFromHash();
+    window.addEventListener("hashchange", triggerFromHash);
+    return () => window.removeEventListener("hashchange", triggerFromHash);
+  }, [openJobs]);
 
   return (
     <>
