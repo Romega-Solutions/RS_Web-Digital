@@ -119,12 +119,6 @@ export default function CareersPageClient() {
           openJobs();
         }, 120);
       }
-
-      if (window.location.hash === "#send-profile") {
-        window.setTimeout(() => {
-          window.location.href = "mailto:careers@romega-solutions.com";
-        }, 120);
-      }
     };
 
     triggerFromHash();

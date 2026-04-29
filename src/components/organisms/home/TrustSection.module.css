@@ -1,74 +1,152 @@
 @reference "../../../app/globals.css";
 
 .root {
-  @apply bg-page text-black;
+  @apply relative overflow-hidden bg-page text-black;
   padding-block: var(--section-space);
   padding-inline: var(--layout-gutter);
 }
 
+.root::before {
+  content: "";
+  @apply absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-secondary/20 to-transparent;
+}
+
+.root::after {
+  content: "";
+  @apply pointer-events-none absolute right-0 top-10 h-72 w-72 rounded-full bg-brand-primary/8 blur-3xl;
+}
+
 .inner {
-  @apply mx-auto flex w-full max-w-6xl flex-col items-center;
+  @apply relative mx-auto flex w-full max-w-6xl flex-col;
+  gap: var(--space-8);
+}
+
+.overview {
+  @apply grid gap-8 lg:grid-cols-[minmax(0,1.3fr)_minmax(18rem,0.9fr)] lg:items-start;
+}
+
+.copyColumn {
+  @apply max-w-4xl;
+}
+
+.eyebrow {
+  @apply text-sm font-semibold uppercase tracking-[0.24em] text-brand-secondary/80;
 }
 
 .title {
-  @apply text-center font-bold text-brand-secondary;
-  font-size: var(--type-display-lg);
-  line-height: var(--leading-display);
-  letter-spacing: var(--tracking-display);
+  @apply mt-4 max-w-4xl font-bold text-brand-secondary;
+  font-size: clamp(2.3rem, 4.6vw, 4.4rem);
+  line-height: 1.04;
+  letter-spacing: -0.04em;
 }
 
 .titleHighlight {
   @apply inline px-2 md:px-3;
-  background-image: linear-gradient(to top,
-      rgb(254 189 25 / 0.55) 0%,
-      rgb(254 189 25 / 0.55) 34%,
-      transparent 34%,
-      transparent 100%);
+  background-image: linear-gradient(
+    to top,
+    rgb(254 189 25 / 0.48) 0%,
+    rgb(254 189 25 / 0.48) 38%,
+    transparent 38%,
+    transparent 100%
+  );
   background-repeat: no-repeat;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
 
 .kicker {
-  @apply max-w-5xl text-center font-medium text-black/90;
-  margin-top: var(--space-5);
-  font-size: var(--type-heading-md);
-  line-height: var(--leading-heading);
+  @apply mt-5 max-w-3xl text-xl font-medium text-black/90 md:text-2xl;
+  line-height: 1.35;
 }
 
 .kickerEmphasis {
-  @apply font-semibold italic text-brand-secondary;
+  @apply font-semibold text-brand-secondary;
 }
 
 .intro {
-  @apply max-w-5xl text-center text-black/90;
-  margin-top: var(--space-6);
-  font-size: var(--type-heading-md);
-  line-height: var(--leading-heading);
+  @apply mt-5 max-w-3xl text-lg text-black/78 md:text-[1.3rem];
+  line-height: 1.62;
+}
+
+.signalPanel {
+  @apply border-l-2 border-brand-primary/35 pl-5 md:pl-7;
+}
+
+.signalHeading {
+  @apply text-sm font-semibold uppercase tracking-[0.2em] text-brand-secondary/75;
+}
+
+.signalList {
+  @apply mt-5 grid gap-5;
+}
+
+.signalItem {
+  @apply relative border-t border-black/8 pt-5;
+}
+
+.signalItem:first-child {
+  @apply border-t-0 pt-0;
+}
+
+.signalTitle {
+  @apply text-lg font-semibold text-brand-secondary md:text-xl;
+  line-height: 1.25;
+}
+
+.signalCopy {
+  @apply mt-2 text-base text-black/72 md:text-lg;
+  line-height: 1.6;
 }
 
 .grid {
-  @apply mt-14 grid w-full grid-cols-2 gap-x-5 gap-y-10 sm:gap-x-8 sm:gap-y-12 md:mt-18 md:grid-cols-3 md:gap-x-10 md:gap-y-14;
-  margin-top: var(--space-8);
-  column-gap: var(--space-5);
-  row-gap: var(--space-7);
+  @apply grid w-full gap-x-6 gap-y-8 border-t border-black/8 pt-8 md:grid-cols-2 xl:grid-cols-3;
 }
 
 .card {
-  @apply flex flex-col items-center text-center;
+  @apply flex h-full flex-col border-l border-black/10 pl-4 transition-colors duration-200 ease-out md:pl-5;
+}
+
+.cardTop {
+  @apply flex items-start justify-between gap-4;
 }
 
 .iconImage {
-  @apply h-24 w-24 rounded-[1.35rem] object-cover shadow-sm ring-1 ring-black/5 md:h-28 md:w-28;
+  @apply h-[4.5rem] w-[4.5rem] rounded-[1.2rem] object-cover shadow-sm ring-1 ring-black/5 md:h-[5.25rem] md:w-[5.25rem];
+}
+
+.cardIndex {
+  @apply mt-1 text-sm font-semibold tracking-[0.18em] text-brand-secondary/35;
+}
+
+.cardBody {
+  @apply mt-5;
 }
 
 .cardTitle {
-  @apply max-w-52 font-semibold text-brand-secondary;
-  margin-top: var(--space-5);
-  font-size: var(--type-heading-lg);
-  line-height: var(--leading-heading);
+  @apply max-w-60 font-semibold text-brand-secondary;
+  font-size: clamp(1.22rem, 1.8vw, 1.45rem);
+  line-height: 1.25;
 }
 
 .cardCopy {
-  @apply mt-4 max-w-60 text-lg leading-tight text-black/80 md:text-xl;
+  @apply mt-3 max-w-[19rem] text-base text-black/72 md:text-[1.05rem];
+  line-height: 1.6;
+}
+
+@media (max-width: 767px) {
+  .root::after {
+    @apply h-56 w-56 blur-2xl;
+  }
+
+  .title {
+    max-width: 16ch;
+  }
+
+  .kicker {
+    @apply text-lg;
+  }
+
+  .intro {
+    @apply text-base;
+  }
 }

@@ -2,35 +2,51 @@
 
 .root {
   @apply relative overflow-hidden bg-surface;
+  padding-block: var(--section-space);
 }
 
 .grid {
   @apply pointer-events-none absolute inset-0 z-0;
-  background-image: linear-gradient(to right, rgb(121 152 240 / 0.16) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(121 152 240 / 0.16) 1px, transparent 1px);
+  background-image:
+    linear-gradient(to right, rgb(121 152 240 / 0.13) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(121 152 240 / 0.13) 1px, transparent 1px);
   background-size: 74px 74px;
+  mask-image: linear-gradient(to bottom, rgb(0 0 0 / 0.95), rgb(0 0 0 / 0.88) 72%, transparent 100%);
 }
 
 .inner {
-  @apply relative z-10 mx-auto grid w-full max-w-6xl;
-  gap: var(--space-7);
-  @apply md:grid-cols-[1.05fr_0.95fr];
-  grid-gap: var(--space-8);
+  @apply relative z-10 mx-auto w-full max-w-[82rem] px-[var(--layout-gutter)];
+}
+
+.contentGrid {
+  @apply grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-12;
 }
 
 .copyWrap {
-  @apply pt-2;
+  @apply flex flex-col;
+  gap: var(--space-4);
+}
+
+.eyebrowRow {
+  @apply flex items-center gap-3;
+}
+
+.eyebrowLine {
+  @apply h-px w-10 bg-brand-primary/70;
+}
+
+.eyebrow {
+  @apply text-sm font-semibold uppercase tracking-[0.24em] text-brand-primary/80;
 }
 
 .title {
-  @apply max-w-2xl font-medium tracking-tight text-brand-tertiary;
+  @apply max-w-[13ch] font-medium tracking-tight text-brand-tertiary;
   font-family: var(--font-growth-title);
-  font-size: var(--type-display-xl);
-  line-height: var(--leading-display);
-  letter-spacing: var(--tracking-display);
+  font-size: clamp(2.7rem, 6vw, 5.8rem);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
 }
 
-/* Reusing growing word effect logic locally to section */
 .growingWord {
   @apply relative inline-block px-1 z-0;
 }
@@ -56,24 +72,63 @@
   transform: rotate(-0.8deg);
 }
 
+.text {
+  @apply max-w-2xl text-lg text-black/82 md:text-[1.28rem];
+  font-family: var(--font-growth-copy);
+  line-height: 1.68;
+}
+
+.supportNote {
+  @apply max-w-xl text-[0.98rem] font-medium text-brand-tertiary/64 md:text-base;
+  line-height: 1.6;
+}
+
+.focusList {
+  @apply mt-1 flex flex-wrap gap-3;
+}
+
+.focusItem {
+  @apply rounded-full border border-brand-tertiary/12 px-4 py-2 text-sm font-semibold text-brand-tertiary/88 md:text-[0.95rem];
+  background: rgb(255 255 255 / 0.38);
+}
+
 .side {
-  @apply flex flex-col gap-5;
+  @apply relative;
 }
 
 .media {
-  @apply relative min-h-72 w-full overflow-hidden rounded-2xl border border-brand-tertiary/35 shadow-[0_20px_50px_rgba(168,159,248,0.15)];
-  background-color: #d7d4ce;
-  aspect-ratio: 16 / 9;
+  @apply relative isolate w-full overflow-hidden rounded-[2rem] border border-brand-tertiary/18;
+  aspect-ratio: 16 / 10;
+  box-shadow: 0 28px 70px rgb(30 58 138 / 0.12);
+  background:
+    linear-gradient(135deg, rgb(215 212 206 / 0.88) 0%, rgb(204 210 223 / 0.76) 100%);
+}
+
+.media::before {
+  content: "";
+  @apply absolute inset-0 z-10;
+  background:
+    linear-gradient(180deg, rgb(13 28 68 / 0.18) 0%, transparent 28%, transparent 60%, rgb(8 20 56 / 0.48) 100%);
+}
+
+.media::after {
+  content: "";
+  @apply absolute inset-[1.15rem] z-20 rounded-[1.25rem] border border-white/14;
 }
 
 .video {
   @apply h-full w-full object-cover;
-  background: linear-gradient(135deg, #e0ddd8 0%, #d7d4ce 100%);
 }
 
-.text {
-  @apply max-w-2xl text-xl leading-tight font-semibold text-black/90 md:text-[1.65rem];
-  font-family: var(--font-growth-copy);
+.mediaOverlay {
+  @apply pointer-events-none absolute inset-0 z-20;
+  background:
+    linear-gradient(135deg, rgb(37 99 235 / 0.05), transparent 42%, rgb(254 189 25 / 0.08) 100%);
+}
+
+.mediaNote {
+  @apply mt-4 max-w-md text-sm font-medium uppercase tracking-[0.16em] text-brand-tertiary/62 md:text-[0.82rem];
+  line-height: 1.6;
 }
 
 .banner {
@@ -104,8 +159,50 @@
   @apply mt-8;
 }
 
+@media (max-width: 1023px) {
+  .title {
+    @apply max-w-none;
+  }
+
+  .media {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+@media (min-width: 1280px) {
+  .contentGrid {
+    grid-template-columns: minmax(0, 1.34fr) minmax(24rem, 0.66fr);
+    gap: clamp(3.25rem, 4vw, 5rem);
+  }
+
+  .title {
+    max-width: 17ch;
+    font-size: clamp(2.8rem, 4.9vw, 5.35rem);
+  }
+
+  .text {
+    max-width: 50rem;
+  }
+
+  .supportNote {
+    max-width: 46rem;
+  }
+}
+
 @media (max-width: 767px) {
+  .root {
+    padding-block: var(--section-space-compact);
+  }
+
   .growingWord::after {
     @apply hidden;
+  }
+
+  .text {
+    @apply text-base;
+  }
+
+  .focusItem {
+    @apply text-sm;
   }
 }
