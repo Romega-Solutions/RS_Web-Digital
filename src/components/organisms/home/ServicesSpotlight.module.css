@@ -40,11 +40,12 @@
 }
 
 .intro {
-  @apply text-center font-semibold text-brand-secondary;
+  @apply mx-auto w-full text-center font-semibold text-brand-secondary;
   font-family: var(--font-body);
   font-size: var(--type-heading-md);
   line-height: var(--leading-heading);
   max-width: min(100%, var(--measure-readable));
+  text-wrap: balance;
 }
 
 .grid {

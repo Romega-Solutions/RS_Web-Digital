@@ -85,16 +85,26 @@
 }
 
 .cta {
-  @apply inline-flex min-h-11 items-center justify-center rounded-[6px] border-[1.5px] border-brand-secondary px-[1.05rem] py-[0.6rem] text-[0.84rem] font-bold tracking-wider text-brand-secondary no-underline transition-all duration-200;
+  @apply inline-flex min-h-11 items-center justify-center rounded-[6px] border-[1.5px] px-[1.05rem] py-[0.6rem] text-[0.84rem] font-bold tracking-wider no-underline transition-all duration-200;
+  background-color: #fff;
+  border-color: var(--color-secondary-accessible);
+  color: var(--color-secondary-accessible);
   font-family: var(--font-body);
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.06);
 }
 
 .cta:hover {
-  @apply bg-brand-secondary text-white;
+  background-color: var(--color-secondary-accessible);
+  border-color: var(--color-secondary-accessible);
+  color: #fff;
+  box-shadow: 0 10px 20px color-mix(in srgb, var(--color-secondary-accessible) 20%, transparent);
 }
 
 .cta:focus-visible {
-  @apply outline-none ring-2 ring-brand-secondary ring-offset-2;
+  @apply outline-none;
+  box-shadow:
+    0 0 0 3px #fff,
+    0 0 0 5px var(--color-secondary-accessible);
 }
 
 @media (prefers-reduced-motion: reduce) {

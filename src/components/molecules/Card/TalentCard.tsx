@@ -67,7 +67,7 @@ export function TalentCard({ talent }: TalentCardProps) {
 
       <div className={styles.footer}>
         <span className={styles.category}>{talent.category}</span>
-        <AppButton href={contactHref} className={styles.cta}>
+        <AppButton href={contactHref} variant="outline" className={styles.cta}>
           REQUEST INTRO
         </AppButton>
       </div>

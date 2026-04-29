@@ -11,7 +11,7 @@ export function ServicesSpotlight() {
       </div>
 
       <div className={styles.inner}>
-        <ScrollReveal variant="fade" duration={0.8}>
+        <ScrollReveal variant="fade" duration={0.8} className="w-full">
           <p className={styles.intro}>
             Whether you are building your team, refining your brand, or
             preparing for your next stage of growth, Romega Solutions brings

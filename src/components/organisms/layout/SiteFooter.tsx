@@ -64,14 +64,13 @@ export function SiteFooter() {
     <footer className={styles.root}>
       <div className={styles.inner}>
         <div className={styles.brand}>
-          <p className={styles.brandEyebrow}>Romega Solutions</p>
           <div className={styles.logoWrap}>
             <Image
-              src="/RS_HORIZONTAL.png"
+              src="/RS_Logo-Blue.png"
               alt="Romega Solutions"
-              width={3732}
-              height={2546}
-              sizes="(max-width: 767px) 11.5rem, (max-width: 1023px) 12.5rem, 13.5rem"
+              width={1601}
+              height={1600}
+              sizes="(max-width: 767px) 5rem, (max-width: 1023px) 5.5rem, 6rem"
               className={styles.logoImage}
             />
           </div>

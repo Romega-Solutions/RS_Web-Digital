@@ -26,24 +26,24 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  width: clamp(2.5rem, 6vw, 6rem);
+  width: clamp(12rem, 28vw, 28rem);
   pointer-events: none;
-  z-index: 2;
+  z-index: 4;
 }
 
 .root::before {
   left: 0;
-  background: linear-gradient(to right, rgb(168 159 248), rgb(168 159 248 / 0));
+  background: rgb(168 159 248);
 }
 
 .root::after {
   right: 0;
-  background: linear-gradient(to left, rgb(168 159 248), rgb(168 159 248 / 0));
+  background: rgb(168 159 248);
 }
 
 .viewport {
   /* prevent marquee duplicate groups from extending layout and creating blank gutters */
-  overflow: visible;
+  overflow: hidden;
   padding: 3rem 0 1rem;
   position: relative;
   z-index: 1;
@@ -85,17 +85,17 @@
 }
 
 .track {
-  @apply flex w-full items-center justify-center;
+  @apply flex w-max items-center;
+  animation: marquee 26s linear infinite;
+  will-change: transform;
 }
 
 .group {
-  @apply m-0 flex list-none items-center justify-center whitespace-normal px-4;
-  flex-wrap: wrap;
-  row-gap: 0.45rem;
+  @apply m-0 flex list-none items-center whitespace-nowrap px-4;
 }
 
 .groupDuplicate {
-  display: none;
+  display: flex;
 }
 
 .item {
@@ -172,6 +172,36 @@
 .root:hover .track,
 .root:focus-within .track {
   animation-play-state: paused;
+}
+
+@media (max-width: 1023px) {
+
+  .root::before,
+  .root::after {
+    display: none;
+  }
+
+  .viewport {
+    overflow: visible;
+  }
+
+  .track {
+    animation: none;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .group {
+    @apply w-full justify-center;
+    flex-wrap: wrap;
+    row-gap: 0.45rem;
+    white-space: normal;
+  }
+
+  .groupDuplicate {
+    display: none;
+  }
 }
 
 @media (max-width: 767px) {

@@ -15,12 +15,8 @@
 }
 
 .brand {
-  @apply mx-auto flex max-w-sm flex-col items-center gap-3 text-center;
+  @apply mx-auto flex max-w-sm flex-col items-center gap-4 text-center;
   @apply md:mx-0 md:items-start md:text-left;
-}
-
-.brandEyebrow {
-  @apply text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-brand-secondary/58;
 }
 
 .mainRight {
@@ -28,35 +24,24 @@
 }
 
 .logoWrap {
-  @apply flex shrink-0 items-start justify-center overflow-hidden;
+  @apply flex shrink-0 items-start justify-center;
   @apply md:justify-start;
-  width: 11.5rem;
+  width: 5rem;
 }
 
 .logoImage {
-  @apply block h-auto w-auto max-w-none object-contain;
-  height: 2.2rem;
-  transform: scale(1.16);
-  transform-origin: left center;
+  @apply block h-auto w-full object-contain;
 }
 
 @media (min-width: 640px) {
   .logoWrap {
-    width: 12.25rem;
-  }
-
-  .logoImage {
-    height: 2.35rem;
+    width: 5.5rem;
   }
 }
 
 @media (min-width: 768px) {
   .logoWrap {
-    width: 13rem;
-  }
-
-  .logoImage {
-    height: 2.5rem;
+    width: 6rem;
   }
 }
 
