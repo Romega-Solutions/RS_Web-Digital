@@ -26,6 +26,7 @@ export function ServicesSpotlight() {
               title="Talent Solutions"
               imageSrc="/2.0%20Website%20Assets/Image%201%20_%20Talent%20Solutions.webp"
               imageAlt="Talent Solutions"
+              href="/services#talent-solutions"
               className={styles.card}
               imageClassName={styles.image}
             />
@@ -36,6 +37,7 @@ export function ServicesSpotlight() {
               title="Brand & Growth Support"
               imageSrc="/2.0%20Website%20Assets/Image%202%20_%20Brand%20%26%20Growth%20Support.webp"
               imageAlt="Brand & Growth Support"
+              href="/services#brand-growth-support"
               className={styles.card}
               imageClassName={styles.image}
             />
@@ -46,6 +48,7 @@ export function ServicesSpotlight() {
               title="Strategic Operations"
               imageSrc="/2.0%20Website%20Assets/Image%203%20_%20Strategic%20Operations.webp"
               imageAlt="Strategic Operations"
+              href="/services#strategic-operations"
               className={styles.card}
               imageClassName={styles.image}
             />

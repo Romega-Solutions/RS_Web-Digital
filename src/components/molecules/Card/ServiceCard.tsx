@@ -1,10 +1,12 @@
 import Image from "next/image";
+import Link from "next/link";
 import styles from "./ServiceCard.module.css";
 
 interface ServiceCardProps {
   title: string;
   imageSrc: string;
   imageAlt: string;
+  href?: string;
   className?: string;
   imageClassName?: string;
 }
@@ -13,11 +15,12 @@ export function ServiceCard({
   title,
   imageSrc,
   imageAlt,
+  href,
   className = "",
   imageClassName = "",
 }: ServiceCardProps) {
-  return (
-    <article className={[styles.root, className].filter(Boolean).join(" ")}>
+  const content = (
+    <>
       <Image
         src={imageSrc}
         alt={imageAlt}
@@ -27,6 +30,20 @@ export function ServiceCard({
         className={[styles.image, imageClassName].filter(Boolean).join(" ")}
       />
       <h3 className="sr-only">{title}</h3>
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link href={href} className={[styles.root, className].filter(Boolean).join(" ")}>
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <article className={[styles.root, className].filter(Boolean).join(" ")}>
+      {content}
     </article>
   );
 }

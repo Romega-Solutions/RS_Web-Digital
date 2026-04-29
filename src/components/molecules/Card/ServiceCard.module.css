@@ -1,11 +1,15 @@
 @reference "../../../app/globals.css";
 
 .root {
-  @apply flex flex-col items-center;
+  @apply flex cursor-pointer flex-col items-center transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.02];
 }
 
 .image {
-  @apply h-112 w-full rounded-2xl object-cover shadow-[0_20px_50px_rgba(28,95,165,0.12)] md:h-136;
+  @apply h-112 w-full rounded-2xl object-cover shadow-[0_20px_50px_rgba(28,95,165,0.12)] transition-shadow duration-300 md:h-136;
+}
+
+.root:hover .image {
+  @apply shadow-[0_30px_60px_rgba(28,95,165,0.18)];
 }
 
 @media (max-width: 767px) {
