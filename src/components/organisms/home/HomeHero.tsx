@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ExploreServicesButton } from "@/components/atoms/Button";
+import { AppButton } from "@/components/atoms/Button";
 import { ScrollReveal } from "@/components/atoms/Motion";
 import styles from "./HomeHero.module.css";
 
@@ -48,7 +48,9 @@ export function HomeHero({ buttonHref = "/services" }: HomeHeroProps) {
         </ScrollReveal>
 
         <ScrollReveal variant="slideUp" distance={10} delay={0.6} duration={0.8}>
-          <ExploreServicesButton variant="primary" size="lg" href={buttonHref} />
+          <AppButton href={buttonHref} variant="primary" size="lg" className={styles.action}>
+            Explore Our Services
+          </AppButton>
         </ScrollReveal>
       </div>
     </section>

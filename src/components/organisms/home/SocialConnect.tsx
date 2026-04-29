@@ -1,11 +1,12 @@
 import Image from "next/image";
+import { ScrollReveal } from "@/components/atoms/Motion";
 import styles from "./SocialConnect.module.css";
 
 export function SocialConnect() {
   return (
     <section className={styles.root}>
       <div className={styles.inner}>
-        <div className={styles.copy}>
+        <ScrollReveal variant="slideRight" duration={0.8} className={styles.copy}>
           <h2 className={styles.title}>
             <span>Stay </span>
             <span className={styles.titleEmphasis}>Connected.</span>
@@ -22,9 +23,9 @@ export function SocialConnect() {
             Follow Romega and be part of the conversation shaping what&apos;s
             next.
           </p>
-        </div>
+        </ScrollReveal>
 
-        <div className={styles.visual} aria-hidden="true">
+        <ScrollReveal variant="slideLeft" delay={0.2} duration={0.8} className={styles.visual}>
           <Image
             src="/phone.png"
             alt=""
@@ -33,7 +34,7 @@ export function SocialConnect() {
             sizes="(max-width: 767px) 100vw, 36rem"
             className={styles.image}
           />
-        </div>
+        </ScrollReveal>
       </div>
     </section>
   );

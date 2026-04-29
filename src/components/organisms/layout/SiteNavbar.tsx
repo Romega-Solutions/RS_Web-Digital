@@ -2,8 +2,6 @@
 
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { useAccessibleOverlay } from "@/components/accessibility/useAccessibleOverlay";
-import { DropdownNavItem } from "@/components/molecules/navigation/DropdownNavItem";
-import { NavMenuLink } from "@/components/molecules/navigation/NavMenuLink";
 import Link from "next/link";
 import styles from "./SiteNavbar.module.css";
 
@@ -22,20 +20,80 @@ type SiteNavbarProps = {
 };
 
 const navItems = [
-  { label: "Home", href: "/" },
   { label: "About", href: "/about" },
 ] as const;
 
 const servicesMenuItems = [
-  { label: "Overview", href: "/services#services-overview" },
-  { label: "Talent Solutions", href: "/services#talent-solutions" },
-  { label: "Brand & Growth Support", href: "/services#brand-growth-support" },
-  { label: "Strategic Operations", href: "/services#strategic-operations" },
+  { 
+    label: "Overview", 
+    href: "/services#services-overview",
+    description: "Strategic growth support for your business.",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+      </svg>
+    )
+  },
+  { 
+    label: "Talent Solutions", 
+    href: "/services#talent-solutions",
+    description: "Build teams aligned with your long-term vision.",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+    )
+  },
+  { 
+    label: "Brand & Growth", 
+    href: "/services#brand-growth-support",
+    description: "Clarify your message and build brand trust.",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
+      </svg>
+    )
+  },
+  { 
+    label: "Strategic Ops", 
+    href: "/services#strategic-operations",
+    description: "Optimize workflows for scalable success.",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+      </svg>
+    )
+  },
 ] as const;
 
 const careersMenuItems = [
-  { label: "Talents", href: "/talent" },
+  { 
+    label: "Talent Pool", 
+    href: "/talent",
+    description: "Browse our curated pool of professionals.",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+    )
+  },
 ] as const;
+
+function ChevronDown() {
+  return (
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m6 9 6 6 6-6"/>
+    </svg>
+  );
+}
+
+function ArrowRight() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M5 12h14m-7-7 7 7-7 7"/>
+    </svg>
+  );
+}
 
 export function SiteNavbar({
   activeItem,
@@ -45,16 +103,9 @@ export function SiteNavbar({
 }: SiteNavbarProps) {
   const [isServicesDropdownOpen, setIsServicesDropdownOpen] = useState(false);
   const [isCareersDropdownOpen, setIsCareersDropdownOpen] = useState(false);
-  const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(
-    activeItem === "Services",
-  );
-  const [isMobileCareersOpen, setIsMobileCareersOpen] = useState(
-    activeItem === "Careers" || activeItem === "Careers & Talents",
-  );
-  const [currentLocation, setCurrentLocation] = useState({
-    hash: "",
-    pathname: "",
-  });
+  const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(activeItem === "Services");
+  const [isMobileCareersOpen, setIsMobileCareersOpen] = useState(activeItem === "Careers" || activeItem === "Careers & Talents");
+  const [currentLocation, setCurrentLocation] = useState({ hash: "", pathname: "" });
   const mobileNavRef = useRef<HTMLElement | null>(null);
   const servicesDropdownCloseTimeoutRef = useRef<number | null>(null);
   const careersDropdownCloseTimeoutRef = useRef<number | null>(null);
@@ -62,19 +113,13 @@ export function SiteNavbar({
   const careersDropdownId = useId();
 
   const clearServicesDropdownCloseTimeout = useCallback(() => {
-    if (servicesDropdownCloseTimeoutRef.current === null) {
-      return;
-    }
-
+    if (servicesDropdownCloseTimeoutRef.current === null) return;
     window.clearTimeout(servicesDropdownCloseTimeoutRef.current);
     servicesDropdownCloseTimeoutRef.current = null;
   }, []);
 
   const clearCareersDropdownCloseTimeout = useCallback(() => {
-    if (careersDropdownCloseTimeoutRef.current === null) {
-      return;
-    }
-
+    if (careersDropdownCloseTimeoutRef.current === null) return;
     window.clearTimeout(careersDropdownCloseTimeoutRef.current);
     careersDropdownCloseTimeoutRef.current = null;
   }, []);
@@ -122,9 +167,7 @@ export function SiteNavbar({
   const handleCloseMobileMenu = useCallback(() => {
     onCloseMobileMenu();
     setIsMobileServicesOpen(activeItem === "Services");
-    setIsMobileCareersOpen(
-      activeItem === "Careers" || activeItem === "Careers & Talents",
-    );
+    setIsMobileCareersOpen(activeItem === "Careers" || activeItem === "Careers & Talents");
   }, [activeItem, onCloseMobileMenu]);
 
   const handleToggleMobileMenu = useCallback(() => {
@@ -132,12 +175,9 @@ export function SiteNavbar({
       handleCloseMobileMenu();
       return;
     }
-
     onToggleMobileMenu();
     setIsMobileServicesOpen(activeItem === "Services");
-    setIsMobileCareersOpen(
-      activeItem === "Careers" || activeItem === "Careers & Talents",
-    );
+    setIsMobileCareersOpen(activeItem === "Careers" || activeItem === "Careers & Talents");
   }, [activeItem, handleCloseMobileMenu, isMobileMenuOpen, onToggleMobileMenu]);
 
   useAccessibleOverlay({
@@ -147,46 +187,25 @@ export function SiteNavbar({
   });
 
   useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-
+    if (typeof window === "undefined") return;
     function handleResize() {
-      if (window.innerWidth >= 1024) {
-        handleCloseMobileMenu();
-      }
+      if (window.innerWidth >= 1024) handleCloseMobileMenu();
     }
-
     window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+    return () => window.removeEventListener("resize", handleResize);
   }, [handleCloseMobileMenu]);
 
   useEffect(() => {
-    return () => {
-      clearServicesDropdownCloseTimeout();
-      clearCareersDropdownCloseTimeout();
-    };
-  }, [clearCareersDropdownCloseTimeout, clearServicesDropdownCloseTimeout]);
-
-  useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-
+    if (typeof window === "undefined") return;
     function syncLocation() {
       setCurrentLocation({
         hash: window.location.hash,
         pathname: window.location.pathname,
       });
     }
-
     syncLocation();
     window.addEventListener("hashchange", syncLocation);
     window.addEventListener("popstate", syncLocation);
-
     return () => {
       window.removeEventListener("hashchange", syncLocation);
       window.removeEventListener("popstate", syncLocation);
@@ -196,21 +215,11 @@ export function SiteNavbar({
   const isHrefActive = useCallback(
     (href: string) => {
       const [pathname, hash = ""] = href.split("#");
-
-      if (pathname !== currentLocation.pathname) {
-        return false;
-      }
-
+      if (pathname !== currentLocation.pathname) return false;
       const normalizedHash = hash ? `#${hash}` : "";
-
       if (href === "/services#services-overview") {
-        return (
-          currentLocation.pathname === "/services" &&
-          (currentLocation.hash === "" ||
-            currentLocation.hash === "#services-overview")
-        );
+        return currentLocation.pathname === "/services" && (currentLocation.hash === "" || currentLocation.hash === "#services-overview");
       }
-
       return currentLocation.hash === normalizedHash;
     },
     [currentLocation.hash, currentLocation.pathname],
@@ -221,51 +230,30 @@ export function SiteNavbar({
       <div className={styles.navDesktopRow}>
         <nav className={styles.menu} aria-label="Primary navigation">
           {navItems.map((item) => (
-            <NavMenuLink
+            <Link
               key={item.label}
               href={item.href}
-              isActive={item.label === activeItem}
+              className={`${styles.navLink} ${item.label === activeItem ? styles.navLinkActive : ""}`}
             >
               {item.label}
-            </NavMenuLink>
+            </Link>
           ))}
 
           <div
-            className={`${styles.dropdown} ${styles.dropdownServices}`}
+            className={`${styles.dropdown} ${styles.dropdownServices} ${isServicesDropdownOpen ? styles.dropdownOpen : ""}`}
             onMouseEnter={openServicesDropdown}
             onMouseLeave={scheduleServicesDropdownClose}
-            onFocusCapture={openServicesDropdown}
-            onBlurCapture={(event) => {
-              const relatedTarget = event.relatedTarget as Node | null;
-              if (
-                !relatedTarget ||
-                !event.currentTarget.contains(relatedTarget)
-              ) {
-                closeServicesDropdown();
-              }
-            }}
-            onKeyDown={(event) => {
-              if (event.key === "Escape") {
-                event.preventDefault();
-                closeServicesDropdown();
-              }
-            }}
           >
             <Link
               href="/services#services-overview"
-              className={styles.dropdownTrigger}
+              className={`${styles.navLink} ${styles.dropdownTrigger} ${activeItem === "Services" ? styles.navLinkActive : ""}`}
               aria-expanded={isServicesDropdownOpen}
               aria-controls={servicesDropdownId}
               aria-haspopup="menu"
               role="button"
-              onClick={closeServicesDropdown}
             >
-              <span className={activeItem === "Services" ? styles.dropdownTriggerActive : ""}>
-                Services
-              </span>
-              <span className={styles.dropdownCaret} aria-hidden="true">
-                ▾
-              </span>
+              Services
+              <span className={styles.dropdownCaret} aria-hidden="true"><ChevronDown /></span>
             </Link>
 
             <div
@@ -275,60 +263,38 @@ export function SiteNavbar({
               role="menu"
             >
               {servicesMenuItems.map((item) => (
-                <DropdownNavItem
+                <Link
                   key={item.label}
                   href={item.href}
                   role="menuitem"
-                  isActive={isHrefActive(item.href)}
+                  className={`${styles.dropdownItem} ${isHrefActive(item.href) ? styles.dropdownItemActive : ""}`}
                   onClick={closeServicesDropdown}
-                  title={item.label}
-                />
+                >
+                  <span className={styles.dropdownItemIcon} aria-hidden="true">{item.icon}</span>
+                  <span className={styles.dropdownItemContent}>
+                    <span className={styles.dropdownItemTitle}>{item.label}</span>
+                    <span className={styles.dropdownItemDesc}>{item.description}</span>
+                  </span>
+                </Link>
               ))}
             </div>
           </div>
 
           <div
-            className={`${styles.dropdown} ${styles.dropdownCareers}`}
+            className={`${styles.dropdown} ${styles.dropdownCareers} ${isCareersDropdownOpen ? styles.dropdownOpen : ""}`}
             onMouseEnter={openCareersDropdown}
             onMouseLeave={scheduleCareersDropdownClose}
-            onFocusCapture={openCareersDropdown}
-            onBlurCapture={(event) => {
-              const relatedTarget = event.relatedTarget as Node | null;
-              if (
-                !relatedTarget ||
-                !event.currentTarget.contains(relatedTarget)
-              ) {
-                closeCareersDropdown();
-              }
-            }}
-            onKeyDown={(event) => {
-              if (event.key === "Escape") {
-                event.preventDefault();
-                closeCareersDropdown();
-              }
-            }}
           >
             <Link
               href="/careers"
-              className={styles.dropdownTrigger}
+              className={`${styles.navLink} ${styles.dropdownTrigger} ${activeItem === "Careers" || activeItem === "Careers & Talents" ? styles.navLinkActive : ""}`}
               aria-expanded={isCareersDropdownOpen}
               aria-controls={careersDropdownId}
               aria-haspopup="menu"
               role="button"
-              onClick={closeCareersDropdown}
             >
-              <span
-                className={
-                  activeItem === "Careers" || activeItem === "Careers & Talents"
-                    ? styles.dropdownTriggerActive
-                    : ""
-                }
-              >
-                Careers
-              </span>
-              <span className={styles.dropdownCaret} aria-hidden="true">
-                ▾
-              </span>
+              Careers
+              <span className={styles.dropdownCaret} aria-hidden="true"><ChevronDown /></span>
             </Link>
 
             <div
@@ -338,14 +304,19 @@ export function SiteNavbar({
               role="menu"
             >
               {careersMenuItems.map((item) => (
-                <DropdownNavItem
+                <Link
                   key={item.label}
                   href={item.href}
                   role="menuitem"
-                  isActive={isHrefActive(item.href)}
+                  className={`${styles.dropdownItem} ${isHrefActive(item.href) ? styles.dropdownItemActive : ""}`}
                   onClick={closeCareersDropdown}
-                  title={item.label}
-                />
+                >
+                  <span className={styles.dropdownItemIcon} aria-hidden="true">{item.icon}</span>
+                  <span className={styles.dropdownItemContent}>
+                    <span className={styles.dropdownItemTitle}>{item.label}</span>
+                    <span className={styles.dropdownItemDesc}>{item.description}</span>
+                  </span>
+                </Link>
               ))}
             </div>
           </div>
@@ -353,89 +324,62 @@ export function SiteNavbar({
 
         <div className={styles.ctaWrap}>
           <Link href="/contact" className={styles.cta}>
-            Contact Us
-            <span
-              className={styles.ctaArrow}
-              aria-hidden="true"
-            >
-              →
-            </span>
+            Contact Us <span className={styles.ctaArrow} aria-hidden="true"><ArrowRight /></span>
           </Link>
           <button
             type="button"
             className={`${styles.burger} ${isMobileMenuOpen ? styles.burgerOpen : ""}`}
             aria-label="Toggle navigation menu"
             aria-expanded={isMobileMenuOpen}
-            aria-controls="mobile-nav-menu"
             onClick={handleToggleMobileMenu}
           >
-            <span className={styles.burgerLine} aria-hidden="true" />
-            <span className={styles.burgerLine} aria-hidden="true" />
-            <span className={styles.burgerLine} aria-hidden="true" />
+            <span className={styles.burgerLine} />
+            <span className={styles.burgerLine} />
+            <span className={styles.burgerLine} />
           </button>
         </div>
       </div>
 
-      {isMobileMenuOpen ? (
-        <button
-          type="button"
-          className={styles.mobileOverlay}
-          aria-label="Close navigation menu"
-          onClick={handleCloseMobileMenu}
-        />
-      ) : null}
+      {isMobileMenuOpen && (
+        <div className={styles.mobileOverlay} onClick={handleCloseMobileMenu} aria-hidden="true" />
+      )}
 
       <nav
-        id="mobile-nav-menu"
         ref={mobileNavRef}
         className={`${styles.mobile} ${isMobileMenuOpen ? styles.mobileOpen : ""}`}
         aria-label="Mobile navigation"
-        aria-hidden={!isMobileMenuOpen}
       >
         {navItems.map((item) => (
-          <NavMenuLink
+          <Link
             key={item.label}
             href={item.href}
-            className={styles.mobileLink}
-            isActive={item.label === activeItem}
+            className={`${styles.navLink} ${styles.mobileLink} ${item.label === activeItem ? styles.navLinkActive : ""}`}
             onClick={handleCloseMobileMenu}
           >
             {item.label}
-          </NavMenuLink>
+          </Link>
         ))}
         <div className={styles.mobileGroup}>
           <button
             type="button"
-            className={`${styles.mobileLink} ${styles.mobileGroupLabel} ${
-              activeItem === "Services" ? styles.navLinkActive : ""
-            }`}
-            aria-expanded={isMobileServicesOpen}
-            aria-controls="mobile-services-submenu"
-            onClick={() => setIsMobileServicesOpen((open) => !open)}
+            className={`${styles.mobileLink} ${styles.mobileGroupLabel}`}
+            onClick={() => setIsMobileServicesOpen(!isMobileServicesOpen)}
           >
-            Services
-            <span
-              className={`${styles.mobileCaret} ${isMobileServicesOpen ? styles.mobileCaretOpen : ""}`}
-            >
-              ▾
-            </span>
+            Services <span className={`${styles.mobileCaret} ${isMobileServicesOpen ? styles.mobileCaretOpen : ""}`}><ChevronDown /></span>
           </button>
-          <div
-            id="mobile-services-submenu"
-            className={`${styles.mobileSubmenu} ${
-              isMobileServicesOpen ? styles.mobileSubmenuOpen : ""
-            }`}
-          >
+          <div className={`${styles.mobileSubmenu} ${isMobileServicesOpen ? styles.mobileSubmenuOpen : ""}`}>
             {servicesMenuItems.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
-                className={`${styles.mobileSublink} ${
-                  isHrefActive(item.href) ? styles.navLinkActive : ""
-                }`}
+                className={`${styles.mobileSublink} ${isHrefActive(item.href) ? styles.navLinkActive : ""}`}
                 onClick={handleCloseMobileMenu}
               >
-                {item.label}
+                <span className={styles.mobileSublinkIcon} aria-hidden="true">{item.icon}</span>
+                <span className={styles.mobileSublinkText}>
+                  <span className={styles.mobileSublinkTitle}>{item.label}</span>
+                  <span className={styles.mobileSublinkDesc}>{item.description}</span>
+                </span>
               </Link>
             ))}
           </div>
@@ -444,40 +388,28 @@ export function SiteNavbar({
           <button
             type="button"
             className={`${styles.mobileLink} ${styles.mobileGroupLabel}`}
-            aria-expanded={isMobileCareersOpen}
-            aria-controls="mobile-careers-submenu"
-            onClick={() => setIsMobileCareersOpen((open) => !open)}
+            onClick={() => setIsMobileCareersOpen(!isMobileCareersOpen)}
           >
-            Careers
-            <span
-              className={`${styles.mobileCaret} ${isMobileCareersOpen ? styles.mobileCaretOpen : ""}`}
-            >
-              ▾
-            </span>
+            Careers <span className={`${styles.mobileCaret} ${isMobileCareersOpen ? styles.mobileCaretOpen : ""}`}><ChevronDown /></span>
           </button>
-          <div
-            id="mobile-careers-submenu"
-            className={`${styles.mobileSubmenu} ${
-              isMobileCareersOpen ? styles.mobileSubmenuOpen : ""
-            }`}
-          >
+          <div className={`${styles.mobileSubmenu} ${isMobileCareersOpen ? styles.mobileSubmenuOpen : ""}`}>
             {careersMenuItems.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
-                className={styles.mobileSublink}
+                className={`${styles.mobileSublink} ${isHrefActive(item.href) ? styles.navLinkActive : ""}`}
                 onClick={handleCloseMobileMenu}
               >
-                {item.label}
+                <span className={styles.mobileSublinkIcon} aria-hidden="true">{item.icon}</span>
+                <span className={styles.mobileSublinkText}>
+                  <span className={styles.mobileSublinkTitle}>{item.label}</span>
+                  <span className={styles.mobileSublinkDesc}>{item.description}</span>
+                </span>
               </Link>
             ))}
           </div>
         </div>
-        <Link
-          href="/contact"
-          className={`${styles.cta} ${styles.mobileCta}`}
-          onClick={handleCloseMobileMenu}
-        >
+        <Link href="/contact" className={`${styles.cta} ${styles.mobileCta}`} onClick={handleCloseMobileMenu}>
           Contact Us
         </Link>
       </nav>

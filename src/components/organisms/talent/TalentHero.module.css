@@ -5,11 +5,11 @@
 }
 
 .container {
-  @apply mx-auto max-w-[75rem];
+  @apply mx-auto max-w-300;
 }
 
 .content {
-  @apply mx-auto max-w-[58rem] text-center;
+  @apply mx-auto max-w-232 text-center;
 }
 
 .badge {
@@ -27,7 +27,7 @@
 }
 
 .description {
-  @apply mx-auto max-w-[48rem] text-[1.05rem] leading-[1.8] text-[#415163];
+  @apply mx-auto max-w-3xl text-[1.05rem] leading-[1.8] text-[#415163];
 }
 
 .features {
@@ -64,4 +64,5 @@
     @apply grid-cols-3;
   }
 }
+
 @reference "../../../app/globals.css";

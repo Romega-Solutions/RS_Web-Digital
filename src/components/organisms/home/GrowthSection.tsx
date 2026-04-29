@@ -1,5 +1,6 @@
-import { ExploreServicesButton } from "@/components/atoms/Button";
+import { AppButton } from "@/components/atoms/Button";
 import { ScrollReveal } from "@/components/atoms/Motion";
+import { ActionCluster } from "@/components/molecules/actions/ActionCluster";
 import styles from "./GrowthSection.module.css";
 
 export function GrowthSection() {
@@ -41,7 +42,11 @@ export function GrowthSection() {
         <div className={styles.bannerOverlay} aria-hidden="true" />
         <div className={styles.bannerContent}>
           <h3 className={styles.bannerTitle}>Let&apos;s Build What&apos;s Next</h3>
-          <ExploreServicesButton variant="primary" size="lg" />
+          <ActionCluster align="center" className={styles.bannerActions}>
+            <AppButton href="/services" variant="primary" size="lg">
+              Explore Our Services
+            </AppButton>
+          </ActionCluster>
         </div>
       </ScrollReveal>
     </section>

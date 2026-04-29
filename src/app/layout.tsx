@@ -100,6 +100,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full antialiased scroll-smooth">
       <body
+        suppressHydrationWarning
         className={`${poppins.variable} ${seasonsStyle.variable} min-h-full flex flex-col font-sans`}
       >
         <a href="#main-content" className="skip-link">

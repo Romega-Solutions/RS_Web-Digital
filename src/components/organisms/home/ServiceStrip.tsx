@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import type { FocusEvent, MouseEvent, ReactNode } from "react";
+import styles from "./ServiceStrip.module.css";
 
 type ServiceItem = {
   label: string;
@@ -17,7 +18,7 @@ type ServiceStripProps = {
 
 const TalentIcon = () => (
   <svg
-    className="service-strip__icon"
+    className={styles.icon}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -32,7 +33,7 @@ const TalentIcon = () => (
 
 const MarketingIcon = () => (
   <svg
-    className="service-strip__icon"
+    className={styles.icon}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -45,7 +46,7 @@ const MarketingIcon = () => (
 
 const WebIcon = () => (
   <svg
-    className="service-strip__icon"
+    className={styles.icon}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -103,6 +104,7 @@ function normalizeItems(items: Array<string | ServiceItem>): ServiceItem[] {
 
 export function ServiceStrip({ items = defaultItems }: ServiceStripProps) {
   const normalizedItems = normalizeItems(items);
+  const viewportRef = useRef<HTMLDivElement | null>(null);
   const [activeTooltip, setActiveTooltip] = useState<{
     label: string;
     text: string;
@@ -125,53 +127,57 @@ export function ServiceStrip({ items = defaultItems }: ServiceStripProps) {
     }
 
     const linkRect = event.currentTarget.getBoundingClientRect();
-    const viewport = event.currentTarget.closest(".service-strip__viewport");
-    const viewportRect = viewport?.getBoundingClientRect();
+    const viewportRect = viewportRef.current?.getBoundingClientRect();
 
     if (!viewportRect) {
       setActiveTooltip(null);
       return;
     }
 
-    const tooltipWidth = 288;
     const horizontalPadding = 16;
+    const tooltipWidth = Math.min(
+      288,
+      Math.max(viewportRect.width - horizontalPadding * 2, 0),
+    );
+    const tooltipHalfWidth = tooltipWidth / 2;
     const centeredLeft =
-      linkRect.left + linkRect.width / 2 - viewportRect.left - tooltipWidth / 2;
+      linkRect.left + linkRect.width / 2 - viewportRect.left;
+    const minLeft = horizontalPadding + tooltipHalfWidth;
     const maxLeft = Math.max(
-      viewportRect.width - tooltipWidth - horizontalPadding,
-      horizontalPadding,
+      viewportRect.width - horizontalPadding - tooltipHalfWidth,
+      minLeft,
     );
 
     setActiveTooltip({
       label: item.label,
       text: item.tooltip,
-      left: Math.min(Math.max(centeredLeft, horizontalPadding), maxLeft),
+      left: Math.min(Math.max(centeredLeft, minLeft), maxLeft),
       bottom: viewportRect.bottom - linkRect.top + 14,
     });
   };
 
   return (
     <section
-      className="service-strip"
+      className={styles.root}
       aria-label="Service categories"
       onMouseLeave={hideTooltip}
       onBlur={hideTooltip}
     >
-      <div className="service-strip__viewport">
-        <div className="service-strip__track">
+      <div ref={viewportRef} className={styles.viewport}>
+        <div className={styles.track}>
           {[0, 1].map((groupIndex) => (
             <ul
               key={groupIndex}
-              className={`service-strip__group ${groupIndex === 1 ? "service-strip__group--duplicate" : ""}`}
+              className={`${styles.group} ${groupIndex === 1 ? styles.groupDuplicate : ""}`}
               aria-hidden={groupIndex === 1}
             >
               {normalizedItems.map((item, index) => (
                 <li
                   key={`${item.label}-${groupIndex}`}
-                  className="service-strip__item"
+                  className={styles.item}
                 >
                   <Link
-                    className="service-strip__link"
+                    className={styles.link}
                     href={item.href ?? "/services"}
                     title={item.tooltip}
                     aria-describedby={
@@ -190,7 +196,7 @@ export function ServiceStrip({ items = defaultItems }: ServiceStripProps) {
                     onFocus={(event) => showTooltip(event, item)}
                   >
                     {item.icon && (
-                      <span className="service-strip__icon-wrapper">
+                      <span className={styles.iconWrapper}>
                         {item.icon}
                       </span>
                     )}
@@ -198,7 +204,7 @@ export function ServiceStrip({ items = defaultItems }: ServiceStripProps) {
                   </Link>
                   {index < normalizedItems.length - 1 ? (
                     <span
-                      className="service-strip__separator"
+                      className={styles.separator}
                       aria-hidden="true"
                     >
                       *
@@ -212,7 +218,7 @@ export function ServiceStrip({ items = defaultItems }: ServiceStripProps) {
         {activeTooltip ? (
           <div
             id={tooltipId}
-            className="service-strip__tooltip"
+            className={styles.tooltip}
             role="tooltip"
             style={{
               left: `${activeTooltip.left}px`,
