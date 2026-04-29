@@ -3,17 +3,19 @@
 :root {
   --color-primary: #febd18;
   --color-secondary: #358df0;
-  --color-secondary-accessible: #1c5fa5;
+  --color-secondary-accessible: #154e8a; /* Darkened for better contrast */
   --color-tertiary: #a89ff8;
   --color-accent: #fd755e;
-  --color-neutral: #424861;
+  --color-neutral: #1e293b; /* Darkened base neutral */
   --color-action: #1c5fa5;
-  --color-action-hover: #245fa2;
+  --color-action-hover: #154e8a;
   --color-action-text: #ffffff;
-  --color-page: #f4f6fb;
+  --color-page: #f1f5f9; /* Adjusted page tint */
   --color-surface: #ffffff;
-  --color-text: #f3f5fa;
-  --color-muted: #9da5bb;
+  --color-text: #f8fafc;
+  --color-text-main: #334155; /* New high-contrast text color */
+  --color-muted: #64748b;
+
   --font-heading: var(--font-seasons-style), "Times New Roman", Times, Georgia, serif;
   --font-body: var(--font-poppins), "Poppins", "Aptos", "Segoe UI", Arial, sans-serif;
   --font-display: var(--font-heading);

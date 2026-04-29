@@ -20,6 +20,8 @@ export default function PrivacyPage() {
       header={<SiteHeader />}
       footer={<SiteFooter />}
       title="Privacy Policy"
+      subtitle="How we collect, use, and protect your personal information at Romega Solutions."
+      lastUpdated="April 24, 2026"
     >
       <LegalPageCard>
         <PrivacyPolicyContent />

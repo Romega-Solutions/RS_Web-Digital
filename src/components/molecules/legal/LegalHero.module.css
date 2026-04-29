@@ -1,0 +1,49 @@
+@reference "../../../app/globals.css";
+
+.root {
+  @apply relative overflow-hidden pt-32 pb-48 md:pt-40 md:pb-60;
+  background: linear-gradient(135deg, #081424 0%, #1c5fa5 100%);
+}
+
+.overlay {
+  @apply absolute inset-0 opacity-20;
+  background-image: radial-gradient(#ffffff 0.5px, transparent 0.5px);
+  background-size: 24px 24px;
+}
+
+.inner {
+  @apply relative mx-auto max-w-7xl px-4;
+}
+
+.content {
+  @apply flex flex-col items-center text-center;
+}
+
+.title {
+  @apply mb-6 text-4xl font-bold tracking-tight text-white md:text-6xl lg:text-7xl;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.subtitle {
+  @apply max-w-2xl text-lg text-white/80 md:text-xl;
+}
+
+.meta {
+  @apply mt-8 flex items-center gap-3 rounded-full bg-white/10 px-5 py-2 backdrop-blur-md;
+}
+
+.metaLabel {
+  @apply text-xs font-bold uppercase tracking-widest text-brand-primary;
+}
+
+.metaValue {
+  @apply text-sm font-medium text-white/90;
+}
+
+.curve {
+  @apply absolute bottom-0 left-0 w-full leading-none text-page;
+}
+
+.curve svg {
+  @apply block h-auto w-full;
+}

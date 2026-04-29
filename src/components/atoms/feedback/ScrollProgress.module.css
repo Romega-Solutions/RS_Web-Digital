@@ -1,0 +1,6 @@
+@reference "../../../app/globals.css";
+
+.bar {
+  @apply fixed inset-x-0 top-0 z-[100] h-1 bg-brand-primary;
+  transform-origin: 0%;
+}

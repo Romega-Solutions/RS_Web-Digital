@@ -20,6 +20,8 @@ export default function TermsPage() {
       header={<SiteHeader />}
       footer={<SiteFooter />}
       title="Terms and Conditions"
+      subtitle="The legal framework and guidelines for using our services and website."
+      lastUpdated="August 27, 2025"
     >
       <LegalPageCard>
         <TermsAndConditionsContent />

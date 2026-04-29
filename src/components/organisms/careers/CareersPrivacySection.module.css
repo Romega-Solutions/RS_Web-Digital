@@ -1,3 +1,5 @@
+﻿@reference "../../../app/globals.css";
+
 .root {
   @apply bg-white text-black;
   padding-block: var(--section-space);
@@ -11,6 +13,7 @@
 .title {
   @apply text-[2.8rem] leading-[0.92] tracking-tight text-brand-secondary md:text-[4.4rem];
   font-family: var(--font-display);
+  text-wrap: balance;
 }
 
 .copy {
@@ -24,7 +27,7 @@
 }
 
 .card {
-  @apply rounded-lg border border-brand-secondary/15 bg-white p-6 shadow-[0_14px_34px_rgb(16_24_40/0.08)] text-center;
+  @apply rounded-lg border border-brand-secondary/15 bg-white p-6 shadow-[0_14px_34px_rgb(16_24_40/0.08)] text-center transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.03] hover:shadow-[0_20px_45px_rgb(16_24_40/0.12)] cursor-default;
 }
 
 .icon {
@@ -39,4 +42,3 @@
 .bottom {
   @apply mx-auto mt-10 flex w-full max-w-6xl justify-center;
 }
-@reference "../../../app/globals.css";

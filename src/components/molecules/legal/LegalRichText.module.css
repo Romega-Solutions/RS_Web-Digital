@@ -1,25 +1,46 @@
 @reference "../../../app/globals.css";
 
 .root {
-  @apply max-w-none text-black/80;
-  line-height: 1.6;
+  @apply max-w-none text-[var(--color-text-main)];
+  line-height: 1.8;
+  font-size: 1.05rem;
 }
 
-.root h2,
-.root h3,
-.root h4 {
-  @apply mb-4 mt-8 text-xl font-bold text-brand-secondary;
+.root h2 {
+  @apply mb-6 mt-12 text-2xl font-bold text-brand-secondary;
+  font-family: var(--font-heading);
+  border-bottom: 2px solid var(--color-page);
+  padding-bottom: 0.75rem;
+}
+
+.root h3 {
+  @apply mb-4 mt-8 text-xl font-bold text-brand-secondary/90;
   font-family: var(--font-heading);
 }
 
 .root p {
-  @apply mb-4;
+  @apply mb-6 text-[var(--color-text-main)];
 }
 
 .root ul {
-  @apply mb-6 list-disc space-y-2 pl-6;
+  @apply mb-8 list-none space-y-3 pl-0;
+}
+
+.root li {
+  @apply relative pl-6 text-[var(--color-text-main)];
+}
+
+.root li::before {
+  content: "•";
+  @apply absolute left-0 font-bold text-brand-primary;
 }
 
 .root strong {
-  @apply font-semibold text-black;
+  @apply font-bold text-black;
 }
+
+.root a {
+  @apply text-brand-secondary underline decoration-brand-primary/30 underline-offset-4 transition-all hover:decoration-brand-primary;
+}
+
+

@@ -1,0 +1,10 @@
+@reference "../../../app/globals.css";
+
+.root {
+  @apply mx-auto w-full max-w-4xl rounded-[2rem] bg-surface p-8 shadow-[0_20px_50px_rgba(8,20,36,0.12)] md:p-16 lg:p-20;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(8px);
+  color: #1e293b; /* Explicitly dark text */
+}
+
+

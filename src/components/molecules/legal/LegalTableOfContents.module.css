@@ -1,0 +1,57 @@
+@reference "../../../app/globals.css";
+
+.root {
+  @apply fixed bottom-6 right-6 z-[90] lg:sticky lg:top-32 lg:block lg:w-72 lg:max-h-[calc(100vh-10rem)] lg:overflow-y-auto lg:rounded-[1.5rem] lg:bg-[rgba(255,255,255,0.4)] lg:p-6 lg:shadow-lg;
+  display: none; /* Hidden by default until toggled */
+}
+
+.root.mobileOpen {
+  @apply block w-[calc(100vw-3rem)] rounded-[2rem] bg-white p-8 shadow-2xl;
+  display: block;
+}
+
+.root.lg\:block {
+  @apply lg:block lg:bg-[rgba(255,255,255,0.4)];
+}
+
+.toggleBtn {
+  @apply fixed bottom-6 right-6 z-[100] flex items-center gap-2 rounded-full bg-brand-secondary px-6 py-3 font-bold text-white shadow-xl lg:hidden;
+}
+
+.root::-webkit-scrollbar {
+  display: none;
+}
+
+
+.title {
+  @apply mb-6 pb-4 border-b border-brand-secondary/10 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-brand-secondary/90;
+  font-family: var(--font-heading);
+}
+
+
+
+.list {
+  @apply m-0 list-none space-y-1 p-0;
+}
+
+.item {
+  @apply m-0 p-0;
+}
+
+.link {
+  @apply relative flex items-center gap-4 py-2.5 px-3 rounded-xl text-[0.95rem] font-semibold text-brand-secondary/80 no-underline transition-all duration-300 hover:bg-brand-secondary/10 hover:text-brand-secondary;
+}
+
+.linkActive {
+  @apply text-brand-secondary font-black bg-brand-secondary/10;
+}
+
+
+.indicator {
+  @apply absolute left-0 h-8 w-1 rounded-r-full bg-brand-primary shadow-[0_0_10px_var(--color-primary)];
+}
+
+.text {
+  @apply truncate;
+}
+
