@@ -41,6 +41,7 @@ export function LegalTableOfContents() {
 
   return (
     <>
+      {isOpen && <div className={styles.backdrop} onClick={() => setIsOpen(false)} />}
       <button className={styles.toggleBtn} onClick={() => setIsOpen(!isOpen)}>
         {isOpen ? "Close" : "Sections"}
       </button>
@@ -78,4 +79,3 @@ export function LegalTableOfContents() {
     </>
   );
 }
-
