@@ -1,17 +1,22 @@
 @reference "../../../app/globals.css";
 
 .root {
-  @apply fixed bottom-8 right-8 z-90 lg:sticky lg:top-32 lg:block lg:w-72 lg:max-h-[calc(100vh-10rem)] lg:overflow-y-auto lg:rounded-3xl lg:bg-[rgba(255, 255, 255, 0.8)] lg:p-6 lg:shadow-xl lg:border lg:border-white/50;
+  @apply fixed bottom-8 right-8 z-90;
   display: none;
 }
 
 .root.mobileOpen {
-  @apply fixed bottom-24 right-4 z-90 block w-[calc(100vw-2rem)] rounded-4xl bg-white p-8 shadow-[0_20px_50px_rgba(8, 20, 36, 0.2)] border border-white;
+  @apply fixed bottom-24 right-4 z-90 block w-[calc(100vw-2rem)] rounded-4xl bg-white p-8 border border-white;
+  box-shadow: 0 20px 50px rgba(8, 20, 36, 0.2);
   display: block;
 }
 
 @media (min-width: 1024px) {
   .root {
+    @apply sticky top-32 block w-72 max-h-[calc(100vh-10rem)] overflow-y-auto rounded-3xl p-6;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 20px 50px rgba(8, 20, 36, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     display: block;
   }
 }
@@ -21,7 +26,8 @@
 }
 
 .toggleBtn {
-  @apply fixed bottom-8 right-8 z-100 flex items-center gap-3 rounded-full bg-brand-secondary px-8 py-4 font-bold text-white shadow-[0_10px_20px_rgba(28, 95, 165, 0.4)] transition-all hover:scale-105 active:scale-95 lg:hidden;
+  @apply fixed bottom-8 right-8 z-100 flex items-center gap-3 rounded-full bg-brand-secondary px-8 py-4 font-bold text-white transition-all hover:scale-105 active:scale-95 lg:hidden;
+  box-shadow: 0 10px 20px rgba(28, 95, 165, 0.4);
 }
 
 .root::-webkit-scrollbar {
