@@ -3,6 +3,7 @@
 .root {
   @apply bg-white pt-10;
   font-family: var(--font-body);
+  scroll-margin-top: 6rem;
 }
 
 .root * {
@@ -15,7 +16,7 @@
 }
 
 .brand {
-  @apply mx-auto flex max-w-sm flex-col items-center gap-4 text-center;
+  @apply mx-auto flex max-w-xs flex-col items-center gap-4 text-center;
   @apply md:mx-0 md:items-start md:text-left;
 }
 
@@ -26,7 +27,7 @@
 .logoWrap {
   @apply flex shrink-0 items-start justify-center;
   @apply md:justify-start;
-  width: 5rem;
+  width: 12rem;
 }
 
 .logoImage {
@@ -35,18 +36,18 @@
 
 @media (min-width: 640px) {
   .logoWrap {
-    width: 5.5rem;
+    width: 12.5rem;
   }
 }
 
 @media (min-width: 768px) {
   .logoWrap {
-    width: 6rem;
+    width: 13rem;
   }
 }
 
 .tagline {
-  @apply max-w-72 text-center text-[0.84rem] leading-[1.6] text-brand-secondary/88;
+  @apply w-full max-w-[18rem] text-center text-[0.84rem] leading-[1.6] text-brand-secondary/88;
   @apply md:text-left md:text-[0.9rem];
 }
 
@@ -102,28 +103,18 @@
 }
 
 .socialLink {
-  @apply relative inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-brand-secondary ring-1 ring-brand-secondary/15 transition-all;
+  @apply inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-secondary/25 bg-white text-brand-secondary transition-all duration-200;
+  will-change: transform, box-shadow;
 }
 
 .socialLink:hover {
-  @apply scale-110 shadow-md text-brand-primary;
+  @apply border-brand-secondary/45 shadow-sm;
+  transform: translateY(-1px);
 }
 
-.socialLink::after {
-  content: attr(data-tooltip);
-  @apply pointer-events-none absolute -top-9 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-full bg-brand-secondary px-2.5 py-1 text-[0.68rem] font-medium tracking-wide text-white opacity-0 shadow-lg transition-all duration-200;
-}
-
-.socialLink::before {
-  content: "";
-  @apply pointer-events-none absolute -top-2 left-1/2 z-10 -translate-x-1/2 border-4 border-transparent border-t-brand-secondary opacity-0 transition-all duration-200;
-}
-
-.socialLink:hover::after,
-.socialLink:hover::before,
-.socialLink:focus-visible::after,
-.socialLink:focus-visible::before {
-  @apply opacity-100;
+.socialLink:active {
+  @apply shadow-none;
+  transform: translateY(0);
 }
 
 .socialLink:focus-visible {
@@ -132,6 +123,15 @@
 
 .socialIcon {
   @apply h-6 w-6 object-contain;
+  transition: opacity 0.2s ease;
+}
+
+.socialLink:focus-visible .socialIcon {
+  opacity: 1;
+}
+
+.socialLabel {
+  @apply sr-only;
 }
 
 .mapCard {
@@ -244,23 +244,42 @@
   @apply leading-snug;
 }
 
+.contactCopy a {
+  @apply flex flex-col;
+}
+
 .contactCopy a:hover {
   @apply underline-offset-2 hover:underline;
 }
 
 .backtop {
-  @apply hidden items-center gap-1 text-brand-secondary;
+  @apply hidden items-center justify-center text-brand-secondary;
   @apply lg:flex;
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
+  position: fixed;
+  right: 1.25rem;
+  bottom: 4.25rem;
+  z-index: 60;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 999px;
+  border: 1px solid rgb(28 95 165 / 0.18);
+  background: rgb(255 255 255 / 0.92);
+  box-shadow: 0 12px 30px rgb(16 24 40 / 0.14);
+  backdrop-filter: blur(10px);
 }
 
 .backtopArrow {
-  @apply text-xl leading-none rotate-180;
+  @apply text-xl leading-none;
 }
 
 .backtop span:last-child {
-  @apply text-xs tracking-wide;
+  @apply sr-only;
+}
+
+.backtop:hover,
+.backtop:focus-visible {
+  @apply bg-brand-secondary text-white outline-none;
+  box-shadow: 0 16px 36px rgb(16 24 40 / 0.2);
 }
 
 .legal {
@@ -282,6 +301,10 @@
 }
 
 @media (max-width: 767px) {
+  .root {
+    @apply pt-24;
+  }
+
   .inner {
     @apply gap-6;
   }
@@ -323,7 +346,15 @@
   }
 
   .contactBlock {
-    @apply mt-3 w-full justify-start rounded-2xl border border-brand-secondary/10 bg-white px-4 py-3 text-xs shadow-sm;
+    @apply mt-3 w-full flex-col items-center justify-center rounded-2xl border border-brand-secondary/10 bg-white px-4 py-3 text-center text-xs shadow-sm;
+  }
+
+  .contactCopy {
+    @apply items-center text-center;
+  }
+
+  .contactCopy a {
+    @apply text-center;
   }
 
   .tagline {
@@ -343,7 +374,24 @@
   }
 }
 
+@media (max-height: 520px) and (orientation: landscape) {
+  .root {
+    @apply pt-20;
+  }
+}
+
 @media (min-width: 768px) and (max-width: 1023px) {
+  .inner {
+    grid-template-columns: minmax(16rem, 0.9fr) minmax(18rem, 1fr);
+  }
+
+  .brand {
+    align-self: start;
+  }
+
+  .mainRight {
+    display: contents;
+  }
 
   .navGroups,
   .links,
@@ -351,8 +399,14 @@
     width: 100%;
   }
 
+  .links {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: start;
+  }
+
   .navGroups {
-    @apply flex-row flex-wrap justify-center;
+    @apply flex-row flex-wrap justify-start;
   }
 
   .navGroup {
@@ -361,6 +415,9 @@
 
   .connect {
     @apply gap-5;
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: start;
   }
 
   .contactBlock {
@@ -368,11 +425,6 @@
   }
 
   .mapCard {
-    @apply max-w-none;
-    min-height: 17rem;
-  }
-
-  .mapFrame {
-    min-height: 17rem;
+    @apply hidden;
   }
 }

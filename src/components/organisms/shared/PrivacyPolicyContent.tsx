@@ -1,7 +1,6 @@
 import Link from "next/link";
 import {
   PRIVACY_CONTACT_EMAIL,
-  PRIVACY_POLICY_LAST_UPDATED,
   PRIVACY_POLICY_VERSION,
   PRIVACY_REQUEST_SLA_BUSINESS_DAYS,
 } from "@/lib/legal/privacy-policy";
@@ -16,24 +15,24 @@ export function PrivacyPolicyContent({
 }: PrivacyPolicyContentProps) {
   return (
     <LegalRichText>
-      <p className="text-xl font-medium text-[var(--color-text-main)]">
+      <p className="text-xl font-medium text-(--color-text-main)">
         This Privacy and Consent Policy explains how Romega Solutions collects,
         processes, stores, retains, and shares personal information from website
         visitors, applicants, and professional contacts.
       </p>
 
-      <h2>A. Collection of Personal Information</h2>
-      <p className="text-[var(--color-text-main)]">
+      <h2 id="section-a">A. Collection of Personal Information</h2>
+      <p className="text-(--color-text-main)">
         We collect personal and professional information voluntarily provided by
         visitors and applicants through website forms, recruitment workflows, and
         related communication channels.
       </p>
       <ul>
-        <li className="text-[var(--color-text-main)]">Full name and contact details (email, phone number)</li>
-        <li className="text-[var(--color-text-main)]">Company name and professional background</li>
-        <li className="text-[var(--color-text-main)]">Resume or CV and work history (for applicants)</li>
-        <li className="text-[var(--color-text-main)]">Portfolio links, project samples, and certifications</li>
-        <li className="text-[var(--color-text-main)]">Inquiry details and message content</li>
+        <li className="text-(--color-text-main)">Full name and contact details (email, phone number)</li>
+        <li className="text-(--color-text-main)">Company name and professional background</li>
+        <li className="text-(--color-text-main)">Resume or CV and work history (for applicants)</li>
+        <li className="text-(--color-text-main)">Portfolio links, project samples, and certifications</li>
+        <li className="text-(--color-text-main)">Inquiry details and message content</li>
       </ul>
 
 

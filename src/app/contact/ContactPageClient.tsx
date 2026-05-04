@@ -1,7 +1,6 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import { FormCheckbox, FormInput, FormSelect, FormTextarea } from "@/components/atoms/Form";
 import { AppButton } from "@/components/atoms/Button";
 import { siteConfig } from "@/lib/seo";
@@ -47,6 +46,27 @@ const subjectOptions = [
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const phonePattern = /^\+?[0-9()\s.-]{7,}$/;
+
+const socialLinks: { href: string; label: string; text: string; title: string }[] = [
+  {
+    href: siteConfig.linkedIn,
+    label: "LinkedIn",
+    text: "in/romega-solutions",
+    title: "Visit Romega Solutions on LinkedIn (@romega-solutions)",
+  },
+  {
+    href: siteConfig.facebook,
+    label: "Facebook",
+    text: "fb/romega-solutions",
+    title: "Visit Romega Solutions on Facebook (@romega-solutions)",
+  },
+  {
+    href: siteConfig.instagram,
+    label: "Instagram",
+    text: "ig/romega-solutions",
+    title: "Visit Romega Solutions on Instagram (@romega-solutions)",
+  },
+];
 
 export default function ContactPageClient() {
   const [form, setForm] = useState<FormState>(initialFormState);
@@ -128,7 +148,16 @@ export default function ContactPageClient() {
         }),
       });
 
-      const payload = (await response.json()) as { success?: boolean; message?: string };
+      let payload: { success?: boolean; message?: string; code?: string };
+      try {
+        payload = (await response.json()) as {
+          success?: boolean;
+          message?: string;
+          code?: string;
+        };
+      } catch {
+        throw new Error("The server returned an invalid response. Please try again.");
+      }
 
       if (!response.ok || !payload.success) {
         throw new Error(payload.message || "Unable to send your message right now.");
@@ -202,50 +231,20 @@ export default function ContactPageClient() {
             </div>
 
             <div className={styles.block}>
-              <h2>Connect with Us</h2>
+              <h2>Social</h2>
               <div className={styles.socials}>
-                <a
-                  href={siteConfig.linkedIn}
-                  aria-label="LinkedIn"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Image
-                    src="/2.0%20Website%20Assets/20.png"
-                    alt=""
-                    width={56}
-                    height={56}
-                    className={styles.socialIcon}
-                  />
-                </a>
-                <a
-                  href={siteConfig.facebook}
-                  aria-label="Facebook"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Image
-                    src="/2.0%20Website%20Assets/18.png"
-                    alt=""
-                    width={56}
-                    height={56}
-                    className={styles.socialIcon}
-                  />
-                </a>
-                <a
-                  href={siteConfig.instagram}
-                  aria-label="Instagram"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Image
-                    src="/2.0%20Website%20Assets/19.png"
-                    alt=""
-                    width={56}
-                    height={56}
-                    className={styles.socialIcon}
-                  />
-                </a>
+                {socialLinks.map((social) => (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={social.title}
+                    aria-label={`Open Romega Solutions ${social.label}`}
+                  >
+                    {social.text}
+                  </a>
+                ))}
               </div>
             </div>
           </div>

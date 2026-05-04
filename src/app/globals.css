@@ -66,10 +66,24 @@
   --measure-readable: 62ch;
   --measure-readable-tight: 54ch;
   --measure-readable-mobile: 38ch;
-  --section-space: clamp(3.5rem, 7vw, 6rem);
-  --section-space-compact: clamp(2.75rem, 5vw, 4.5rem);
+  --page-readable-max-width: 68rem;
+  --page-readable-measure: 62ch;
+  --section-space-xl: clamp(5rem, 9vw, 8rem);
+  --section-space-lg: clamp(4rem, 7vw, 6rem);
+  --section-space-md: clamp(2.75rem, 5vw, 4.25rem);
+  --section-space: var(--section-space-lg);
+  --section-space-compact: var(--section-space-md);
   --page-hero-min-height: clamp(34rem, calc(100svh - 4.5rem), 46rem);
   --page-hero-content-min-height: clamp(30rem, calc(100svh - 10rem), 40rem);
+  --page-band-dark: #0f2238;
+  --page-band-soft: #f6f8fc;
+  --surface-featured-shadow: 0 24px 64px rgba(8, 20, 36, 0.14);
+  --surface-soft-shadow: 0 14px 34px rgba(16, 24, 40, 0.08);
+  --hero-overlay-dark: linear-gradient(
+    180deg,
+    rgba(10, 18, 32, 0.22),
+    rgba(10, 18, 32, 0.58)
+  );
 }
 
 body {

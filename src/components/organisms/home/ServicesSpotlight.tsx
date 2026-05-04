@@ -24,6 +24,7 @@ export function ServicesSpotlight() {
           <ScrollReveal variant="scale" delay={0.1}>
             <ServiceCard
               title="Talent Solutions"
+              description="Find aligned people who strengthen your team and support long-term growth."
               imageSrc="/2.0%20Website%20Assets/Image%201%20_%20Talent%20Solutions.webp"
               imageAlt="Talent Solutions"
               href="/services#talent-solutions"
@@ -35,6 +36,7 @@ export function ServicesSpotlight() {
           <ScrollReveal variant="scale" delay={0.2}>
             <ServiceCard
               title="Brand & Growth Support"
+              description="Clarify your message, sharpen your presence, and build trust faster."
               imageSrc="/2.0%20Website%20Assets/Image%202%20_%20Brand%20%26%20Growth%20Support.webp"
               imageAlt="Brand & Growth Support"
               href="/services#brand-growth-support"
@@ -46,6 +48,7 @@ export function ServicesSpotlight() {
           <ScrollReveal variant="scale" delay={0.3}>
             <ServiceCard
               title="Strategic Operations"
+              description="Bring structure to the moving parts behind growth, delivery, and execution."
               imageSrc="/2.0%20Website%20Assets/Image%203%20_%20Strategic%20Operations.webp"
               imageAlt="Strategic Operations"
               href="/services#strategic-operations"

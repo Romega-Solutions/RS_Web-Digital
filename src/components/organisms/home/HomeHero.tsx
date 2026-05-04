@@ -7,7 +7,9 @@ type HomeHeroProps = {
   buttonHref?: string;
 };
 
-export function HomeHero({ buttonHref = "/services" }: HomeHeroProps) {
+export function HomeHero({
+  buttonHref = "https://calendly.com/romega-solutions/discoverycall?back=1",
+}: HomeHeroProps) {
   return (
     <section className={styles.root}>
       <Image
@@ -49,7 +51,7 @@ export function HomeHero({ buttonHref = "/services" }: HomeHeroProps) {
 
         <ScrollReveal variant="slideUp" distance={10} delay={0.6} duration={0.8}>
           <AppButton href={buttonHref} variant="primary" size="lg" className={styles.action}>
-            Explore Our Services
+            Book your Call today!
           </AppButton>
         </ScrollReveal>
       </div>

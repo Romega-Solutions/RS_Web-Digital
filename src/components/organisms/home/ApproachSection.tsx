@@ -28,13 +28,13 @@ export function ApproachSection() {
         <ScrollReveal variant="slideRight" duration={0.8} className={styles.left}>
           <p className={styles.eyebrow}>Intentional growth</p>
           <h2 className={styles.title}>
-            We don&apos;t
+            <span className={styles.titleLine}>We don&apos;t</span>
             <br />
-            rush growth.
+            <span className={styles.titleLine}>rush growth.</span>
             <br />
-            <span className={styles.emphasis}>We build it</span>
+            <span className={`${styles.titleLine} ${styles.emphasis}`}>We build it</span>
             <br />
-            <span className={styles.circled}>right.</span>
+            <span className={`${styles.titleLine} ${styles.circled}`}>right.</span>
           </h2>
           <div className={styles.focusAreas} aria-label="Growth focus areas">
             {focusAreas.map((area) => (

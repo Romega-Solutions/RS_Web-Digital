@@ -1,28 +1,37 @@
 .root {
-  @apply bg-white text-black;
+  @apply text-black;
   padding-bottom: 2rem;
   padding-top: var(--section-space);
   padding-inline: var(--layout-gutter);
+  background:
+    linear-gradient(180deg, rgb(255 255 255) 0%, rgb(246 251 255) 52%, rgb(255 255 255) 100%);
 }
 
 .inner {
-  @apply relative mx-auto grid w-full max-w-6xl grid-cols-1 overflow-visible pb-10 md:min-h-[56rem] md:pb-28;
+  @apply relative mx-auto grid w-full max-w-6xl grid-cols-1 overflow-visible pb-10 md:min-h-[54rem] md:pb-28;
 }
 
 .grid {
-  @apply pointer-events-none absolute left-[-1%] top-29 h-88 w-[54%];
+  @apply pointer-events-none absolute left-0 top-29 h-88 w-[58%];
   background-image: linear-gradient(to right, rgb(55 141 238 / 0.13) 1px, transparent 1px),
     linear-gradient(to bottom, rgb(55 141 238 / 0.13) 1px, transparent 1px);
   background-size: 82px 82px;
+  mask-image: linear-gradient(90deg, rgb(0 0 0 / 0.9), rgb(0 0 0 / 0.78) 62%, transparent);
 }
 
 .heading {
-  @apply relative z-10 md:absolute md:left-[8%] md:top-4;
+  @apply relative z-20 md:absolute md:left-0 md:top-2;
 }
 
 .title {
-  @apply text-[3rem] leading-[0.92] font-medium tracking-tight text-brand-secondary md:text-[4.6rem];
+  @apply text-[3rem] leading-[0.92] font-medium tracking-tight text-brand-secondary md:text-[4.05rem] lg:text-[4.35rem];
   font-family: var(--font-display);
+  max-width: none;
+}
+
+.titleLine {
+  display: inline-block;
+  white-space: nowrap;
 }
 
 .title em {
@@ -35,15 +44,15 @@
 }
 
 .photoMain {
-  @apply mt-8 h-64 w-full justify-self-end md:mt-0 md:h-72 md:w-[51%];
+  @apply mt-8 h-64 w-full justify-self-end md:mt-0 md:h-72 md:w-[48%] lg:w-[49%];
 }
 
 .photoMid {
-  @apply mt-6 h-32 w-[50%] md:absolute md:left-[18%] md:top-52 md:mt-0 md:h-44 md:w-60;
+  @apply mt-6 h-32 w-[50%] md:absolute md:left-[14%] md:top-[13.5rem] md:mt-0 md:h-42 md:w-58 lg:h-44 lg:w-60;
 }
 
 .photoLow {
-  @apply mt-6 h-36 w-[58%] md:absolute md:left-[4%] md:top-[24.75rem] md:mt-0 md:h-46 md:w-64;
+  @apply mt-6 h-36 w-[58%] md:absolute md:left-0 md:top-[24.25rem] md:mt-0 md:h-44 md:w-62 lg:h-46 lg:w-64;
 }
 
 .image {
@@ -63,18 +72,49 @@
 }
 
 .copy {
-  @apply relative z-10 mt-10 space-y-5 text-base text-black md:absolute md:left-[41%] md:top-[25.75rem] md:mt-0 md:text-[1.08rem];
+  @apply relative z-10 mt-10 text-base text-black md:absolute md:left-[39%] md:top-[24.5rem] md:mt-0 md:text-[1.08rem];
   font-family: var(--font-body);
   line-height: 1.48;
-  max-width: min(100%, var(--measure-readable-tight));
+  max-width: min(100%, 33.5rem);
+}
+
+.copy::before {
+  content: "";
+  @apply absolute -left-5 top-1 hidden h-[calc(100%-0.25rem)] w-px md:block;
+  background: linear-gradient(180deg, rgb(254 189 25 / 0.95), rgb(53 141 240 / 0.18), transparent);
+}
+
+.lead {
+  @apply text-[1.04rem] text-slate-900 md:text-[1.1rem];
+  line-height: 1.66;
+  text-wrap: pretty;
+}
+
+.exists {
+  @apply mt-6 text-[1.18rem] font-medium text-brand-secondary md:text-[1.3rem];
+  line-height: 1.38;
+  text-wrap: balance;
 }
 
 .copy strong {
-  @apply font-black text-black;
+  @apply font-black text-brand-secondary;
+}
+
+.exists span {
+  @apply relative inline-block font-bold text-black;
+}
+
+.exists span::after {
+  content: "";
+  @apply absolute inset-x-0 bottom-0 h-[0.42em] bg-brand-primary/45;
+  z-index: -1;
 }
 
 .statement {
-  @apply relative left-1/2 z-10 mt-18 flex w-screen -translate-x-1/2 items-center justify-center bg-[#fff0cb] px-6 py-12 text-center text-[2rem] leading-[1.05] text-brand-secondary md:absolute md:bottom-0 md:mt-0 md:px-12 md:py-10 md:text-[2.4rem];
+  @apply relative left-1/2 z-10 mt-18 flex w-screen -translate-x-1/2 items-center justify-center overflow-hidden px-6 py-12 text-brand-secondary md:absolute md:bottom-0 md:mt-0 md:px-12 md:py-11;
+  background:
+    linear-gradient(90deg, rgb(255 240 203 / 0.96), rgb(255 248 226 / 0.88) 44%, rgb(229 244 255 / 0.92)),
+    radial-gradient(circle at 16% 50%, rgb(254 189 25 / 0.22), transparent 22rem);
   font-family: var(--font-display);
 }
 
@@ -84,8 +124,30 @@
   clip-path: polygon(50% 0, 0 100%, 100% 100%);
 }
 
+.statement::after {
+  content: "";
+  @apply pointer-events-none absolute inset-x-0 top-0 h-px;
+  background: linear-gradient(90deg, transparent, rgb(9 75 143 / 0.28), transparent);
+}
+
 .statement p {
-  @apply mx-auto max-w-5xl;
+  @apply relative mx-auto grid max-w-6xl items-center gap-4 text-left md:grid-cols-[0.5fr_1.5fr] md:gap-8;
+}
+
+.statement p::before {
+  content: "";
+  @apply absolute -left-6 top-0 hidden h-full w-px md:block;
+  background: linear-gradient(180deg, transparent, rgb(9 75 143 / 0.34), transparent);
+}
+
+.statement span {
+  @apply block text-[1rem] font-bold uppercase tracking-[0.22em] text-brand-secondary/70;
+  font-family: var(--font-body);
+}
+
+.statement strong {
+  @apply block text-[1.75rem] font-medium leading-[1.08] tracking-[-0.025em] text-brand-secondary md:text-[2.25rem] lg:text-[2.55rem];
+  text-wrap: balance;
 }
 
 .statement em {

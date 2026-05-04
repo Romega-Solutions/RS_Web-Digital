@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useId, useRef, useState } from "react";
+import type { FocusEvent, KeyboardEvent } from "react";
 import { useAccessibleOverlay } from "@/components/accessibility/useAccessibleOverlay";
 import Link from "next/link";
 import styles from "./SiteNavbar.module.css";
@@ -170,6 +171,24 @@ export function SiteNavbar({
     setIsServicesDropdownOpen(false);
   }, [clearServicesDropdownCloseTimeout]);
 
+  const handleServicesDropdownBlur = useCallback(
+    (event: FocusEvent<HTMLDivElement>) => {
+      if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+        closeServicesDropdown();
+      }
+    },
+    [closeServicesDropdown],
+  );
+
+  const handleServicesDropdownKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLDivElement>) => {
+      if (event.key === "Escape") {
+        closeServicesDropdown();
+      }
+    },
+    [closeServicesDropdown],
+  );
+
   const scheduleServicesDropdownClose = useCallback(() => {
     clearServicesDropdownCloseTimeout();
     servicesDropdownCloseTimeoutRef.current = window.setTimeout(() => {
@@ -189,6 +208,24 @@ export function SiteNavbar({
     clearCareersDropdownCloseTimeout();
     setIsCareersDropdownOpen(false);
   }, [clearCareersDropdownCloseTimeout]);
+
+  const handleCareersDropdownBlur = useCallback(
+    (event: FocusEvent<HTMLDivElement>) => {
+      if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+        closeCareersDropdown();
+      }
+    },
+    [closeCareersDropdown],
+  );
+
+  const handleCareersDropdownKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLDivElement>) => {
+      if (event.key === "Escape") {
+        closeCareersDropdown();
+      }
+    },
+    [closeCareersDropdown],
+  );
 
   const scheduleCareersDropdownClose = useCallback(() => {
     clearCareersDropdownCloseTimeout();
@@ -277,6 +314,9 @@ export function SiteNavbar({
             className={`${styles.dropdown} ${styles.dropdownServices} ${isServicesDropdownOpen ? styles.dropdownOpen : ""}`}
             onMouseEnter={openServicesDropdown}
             onMouseLeave={scheduleServicesDropdownClose}
+            onFocus={openServicesDropdown}
+            onBlur={handleServicesDropdownBlur}
+            onKeyDown={handleServicesDropdownKeyDown}
           >
             <Link
               href="/services#services-overview"
@@ -318,6 +358,9 @@ export function SiteNavbar({
             className={`${styles.dropdown} ${styles.dropdownCareers} ${isCareersDropdownOpen ? styles.dropdownOpen : ""}`}
             onMouseEnter={openCareersDropdown}
             onMouseLeave={scheduleCareersDropdownClose}
+            onFocus={openCareersDropdown}
+            onBlur={handleCareersDropdownBlur}
+            onKeyDown={handleCareersDropdownKeyDown}
           >
             <Link
               href="/careers"

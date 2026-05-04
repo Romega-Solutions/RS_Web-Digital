@@ -28,7 +28,7 @@ export function ConsultationBanner() {
         </p>
 
         <AppButton 
-          href="#top" 
+          href="/contact" 
           variant="primary" 
           size="lg" 
           className={styles.button}

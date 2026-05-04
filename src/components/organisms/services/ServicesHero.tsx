@@ -29,7 +29,7 @@ export function ServicesHero() {
         </p>
 
         <AppButton 
-          href="#consultation" 
+          href="/contact" 
           variant="primary" 
           size="lg"
           className={styles.button}

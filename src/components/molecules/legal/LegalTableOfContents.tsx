@@ -9,18 +9,28 @@ interface ToCItem {
   text: string;
 }
 
+const LEGAL_CONTENT_ID = "legal-content";
+const LEGAL_TOC_ID = "legal-table-of-contents";
+
 export function LegalTableOfContents() {
   const [items, setItems] = useState<ToCItem[]>([]);
   const [activeId, setActiveId] = useState<string>("");
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const headers = Array.from(document.querySelectorAll("h2[id]"));
-    const tocItems = headers.map((h) => ({
-      id: h.id,
-      text: h.textContent || "",
+    const legalContent = document.getElementById(LEGAL_CONTENT_ID);
+    if (!legalContent) {
+      return;
+    }
+
+    const headers = Array.from(legalContent.querySelectorAll("h2[id]"));
+    const tocItems = headers.map((header) => ({
+      id: header.id,
+      text: header.textContent || "",
     }));
-    setItems(tocItems);
+    const frameId = window.requestAnimationFrame(() => {
+      setItems(tocItems);
+    });
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -34,7 +44,10 @@ export function LegalTableOfContents() {
     );
 
     headers.forEach((h) => observer.observe(h));
-    return () => observer.disconnect();
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      observer.disconnect();
+    };
   }, []);
 
   if (items.length === 0) return null;
@@ -42,10 +55,19 @@ export function LegalTableOfContents() {
   return (
     <>
       {isOpen && <div className={styles.backdrop} onClick={() => setIsOpen(false)} />}
-      <button className={styles.toggleBtn} onClick={() => setIsOpen(!isOpen)}>
+      <button
+        className={styles.toggleBtn}
+        onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
+        aria-controls={LEGAL_TOC_ID}
+      >
         {isOpen ? "Close" : "Sections"}
       </button>
-      <nav className={`${styles.root} ${isOpen ? styles.mobileOpen : ""}`} aria-label="Table of contents">
+      <nav
+        id={LEGAL_TOC_ID}
+        className={`${styles.root} ${isOpen ? styles.mobileOpen : ""}`}
+        aria-label="Table of contents"
+      >
         <h3 className={styles.title}>Table of Contents</h3>
         <ul className={styles.list}>
           {items.map((item) => (
@@ -53,11 +75,7 @@ export function LegalTableOfContents() {
               <a
                 href={`#${item.id}`}
                 className={`${styles.link} ${activeId === item.id ? styles.linkActive : ""}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth" });
-                  setIsOpen(false);
-                }}
+                onClick={() => setIsOpen(false)}
               >
                 <AnimatePresence mode="wait">
                   {activeId === item.id && (

@@ -61,16 +61,17 @@ function InstagramIcon() {
 
 export function SiteFooter() {
   return (
-    <footer className={styles.root}>
+    <footer id="site-footer" className={styles.root}>
       <div className={styles.inner}>
         <div className={styles.brand}>
           <div className={styles.logoWrap}>
             <Image
-              src="/RS_Logo-Blue.png"
+              src="/RS_HORIZONTAL_CROPPED.png"
               alt="Romega Solutions"
-              width={1601}
-              height={1600}
-              sizes="(max-width: 767px) 5rem, (max-width: 1023px) 5.5rem, 6rem"
+              width={3259}
+              height={1362}
+              sizes="(max-width: 767px) 12rem, (max-width: 1023px) 13rem, 13.5rem"
+              loading="eager"
               className={styles.logoImage}
             />
           </div>
@@ -124,30 +125,36 @@ export function SiteFooter() {
                 className={styles.socialLink}
                 data-tooltip="LinkedIn"
                 aria-label="Romega Solutions on LinkedIn"
+                title="LinkedIn"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <LinkedInIcon />
+                <span className={styles.socialLabel}>LinkedIn</span>
               </a>
               <a
                 href={siteConfig.facebook}
                 className={styles.socialLink}
                 data-tooltip="Facebook"
                 aria-label="Romega Solutions on Facebook"
+                title="Facebook"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <FacebookIcon />
+                <span className={styles.socialLabel}>Facebook</span>
               </a>
               <a
                 href={siteConfig.instagram}
                 className={styles.socialLink}
                 data-tooltip="Instagram"
                 aria-label="Romega Solutions on Instagram"
+                title="Instagram"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <InstagramIcon />
+                <span className={styles.socialLabel}>Instagram</span>
               </a>
             </div>
 

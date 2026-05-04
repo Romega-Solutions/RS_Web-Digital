@@ -4,6 +4,7 @@ import styles from "./ServiceCard.module.css";
 
 interface ServiceCardProps {
   title: string;
+  description?: string;
   imageSrc: string;
   imageAlt: string;
   href?: string;
@@ -13,6 +14,7 @@ interface ServiceCardProps {
 
 export function ServiceCard({
   title,
+  description,
   imageSrc,
   imageAlt,
   href,
@@ -30,6 +32,11 @@ export function ServiceCard({
         className={[styles.image, imageClassName].filter(Boolean).join(" ")}
       />
       <h3 className="sr-only">{title}</h3>
+      {description ? (
+        <div className={styles.overlay} aria-hidden="true">
+          <p>{description}</p>
+        </div>
+      ) : null}
     </>
   );
 

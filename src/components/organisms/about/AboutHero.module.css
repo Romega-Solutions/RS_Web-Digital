@@ -2,7 +2,7 @@
 
 .root {
   @apply relative overflow-hidden;
-  background: linear-gradient(180deg, #4b91e8 0%, #76acef 58%, #9dc4f3 100%);
+  background: linear-gradient(180deg, #0f3767 0%, #2f78cf 34%, #76acef 68%, #9dc4f3 100%);
   min-height: var(--page-hero-min-height);
 }
 

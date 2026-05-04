@@ -33,12 +33,14 @@
 
 .inner {
   @apply relative z-10 mx-auto grid w-full max-w-6xl items-center;
-  gap: clamp(3rem, 7vw, 6rem);
-  @apply lg:grid-cols-[minmax(0,0.88fr)_minmax(24rem,1.12fr)];
+  gap: clamp(2rem, 4vw, 3.5rem);
+  @apply md:grid-cols-[minmax(0,0.88fr)_minmax(20rem,1.12fr)];
+  @apply lg:grid-cols-[minmax(0,0.96fr)_minmax(22rem,1.04fr)];
 }
 
 .left {
   @apply relative flex flex-col items-center md:items-start;
+  max-width: 34rem;
 }
 
 .left::before {
@@ -55,10 +57,15 @@
 .title {
   @apply text-center font-normal text-white md:text-left;
   font-family: var(--font-growth-title);
-  font-size: clamp(3.05rem, 7.4vw, 6.35rem);
+  font-size: clamp(3.05rem, 6.2vw, 5.55rem);
   line-height: 0.91;
   letter-spacing: -0.025em;
   text-wrap: balance;
+}
+
+.titleLine {
+  display: inline-block;
+  white-space: nowrap;
 }
 
 .emphasis {
@@ -67,6 +74,7 @@
 
 .circled {
   @apply relative inline-block font-semibold text-white;
+  font-size: 1.08em;
 }
 
 .circled::after {
@@ -79,6 +87,9 @@
 
 .focusAreas {
   @apply mt-8 flex max-w-lg flex-wrap justify-center gap-3 md:justify-start;
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
 }
 
 .focusArea {
@@ -89,11 +100,14 @@
 
 .right {
   @apply w-full;
+  justify-self: end;
 }
 
 .panel {
   @apply relative overflow-hidden border border-white/18 bg-white/10 p-6 shadow-2xl backdrop-blur-md md:p-8 lg:p-10;
   border-radius: 1.25rem;
+  width: 100%;
+  max-width: 34rem;
   box-shadow:
     0 32px 80px rgb(8 31 68 / 0.26),
     inset 0 1px 0 rgb(255 255 255 / 0.2);
@@ -162,6 +176,62 @@
 .principleText {
   @apply mt-1 text-sm text-white/72 md:text-base;
   line-height: 1.55;
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .root {
+    padding-block: clamp(4rem, 7vw, 5.5rem);
+  }
+
+  .inner {
+    gap: clamp(2rem, 4vw, 3rem);
+  }
+
+  .left {
+    align-self: center;
+  }
+
+  .title {
+    font-size: clamp(3.15rem, 6.5vw, 4.35rem);
+    line-height: 0.94;
+    letter-spacing: -0.018em;
+  }
+
+  .focusAreas {
+    @apply mt-6 gap-2.5;
+  }
+
+  .focusArea {
+    @apply px-3 py-1.5 text-xs;
+  }
+
+  .panel {
+    @apply p-6;
+  }
+
+  .heading {
+    font-size: clamp(1.55rem, 3vw, 2.1rem);
+  }
+
+  .copy {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+}
+
+@media (min-width: 768px) {
+  .focusAreas {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(0.75rem);
+  }
+
+  .left:hover .focusAreas,
+  .left:focus-within .focusAreas {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 767px) {

@@ -19,11 +19,35 @@
 }
 
 .header {
-  @apply mb-12 px-4 text-center md:mb-14;
+  @apply mx-auto mb-14 px-4 text-center md:mb-16;
+  max-width: min(100%, 48rem);
+}
+
+.header::before {
+  content: "Our team";
+  @apply mb-4 block text-xs font-bold uppercase tracking-[0.24em] text-brand-primary;
+  font-family: var(--font-body);
+}
+
+.header :global(.title) {
+  @apply text-brand-secondary;
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 5.2vw, 4.65rem);
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+}
+
+.header :global(.body) {
+  @apply mx-auto mt-2 text-[1.05rem] text-slate-700 md:text-[1.18rem];
+  font-family: var(--font-body);
+  line-height: 1.55;
+  max-width: 38rem;
 }
 
 .headingTitle {
-  @apply block max-w-[18ch];
+  @apply block;
+  max-width: 13ch;
+  text-wrap: balance;
 }
 
 .title {
@@ -429,7 +453,16 @@
 }
 
 @media (max-width: 767px) {
+  .header {
+    @apply mb-10;
+  }
+
+  .header :global(.title) {
+    font-size: clamp(2.35rem, 11vw, 3.2rem);
+    line-height: 0.98;
+  }
+
   .header :global(.body) {
-    max-width: 19rem;
+    max-width: 20rem;
   }
 }

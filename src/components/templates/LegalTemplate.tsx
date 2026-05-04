@@ -5,6 +5,8 @@ import { LegalHero } from "@/components/molecules/legal/LegalHero";
 import { LegalTableOfContents } from "@/components/molecules/legal/LegalTableOfContents";
 import { ScrollProgress } from "@/components/atoms/feedback/ScrollProgress";
 
+const LEGAL_CONTENT_ID = "legal-content";
+
 interface LegalTemplateProps {
   jsonLd?: React.ReactNode;
   header: React.ReactNode;
@@ -41,7 +43,7 @@ export function LegalTemplate({
       <div className={styles.content}>
         <div className={styles.layoutInner}>
           <LegalTableOfContents />
-          <div className={styles.mainBody}>
+          <div id={LEGAL_CONTENT_ID} className={styles.mainBody}>
             {children}
           </div>
         </div>
