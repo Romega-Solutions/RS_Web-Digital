@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useId, useRef, useState } from "react";
+import { useCallback, useId, useRef, useState } from "react";
 import type { FocusEvent, MouseEvent, ReactNode } from "react";
 import styles from "./ServiceStrip.module.css";
 
@@ -172,11 +172,11 @@ export function ServiceStrip({ items = defaultItems }: ServiceStripProps) {
   } | null>(null);
   const tooltipId = useId();
 
-  const hideTooltip = () => {
+  const hideTooltip = useCallback(() => {
     setActiveTooltip(null);
-  };
+  }, []);
 
-  const showTooltip = (
+  const showTooltip = useCallback((
     event: MouseEvent<HTMLAnchorElement> | FocusEvent<HTMLAnchorElement>,
     item: ServiceItem,
   ) => {
@@ -214,7 +214,7 @@ export function ServiceStrip({ items = defaultItems }: ServiceStripProps) {
       left: Math.min(Math.max(centeredLeft, minLeft), maxLeft),
       bottom: rootRect.bottom - linkRect.top + 14,
     });
-  };
+  }, []);
 
   return (
     <section
