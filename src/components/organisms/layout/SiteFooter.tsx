@@ -5,11 +5,10 @@ import Link from "next/link";
 import { siteConfig } from "@/lib/seo";
 import styles from "./SiteFooter.module.css";
 
-const officeAddressQuery = "222 Pacific Coast Hwy #10 El Segundo CA 90245";
-const googleMapsEmbedKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_API_KEY;
-const googleMapsEmbedSrc = googleMapsEmbedKey
-  ? `https://www.google.com/maps/embed/v1/place?key=${googleMapsEmbedKey}&q=${encodeURIComponent(officeAddressQuery)}`
-  : `https://www.google.com/maps?q=${encodeURIComponent(officeAddressQuery)}&output=embed`;
+const osmEmbedSrc =
+  "https://www.openstreetmap.org/export/embed.html?bbox=-118.4229%2C33.9076%2C-118.4029%2C33.9276&layer=mapnik&marker=33.9176%2C-118.4129";
+const osmAddressHref =
+  "https://www.openstreetmap.org/?mlat=33.9176&mlon=-118.4129#map=17/33.9176/-118.4129";
 
 function LinkedInIcon() {
   return (
@@ -220,7 +219,7 @@ export function SiteFooter() {
               <div className={styles.contactCopy}>
                 <span className={styles.contactLabel}>Office</span>
                 <a
-                  href="https://www.google.com/maps/search/?api=1&query=222+Pacific+Coast+Hwy+%2310+El+Segundo+CA+90245"
+                  href={osmAddressHref}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -233,8 +232,8 @@ export function SiteFooter() {
 
           <div className={styles.mapCard}>
             <iframe
-              title="Romega Solutions office location in Google Maps"
-              src={googleMapsEmbedSrc}
+              title="Romega Solutions office location"
+              src={osmEmbedSrc}
               className={styles.mapFrame}
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"

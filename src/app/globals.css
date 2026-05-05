@@ -168,67 +168,6 @@ body {
 
 }
 
-@media (max-width: 767px) {
-  .site-shell--home .site-header__inner {
-    box-sizing: border-box;
-    max-width: 100%;
-    padding-inline: 0.75rem;
-    width: 100%;
-  }
-
-  .site-shell--home .site-header__main {
-    position: relative;
-    padding-right: 3.75rem;
-  }
-
-  .site-shell--home .site-header__brand {
-    max-width: calc(100% - 3.25rem);
-  }
-
-  .site-shell--home .site-nav {
-    position: absolute;
-    right: 0.5rem;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  .site-shell--home .site-nav__burger {
-    display: flex !important;
-    position: fixed;
-    right: 1.25rem;
-    top: 1.55rem;
-    z-index: 90;
-  }
-
-  .site-shell--home .site-header__brand-text {
-    font-size: clamp(0.95rem, 4.35vw, 1.06rem);
-  }
-
-  .site-shell--home .home-hero__headline,
-  .site-shell--home .home-hero__subtitle {
-    margin-inline: auto;
-    max-width: min(100%, 19.5rem);
-    width: min(19.5rem, calc(100vw - 3rem));
-    font-size: clamp(1.9rem, 8vw, 2.2rem);
-    line-height: 1.04;
-    overflow-wrap: break-word;
-    white-space: normal !important;
-  }
-
-  .site-shell--home .home-hero__line--first {
-    white-space: normal;
-  }
-
-  .site-shell--home .home-hero__copy {
-    margin-inline: auto;
-    max-width: min(100%, 17.5rem);
-    width: min(17.5rem, calc(100vw - 3.5rem));
-    font-size: 0.875rem;
-    line-height: 1.35;
-    overflow-wrap: break-word;
-    white-space: normal !important;
-  }
-}
 
 @keyframes service-marquee {
   0% {
@@ -252,34 +191,4 @@ body {
 
 .legal-page-card {
   @apply w-full max-w-4xl rounded-[28px] border border-brand-secondary/12 bg-white p-6 shadow-[0_26px_70px_rgb(17_24_39/0.12)] md:p-10 lg:p-12;
-}
-
-.prose {
-  @apply text-black/80;
-  line-height: 1.6;
-}
-
-.prose h4 {
-  @apply mb-4 mt-8 text-xl font-bold text-brand-secondary;
-  font-family: var(--font-heading);
-}
-
-.prose p {
-  @apply mb-4;
-}
-
-.prose ul {
-  @apply mb-6 list-disc space-y-2 pl-6;
-}
-
-.prose li {
-  @apply pl-1;
-}
-
-.prose strong {
-  @apply font-semibold text-black;
-}
-
-.prose .rounded-lg {
-  @apply my-6;
 }
