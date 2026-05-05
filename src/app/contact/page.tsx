@@ -21,6 +21,11 @@ export const metadata: Metadata = createMetadata({
 });
 
 export default function ContactPage() {
+  const contactFormAvailable =
+    Boolean(process.env.RESEND_API_KEY) ||
+    (process.env.EMAIL_CONTACT_FALLBACK_ENABLED?.toLowerCase() === "true" &&
+      process.env.NODE_ENV !== "production");
+
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -64,7 +69,7 @@ export default function ContactPage() {
       header={<SiteHeader />}
       footer={<SiteFooter />}
     >
-      <ContactPageClient />
+      <ContactPageClient contactFormAvailable={contactFormAvailable} />
     </MainTemplate>
   );
 }

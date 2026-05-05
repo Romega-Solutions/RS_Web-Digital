@@ -167,7 +167,11 @@
 }
 
 .searchWrap {
-  @apply relative flex flex-col gap-2;
+  @apply flex flex-col gap-2;
+}
+
+.searchInputWrap {
+  @apply relative;
 }
 
 .searchLabel {

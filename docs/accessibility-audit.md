@@ -2,7 +2,7 @@
 
 Audit basis: source review of the local Next.js 16 App Router project, local HTML fetches from the running dev app, `eslint` pass, and a failed production build caused by a non-a11y type issue in `src/app/layout.tsx`. No live NVDA/VoiceOver session or browser zoom lab was available, so reflow and AT findings are partly code-inferred.
 
-## 1) Executive Summary
+## 1) Executive Summaryf
 
 Accessibility score: `46/100`
 

@@ -10,7 +10,7 @@ export const siteConfig = {
     "Romega Solutions provides expert talent acquisition, brand growth support, and strategic operations consulting for businesses ready to scale with intention.",
   ogImage: "/opengraph-image",
   logo: "/RS_Logo-Blue.png",
-  favicon: "/favicon.ico",
+  favicon: "/favicon.png",
   email: "info@romega-solutions.com",
   phone: "+1 (310) 955-1444", // Example phone
   linkedIn: "https://www.linkedin.com/company/romega-solutions/posts/?feedView=all",

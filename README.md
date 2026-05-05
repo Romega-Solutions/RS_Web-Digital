@@ -35,6 +35,22 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
+## Vercel Environment Setup
+
+Set these variables in Vercel before deploying:
+
+- `RESEND_API_KEY`: required for the contact form in production
+- `ADMIN_EMAIL`: destination for contact form submissions
+- `NEXT_PUBLIC_SITE_URL`: canonical site URL used for metadata and structured data
+- `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_API_KEY`: optional, but recommended for the footer map
+
+Optional variables:
+
+- `RECAPTCHA_SECRET_KEY`: only set this after adding client-side reCAPTCHA token support
+- `RECAPTCHA_TIMEOUT_MS`
+- `JOBS_API_URL`
+- `EMAIL_CONTACT_FALLBACK_ENABLED`: local development only, ignored in production
+
 ## Run with Docker
 
 Build the image:
