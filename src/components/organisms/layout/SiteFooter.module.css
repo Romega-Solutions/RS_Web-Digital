@@ -147,12 +147,10 @@
 }
 
 .mapFrame {
-  @apply block w-full object-cover;
+  @apply block w-full;
   border: 0;
-  /* +22px hides the OSM attribution bar; mapCard clips it via overflow-hidden */
-  height: calc(100% + 22px);
-  min-height: calc(11rem + 22px);
-  margin-bottom: -22px;
+  height: 100%;
+  min-height: 11rem;
 }
 
 @media (min-width: 768px) {
@@ -171,7 +169,7 @@
   }
 
   .mapFrame {
-    min-height: calc(15rem + 22px);
+    min-height: 15rem;
   }
 }
 
@@ -189,7 +187,7 @@
 
 @media (min-width: 1280px) {
   .mapFrame {
-    min-height: calc(17rem + 22px);
+    min-height: 17rem;
   }
 }
 

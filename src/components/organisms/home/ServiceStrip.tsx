@@ -144,6 +144,44 @@ const defaultItems: ServiceItem[] = [
   },
 ];
 
+type MarqueeLinkProps = {
+  item: ServiceItem;
+  onShow: (event: MouseEvent<HTMLAnchorElement> | FocusEvent<HTMLAnchorElement>, item: ServiceItem) => void;
+  activeTooltipLabel: string | undefined;
+  tooltipId: string;
+  tabIndex?: number;
+  hidden?: boolean;
+};
+
+function MarqueeLink({ item, onShow, activeTooltipLabel, tooltipId, tabIndex, hidden }: MarqueeLinkProps) {
+  const handleMouseEnter = useCallback(
+    (event: MouseEvent<HTMLAnchorElement>) => onShow(event, item),
+    [item, onShow],
+  );
+  const handleFocus = useCallback(
+    (event: FocusEvent<HTMLAnchorElement>) => onShow(event, item),
+    [item, onShow],
+  );
+  return (
+    <Link
+      className={styles.link}
+      href={item.href ?? "/services"}
+      title={item.tooltip}
+      aria-describedby={
+        activeTooltipLabel === item.label && item.tooltip ? tooltipId : undefined
+      }
+      tabIndex={tabIndex}
+      aria-hidden={hidden}
+      aria-label={item.tooltip ? `${item.label}. ${item.tooltip}` : item.label}
+      onMouseEnter={handleMouseEnter}
+      onFocus={handleFocus}
+    >
+      {item.icon && <span className={styles.iconWrapper}>{item.icon}</span>}
+      {item.label}
+    </Link>
+  );
+}
+
 function normalizeItems(items: Array<string | ServiceItem>): ServiceItem[] {
   return items.map((item) => {
     if (typeof item === "string") {
@@ -260,37 +298,16 @@ export function ServiceStrip({ items = defaultItems }: ServiceStripProps) {
                   key={`${item.label}-${groupIndex}`}
                   className={styles.item}
                 >
-                  <Link
-                    className={styles.link}
-                    href={item.href ?? "/services"}
-                    title={item.tooltip}
-                    aria-describedby={
-                      activeTooltip?.label === item.label && item.tooltip
-                        ? tooltipId
-                        : undefined
-                    }
+                  <MarqueeLink
+                    item={item}
+                    onShow={showTooltip}
+                    activeTooltipLabel={activeTooltip?.label}
+                    tooltipId={tooltipId}
                     tabIndex={groupIndex > 0 ? -1 : undefined}
-                    aria-hidden={groupIndex > 0}
-                    aria-label={
-                      item.tooltip
-                        ? `${item.label}. ${item.tooltip}`
-                        : item.label
-                    }
-                    onMouseEnter={(event) => showTooltip(event, item)}
-                    onFocus={(event) => showTooltip(event, item)}
-                  >
-                    {item.icon && (
-                      <span className={styles.iconWrapper}>
-                        {item.icon}
-                      </span>
-                    )}
-                    {item.label}
-                  </Link>
+                    hidden={groupIndex > 0}
+                  />
                   {index < marqueeItems.length - 1 ? (
-                    <span
-                      className={styles.separator}
-                      aria-hidden="true"
-                    >
+                    <span className={styles.separator} aria-hidden="true">
                       *
                     </span>
                   ) : null}

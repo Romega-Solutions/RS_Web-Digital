@@ -1,12 +1,16 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { siteConfig } from "@/lib/seo";
 import styles from "./SiteFooter.module.css";
 
-const osmEmbedSrc =
-  "https://www.openstreetmap.org/export/embed.html?bbox=-118.4229%2C33.9076%2C-118.4029%2C33.9276&layer=mapnik&marker=33.9176%2C-118.4129";
+const FooterMap = dynamic(
+  () => import("./FooterMap").then((m) => m.FooterMap),
+  { ssr: false },
+);
+
 const osmAddressHref =
   "https://www.openstreetmap.org/?mlat=33.9176&mlon=-118.4129#map=17/33.9176/-118.4129";
 
@@ -231,13 +235,7 @@ export function SiteFooter() {
           </div>
 
           <div className={styles.mapCard}>
-            <iframe
-              title="Romega Solutions office location"
-              src={osmEmbedSrc}
-              className={styles.mapFrame}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
+            <FooterMap className={styles.mapFrame} />
           </div>
         </div>
 
