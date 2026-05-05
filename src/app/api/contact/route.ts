@@ -302,7 +302,7 @@ async function sendEmail(body: ContactEmailPayload): Promise<ContactEmailResult>
     });
 
     const result = await resend.emails.send({
-      from: "Romega Contact Form <onboarding@resend.dev>",
+      from: "Romega Contact Form <noreply@romega-solutions.com>",
       to: adminEmail,
       replyTo: body.email,
       subject: `New Contact: ${body.subject}`,
