@@ -303,7 +303,7 @@ export default function CareersPageClient() {
             <div className="careers-sidebar-header">
               <div>
                 <h2 id="careers-jobs-title">Current Roles Open</h2>
-                <p id="careers-jobs-description">Mock data for now. Review time is typically one week.</p>
+                <p id="careers-jobs-description">Review time is typically one week.</p>
               </div>
               <AppButton
                 ref={closeButtonRef}
