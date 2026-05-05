@@ -49,9 +49,8 @@ export function TalentHero({ totalTalents, totalCategories, totalLocations }: Ta
             </h1>
 
             <p className={styles.description}>
-              Browse a curated pool of professionals across operations, brand, sales,    
-              product, and technical delivery. The structure mirrors the Romega talent   
-              experience, adapted here for the digital site with local mock profiles.    
+              Browse a curated pool of professionals across operations, brand, sales,
+              product, and technical delivery — matched to the needs of growing businesses.
             </p>
           </ScrollReveal>
 
