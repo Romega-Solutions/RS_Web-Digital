@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { RouteAnnouncer } from "@/components/accessibility/RouteAnnouncer";
 import localFont from "next/font/local";
 import { Poppins } from "next/font/google";
@@ -25,11 +25,21 @@ const seasonsStyle = localFont({
   adjustFontFallback: false,
 });
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#1c5fa5" },
+    { media: "(prefers-color-scheme: dark)", color: "#1c5fa5" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export const metadata: Metadata = {
   metadataBase: siteConfig.url,
   title: {
-    default: "Romega Solutions | Talent, Brand, and Operations Support",
-    template: "%s | Romega Solutions",
+    default: `${siteConfig.name} | Talent, Brand, and Operations Support`,
+    template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
   applicationName: siteConfig.name,
@@ -40,33 +50,29 @@ export const metadata: Metadata = {
   icons: {
     icon: siteConfig.favicon,
     shortcut: siteConfig.favicon,
-    apple: siteConfig.favicon,
+    apple: "/apple-touch-icon.png", // Standard naming
   },
   formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
+    email: true,
+    address: true,
+    telephone: true,
   },
   openGraph: {
     type: "website",
     locale: "en_US",
     url: absoluteUrl("/"),
     siteName: siteConfig.name,
-    title: "Romega Solutions | Talent, Brand, and Operations Support",
-    description: siteConfig.description,
     images: [
       {
         url: absoluteUrl(siteConfig.ogImage),
         width: 1200,
         height: 630,
-        alt: "Romega Solutions",
+        alt: siteConfig.name,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Romega Solutions | Talent, Brand, and Operations Support",
-    description: siteConfig.description,
     images: [absoluteUrl(siteConfig.ogImage)],
   },
   robots: {
@@ -81,7 +87,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "/",
+    canonical: "./",
   },
   category: "business",
 };
@@ -92,9 +98,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased">
+    <html lang="en" className="h-full antialiased scroll-smooth">
       <body
-        className={`${poppins.variable} ${seasonsStyle.variable} min-h-full flex flex-col`}
+        suppressHydrationWarning
+        className={`${poppins.variable} ${seasonsStyle.variable} min-h-full flex flex-col font-sans`}
       >
         <a href="#main-content" className="skip-link">
           Skip to main content

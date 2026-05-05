@@ -1,6 +1,6 @@
-import Image from "next/image";
 import type { Metadata } from "next";
-import { AppButton } from "@/components/atoms/Button";
+import { MainTemplate } from "@/components/templates/MainTemplate";
+import { AboutHero } from "@/components/organisms/about/AboutHero";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { AboutExpertsSection } from "@/components/organisms/about/AboutExpertsSection";
 import { AboutGrowthSection } from "@/components/organisms/about/AboutGrowthSection";
@@ -11,10 +11,10 @@ import { AboutVisionSection } from "@/components/organisms/about/AboutVisionSect
 import { ConsultationBanner } from "@/components/organisms/shared/ConsultationBanner";
 import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
 import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
-import { absoluteUrl, createMetadata } from "@/lib/seo";
+import { absoluteUrl, createMetadata, createBreadcrumbSchema } from "@/lib/seo";
 
 export const metadata: Metadata = createMetadata({
-  title: "About Romega Solutions",
+  title: "About Us",
   description:
     "Learn how Romega Solutions helps businesses grow through people-first strategy, global talent experience, and practical operational support.",
   path: "/about",
@@ -28,9 +28,15 @@ export const metadata: Metadata = createMetadata({
 });
 
 export default function AboutPage() {
+  const breadcrumbData = createBreadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "About", path: "/about" },
+  ]);
+
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
+      breadcrumbData,
       {
         "@type": "AboutPage",
         "@id": absoluteUrl("/about#webpage"),
@@ -45,94 +51,24 @@ export default function AboutPage() {
           "@id": absoluteUrl("/#organization"),
         },
       },
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          {
-            "@type": "ListItem",
-            position: 1,
-            name: "Home",
-            item: absoluteUrl("/"),
-          },
-          {
-            "@type": "ListItem",
-            position: 2,
-            name: "About",
-            item: absoluteUrl("/about"),
-          },
-        ],
-      },
     ],
   };
 
   return (
-    <div className="site-shell" id="top">
-      <JsonLd id="about-structured-data" data={structuredData} />
-      <SiteHeader activeItem="About" />
-
-      <main id="main-content" tabIndex={-1}>
-        <section className="about-hero">
-          <div className="about-hero-inner">
-            <div className="about-hero-photo-frame">
-              <Image
-                src="/prompt-images/about/1_hero.png"
-                alt="Romega team collaborating around a table"
-                fill
-                preload
-                sizes="(max-width: 767px) 100vw, 36vw"
-                className="about-hero-photo"
-              />
-            </div>
-
-            <div className="about-hero-copy">
-              <h1 className="about-hero-title">
-                Built on <span className="about-hero-highlight">Purpose,</span>
-                <br />
-                Driven by <span className="about-hero-highlight">People</span>
-              </h1>
-
-              <div className="about-hero-text">
-                <p>
-                  Romega Solutions was founded on a simple insight{" "}
-                  <strong>Growth shouldn&apos;t feel overwhelming or disconnected.</strong>{" "}
-                  Too often, businesses struggle with hiring the right people,
-                  clarifying their brand message, and aligning operations, all at
-                  the same time. We saw an opportunity to bring those elements
-                  together, not separately, but as an integrated approach to
-                  intentional growth.
-                </p>
-
-                <p>
-                  We started by helping Philippine-based talent connect with
-                  global opportunity. Today, we&apos;ve grown into a trusted
-                  partner for businesses worldwide, supporting teams, refining
-                  brand presence, and powering sustainable growth.
-                </p>
-              </div>
-
-              <AppButton href="/services" variant="primary" size="lg">
-                Connect with Us today!
-              </AppButton>
-            </div>
-          </div>
-        </section>
-
-        <AboutMissionSection />
-
-        <AboutVisionSection />
-
-        <AboutValuesSection />
-
-        <AboutPartnersSection />
-
-        <AboutExpertsSection />
-
-        <AboutGrowthSection />
-
-        <ConsultationBanner />
-      </main>
-
-      <SiteFooter />
-    </div>
+    <MainTemplate
+      jsonLd={<JsonLd id="about-structured-data" data={structuredData} />}
+      header={<SiteHeader activeItem="About" />}
+      footer={<SiteFooter />}
+      shellVariant="hero"
+    >
+      <AboutHero />
+      <AboutMissionSection />
+      <AboutVisionSection />
+      <AboutValuesSection />
+      <AboutPartnersSection />
+      <AboutExpertsSection />
+      <AboutGrowthSection />
+      <ConsultationBanner />
+    </MainTemplate>
   );
 }

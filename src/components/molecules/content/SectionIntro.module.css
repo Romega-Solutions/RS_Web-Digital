@@ -1,0 +1,29 @@
+@reference "../../../app/globals.css";
+
+.root {
+  @apply flex flex-col;
+  gap: var(--space-4);
+}
+
+.alignCenter {
+  @apply items-center text-center;
+}
+
+.eyebrow {
+  @apply text-sm font-semibold uppercase tracking-[0.24em] text-brand-secondary/75;
+}
+
+.title {
+  @apply text-brand-secondary;
+  font-family: var(--font-heading);
+  font-size: var(--type-heading-lg);
+  line-height: var(--leading-heading);
+}
+
+.body {
+  @apply text-black/78;
+  font-family: var(--font-body);
+  font-size: var(--type-body-md);
+  line-height: 1.55;
+  max-width: min(100%, var(--measure-readable));
+}

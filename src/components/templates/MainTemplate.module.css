@@ -1,0 +1,75 @@
+@reference "../../app/globals.css";
+
+.root {
+  @apply relative min-h-screen bg-background;
+  overflow-x: clip;
+  padding-top: var(--site-header-height, clamp(4.25rem, 3.95rem + 1vw, 5rem));
+}
+
+.rootHome {
+  @apply pt-0;
+}
+
+.main {
+  @apply block;
+}
+
+.pageHero {
+  min-height: var(--page-hero-min-height);
+}
+
+.pageHeroContent {
+  min-height: var(--page-hero-content-min-height);
+}
+
+.pageBand {
+  padding-block: var(--section-space-lg);
+}
+
+.pageBandCompact {
+  padding-block: var(--section-space-md);
+}
+
+.pageBandFeatured {
+  padding-block: var(--section-space-xl);
+}
+
+.pageBandDark {
+  background: var(--page-band-dark);
+  color: var(--color-text);
+}
+
+.pageBandSoft {
+  background: var(--page-band-soft);
+  color: var(--color-text-main);
+}
+
+.pageContent {
+  width: min(100%, var(--layout-content));
+  margin-inline: auto;
+  padding-inline: var(--layout-gutter);
+}
+
+.pageContentWide {
+  width: min(100%, var(--layout-content-wide));
+  margin-inline: auto;
+  padding-inline: var(--layout-gutter-wide);
+}
+
+.pageContentReadable {
+  width: min(100%, var(--page-readable-max-width));
+  margin-inline: auto;
+  padding-inline: var(--layout-gutter);
+}
+
+.featuredSurface {
+  background: var(--color-surface);
+  color: var(--color-text-main);
+  box-shadow: var(--surface-featured-shadow);
+  border-radius: clamp(1.25rem, 2vw, 2rem);
+  border: 1px solid rgba(15, 34, 56, 0.08);
+}
+
+.featuredSurfaceSoft {
+  box-shadow: var(--surface-soft-shadow);
+}

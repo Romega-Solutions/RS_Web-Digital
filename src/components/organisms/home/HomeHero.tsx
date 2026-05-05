@@ -1,44 +1,59 @@
 import Image from "next/image";
-import { ExploreServicesButton } from "@/components/atoms/Button";
+import { AppButton } from "@/components/atoms/Button";
+import { ScrollReveal } from "@/components/atoms/Motion";
+import styles from "./HomeHero.module.css";
 
 type HomeHeroProps = {
   buttonHref?: string;
 };
 
-export function HomeHero({ buttonHref = "/services" }: HomeHeroProps) {
+export function HomeHero({
+  buttonHref = "https://calendly.com/romega-solutions/discoverycall?back=1",
+}: HomeHeroProps) {
   return (
-    <section className="home-hero">
+    <section className={styles.root}>
       <Image
         src="/2.0%20Website%20Assets/Hero%20Background.webp"
         alt=""
         fill
         priority
-        className="object-cover"
+        className={styles.image}
         sizes="100vw"
         quality={85}
       />
-      <div className="home-hero__overlay" aria-hidden="true" />
+      <div className={styles.overlay} aria-hidden="true" />
 
-      <div className="home-hero__content">
-        <h1 className="home-hero__headline">
-          <span className="home-hero__line home-hero__line--first">
-            Built for <span className="growing-word">growing</span> businesses.
-          </span>
-        </h1>
-        <p className="home-hero__line home-hero__subtitle">
-          Designed for <span className="home-hero__accent">what&apos;s next.</span>
-        </p>
+      <div className={styles.content}>
+        <ScrollReveal variant="slideUp" distance={40} duration={0.8}>
+          <h1 className={styles.headline}>
+            <span className={`${styles.line} ${styles.lineFirst}`}>
+              Built for <span className={styles.growingWord}>growing</span> businesses.
+            </span>
+          </h1>
+        </ScrollReveal>
 
-        <p className="home-hero__copy">
-          <span className="home-hero__copy-line">
-            Partnering with businesses to grow teams,
-          </span>
-          <span className="home-hero__copy-line">
-            strengthen brands, and scale with confidence.
-          </span>
-        </p>
+        <ScrollReveal variant="slideUp" distance={20} delay={0.2} duration={0.8}>
+          <p className={`${styles.line} ${styles.subtitle}`}>
+            Designed for <span className={styles.accent}>what&apos;s next.</span>
+          </p>
+        </ScrollReveal>
 
-        <ExploreServicesButton variant="primary" size="lg" href={buttonHref} />
+        <ScrollReveal variant="fade" delay={0.4} duration={1}>
+          <p className={styles.copy}>
+            <span className={styles.copyLine}>
+              Partnering with businesses to grow teams,
+            </span>
+            <span className={styles.copyLine}>
+              strengthen brands, and scale with confidence.
+            </span>
+          </p>
+        </ScrollReveal>
+
+        <ScrollReveal variant="slideUp" distance={10} delay={0.6} duration={0.8}>
+          <AppButton href={buttonHref} variant="primary" size="lg" className={styles.action}>
+            Book your Call today!
+          </AppButton>
+        </ScrollReveal>
       </div>
     </section>
   );

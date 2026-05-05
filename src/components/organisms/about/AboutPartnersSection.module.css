@@ -1,0 +1,62 @@
+.root {
+  @apply relative text-white;
+  background:
+    linear-gradient(to right, rgb(255 255 255 / 0.14) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.14) 1px, transparent 1px),
+    linear-gradient(180deg, #94c6f3 0%, #75b4ee 100%);
+  background-size: 92px 92px, 92px 92px, auto;
+  padding-block: var(--section-space);
+  padding-inline: var(--layout-gutter);
+}
+
+.inner {
+  @apply relative mx-auto flex w-full max-w-6xl flex-col items-center text-center;
+}
+
+.title {
+  @apply text-[2.35rem] leading-none font-medium md:text-[3.5rem];
+  font-family: var(--font-display);
+}
+
+.copy {
+  @apply mt-5 space-y-4 text-base text-white md:text-[1.05rem];
+  font-family: var(--font-body);
+  line-height: 1.55;
+  max-width: min(100%, var(--measure-readable));
+}
+
+.copy strong {
+  @apply font-black text-white;
+}
+
+.map {
+  @apply relative mt-8 w-full max-w-6xl overflow-hidden md:mt-12;
+  aspect-ratio: 1920 / 1080;
+}
+
+.world {
+  @apply object-contain;
+}
+
+@media (max-width: 767px) {
+  .root {
+    padding-block: var(--section-space-compact);
+  }
+
+  .title {
+    @apply text-[2.15rem];
+    line-height: 1;
+  }
+
+  .copy {
+    @apply mt-4 text-[0.98rem];
+    line-height: 1.5;
+    max-width: min(100%, var(--measure-readable-mobile));
+  }
+
+  .map {
+    @apply mt-6;
+    aspect-ratio: 4 / 3;
+  }
+}
+@reference "../../../app/globals.css";

@@ -1,10 +1,10 @@
 import Link from "next/link";
 import {
   PRIVACY_CONTACT_EMAIL,
-  PRIVACY_POLICY_LAST_UPDATED,
   PRIVACY_POLICY_VERSION,
   PRIVACY_REQUEST_SLA_BUSINESS_DAYS,
 } from "@/lib/legal/privacy-policy";
+import { LegalRichText } from "@/components/molecules/legal/LegalRichText";
 
 interface PrivacyPolicyContentProps {
   showCanonicalLink?: boolean;
@@ -14,46 +14,34 @@ export function PrivacyPolicyContent({
   showCanonicalLink = false,
 }: PrivacyPolicyContentProps) {
   return (
-    <div className="prose prose-sm max-w-none">
-      <p className="text-lg text-gray-800 font-medium mb-6">
+    <LegalRichText>
+      <p className="text-xl font-medium text-(--color-text-main)">
         This Privacy and Consent Policy explains how Romega Solutions collects,
         processes, stores, retains, and shares personal information from website
         visitors, applicants, and professional contacts.
       </p>
 
-      <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 mb-6 text-sm text-blue-900">
-        <p className="m-0">
-          <strong>Policy Version:</strong> {PRIVACY_POLICY_VERSION}
-        </p>
-        <p className="m-0">
-          <strong>Last Updated:</strong> {PRIVACY_POLICY_LAST_UPDATED}
-        </p>
-      </div>
-
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
-        A. Collection of Personal Information
-      </h4>
-      <p className="text-gray-700 mb-3">
+      <h2 id="section-a">A. Collection of Personal Information</h2>
+      <p className="text-(--color-text-main)">
         We collect personal and professional information voluntarily provided by
         visitors and applicants through website forms, recruitment workflows, and
         related communication channels.
       </p>
-      <ul className="list-disc pl-6 text-gray-700 mb-6">
-        <li>Full name and contact details (email, phone number)</li>
-        <li>Company name and professional background</li>
-        <li>Resume or CV and work history (for applicants)</li>
-        <li>Portfolio links, project samples, and certifications</li>
-        <li>Inquiry details and message content</li>
+      <ul>
+        <li className="text-(--color-text-main)">Full name and contact details (email, phone number)</li>
+        <li className="text-(--color-text-main)">Company name and professional background</li>
+        <li className="text-(--color-text-main)">Resume or CV and work history (for applicants)</li>
+        <li className="text-(--color-text-main)">Portfolio links, project samples, and certifications</li>
+        <li className="text-(--color-text-main)">Inquiry details and message content</li>
       </ul>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
-        B. Purpose of Processing
-      </h4>
-      <p className="text-gray-700 mb-3">
+
+      <h2 id="section-b">B. Purpose of Processing</h2>
+      <p>
         We process information only for legitimate business and professional
         purposes.
       </p>
-      <ul className="list-disc pl-6 text-gray-700 mb-6">
+      <ul>
         <li>Responding to inquiries and providing requested information</li>
         <li>Recruitment and qualification assessment</li>
         <li>Communication about applications and opportunities</li>
@@ -64,14 +52,12 @@ export function PrivacyPolicyContent({
         </li>
       </ul>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
-        C. Cookies and Tracking
-      </h4>
-      <p className="text-gray-700 mb-3">
+      <h2 id="section-c">C. Cookies and Tracking</h2>
+      <p>
         Our website uses minimal cookies to ensure technical functionality and
         improve user experience.
       </p>
-      <ul className="list-disc pl-6 text-gray-700 mb-6">
+      <ul>
         <li>
           <strong>Essential Cookies:</strong> Required for basic website
           functionality and security.
@@ -86,32 +72,28 @@ export function PrivacyPolicyContent({
           visitors.
         </li>
       </ul>
-      <p className="text-gray-700 mb-6">
+      <p>
         You can manage or disable cookies through your browser settings, though
         some features of the site may not function correctly as a result.
       </p>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
-        D. Retention of Data
-      </h4>
-      <p className="text-gray-700 mb-3">
+      <h2 id="section-d">D. Retention of Data</h2>
+      <p>
         We retain data only for a reasonable period necessary for the purposes
         outlined above, or as required by legal and operational obligations.
       </p>
-      <ul className="list-disc pl-6 text-gray-700 mb-6">
+      <ul>
         <li>Inquiry data is retained to facilitate ongoing communication</li>
         <li>Applicant data supports future role matching and continuity</li>
         <li>Data is reviewed and minimized periodically</li>
       </ul>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
-        E. Sharing and Disclosure of Information
-      </h4>
-      <p className="text-gray-700 mb-3">
+      <h2 id="section-e">E. Sharing and Disclosure of Information</h2>
+      <p>
         We disclose only what is necessary and relevant for service delivery and
         evaluation.
       </p>
-      <ul className="list-disc pl-6 text-gray-700 mb-6">
+      <ul>
         <li>Authorized internal personnel involved in operations and recruitment</li>
         <li>
           Service providers who assist in our business operations (subject to
@@ -120,14 +102,12 @@ export function PrivacyPolicyContent({
         <li>Lawful disclosures required by legal or regulatory obligations</li>
       </ul>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
-        F. Data Subject Rights
-      </h4>
-      <p className="text-gray-700 mb-3">
+      <h2 id="section-f">F. Data Subject Rights</h2>
+      <p>
         In line with GDPR and other applicable data privacy regulations, you may
         request to:
       </p>
-      <ul className="list-disc pl-6 text-gray-700 mb-6">
+      <ul>
         <li>Be informed about data processing activities</li>
         <li>Access your personal information</li>
         <li>Correct inaccurate or incomplete records</li>
@@ -136,42 +116,40 @@ export function PrivacyPolicyContent({
         <li>Object to processing or request data portability</li>
       </ul>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
-        G. Voluntary Consent and Transparency
-      </h4>
-      <p className="text-gray-700 mb-3">
+      <h2 id="section-g">G. Voluntary Consent and Transparency</h2>
+      <p>
         Consent must be informed, specific, and voluntary. By using our contact
         forms or submitting applications, you acknowledge and agree to the terms
         outlined in this policy.
       </p>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
-        Public Data Minimization Standards
-      </h4>
-      <ul className="list-disc pl-6 text-gray-700 mb-6">
+      <h2 id="section-minimization">Public Data Minimization Standards</h2>
+      <ul>
         <li>Allowed public fields focus on professional qualifications only</li>
         <li>Direct personal contact details are excluded from public pages</li>
         <li>Sensitive identifiers and protected attributes are never published</li>
       </ul>
 
-      <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">
-        Contact and Requests
-      </h4>
-      <p className="text-gray-700 mb-2">
+      <h2 id="section-contact">Contact and Requests</h2>
+      <p>
         For access, correction, withdrawal, deletion, and takedown requests,
         contact:
       </p>
-      <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-6">
-        <p className="text-gray-700 mb-2">Email: {PRIVACY_CONTACT_EMAIL}</p>
-        <p className="text-gray-700 mb-2">Website: www.romega-solutions.com</p>
-        <p className="text-gray-700 mb-0">
+      <div className="my-8 rounded-2xl bg-page p-8 border border-gray-100 shadow-inner">
+        <p className="mb-2 font-bold text-brand-secondary">Romega Solutions Privacy Office</p>
+        <p className="mb-2">Email: {PRIVACY_CONTACT_EMAIL}</p>
+        <p className="mb-2">Website: www.romega-solutions.com</p>
+        <p className="mb-0">
           Address: 222 Pacific Coast Hwy, #10, El Segundo, CA 90245
         </p>
       </div>
 
-      <p className="text-gray-700 mb-0">
+      <p className="text-sm italic text-gray-500">
         Target internal response timeline for privacy and takedown requests:
         within {PRIVACY_REQUEST_SLA_BUSINESS_DAYS} business days.
+      </p>
+      <p className="text-xs text-gray-400 mt-4">
+        Policy Version: {PRIVACY_POLICY_VERSION}
       </p>
 
       {showCanonicalLink && (
@@ -181,6 +159,6 @@ export function PrivacyPolicyContent({
           </Link>
         </div>
       )}
-    </div>
+    </LegalRichText>
   );
 }

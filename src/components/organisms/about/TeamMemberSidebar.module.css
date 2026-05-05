@@ -1,0 +1,188 @@
+@reference "../../../app/globals.css";
+
+.sidebar {
+  @apply fixed inset-0 z-60 hidden;
+}
+
+.sidebar--open {
+  @apply block;
+}
+
+.sidebar__overlay {
+  @apply fixed inset-0 z-60 bg-black/50;
+}
+
+.sidebar__panel {
+  @apply fixed inset-y-0 right-0 z-70 h-full w-full translate-x-full overflow-x-hidden overflow-y-auto transition-transform duration-300 ease-in-out;
+  background: linear-gradient(to right, #d4e9f7, #e8f4f9);
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar__panel--open {
+  @apply translate-x-0;
+}
+
+.sidebar__close {
+  @apply absolute right-4 top-4 z-20 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-none bg-white text-[1.35rem] leading-none text-[#333333] transition-colors duration-200;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-family: var(--font-body);
+}
+
+.sidebar__close:hover {
+  @apply bg-gray-200;
+}
+
+.sidebar__content {
+  @apply flex flex-col gap-5;
+}
+
+.sidebar__header {
+  @apply flex items-center gap-4 px-6 py-6 pb-4;
+  background: linear-gradient(to right, #d4e9f7, #e8f4f9);
+}
+
+.sidebar__image-container {
+  @apply h-30 w-30 shrink-0 overflow-hidden rounded-[126px] border-b-[1.5px] border-l border-r border-[#0076e5];
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.sidebar__image {
+  @apply h-full w-full object-cover;
+}
+
+.sidebar__details {
+  @apply flex flex-1 flex-col gap-1;
+}
+
+.sidebar__last-name {
+  @apply mb-1 text-[30px] font-normal leading-[1.2] tracking-[1.5px] text-[#2a6dca];
+  font-family: var(--font-heading);
+}
+
+.sidebar__name {
+  @apply mb-1 text-[22px] font-normal leading-[1.2] tracking-[1.1px] text-[#2a6dca];
+  font-family: var(--font-heading);
+}
+
+.sidebar__role {
+  @apply m-0 text-[20px] font-medium leading-[1.1] uppercase text-brand-primary;
+  font-family: var(--font-body);
+}
+
+.sidebar__main {
+  @apply flex flex-col gap-5 overflow-x-hidden px-6 pb-6;
+}
+
+.sidebar__section {
+  @apply flex flex-col items-start gap-4 self-stretch rounded-lg border-b-[0.5px] border-[#2a6dca] bg-[#e8f1ff] p-4 pl-4 pb-5;
+}
+
+.sidebar__section:first-child {
+  @apply border-b-0 border-l-4 border-brand-secondary;
+  background: linear-gradient(135deg, #edf4ff 0%, #f8fbff 100%);
+}
+
+.sidebar__section--explore {
+  @apply overflow-x-hidden pb-4;
+}
+
+.sidebar__section-title {
+  @apply mt-4 font-normal text-[#285db2];
+  font-family: var(--font-heading);
+  font-size: 20px;
+}
+
+.sidebar__bio {
+  @apply m-0 pr-4 font-medium leading-tight text-[#69728a];
+  font-family: var(--font-body);
+  font-size: 16px;
+}
+
+.sidebar__bio-text {
+  @apply m-0;
+}
+
+.sidebar__bio-list {
+  @apply m-0 flex list-none flex-col gap-2 p-0;
+}
+
+.sidebar__bio-item {
+  @apply relative pl-6 text-[0.9375rem] leading-relaxed;
+}
+
+.sidebar__bio-item::before {
+  @apply absolute left-2 font-bold text-[#0076e5];
+  content: "-";
+}
+
+.sidebar__list {
+  @apply m-0 mr-4 flex w-full list-none flex-col gap-3 p-0;
+}
+
+.sidebar__list-item {
+  @apply flex items-start gap-3 text-[0.9375rem] leading-normal text-[#1e3a5f];
+}
+
+.sidebar__bullet {
+  @apply flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sky-100 text-[0.875rem] font-bold text-sky-600;
+}
+
+.sidebar__contact-buttons {
+  @apply flex w-full gap-3 pb-2 pr-4;
+}
+
+.sidebar__linkedin-button {
+  @apply flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#0066cc] px-4 py-3 text-[14px] font-semibold text-white no-underline transition-colors duration-200;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar__linkedin-button:hover {
+  @apply bg-[#0052a3];
+}
+
+.sidebar__icon-button {
+  @apply flex w-auto min-w-12 items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-lg border-none bg-blue-200 p-3 text-[#0066cc] no-underline transition-all duration-300;
+  transition-timing-function: ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar__icon-button:hover {
+  @apply flex-1 bg-blue-300 px-4;
+}
+
+.sidebar__button-label {
+  @apply max-w-0 overflow-hidden text-[13px] font-medium text-[#0066cc] opacity-0 transition-all duration-300;
+  transition-timing-function: ease;
+}
+
+.sidebar__icon-button:hover .sidebar__button-label {
+  @apply max-w-50 opacity-100;
+}
+
+.sidebar__carousel {
+  @apply mt-4 mr-4 flex max-w-[calc(100%-16px)] gap-3 overflow-x-auto overflow-y-hidden pb-2 scroll-smooth;
+}
+
+.sidebar__carousel-item {
+  @apply flex shrink-0 flex-col items-center gap-2 p-2;
+}
+
+.sidebar__carousel-image-wrapper {
+  @apply h-20 w-20 overflow-hidden rounded-full border-[3px] border-white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar__carousel-image {
+  @apply h-full w-full object-cover;
+}
+
+.sidebar__carousel-name {
+  @apply m-0 text-center text-[0.75rem] font-medium text-[#17466d];
+  font-family: var(--font-body);
+}
+
+@media (min-width: 640px) {
+  .sidebar__panel {
+    @apply w-95;
+  }
+}

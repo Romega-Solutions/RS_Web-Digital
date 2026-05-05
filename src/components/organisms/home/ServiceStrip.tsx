@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import type { FocusEvent, MouseEvent, ReactNode } from "react";
+import styles from "./ServiceStrip.module.css";
 
 type ServiceItem = {
   label: string;
@@ -17,7 +18,7 @@ type ServiceStripProps = {
 
 const TalentIcon = () => (
   <svg
-    className="service-strip__icon"
+    className={styles.icon}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -32,7 +33,7 @@ const TalentIcon = () => (
 
 const MarketingIcon = () => (
   <svg
-    className="service-strip__icon"
+    className={styles.icon}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -45,7 +46,7 @@ const MarketingIcon = () => (
 
 const WebIcon = () => (
   <svg
-    className="service-strip__icon"
+    className={styles.icon}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -65,24 +66,81 @@ const defaultItems: ServiceItem[] = [
       "Explore our full range of services designed to accelerate your growth",
   },
   {
-    label: "Talent Acquisition",
+    label: "Talent Solutions",
     href: "/services#talent-solutions",
     icon: <TalentIcon />,
     tooltip:
-      "Building expert teams across engineering, product, sales, and operations",
+      "Identify, attract, and retain talent aligned with your goals and culture",
   },
   {
-    label: "Digital Marketing",
+    label: "Executive Search",
+    href: "/services#talent-solutions",
+    icon: <TalentIcon />,
+    tooltip:
+      "Leadership search support for roles that shape long-term business direction",
+  },
+  {
+    label: "Global Talent Sourcing",
+    href: "/services#talent-solutions",
+    icon: <TalentIcon />,
+    tooltip:
+      "Remote and global sourcing support for teams ready to scale beyond one market",
+  },
+  {
+    label: "Workforce Planning",
+    href: "/services#talent-solutions",
+    icon: <TalentIcon />,
+    tooltip:
+      "Team structuring guidance that connects hiring needs with growth plans",
+  },
+  {
+    label: "Brand & Growth Support",
     href: "/services#brand-growth-support",
     icon: <MarketingIcon />,
     tooltip:
-      "Strategic brand development and market positioning to reach your audience",
+      "Clarify your brand voice, value narrative, and market presence",
   },
   {
-    label: "Website Development",
+    label: "Brand Positioning",
+    href: "/services#brand-growth-support",
+    icon: <MarketingIcon />,
+    tooltip:
+      "Shape a clearer position so your audience understands why you matter",
+  },
+  {
+    label: "Content Direction",
+    href: "/services#brand-growth-support",
+    icon: <MarketingIcon />,
+    tooltip:
+      "Communication guidance for brands that need a sharper message",
+  },
+  {
+    label: "Strategic Operations",
     href: "/services#strategic-operations",
     icon: <WebIcon />,
-    tooltip: "Custom web solutions that drive engagement and conversions",
+    tooltip:
+      "Optimize workflows, clarify processes, and align operations with growth goals",
+  },
+  {
+    label: "Process Optimization",
+    href: "/services#strategic-operations",
+    icon: <WebIcon />,
+    tooltip:
+      "Improve the systems behind delivery so leaders can focus on impact",
+  },
+  {
+    label: "Workflow Clarity",
+    href: "/services#strategic-operations",
+    icon: <WebIcon />,
+    tooltip:
+      "Document and simplify workflows so teams move with less friction",
+  },
+  {
+    label: "Leadership Support",
+    href: "/services#strategic-operations",
+    icon: <WebIcon />,
+    tooltip:
+      "Practical operating support for leaders managing scale and change",
   },
 ];
 
@@ -103,11 +161,14 @@ function normalizeItems(items: Array<string | ServiceItem>): ServiceItem[] {
 
 export function ServiceStrip({ items = defaultItems }: ServiceStripProps) {
   const normalizedItems = normalizeItems(items);
+  const [featuredItem, ...marqueeItems] = normalizedItems;
+  const rootRef = useRef<HTMLElement | null>(null);
+  const viewportRef = useRef<HTMLDivElement | null>(null);
   const [activeTooltip, setActiveTooltip] = useState<{
     label: string;
     text: string;
     left: number;
-    top: number;
+    bottom: number;
   } | null>(null);
   const tooltipId = useId();
 
@@ -125,53 +186,82 @@ export function ServiceStrip({ items = defaultItems }: ServiceStripProps) {
     }
 
     const linkRect = event.currentTarget.getBoundingClientRect();
-    const viewport = event.currentTarget.closest(".service-strip__viewport");
-    const viewportRect = viewport?.getBoundingClientRect();
+    const rootRect = rootRef.current?.getBoundingClientRect();
+    const viewportRect = viewportRef.current?.getBoundingClientRect();
 
-    if (!viewportRect) {
+    if (!rootRect || !viewportRect) {
       setActiveTooltip(null);
       return;
     }
 
-    const tooltipWidth = 288;
     const horizontalPadding = 16;
+    const tooltipWidth = Math.min(
+      288,
+      Math.max(rootRect.width - horizontalPadding * 2, 0),
+    );
+    const tooltipHalfWidth = tooltipWidth / 2;
     const centeredLeft =
-      linkRect.left + linkRect.width / 2 - viewportRect.left - tooltipWidth / 2;
+      linkRect.left + linkRect.width / 2 - rootRect.left;
+    const minLeft = horizontalPadding + tooltipHalfWidth;
     const maxLeft = Math.max(
-      viewportRect.width - tooltipWidth - horizontalPadding,
-      horizontalPadding,
+      rootRect.width - horizontalPadding - tooltipHalfWidth,
+      minLeft,
     );
 
     setActiveTooltip({
       label: item.label,
       text: item.tooltip,
-      left: Math.min(Math.max(centeredLeft, horizontalPadding), maxLeft),
-      top: linkRect.bottom - viewportRect.top + 14,
+      left: Math.min(Math.max(centeredLeft, minLeft), maxLeft),
+      bottom: rootRect.bottom - linkRect.top + 14,
     });
   };
 
   return (
     <section
-      className="service-strip"
+      ref={rootRef}
+      className={styles.root}
       aria-label="Service categories"
       onMouseLeave={hideTooltip}
       onBlur={hideTooltip}
     >
-      <div className="service-strip__viewport">
-        <div className="service-strip__track">
-          {[0, 1].map((groupIndex) => (
+      {featuredItem ? (
+        <div className={styles.featuredWrap}>
+          <Link
+            className={styles.featuredLink}
+            href={featuredItem.href ?? "/services"}
+            title={featuredItem.tooltip}
+            aria-describedby={
+              activeTooltip?.label === featuredItem.label && featuredItem.tooltip
+                ? tooltipId
+                : undefined
+            }
+            aria-label={
+              featuredItem.tooltip
+                ? `${featuredItem.label}. ${featuredItem.tooltip}`
+                : featuredItem.label
+            }
+            onMouseEnter={(event) => showTooltip(event, featuredItem)}
+            onFocus={(event) => showTooltip(event, featuredItem)}
+          >
+            {featuredItem.label}
+          </Link>
+        </div>
+      ) : null}
+      <div ref={viewportRef} className={styles.viewport}>
+        <div className={styles.track}>
+          {marqueeItems.length > 0 ? [0, 1, 2, 3].map((groupIndex) => (
             <ul
               key={groupIndex}
-              className={`service-strip__group ${groupIndex === 1 ? "service-strip__group--duplicate" : ""}`}
-              aria-hidden={groupIndex === 1}
+              className={`${styles.group} ${groupIndex > 0 ? styles.groupDuplicate : ""}`}
+              aria-hidden={groupIndex > 0}
             >
-              {normalizedItems.map((item, index) => (
+              {marqueeItems.map((item, index) => (
                 <li
                   key={`${item.label}-${groupIndex}`}
-                  className="service-strip__item"
+                  className={styles.item}
                 >
                   <Link
-                    className="service-strip__link"
+                    className={styles.link}
                     href={item.href ?? "/services"}
                     title={item.tooltip}
                     aria-describedby={
@@ -179,8 +269,8 @@ export function ServiceStrip({ items = defaultItems }: ServiceStripProps) {
                         ? tooltipId
                         : undefined
                     }
-                    tabIndex={groupIndex === 1 ? -1 : undefined}
-                    aria-hidden={groupIndex === 1}
+                    tabIndex={groupIndex > 0 ? -1 : undefined}
+                    aria-hidden={groupIndex > 0}
                     aria-label={
                       item.tooltip
                         ? `${item.label}. ${item.tooltip}`
@@ -190,15 +280,15 @@ export function ServiceStrip({ items = defaultItems }: ServiceStripProps) {
                     onFocus={(event) => showTooltip(event, item)}
                   >
                     {item.icon && (
-                      <span className="service-strip__icon-wrapper">
+                      <span className={styles.iconWrapper}>
                         {item.icon}
                       </span>
                     )}
                     {item.label}
                   </Link>
-                  {index < normalizedItems.length - 1 ? (
+                  {index < marqueeItems.length - 1 ? (
                     <span
-                      className="service-strip__separator"
+                      className={styles.separator}
                       aria-hidden="true"
                     >
                       *
@@ -207,22 +297,22 @@ export function ServiceStrip({ items = defaultItems }: ServiceStripProps) {
                 </li>
               ))}
             </ul>
-          ))}
+          )) : null}
         </div>
-        {activeTooltip ? (
-          <div
-            id={tooltipId}
-            className="service-strip__tooltip"
-            role="tooltip"
-            style={{
-              left: `${activeTooltip.left}px`,
-              top: `${activeTooltip.top}px`,
-            }}
-          >
-            {activeTooltip.text}
-          </div>
-        ) : null}
       </div>
+      {activeTooltip ? (
+        <div
+          id={tooltipId}
+          className={styles.tooltip}
+          role="tooltip"
+          style={{
+            left: `${activeTooltip.left}px`,
+            bottom: `${activeTooltip.bottom}px`,
+          }}
+        >
+          {activeTooltip.text}
+        </div>
+      ) : null}
     </section>
   );
 }

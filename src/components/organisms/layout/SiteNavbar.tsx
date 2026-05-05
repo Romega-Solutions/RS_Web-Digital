@@ -1,8 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useId, useRef, useState } from "react";
+import type { FocusEvent, KeyboardEvent } from "react";
 import { useAccessibleOverlay } from "@/components/accessibility/useAccessibleOverlay";
 import Link from "next/link";
+import styles from "./SiteNavbar.module.css";
 
 export type SiteHeaderActiveItem =
   | "Home"
@@ -27,104 +29,105 @@ const servicesMenuItems = [
   {
     label: "Overview",
     href: "/services#services-overview",
-    description: "End-to-end solutions for modern growth.",
+    description: "Strategic growth support for your business.",
     icon: (
-      <svg className="h-5 w-5 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
       </svg>
-    ),
+    )
   },
   {
     label: "Talent Solutions",
     href: "/services#talent-solutions",
-    description: "Build and scale your technical team.",
+    description: "Build teams aligned with your long-term vision.",
     icon: (
-      <svg className="h-5 w-5 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
       </svg>
-    ),
+    )
   },
   {
-    label: "Brand & Growth Support",
+    label: "Brand & Growth",
     href: "/services#brand-growth-support",
-    description: "Strengthen and elevate your presence.",
+    description: "Clarify your message and build brand trust.",
     icon: (
-      <svg className="h-5 w-5 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605" />
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
       </svg>
-    ),
+    )
   },
   {
-    label: "Strategic Operations",
+    label: "Strategic Ops",
     href: "/services#strategic-operations",
-    description: "Optimize processes and workflows.",
+    description: "Optimize workflows for scalable success.",
     icon: (
-      <svg className="h-5 w-5 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.45" />
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
       </svg>
-    ),
+    )
   },
-];
+] as const;
 
 const careersMenuItems = [
   {
-    label: "Internal Careers",
+    label: "Careers Page",
     href: "/careers",
-    description: "Join the Romega core team.",
+    description: "Learn about the role, culture, and hiring process.",
+    isChild: false,
     icon: (
-      <svg className="h-5 w-5 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" />
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8"/><path d="M8 11h8"/><path d="M8 15h5"/>
       </svg>
-    ),
+    )
   },
   {
-    label: "Explore Talents",
-    href: "/talent",
-    description: "Hire vetted global professionals.",
+    label: "View Open Opportunities",
+    href: "/careers#open-opportunities",
+    description: "Open the current roles panel on the careers page.",
+    isChild: true,
     icon: (
-      <svg className="h-5 w-5 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 7h18"/><path d="M8 3v4"/><path d="M16 3v4"/><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 11h8"/><path d="M8 15h5"/>
       </svg>
-    ),
+    )
   },
-];
+  {
+    label: "Send Your Profile",
+    href: "mailto:careers@romega-solutions.com",
+    description: "Open your mail app and send your profile directly.",
+    isChild: true,
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M4 4h16v16H4z"/><path d="m22 6-10 7L2 6"/><path d="M8 11h.01"/><path d="M12 11h.01"/><path d="M16 11h.01"/>
+      </svg>
+    )
+  },
+  {
+    label: "Talent Pool",
+    href: "/talent",
+    description: "Browse our curated pool of professionals.",
+    isChild: false,
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+    )
+  },
+] as const;
 
-type DropdownItemProps = {
-  item: { label: string; href: string; description: string; icon: React.ReactNode };
-  isActive: boolean;
-  onClick: () => void;
-};
-
-function DesktopDropdownItem({ item, isActive, onClick }: DropdownItemProps) {
+function ChevronDown() {
   return (
-    <Link
-      href={item.href}
-      role="menuitem"
-      className={`site-nav__dropdown-item ${isActive ? "site-nav__dropdown-item--active" : ""}`}
-      onClick={onClick}
-    >
-      <div className="site-nav__dropdown-item-icon">{item.icon}</div>
-      <div className="site-nav__dropdown-item-text">
-        <span className="site-nav__dropdown-item-title">{item.label}</span>
-        <span className="site-nav__dropdown-item-desc">{item.description}</span>
-      </div>
-    </Link>
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m6 9 6 6 6-6"/>
+    </svg>
   );
 }
 
-function MobileSublinkItem({ item, isActive, onClick }: DropdownItemProps) {
+function ArrowRight() {
   return (
-    <Link
-      href={item.href}
-      className={`site-nav__link site-nav__mobile-sublink ${isActive ? "site-nav__link--active" : ""}`}
-      onClick={onClick}
-    >
-      <div className="site-nav__mobile-sublink-icon">{item.icon}</div>
-      <div className="site-nav__mobile-sublink-text">
-        <span className="site-nav__mobile-sublink-title">{item.label}</span>
-        <span className="site-nav__mobile-sublink-desc">{item.description}</span>
-      </div>
-    </Link>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M5 12h14m-7-7 7 7-7 7"/>
+    </svg>
   );
 }
 
@@ -136,16 +139,9 @@ export function SiteNavbar({
 }: SiteNavbarProps) {
   const [isServicesDropdownOpen, setIsServicesDropdownOpen] = useState(false);
   const [isCareersDropdownOpen, setIsCareersDropdownOpen] = useState(false);
-  const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(
-    activeItem === "Services",
-  );
-  const [isMobileCareersOpen, setIsMobileCareersOpen] = useState(
-    activeItem === "Careers" || activeItem === "Careers & Talents" || activeItem === "Talent",
-  );
-  const [currentLocation, setCurrentLocation] = useState({
-    hash: "",
-    pathname: "",
-  });
+  const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(activeItem === "Services");
+  const [isMobileCareersOpen, setIsMobileCareersOpen] = useState(activeItem === "Careers" || activeItem === "Careers & Talents");
+  const [currentLocation, setCurrentLocation] = useState({ hash: "", pathname: "" });
   const mobileNavRef = useRef<HTMLElement | null>(null);
   const servicesDropdownCloseTimeoutRef = useRef<number | null>(null);
   const careersDropdownCloseTimeoutRef = useRef<number | null>(null);
@@ -153,19 +149,13 @@ export function SiteNavbar({
   const careersDropdownId = useId();
 
   const clearServicesDropdownCloseTimeout = useCallback(() => {
-    if (servicesDropdownCloseTimeoutRef.current === null) {
-      return;
-    }
-
+    if (servicesDropdownCloseTimeoutRef.current === null) return;
     window.clearTimeout(servicesDropdownCloseTimeoutRef.current);
     servicesDropdownCloseTimeoutRef.current = null;
   }, []);
 
   const clearCareersDropdownCloseTimeout = useCallback(() => {
-    if (careersDropdownCloseTimeoutRef.current === null) {
-      return;
-    }
-
+    if (careersDropdownCloseTimeoutRef.current === null) return;
     window.clearTimeout(careersDropdownCloseTimeoutRef.current);
     careersDropdownCloseTimeoutRef.current = null;
   }, []);
@@ -181,6 +171,24 @@ export function SiteNavbar({
     clearServicesDropdownCloseTimeout();
     setIsServicesDropdownOpen(false);
   }, [clearServicesDropdownCloseTimeout]);
+
+  const handleServicesDropdownBlur = useCallback(
+    (event: FocusEvent<HTMLDivElement>) => {
+      if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+        closeServicesDropdown();
+      }
+    },
+    [closeServicesDropdown],
+  );
+
+  const handleServicesDropdownKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLDivElement>) => {
+      if (event.key === "Escape") {
+        closeServicesDropdown();
+      }
+    },
+    [closeServicesDropdown],
+  );
 
   const scheduleServicesDropdownClose = useCallback(() => {
     clearServicesDropdownCloseTimeout();
@@ -202,6 +210,24 @@ export function SiteNavbar({
     setIsCareersDropdownOpen(false);
   }, [clearCareersDropdownCloseTimeout]);
 
+  const handleCareersDropdownBlur = useCallback(
+    (event: FocusEvent<HTMLDivElement>) => {
+      if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+        closeCareersDropdown();
+      }
+    },
+    [closeCareersDropdown],
+  );
+
+  const handleCareersDropdownKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLDivElement>) => {
+      if (event.key === "Escape") {
+        closeCareersDropdown();
+      }
+    },
+    [closeCareersDropdown],
+  );
+
   const scheduleCareersDropdownClose = useCallback(() => {
     clearCareersDropdownCloseTimeout();
     careersDropdownCloseTimeoutRef.current = window.setTimeout(() => {
@@ -213,9 +239,7 @@ export function SiteNavbar({
   const handleCloseMobileMenu = useCallback(() => {
     onCloseMobileMenu();
     setIsMobileServicesOpen(activeItem === "Services");
-    setIsMobileCareersOpen(
-      activeItem === "Careers" || activeItem === "Careers & Talents" || activeItem === "Talent",
-    );
+    setIsMobileCareersOpen(activeItem === "Careers" || activeItem === "Careers & Talents");
   }, [activeItem, onCloseMobileMenu]);
 
   const handleToggleMobileMenu = useCallback(() => {
@@ -223,12 +247,9 @@ export function SiteNavbar({
       handleCloseMobileMenu();
       return;
     }
-
     onToggleMobileMenu();
     setIsMobileServicesOpen(activeItem === "Services");
-    setIsMobileCareersOpen(
-      activeItem === "Careers" || activeItem === "Careers & Talents" || activeItem === "Talent",
-    );
+    setIsMobileCareersOpen(activeItem === "Careers" || activeItem === "Careers & Talents");
   }, [activeItem, handleCloseMobileMenu, isMobileMenuOpen, onToggleMobileMenu]);
 
   useAccessibleOverlay({
@@ -238,46 +259,25 @@ export function SiteNavbar({
   });
 
   useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-
+    if (typeof window === "undefined") return;
     function handleResize() {
-      if (window.innerWidth >= 1024) {
-        handleCloseMobileMenu();
-      }
+      if (window.innerWidth >= 1024) handleCloseMobileMenu();
     }
-
     window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+    return () => window.removeEventListener("resize", handleResize);
   }, [handleCloseMobileMenu]);
 
   useEffect(() => {
-    return () => {
-      clearServicesDropdownCloseTimeout();
-      clearCareersDropdownCloseTimeout();
-    };
-  }, [clearCareersDropdownCloseTimeout, clearServicesDropdownCloseTimeout]);
-
-  useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-
+    if (typeof window === "undefined") return;
     function syncLocation() {
       setCurrentLocation({
         hash: window.location.hash,
         pathname: window.location.pathname,
       });
     }
-
     syncLocation();
     window.addEventListener("hashchange", syncLocation);
     window.addEventListener("popstate", syncLocation);
-
     return () => {
       window.removeEventListener("hashchange", syncLocation);
       window.removeEventListener("popstate", syncLocation);
@@ -287,285 +287,207 @@ export function SiteNavbar({
   const isHrefActive = useCallback(
     (href: string) => {
       const [pathname, hash = ""] = href.split("#");
-
-      if (pathname !== currentLocation.pathname) {
-        return false;
-      }
-
+      if (pathname !== currentLocation.pathname) return false;
       const normalizedHash = hash ? `#${hash}` : "";
-
       if (href === "/services#services-overview") {
-        return (
-          currentLocation.pathname === "/services" &&
-          (currentLocation.hash === "" ||
-            currentLocation.hash === "#services-overview")
-        );
+        return currentLocation.pathname === "/services" && (currentLocation.hash === "" || currentLocation.hash === "#services-overview");
       }
-
       return currentLocation.hash === normalizedHash;
     },
     [currentLocation.hash, currentLocation.pathname],
   );
 
   return (
-    <div className="site-nav">
-      <div className="site-nav__desktop-row">
-        <nav className="site-nav__menu" aria-label="Primary navigation">
+    <div className={styles.nav}>
+      <div className={styles.navDesktopRow}>
+        <nav className={styles.menu} aria-label="Primary navigation">
           {navItems.map((item) => (
             <Link
               key={item.label}
               href={item.href}
-              className={`site-nav__link ${
-                item.label === activeItem ? "site-nav__link--active" : ""
-              }`}
+              className={`${styles.navLink} ${item.label === activeItem ? styles.navLinkActive : ""}`}
             >
               <span className="site-nav__link-text">{item.label}</span>
             </Link>
           ))}
 
           <div
-            className="site-nav__dropdown site-nav__dropdown--services"
+            className={`${styles.dropdown} ${styles.dropdownServices} ${isServicesDropdownOpen ? styles.dropdownOpen : ""}`}
             onMouseEnter={openServicesDropdown}
             onMouseLeave={scheduleServicesDropdownClose}
-            onFocusCapture={openServicesDropdown}
-            onBlurCapture={(event) => {
-              const relatedTarget = event.relatedTarget as Node | null;
-              if (
-                !relatedTarget ||
-                !event.currentTarget.contains(relatedTarget)
-              ) {
-                closeServicesDropdown();
-              }
-            }}
-            onKeyDown={(event) => {
-              if (event.key === "Escape") {
-                event.preventDefault();
-                closeServicesDropdown();
-              }
-            }}
+            onFocus={openServicesDropdown}
+            onBlur={handleServicesDropdownBlur}
+            onKeyDown={handleServicesDropdownKeyDown}
           >
-            <button
-              type="button"
-              className={`site-nav__link site-nav__dropdown-trigger ${
-                activeItem === "Services" ? "site-nav__link--active" : ""
-              }`}
+            <Link
+              href="/services#services-overview"
+              className={`${styles.navLink} ${styles.dropdownTrigger} ${activeItem === "Services" ? styles.navLinkActive : ""}`}
               aria-expanded={isServicesDropdownOpen}
               aria-controls={servicesDropdownId}
               aria-haspopup="menu"
-              onClick={() => {
-                setIsServicesDropdownOpen((open) => !open);
-                setIsCareersDropdownOpen(false);
-              }}
+              role="button"
             >
-              <span className="site-nav__link-text">Services</span>
-              <span className="site-nav__dropdown-caret" aria-hidden="true">
-                ▾
-              </span>
-            </button>
+              Services
+              <span className={styles.dropdownCaret} aria-hidden="true"><ChevronDown /></span>
+            </Link>
 
             <div
               id={servicesDropdownId}
-              className={`site-nav__dropdown-menu ${isServicesDropdownOpen ? "site-nav__dropdown-menu--open" : ""}`}
+              className={`${styles.dropdownMenu} ${isServicesDropdownOpen ? styles.dropdownMenuOpen : ""}`}
               aria-hidden={!isServicesDropdownOpen}
               role="menu"
             >
               {servicesMenuItems.map((item) => (
-                <DesktopDropdownItem
+                <Link
                   key={item.label}
-                  item={item}
-                  isActive={isHrefActive(item.href)}
+                  href={item.href}
+                  role="menuitem"
+                  className={`${styles.dropdownItem} ${isHrefActive(item.href) ? styles.dropdownItemActive : ""}`}
                   onClick={closeServicesDropdown}
-                />
+                >
+                  <span className={styles.dropdownItemIcon} aria-hidden="true">{item.icon}</span>
+                  <span className={styles.dropdownItemContent}>
+                    <span className={styles.dropdownItemTitle}>{item.label}</span>
+                    <span className={styles.dropdownItemDesc}>{item.description}</span>
+                  </span>
+                </Link>
               ))}
             </div>
           </div>
 
           <div
-            className="site-nav__dropdown site-nav__dropdown--careers"
+            className={`${styles.dropdown} ${styles.dropdownCareers} ${isCareersDropdownOpen ? styles.dropdownOpen : ""}`}
             onMouseEnter={openCareersDropdown}
             onMouseLeave={scheduleCareersDropdownClose}
-            onFocusCapture={openCareersDropdown}
-            onBlurCapture={(event) => {
-              const relatedTarget = event.relatedTarget as Node | null;
-              if (
-                !relatedTarget ||
-                !event.currentTarget.contains(relatedTarget)
-              ) {
-                closeCareersDropdown();
-              }
-            }}
-            onKeyDown={(event) => {
-              if (event.key === "Escape") {
-                event.preventDefault();
-                closeCareersDropdown();
-              }
-            }}
+            onFocus={openCareersDropdown}
+            onBlur={handleCareersDropdownBlur}
+            onKeyDown={handleCareersDropdownKeyDown}
           >
-            <button
-              type="button"
-              className={`site-nav__link site-nav__dropdown-trigger ${
-                activeItem === "Careers" || activeItem === "Careers & Talents" || activeItem === "Talent"
-                  ? "site-nav__link--active"
-                  : ""
-              }`}
+            <Link
+              href="/careers"
+              className={`${styles.navLink} ${styles.dropdownTrigger} ${activeItem === "Careers" || activeItem === "Careers & Talents" ? styles.navLinkActive : ""}`}
               aria-expanded={isCareersDropdownOpen}
               aria-controls={careersDropdownId}
               aria-haspopup="menu"
-              onClick={() => {
-                setIsCareersDropdownOpen((open) => !open);
-                setIsServicesDropdownOpen(false);
-              }}
+              role="button"
             >
-              <span className="site-nav__link-text">Careers & Talent</span>
-              <span className="site-nav__dropdown-caret" aria-hidden="true">
-                ▾
-              </span>
-            </button>
+              Careers & Talents
+              <span className={styles.dropdownCaret} aria-hidden="true"><ChevronDown /></span>
+            </Link>
 
             <div
               id={careersDropdownId}
-              className={`site-nav__dropdown-menu ${isCareersDropdownOpen ? "site-nav__dropdown-menu--open" : ""}`}
+              className={`${styles.dropdownMenu} ${isCareersDropdownOpen ? styles.dropdownMenuOpen : ""}`}
               aria-hidden={!isCareersDropdownOpen}
               role="menu"
             >
               {careersMenuItems.map((item) => (
-                <DesktopDropdownItem
+                <Link
                   key={item.label}
-                  item={item}
-                  isActive={isHrefActive(item.href)}
+                  href={item.href}
+                  role="menuitem"
+                  className={`${styles.dropdownItem} ${item.isChild ? styles.dropdownItemChild : ""} ${isHrefActive(item.href) ? styles.dropdownItemActive : ""}`}
                   onClick={closeCareersDropdown}
-                />
+                >
+                  <span className={styles.dropdownItemIcon} aria-hidden="true">{item.icon}</span>
+                  <span className={styles.dropdownItemContent}>
+                    <span className={styles.dropdownItemTitle}>{item.label}</span>
+                    <span className={styles.dropdownItemDesc}>{item.description}</span>
+                  </span>
+                </Link>
               ))}
             </div>
           </div>
         </nav>
 
-        <div className="site-nav__cta-wrap">
-          <Link href="/contact" className="site-nav__cta">
-            Contact Us
-            <span
-              className="site-nav__cta-arrow color-white"
-              aria-hidden="true"
-            >
-              →
-            </span>
+        <div className={styles.ctaWrap}>
+          <Link href="/contact" className={styles.cta}>
+            Contact Us <span className={styles.ctaArrow} aria-hidden="true"><ArrowRight /></span>
           </Link>
           <button
             type="button"
-            className={`site-nav__burger ${isMobileMenuOpen ? "site-nav__burger--open" : ""}`}
+            className={`${styles.burger} ${isMobileMenuOpen ? styles.burgerOpen : ""}`}
             aria-label="Toggle navigation menu"
             aria-expanded={isMobileMenuOpen}
-            aria-controls="mobile-nav-menu"
             onClick={handleToggleMobileMenu}
           >
-            <span className="site-nav__burger-line" aria-hidden="true" />
-            <span className="site-nav__burger-line" aria-hidden="true" />
-            <span className="site-nav__burger-line" aria-hidden="true" />
+            <span className={styles.burgerLine} />
+            <span className={styles.burgerLine} />
+            <span className={styles.burgerLine} />
           </button>
         </div>
       </div>
 
-      {isMobileMenuOpen ? (
-        <button
-          type="button"
-          className="site-nav__mobile-overlay"
-          aria-label="Close navigation menu"
-          onClick={handleCloseMobileMenu}
-        />
-      ) : null}
+      {isMobileMenuOpen && (
+        <div className={styles.mobileOverlay} onClick={handleCloseMobileMenu} aria-hidden="true" />
+      )}
 
       <nav
-        id="mobile-nav-menu"
         ref={mobileNavRef}
-        className={`site-nav__mobile ${isMobileMenuOpen ? "site-nav__mobile--open" : ""}`}
+        className={`${styles.mobile} ${isMobileMenuOpen ? styles.mobileOpen : ""}`}
         aria-label="Mobile navigation"
-        aria-hidden={!isMobileMenuOpen}
       >
         {navItems.map((item) => (
           <Link
             key={item.label}
             href={item.href}
-            className={`site-nav__link site-nav__mobile-link ${
-              item.label === activeItem ? "site-nav__link--active" : ""
-            }`}
+            className={`${styles.navLink} ${styles.mobileLink} ${item.label === activeItem ? styles.navLinkActive : ""}`}
             onClick={handleCloseMobileMenu}
           >
             {item.label}
           </Link>
         ))}
-        <div className="site-nav__mobile-group">
+        <div className={styles.mobileGroup}>
           <button
             type="button"
-            className={`site-nav__link site-nav__mobile-link site-nav__mobile-group-label ${
-              activeItem === "Services" ? "site-nav__link--active" : ""
-            }`}
-            aria-expanded={isMobileServicesOpen}
-            aria-controls="mobile-services-submenu"
-            onClick={() => setIsMobileServicesOpen((open) => !open)}
+            className={`${styles.mobileLink} ${styles.mobileGroupLabel}`}
+            onClick={() => setIsMobileServicesOpen(!isMobileServicesOpen)}
           >
-            Services
-            <span
-              className={`site-nav__mobile-caret ${isMobileServicesOpen ? "site-nav__mobile-caret--open" : ""}`}
-            >
-              ▾
-            </span>
+            Services <span className={`${styles.mobileCaret} ${isMobileServicesOpen ? styles.mobileCaretOpen : ""}`}><ChevronDown /></span>
           </button>
-          <div
-            id="mobile-services-submenu"
-            className={`site-nav__mobile-submenu ${
-              isMobileServicesOpen ? "site-nav__mobile-submenu--open" : ""
-            }`}
-          >
+          <div className={`${styles.mobileSubmenu} ${isMobileServicesOpen ? styles.mobileSubmenuOpen : ""}`}>
             {servicesMenuItems.map((item) => (
-              <MobileSublinkItem
+              <Link
                 key={item.label}
-                item={item}
-                isActive={isHrefActive(item.href)}
+                href={item.href}
+                className={`${styles.mobileSublink} ${isHrefActive(item.href) ? styles.navLinkActive : ""}`}
                 onClick={handleCloseMobileMenu}
-              />
+              >
+                <span className={styles.mobileSublinkIcon} aria-hidden="true">{item.icon}</span>
+                <span className={styles.mobileSublinkText}>
+                  <span className={styles.mobileSublinkTitle}>{item.label}</span>
+                  <span className={styles.mobileSublinkDesc}>{item.description}</span>
+                </span>
+              </Link>
             ))}
           </div>
         </div>
-        
-        <div className="site-nav__mobile-group">
+        <div className={styles.mobileGroup}>
           <button
             type="button"
-            className={`site-nav__link site-nav__mobile-link site-nav__mobile-group-label ${
-              activeItem === "Careers" || activeItem === "Careers & Talents" || activeItem === "Talent" ? "site-nav__link--active" : ""
-            }`}
-            aria-expanded={isMobileCareersOpen}
-            aria-controls="mobile-careers-submenu"
-            onClick={() => setIsMobileCareersOpen((open) => !open)}
+            className={`${styles.mobileLink} ${styles.mobileGroupLabel}`}
+            onClick={() => setIsMobileCareersOpen(!isMobileCareersOpen)}
           >
-            Careers & Talent
-            <span
-              className={`site-nav__mobile-caret ${isMobileCareersOpen ? "site-nav__mobile-caret--open" : ""}`}
-            >
-              ▾
-            </span>
+            Careers & Talents <span className={`${styles.mobileCaret} ${isMobileCareersOpen ? styles.mobileCaretOpen : ""}`}><ChevronDown /></span>
           </button>
-          <div
-            id="mobile-careers-submenu"
-            className={`site-nav__mobile-submenu ${
-              isMobileCareersOpen ? "site-nav__mobile-submenu--open" : ""
-            }`}
-          >
+          <div className={`${styles.mobileSubmenu} ${isMobileCareersOpen ? styles.mobileSubmenuOpen : ""}`}>
             {careersMenuItems.map((item) => (
-              <MobileSublinkItem
+              <Link
                 key={item.label}
-                item={item}
-                isActive={isHrefActive(item.href)}
+                href={item.href}
+                className={`${styles.mobileSublink} ${item.isChild ? styles.mobileSublinkChild : ""} ${isHrefActive(item.href) ? styles.navLinkActive : ""}`}
                 onClick={handleCloseMobileMenu}
-              />
+              >
+                <span className={styles.mobileSublinkIcon} aria-hidden="true">{item.icon}</span>
+                <span className={styles.mobileSublinkText}>
+                  <span className={styles.mobileSublinkTitle}>{item.label}</span>
+                  <span className={styles.mobileSublinkDesc}>{item.description}</span>
+                </span>
+              </Link>
             ))}
           </div>
         </div>
-
-        <Link
-          href="/contact"
-          className="site-nav__cta site-nav__mobile-cta"
-          onClick={handleCloseMobileMenu}
-        >
+        <Link href="/contact" className={`${styles.cta} ${styles.mobileCta}`} onClick={handleCloseMobileMenu}>
           Contact Us
         </Link>
       </nav>

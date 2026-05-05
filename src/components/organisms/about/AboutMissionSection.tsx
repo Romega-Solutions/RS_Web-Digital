@@ -1,69 +1,68 @@
 import Image from "next/image";
+import styles from "./AboutMissionSection.module.css";
 
 export function AboutMissionSection() {
   return (
-    <section className="about-mission-section" aria-labelledby="about-mission-title">
-      <div className="about-mission-inner">
-        <div className="about-mission-grid" aria-hidden="true" />
+    <section className={styles.root} aria-labelledby="about-mission-title">
+      <div className={styles.inner}>
+        <div className={styles.grid} aria-hidden="true" />
 
-        <div className="about-mission-heading">
-          <h2 id="about-mission-title" className="about-mission-title">
-            Why we <em>do</em>
+        <div className={styles.heading}>
+          <h2 id="about-mission-title" className={styles.title}>
+            <span className={styles.titleLine}>Why We <em>Do</em></span>
             <br />
-            What we <em>do</em>
+            <span className={styles.titleLine}>What We <em>Do</em></span>
           </h2>
         </div>
 
-        <div className="about-mission-photo about-mission-photo-main">
+        <div className={`${styles.photo} ${styles.photoMain}`}>
           <Image
-            src="/why-1.png"
+            src="/why-1.webp"
             alt="Team members reviewing work at a computer"
             fill
             sizes="(max-width: 767px) 100vw, 44vw"
-            className="about-mission-image"
+            className={styles.image}
           />
         </div>
 
-        <div className="about-mission-photo about-mission-photo-mid">
+        <div className={`${styles.photo} ${styles.photoMid}`}>
           <Image
-            src="/why-2.png"
+            src="/why-2.webp"
             alt="Two team members collaborating over a laptop"
             fill
             sizes="(max-width: 767px) 48vw, 15rem"
-            className="about-mission-image"
+            className={styles.image}
           />
         </div>
 
-        <div className="about-mission-photo about-mission-photo-low">
+        <div className={`${styles.photo} ${styles.photoLow}`}>
           <Image
-            src="/why-3.png"
+            src="/why-3.webp"
             alt="A team discussing work around a laptop"
             fill
             sizes="(max-width: 767px) 52vw, 16rem"
-            className="about-mission-image"
+            className={styles.image}
           />
         </div>
 
-        <div className="about-mission-copy">
-          <p>
+        <div className={styles.copy}>
+          <p className={styles.lead}>
             We believe businesses grow best when people, purpose, and clarity
-            are aligned. Too many companies plateau not because opportunity, but
-            because systems, teams, or brand identity aren&apos;t working in
-            harmony.
+            are aligned. Too often, momentum stalls not because opportunity is
+            missing, but because teams, systems, and brand direction are moving
+            out of sync.
           </p>
-          <p>
-            <strong>
-              Romega exists to help founders, leaders, and teams build growth
-              that feels structured, confident, and purposeful, not chaotic or
-              reactive.
-            </strong>
+          <p className={styles.exists}>
+            <strong>Romega exists</strong> to help founders, leaders, and teams
+            grow with more structure, confidence, and intention{" "}
+            <span>not constant catch-up.</span>
           </p>
         </div>
 
-        <div className="about-mission-statement">
+        <div className={styles.statement}>
           <p>
-            Our <em>Mission</em> is to be a steady growth partner for businesses
-            by building strong teams and credible brands that last.
+            <span>Our <em>mission</em></span>
+            <strong>help businesses grow with stronger teams, clearer direction, and support that lasts.</strong>
           </p>
         </div>
       </div>

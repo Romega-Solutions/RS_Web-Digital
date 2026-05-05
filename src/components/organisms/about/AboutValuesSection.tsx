@@ -1,65 +1,70 @@
 import Image from "next/image";
+import styles from "./AboutValuesSection.module.css";
 
 const values = [
   {
     title: (
       <>
-        <span className="about-values-initial">R</span>eliable &amp;
+        <span className={styles.initial}>R</span>eliable &amp;
         <br />
-        <span className="about-values-initial">O</span>pportunity-Driven
+        <span className={styles.initial}>O</span>pportunity-Driven
       </>
     ),
     description:
-      "We honor our commitments and create meaningful growth, delivering with integrity, consistency, and long-term vision.",
+      "We do what we say we will do and look for opportunities that create meaningful, lasting progress.",
   },
   {
     title: (
       <>
-        <span className="about-values-phrase">
-          <span className="about-values-initial">M</span>eaningful Collaboration &amp;
+        <span className={styles.phrase}>
+          <span className={styles.initial}>M</span>eaningful Collaboration &amp;
         </span>
         <br />
-        <span className="about-values-initial">E</span>xcellence
+        <span className={styles.initial}>E</span>xcellence
       </>
     ),
     description:
-      "We work hand-in-hand with our partners, executing every project with clarity, quality, and purpose.",
+      "We work closely with our partners and hold every project to a standard of clarity, care, and quality.",
   },
   {
     title: (
       <>
-        <span className="about-values-initial">G</span>rowth-Focused &amp;
+        <span className={styles.initial}>G</span>rowth-Focused &amp;
         <br />
-        <span className="about-values-initial">A</span>daptable
+        <span className={styles.initial}>A</span>daptable
       </>
     ),
     description:
-      "We innovate boldly and stay agile, building teams and brands that thrive in a changing world.",
+      "We stay adaptable, think long term, and help teams and brands grow with the realities of a changing market.",
   },
 ];
 
 export function AboutValuesSection() {
   return (
-    <section className="about-values-section" aria-labelledby="about-values-title">
-      <div className="about-values-inner">
-        <div className="about-values-photo-frame">
+    <section className={styles.root} aria-labelledby="about-values-title">
+      <div className={styles.inner}>
+        <div className={styles.photoFrame}>
           <Image
-            src="/stand-1.png"
+            src="/stand-1.webp"
             alt="A team collaborating around a laptop"
             fill
             sizes="(max-width: 767px) 100vw, 48vw"
-            className="about-values-photo"
+            className={styles.photo}
           />
         </div>
 
-        <div className="about-values-copy">
-          <h2 id="about-values-title" className="about-values-title">
+        <div className={styles.copy}>
+          <h2 id="about-values-title" className={styles.title}>
             What We Stand For
           </h2>
+          <p className={styles.lead}>
+            The principles behind how we support clients, talent, and steady
+            long-term growth.
+          </p>
 
-          <div className="about-values-list">
+          <div className={styles.list}>
             {values.map((value) => (
-              <article key={value.description} className="about-values-item">
+              <article key={value.description} className={styles.item}>
                 <h3>{value.title}</h3>
                 <p>{value.description}</p>
               </article>

@@ -1,20 +1,22 @@
 import type { Metadata } from "next";
+import { MainTemplate } from "@/components/templates/MainTemplate";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
 import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
-import { absoluteUrl, createMetadata, siteConfig } from "@/lib/seo";
+import { absoluteUrl, createMetadata } from "@/lib/seo";
 import ContactPageClient from "./ContactPageClient";
 
 export const metadata: Metadata = createMetadata({
   title: "Contact Romega Solutions",
   description:
-    "Contact Romega Solutions for business inquiries, partnerships, hiring support, and strategic growth conversations.",
+    "Get in touch with Romega Solutions to discuss talent, brand, and operations support tailored to your growth goals.",
   path: "/contact",
   keywords: [
-    "contact romega solutions",
+    "contact romega",
+    "hire romega solutions",
     "business inquiry",
-    "hiring support consultation",
-    "growth strategy consultation",
+    "talent consulting contact",
+    "brand strategy inquiry",
   ],
 });
 
@@ -28,24 +30,13 @@ export default function ContactPage() {
         url: absoluteUrl("/contact"),
         name: "Contact Romega Solutions",
         description:
-          "Contact Romega Solutions for business inquiries, partnerships, hiring support, and strategic growth conversations.",
+          "Get in touch with Romega Solutions to discuss talent, brand, and operations support tailored to your growth goals.",
         isPartOf: {
           "@id": absoluteUrl("/#website"),
         },
         about: {
           "@id": absoluteUrl("/#organization"),
         },
-      },
-      {
-        "@type": "Organization",
-        "@id": absoluteUrl("/contact#contact"),
-        name: siteConfig.name,
-        email: siteConfig.email,
-        address: {
-          "@type": "PostalAddress",
-          ...siteConfig.address,
-        },
-        sameAs: [siteConfig.linkedIn, siteConfig.instagram, siteConfig.facebook],
       },
       {
         "@type": "BreadcrumbList",
@@ -68,11 +59,12 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="site-shell" id="top">
-      <JsonLd id="contact-structured-data" data={structuredData} />
-      <SiteHeader />
+    <MainTemplate
+      jsonLd={<JsonLd id="contact-structured-data" data={structuredData} />}
+      header={<SiteHeader />}
+      footer={<SiteFooter />}
+    >
       <ContactPageClient />
-      <SiteFooter />
-    </div>
+    </MainTemplate>
   );
 }

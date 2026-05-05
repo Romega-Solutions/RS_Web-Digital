@@ -1,0 +1,112 @@
+.root {
+  @apply relative isolate overflow-hidden text-black;
+  --talent-surface: var(--color-surface);
+  --talent-page-bg: var(--color-page);
+  --talent-border: color-mix(in srgb, var(--color-brand-secondary) 18%, white);
+  --talent-copy: color-mix(in srgb, var(--color-brand-secondary) 78%, #0f172a);
+  --talent-muted: color-mix(in srgb, var(--color-brand-secondary) 64%, #1f2937);
+  padding: calc(var(--site-header-height, 5rem) + 1.5rem) 1rem 3.5rem;
+  background: linear-gradient(180deg, var(--talent-surface) 0%, var(--talent-page-bg) 100%);
+}
+
+.container {
+  @apply mx-auto max-w-300;
+}
+
+.content {
+  @apply mx-auto max-w-232 text-center;
+}
+
+.badge {
+  @apply mb-4 inline-flex flex-wrap items-center justify-center gap-2 text-[0.95rem];
+  color: var(--talent-muted);
+}
+
+.stars {
+  @apply tracking-widest text-brand-secondary;
+}
+
+.title {
+  @apply mb-4 leading-[0.98] text-brand-secondary;
+  font-family: var(--font-heading);
+  font-size: clamp(2.3rem, 5vw, 4.2rem);
+}
+
+.description {
+  @apply mx-auto text-[1.05rem] leading-[1.8];
+  color: var(--talent-copy);
+  max-width: min(100%, var(--measure-readable));
+}
+
+.actions {
+  @apply mt-6 flex flex-wrap items-center justify-center gap-3;
+}
+
+.primaryAction,
+.secondaryAction {
+  @apply min-h-11 rounded-full px-5 py-[0.7rem] font-bold;
+}
+
+.stats {
+  @apply mt-6 grid grid-cols-1 gap-3;
+}
+
+.statItem {
+  @apply rounded-lg border bg-white px-4 py-3;
+  border-color: var(--talent-border);
+}
+
+.statLabel {
+  @apply text-[0.82rem] font-semibold uppercase tracking-wide;
+  color: var(--talent-muted);
+}
+
+.statValue {
+  @apply mt-1 text-[1.3rem] font-bold text-brand-secondary;
+  font-family: var(--font-heading);
+}
+
+.features {
+  @apply mt-10 grid grid-cols-1 gap-4;
+}
+
+.featureCard {
+  @apply rounded-lg border bg-white p-[1.35rem_1.1rem];
+  border-color: var(--talent-border);
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--color-brand-secondary) 10%, transparent);
+}
+
+.featureIcon {
+  @apply inline-flex h-11 w-11 items-center justify-center rounded-lg bg-brand-secondary/12 text-brand-secondary;
+}
+
+.featureIcon svg {
+  @apply h-6 w-6;
+}
+
+.featureTitle {
+  @apply mb-2 mt-[0.9rem] text-[1.25rem];
+  color: var(--talent-copy);
+  font-family: var(--font-heading);
+}
+
+.featureCopy {
+  @apply m-0 leading-[1.7];
+  color: var(--talent-muted);
+}
+
+@media (min-width: 700px) {
+  .root {
+    padding: calc(var(--site-header-height, 5rem) + 2rem) 1.5rem 4rem;
+  }
+
+  .stats {
+    @apply grid-cols-3;
+  }
+
+  .features {
+    @apply grid-cols-3;
+  }
+}
+
+@reference "../../../app/globals.css";

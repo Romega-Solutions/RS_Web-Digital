@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { LegalTemplate } from "@/components/templates/LegalTemplate";
 import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
 import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
 import { LegalPageCard } from "@/components/organisms/shared/LegalPageCard";
@@ -15,14 +16,16 @@ export const metadata: Metadata = createMetadata({
 
 export default function PrivacyPage() {
   return (
-    <div className="site-shell" id="top">
-      <SiteHeader />
-      <main id="main-content" tabIndex={-1} className="legal-page-shell">
-        <LegalPageCard>
-          <PrivacyPolicyContent />
-        </LegalPageCard>
-      </main>
-      <SiteFooter />
-    </div>
+    <LegalTemplate
+      header={<SiteHeader />}
+      footer={<SiteFooter />}
+      title="Privacy Policy"
+      subtitle="How we collect, use, and protect your personal information at Romega Solutions."
+      lastUpdated="April 24, 2026"
+    >
+      <LegalPageCard>
+        <PrivacyPolicyContent />
+      </LegalPageCard>
+    </LegalTemplate>
   );
 }

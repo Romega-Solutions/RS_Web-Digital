@@ -1,18 +1,18 @@
-import Link from "next/link";
-import Image from "next/image";
 import type { Metadata } from "next";
-import { ExploreServicesButton } from "@/components/atoms/Button";
+import { MainTemplate } from "@/components/templates/MainTemplate";
+import { ServicesHero } from "@/components/organisms/services/ServicesHero";
+import { ServicesDetailSection } from "@/components/organisms/services/ServicesDetailSection";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ServiceStrip } from "@/components/organisms/home/ServiceStrip";
 import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
 import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
 import { ConsultationBanner } from "@/components/organisms/shared/ConsultationBanner";
-import { absoluteUrl, createMetadata } from "@/lib/seo";
+import { absoluteUrl, createMetadata, createBreadcrumbSchema } from "@/lib/seo";
 
 export const metadata: Metadata = createMetadata({
-  title: "Services for Talent, Brand, and Operations",
+  title: "Our Services",
   description:
-    "Explore Romega Solutions services across talent acquisition, brand and growth support, and strategic operations for scaling businesses.",
+    "Expert talent acquisition, brand and growth support, and strategic operations for businesses ready to scale.",
   path: "/services",
   keywords: [
     "talent solutions",
@@ -78,9 +78,15 @@ const detailedServices = [
 ] as const;
 
 export default function ServicesPage() {
+  const breadcrumbData = createBreadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "Services", path: "/services" },
+  ]);
+
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
+      breadcrumbData,
       {
         "@type": "CollectionPage",
         "@id": absoluteUrl("/services#webpage"),
@@ -101,127 +107,30 @@ export default function ServicesPage() {
             "@type": "Service",
             name: service.title,
             description: service.copy,
-            serviceType: service.title,
-            url: absoluteUrl(`/services#${service.id}`),
           },
         })),
-      },
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          {
-            "@type": "ListItem",
-            position: 1,
-            name: "Home",
-            item: absoluteUrl("/"),
-          },
-          {
-            "@type": "ListItem",
-            position: 2,
-            name: "Services",
-            item: absoluteUrl("/services"),
-          },
-        ],
       },
     ],
   };
 
   return (
-    <div className="site-shell" id="top">
-      <JsonLd id="services-structured-data" data={structuredData} />
-      <SiteHeader activeItem="Services" />
+    <MainTemplate
+      jsonLd={<JsonLd id="services-structured-data" data={structuredData} />}
+      header={<SiteHeader activeItem="Services" />}
+      footer={<SiteFooter />}
+      shellVariant="hero"
+    >
+      <ServicesHero />
 
-      <main id="main-content" tabIndex={-1}>
-        <section className="services-hero">
-          <div className="services-hero-media" aria-hidden="true">
-            <Image
-              src="/2.0%20Website%20Assets/2.webp"
-              alt=""
-              fill
-              preload
-              sizes="100vw"
-              className="services-hero-image"
-            />
-          </div>
-          <div className="services-hero-overlay" aria-hidden="true" />
-
-          <div className="services-hero-inner">
-            <h1 className="services-hero-title">
-              Where teams and brands
-              <br />
-              are <span className="services-hero-highlight">built side by side.</span>
-            </h1>
-
-            <p className="services-hero-copy">
-              At Romega, we don&apos;t treat services as silos. We integrate team
-              growth, brand support, and strategic operations so your business
-              moves forward as one unified system, not separate parts.
-            </p>
-
-            <Link href="#services-overview" className="services-hero-cta">
-              Book your Call today!
-            </Link>
-          </div>
-        </section>
-
+      <div id="services-overview">
         <ServiceStrip />
+      </div>
 
-        <section
-          id="services-overview"
-          className="services-detail-section"
-          aria-labelledby="services-detail-title"
-        >
-          <div className="services-detail-inner">
-            <h1 id="services-detail-title" className="sr-only">
-              Service details
-            </h1>
+      <ServicesDetailSection services={detailedServices} />
 
-            {detailedServices.map((service, index) => (
-              <div
-                id={service.id}
-                key={service.title}
-                className={`services-detail-row ${
-                  index % 2 === 1 ? "services-detail-row-reverse" : ""
-                }`}
-              >
-                <div className="services-detail-media">
-                  <Image
-                    src={service.imageSrc}
-                    alt={service.imageAlt}
-                    fill
-                    sizes="(max-width: 767px) 100vw, 42vw"
-                    className="services-detail-image"
-                  />
-                </div>
-
-                <article className="services-detail-copy">
-                  <h2 className="services-detail-intro">{service.intro}</h2>
-                  <p className="services-detail-text">{service.copy}</p>
-                  <h3 className="services-detail-offer">{service.offerTitle}</h3>
-                  <ul className="services-detail-list">
-                    {service.bullets.map((bullet) => (
-                      <li key={bullet}>{bullet}</li>
-                    ))}
-                  </ul>
-                </article>
-              </div>
-            ))}
-
-            <div className="services-detail-cta-wrap">
-              <ExploreServicesButton
-                href="#services-overview"
-                variant="primary"
-                size="md"
-                label="Discover How We Work"
-              />
-            </div>
-          </div>
-        </section>
-
+      <div id="consultation">
         <ConsultationBanner />
-      </main>
-
-      <SiteFooter />
-    </div>
+      </div>
+    </MainTemplate>
   );
 }

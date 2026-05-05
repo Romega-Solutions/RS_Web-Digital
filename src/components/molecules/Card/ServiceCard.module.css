@@ -1,0 +1,48 @@
+@reference "../../../app/globals.css";
+
+.root {
+  @apply relative flex cursor-pointer flex-col items-center overflow-hidden rounded-2xl transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.02];
+}
+
+.image {
+  @apply h-112 w-full rounded-2xl object-cover shadow-[0_20px_50px_rgba(28,95,165,0.12)] transition-shadow duration-300 md:h-136;
+}
+
+.root:hover .image {
+  @apply shadow-[0_30px_60px_rgba(28,95,165,0.18)];
+}
+
+.overlay {
+  @apply pointer-events-none absolute inset-x-0 bottom-0 flex min-h-32 translate-y-3 items-end px-5 pb-5 pt-16 opacity-0 transition-all duration-300 ease-out;
+  background: linear-gradient(
+    180deg,
+    rgb(5 32 61 / 0) 0%,
+    rgb(5 32 61 / 0.66) 46%,
+    rgb(5 32 61 / 0.94) 100%
+  );
+}
+
+.overlay p {
+  @apply m-0 text-sm font-semibold leading-snug text-white;
+  text-shadow: 0 1px 10px rgb(0 0 0 / 0.35);
+}
+
+.root:hover .overlay,
+.root:focus-visible .overlay,
+.root:focus-within .overlay {
+  @apply translate-y-0 opacity-100;
+}
+
+.root:focus-visible {
+  @apply outline-none ring-2 ring-brand-primary ring-offset-4 ring-offset-page;
+}
+
+@media (max-width: 767px) {
+  .image {
+    @apply h-80;
+  }
+
+  .overlay {
+    @apply min-h-28 px-4 pb-4 pt-12;
+  }
+}

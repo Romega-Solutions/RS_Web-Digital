@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "validate:architecture": "node scripts/validate-architecture.mjs",
+    "lint": "npm run validate:architecture && eslint"
   },
   "dependencies": {
     "framer-motion": "^12.38.0",

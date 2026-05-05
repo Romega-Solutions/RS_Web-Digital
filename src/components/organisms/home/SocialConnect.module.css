@@ -1,0 +1,426 @@
+@reference "../../../app/globals.css";
+
+.root {
+  @apply relative overflow-hidden;
+  background-color: #f6e4b9;
+  padding-block: var(--section-space);
+  padding-inline: var(--layout-gutter);
+}
+
+.root {
+  background:
+    radial-gradient(circle at 12% 18%, rgb(53 141 240 / 0.13), transparent 28rem),
+    radial-gradient(circle at 88% 18%, rgb(254 189 25 / 0.18), transparent 24rem),
+    linear-gradient(135deg, rgb(238 248 246), rgb(246 251 255) 46%, rgb(255 248 224));
+  border-block: 1px solid rgb(9 75 143 / 0.1);
+}
+
+.root::before {
+  opacity: 0.58;
+}
+
+.inner {
+  align-items: center;
+  gap: clamp(2rem, 6vw, 5rem);
+}
+
+.copy {
+  position: relative;
+  max-width: 33.5rem;
+  padding: clamp(1.5rem, 3vw, 2.4rem);
+  border: 1px solid rgb(9 75 143 / 0.12);
+  border-radius: 1.6rem;
+  background: rgb(255 255 255 / 0.52);
+  box-shadow: 0 20px 54px rgb(9 75 143 / 0.09);
+  backdrop-filter: blur(10px);
+}
+
+.copy::before {
+  content: "";
+  position: absolute;
+  inset: 0.75rem auto auto 0.75rem;
+  width: 3.5rem;
+  height: 0.25rem;
+  border-radius: 999px;
+  background: rgb(254 189 25 / 0.9);
+}
+
+.title {
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+  white-space: nowrap;
+}
+
+.followRow {
+  margin-top: clamp(1.4rem, 3vw, 2rem);
+}
+
+.linkedinButton {
+  min-height: 3rem;
+  padding-inline: 1.15rem 1.35rem;
+  border: 1px solid rgb(255 255 255 / 0.38);
+  box-shadow:
+    0 14px 30px rgb(9 75 143 / 0.22),
+    inset 0 1px 0 rgb(255 255 255 / 0.24);
+}
+
+.linkedinButton:hover,
+.linkedinButton:focus-visible {
+  transform: translateY(-2px);
+  box-shadow:
+    0 18px 38px rgb(9 75 143 / 0.28),
+    inset 0 1px 0 rgb(255 255 255 / 0.28);
+}
+
+.linkedinIcon {
+  filter: drop-shadow(0 1px 0 rgb(255 255 255 / 0.18));
+}
+
+.visual {
+  position: relative;
+}
+
+.visual::before {
+  content: "";
+  position: absolute;
+  inset: 12% 4% 4% 10%;
+  border-radius: 2rem;
+  background:
+    linear-gradient(135deg, rgb(255 255 255 / 0.74), rgb(255 255 255 / 0.28)),
+    radial-gradient(circle at 72% 14%, rgb(53 141 240 / 0.18), transparent 12rem);
+  border: 1px solid rgb(255 255 255 / 0.62);
+  box-shadow: 0 28px 70px rgb(9 75 143 / 0.12);
+  z-index: -1;
+}
+
+.imageWrap {
+  transform: rotate(1.5deg);
+  filter: drop-shadow(0 28px 34px rgb(9 75 143 / 0.16));
+}
+
+.imageWrap:hover {
+  transform: rotate(0deg) translateY(-4px);
+}
+
+.root::before {
+  content: "";
+  @apply absolute inset-0 opacity-[0.03] pointer-events-none;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231c5fa5' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.inner {
+  @apply relative mx-auto grid w-full max-w-6xl items-start;
+  gap: var(--space-7);
+}
+
+.copy {
+  @apply pt-2;
+}
+
+.title {
+  @apply tracking-tight text-brand-secondary;
+  font-family: var(--font-display);
+  font-size: var(--type-display-xl);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+}
+
+.titleEmphasis {
+  @apply italic;
+}
+
+.text {
+  @apply mt-7 text-brand-secondary;
+  font-family: var(--font-body);
+  font-size: var(--type-heading-md);
+  line-height: 1.5;
+  max-width: min(100%, var(--measure-readable-tight));
+}
+
+.textLast {
+  @apply mt-8;
+}
+
+.followRow {
+  @apply mt-6;
+}
+
+.linkedinButton {
+  @apply inline-flex items-center gap-3 rounded-md px-4 py-2 text-white no-underline;
+  align-items: center;
+  background-color: #0a66c2;
+  box-shadow: 0 8px 20px rgb(10 102 194 / 0.12);
+}
+
+.linkedinIcon {
+  @apply block;
+  flex: 0 0 auto;
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.followText {
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.visual {
+  @apply mx-auto w-full max-w-xl;
+}
+
+.image {
+  @apply block h-auto w-full rounded-2xl;
+  box-shadow: 0 20px 50px rgb(28 95 165 / 0.15);
+}
+
+@media (min-width: 768px) {
+  .inner {
+    grid-template-columns: 0.95fr 1.05fr;
+    gap: 2.5rem;
+  }
+}
+
+@media (max-width: 980px) {
+  .title {
+    font-size: 3rem;
+    white-space: normal;
+  }
+
+  .text {
+    @apply text-lg;
+  }
+}
+
+@media (max-width: 767px) {
+  .inner {
+    @apply gap-7;
+  }
+
+  .copy {
+    @apply pt-0;
+  }
+
+  .title {
+    font-size: clamp(2.45rem, 11vw, 3rem);
+    line-height: 0.96;
+  }
+
+  .text {
+    @apply mt-5 text-lg;
+    line-height: 1.45;
+    max-width: min(100%, var(--measure-readable-mobile));
+  }
+
+  .textLast {
+    @apply mt-5;
+  }
+
+  .visual {
+    @apply max-w-sm;
+  }
+}
+
+/* SocialConnect visual polish overrides */
+.root {
+  background:
+    linear-gradient(180deg, rgb(250 253 255), rgb(247 251 255) 58%, rgb(255 252 242));
+  border-block: 1px solid rgb(9 75 143 / 0.06);
+}
+
+.root::before {
+  opacity: 0.035;
+}
+
+.inner {
+  align-items: center;
+  gap: clamp(2rem, 6vw, 5rem);
+}
+
+.copy {
+  position: relative;
+  max-width: 33.5rem;
+  padding: clamp(0.25rem, 1vw, 0.75rem) 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.copy::before {
+  content: "";
+  position: absolute;
+  inset: 0.75rem auto auto 0.75rem;
+  width: 3.5rem;
+  height: 0.25rem;
+  border-radius: 999px;
+  background: rgb(254 189 25 / 0.9);
+}
+
+.title {
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+  white-space: nowrap;
+}
+
+.followRow {
+  margin-top: clamp(1.4rem, 3vw, 2rem);
+}
+
+.linkedinButton {
+  min-height: 3rem;
+  padding-inline: 1.15rem 1.35rem;
+  border: 1px solid rgb(255 255 255 / 0.38);
+  box-shadow:
+    0 14px 30px rgb(9 75 143 / 0.22),
+    inset 0 1px 0 rgb(255 255 255 / 0.24);
+}
+
+.linkedinButton:hover,
+.linkedinButton:focus-visible {
+  transform: translateY(-2px);
+  box-shadow:
+    0 18px 38px rgb(9 75 143 / 0.28),
+    inset 0 1px 0 rgb(255 255 255 / 0.28);
+}
+
+.linkedinIcon {
+  filter: drop-shadow(0 1px 0 rgb(255 255 255 / 0.18));
+}
+
+.visual {
+  position: relative;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.visualFrame {
+  position: relative;
+  display: block;
+  scroll-margin-top: 6rem;
+}
+
+.visualHotspot {
+  position: absolute;
+  z-index: 2;
+  cursor: pointer;
+  border-radius: 0.75rem;
+  transition: box-shadow 160ms ease, transform 160ms ease;
+}
+
+.visualHotspot::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 0.55rem);
+  z-index: 3;
+  padding: 0.4rem 0.6rem;
+  border-radius: 999px;
+  color: #ffffff;
+  background: rgb(10 102 194 / 0.96);
+  box-shadow: 0 10px 22px rgb(10 102 194 / 0.22);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 0.25rem);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.visualHotspot::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 0.25rem);
+  z-index: 3;
+  width: 0.55rem;
+  height: 0.55rem;
+  background: rgb(10 102 194 / 0.96);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 0.25rem) rotate(45deg);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.visualHotspot:hover,
+.visualHotspot:focus-visible {
+  box-shadow:
+    0 0 0 2px rgb(255 255 255 / 0.92),
+    0 0 0 4px rgb(10 102 194 / 0.75),
+    0 12px 28px rgb(10 102 194 / 0.16);
+  transform: translateY(-0.12rem);
+}
+
+.visualHotspot:hover::after,
+.visualHotspot:focus-visible::after,
+.visualHotspot:hover::before,
+.visualHotspot:focus-visible::before {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.visualHotspot:hover::before,
+.visualHotspot:focus-visible::before {
+  transform: translate(-50%, 0) rotate(45deg);
+}
+
+.visualHotspot:focus-visible {
+  outline: 3px solid rgb(10 102 194 / 0.65);
+  outline-offset: 0.2rem;
+}
+
+.brandHotspot {
+  left: 24.5%;
+  top: 19%;
+  width: 24%;
+  height: 29%;
+}
+
+.brandHotspot::after {
+  top: calc(100% + 0.55rem);
+  bottom: auto;
+  transform: translate(-50%, -0.25rem);
+}
+
+.brandHotspot::before {
+  top: calc(100% + 0.25rem);
+  bottom: auto;
+  transform: translate(-50%, -0.25rem) rotate(45deg);
+}
+
+.linkedinHotspot {
+  left: 18%;
+  top: 58%;
+  width: 18%;
+  height: 20%;
+  border-radius: 1rem;
+}
+
+.hiringHotspot {
+  left: 68%;
+  top: 47%;
+  width: 23%;
+  height: 29%;
+}
+
+.visual::before {
+  display: none;
+}
+
+.image {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.imageWrap {
+  transform: rotate(1.5deg);
+  filter: drop-shadow(0 28px 34px rgb(9 75 143 / 0.16));
+  transition: transform 220ms ease, filter 220ms ease;
+}
+
+.imageWrap:hover {
+  transform: rotate(0deg) translateY(-4px);
+}

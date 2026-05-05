@@ -1,8 +1,10 @@
 "use client";
 
 import { TEAM_MEMBERS, type TeamMember } from "@/lib/constants";
+import { SectionIntro } from "@/components/molecules/content/SectionIntro";
 import Image from "next/image";
 import { useCallback, useRef, useState, type KeyboardEvent, type TouchEvent } from "react";
+import styles from "./TeamCarousel.module.css";
 
 type TeamCarouselProps = {
   onMemberClick?: (member: TeamMember) => void;
@@ -99,43 +101,40 @@ export function TeamCarousel({ onMemberClick }: TeamCarouselProps) {
   });
 
   return (
-    <section className="team-carousel" aria-labelledby="team-heading">
-      <div className="team-carousel__bg-grid" aria-hidden="true" />
+    <section className={styles.root} aria-labelledby="team-heading">
+      <div className={styles["bg-grid"]} aria-hidden="true" />
 
-      <div className="team-carousel__container">
-        <div className="team-carousel__header">
-          <h2 id="team-heading" className="team-carousel__title">
-            Meet the Experts Behind Your Success
-          </h2>
-          <p className="team-carousel__description">
-            Our team brings a blend of strategic insight, market perspective, and
-            practical experience in team building and brand support.
-          </p>
-        </div>
+      <div className={styles.container}>
+        <SectionIntro
+          align="center"
+          className={styles.header}
+          title={<span id="team-heading" className={styles.headingTitle}>Meet the People Behind Romega</span>}
+          body="A team shaped by practical experience in talent, brand support, and steady business growth."
+        />
 
         <div
-          className="team-carousel__track-wrapper"
+          className={styles["track-wrapper"]}
           tabIndex={0}
           onKeyDown={handleTrackKeyDown}
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
         >
-          <div ref={trackRef} className="team-carousel__track">
+          <div ref={trackRef} className={styles.track}>
             {visibleMembers.map(({ member, position }) => {
               const isCenter = position === 3;
+              const positionClass = styles[`item--position-${position}`];
+              const centerClass = isCenter ? styles["item--center"] : "";
 
               return (
                 <div
                   key={`${member.id}-${position}`}
-                  className={`team-carousel__item team-carousel__item--position-${position} ${
-                    isCenter ? "team-carousel__item--center" : ""
-                  }`}
+                  className={`${styles.item} ${positionClass} ${centerClass}`}
                 >
                   <button
                     type="button"
-                    className={`team-carousel__card ${
-                      member.id === "rich-salvador" ? "team-carousel__card--white-bg" : ""
+                    className={`${styles.card} ${
+                      member.id === "rich-salvador" ? styles["card--white-bg"] : ""
                     }`}
                     aria-label={`${member.name}, ${member.title}`}
                     disabled={!isCenter}
@@ -145,16 +144,16 @@ export function TeamCarousel({ onMemberClick }: TeamCarouselProps) {
                       src={member.image}
                       alt={member.name}
                       fill
-                      className="team-carousel__image"
+                      className={styles.image}
                       sizes="(max-width: 768px) 200px, 400px"
                     />
 
-                    <div className="team-carousel__overlay">
-                      <h3 className="team-carousel__name">{member.name}</h3>
-                      <p className="team-carousel__role">{member.title}</p>
+                    <div className={styles.overlay}>
+                      <h3 className={styles.name}>{member.name}</h3>
+                      <p className={styles.role}>{member.title}</p>
                     </div>
 
-                    {isCenter ? <div className="team-carousel__cta">View Profile</div> : null}
+                    {isCenter ? <div className={styles.cta}>View Profile</div> : null}
                   </button>
                 </div>
               );
@@ -162,26 +161,26 @@ export function TeamCarousel({ onMemberClick }: TeamCarouselProps) {
           </div>
         </div>
 
-        <div className="team-carousel__controls">
+        <div className={styles.controls}>
           <button
             type="button"
-            className="team-carousel__button"
+            className={styles.button}
             onClick={() => handleScroll(-1)}
             aria-label="Previous team member"
             disabled={isAnimating}
           >
-            <span className="team-carousel__icon" aria-hidden="true">
+            <span className={styles.icon} aria-hidden="true">
               &lt;
             </span>
           </button>
 
-          <div className="team-carousel__dots">
+          <div className={styles.dots}>
             {TEAM_MEMBERS.map((member, index) => (
               <button
                 key={member.id}
                 type="button"
-                className={`team-carousel__dot ${
-                  index === currentIndex ? "team-carousel__dot--active" : ""
+                className={`${styles.dot} ${
+                  index === currentIndex ? styles["dot--active"] : ""
                 }`}
                 onClick={() => goToSlide(index)}
                 aria-label={`Go to ${member.name}`}
@@ -192,12 +191,12 @@ export function TeamCarousel({ onMemberClick }: TeamCarouselProps) {
 
           <button
             type="button"
-            className="team-carousel__button"
+            className={styles.button}
             onClick={() => handleScroll(1)}
             aria-label="Next team member"
             disabled={isAnimating}
           >
-            <span className="team-carousel__icon" aria-hidden="true">
+            <span className={styles.icon} aria-hidden="true">
               &gt;
             </span>
           </button>

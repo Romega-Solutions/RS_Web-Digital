@@ -1,9 +1,10 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
+import { FormCheckbox, FormInput, FormSelect, FormTextarea } from "@/components/atoms/Form";
+import { AppButton } from "@/components/atoms/Button";
 import { siteConfig } from "@/lib/seo";
+import styles from "./ContactPageClient.module.css";
 
 type FormState = {
   firstName: string;
@@ -45,6 +46,27 @@ const subjectOptions = [
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const phonePattern = /^\+?[0-9()\s.-]{7,}$/;
+
+const socialLinks: { href: string; label: string; text: string; title: string }[] = [
+  {
+    href: siteConfig.linkedIn,
+    label: "LinkedIn",
+    text: "in/romega-solutions",
+    title: "Visit Romega Solutions on LinkedIn (@romega-solutions)",
+  },
+  {
+    href: siteConfig.facebook,
+    label: "Facebook",
+    text: "fb/romega-solutions",
+    title: "Visit Romega Solutions on Facebook (@romega-solutions)",
+  },
+  {
+    href: siteConfig.instagram,
+    label: "Instagram",
+    text: "ig/romega-solutions",
+    title: "Visit Romega Solutions on Instagram (@romega-solutions)",
+  },
+];
 
 export default function ContactPageClient() {
   const [form, setForm] = useState<FormState>(initialFormState);
@@ -126,7 +148,16 @@ export default function ContactPageClient() {
         }),
       });
 
-      const payload = (await response.json()) as { success?: boolean; message?: string };
+      let payload: { success?: boolean; message?: string; code?: string };
+      try {
+        payload = (await response.json()) as {
+          success?: boolean;
+          message?: string;
+          code?: string;
+        };
+      } catch {
+        throw new Error("The server returned an invalid response. Please try again.");
+      }
 
       if (!response.ok || !payload.success) {
         throw new Error(payload.message || "Unable to send your message right now.");
@@ -177,263 +208,173 @@ export default function ContactPageClient() {
   }
 
   return (
-    <main id="main-content" tabIndex={-1}>
-      <section className="contact-page">
-        <div className="contact-page-inner">
-          <div className="contact-page-info">
-            <h1 className="contact-page-title">Contact Us</h1>
-            <p className="contact-page-copy">
+      <section className={styles.page}>
+        <div className={styles.inner}>
+          <div className={styles.info}>
+            <h1 className={styles.title}>Contact Us</h1>
+            <p className={styles.copy}>
               If you&apos;re looking to build your team, strengthen your brand, or explore new
               opportunities for growth, we&apos;d love to hear from you. Share your details and our team
               will be in touch soon.
             </p>
 
-            <div className="contact-page-divider" />
+            <div className={styles.divider} />
 
-            <div className="contact-page-block">
+            <div className={styles.block}>
               <h2>Location</h2>
               <p>222 Pacific Coast Hwy, #10 in El Segundo, California 90245</p>
             </div>
 
-            <div className="contact-page-block">
+            <div className={styles.block}>
               <h2>Email</h2>
               <a href="mailto:info@romega-solutions.com">info@romega-solutions.com</a>
             </div>
 
-            <div className="contact-page-block">
-              <h2>Connect with Us</h2>
-              <div className="contact-page-socials">
-                <a
-                  href={siteConfig.linkedIn}
-                  aria-label="LinkedIn"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Image
-                    src="/2.0%20Website%20Assets/20.png"
-                    alt=""
-                    width={56}
-                    height={56}
-                    className="contact-page-social-icon"
-                  />
-                </a>
-                <a
-                  href={siteConfig.facebook}
-                  aria-label="Facebook"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Image
-                    src="/2.0%20Website%20Assets/18.png"
-                    alt=""
-                    width={56}
-                    height={56}
-                    className="contact-page-social-icon"
-                  />
-                </a>
-                <a
-                  href={siteConfig.instagram}
-                  aria-label="Instagram"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Image
-                    src="/2.0%20Website%20Assets/19.png"
-                    alt=""
-                    width={56}
-                    height={56}
-                    className="contact-page-social-icon"
-                  />
-                </a>
+            <div className={styles.block}>
+              <h2>Social</h2>
+              <div className={styles.socials}>
+                {socialLinks.map((social) => (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={social.title}
+                    aria-label={`Open Romega Solutions ${social.label}`}
+                  >
+                    {social.text}
+                  </a>
+                ))}
               </div>
             </div>
           </div>
 
-          <div className="contact-page-form-wrap">
-            <form className="contact-form" onSubmit={handleSubmit} noValidate>
-              <div className="contact-form-grid">
-                <label className="contact-field">
-                  <span>First Name*</span>
-                  <input
-                    type="text"
-                    value={form.firstName}
-                    onChange={(event) => updateField("firstName", event.target.value)}
-                    required
-                    autoComplete="given-name"
-                    aria-invalid={errors.firstName ? "true" : "false"}
-                    aria-describedby={errors.firstName ? "contact-first-name-error" : undefined}
-                  />
-                  {errors.firstName ? (
-                    <span id="contact-first-name-error" className="contact-field-error">
-                      {errors.firstName}
-                    </span>
-                  ) : null}
-                </label>
+          <div className={styles.formWrap}>
+            <form className={styles.form} onSubmit={handleSubmit} noValidate>
+              <div className={styles.formGrid}>
+                <FormInput
+                  label="First Name*"
+                  type="text"
+                  value={form.firstName}
+                  onChange={(event) => updateField("firstName", event.target.value)}
+                  error={errors.firstName}
+                  required
+                  autoComplete="given-name"
+                />
 
-                <label className="contact-field">
-                  <span>Last Name*</span>
-                  <input
-                    type="text"
-                    value={form.lastName}
-                    onChange={(event) => updateField("lastName", event.target.value)}
-                    required
-                    autoComplete="family-name"
-                    aria-invalid={errors.lastName ? "true" : "false"}
-                    aria-describedby={errors.lastName ? "contact-last-name-error" : undefined}
-                  />
-                  {errors.lastName ? (
-                    <span id="contact-last-name-error" className="contact-field-error">
-                      {errors.lastName}
-                    </span>
-                  ) : null}
-                </label>
+                <FormInput
+                  label="Last Name*"
+                  type="text"
+                  value={form.lastName}
+                  onChange={(event) => updateField("lastName", event.target.value)}
+                  error={errors.lastName}
+                  required
+                  autoComplete="family-name"
+                />
               </div>
 
-              <div className="contact-form-grid">
-                <label className="contact-field">
-                  <span>Email address*</span>
-                  <input
-                    type="email"
-                    value={form.email}
-                    onChange={(event) => updateField("email", event.target.value)}
-                    required
-                    autoComplete="email"
-                    aria-invalid={errors.email ? "true" : "false"}
-                    aria-describedby={errors.email ? "contact-email-error" : undefined}
-                  />
-                  {errors.email ? (
-                    <span id="contact-email-error" className="contact-field-error">
-                      {errors.email}
-                    </span>
-                  ) : null}
-                </label>
+              <div className={styles.formGrid}>
+                <FormInput
+                  label="Email address*"
+                  type="email"
+                  value={form.email}
+                  onChange={(event) => updateField("email", event.target.value)}
+                  error={errors.email}
+                  required
+                  autoComplete="email"
+                />
 
-                <label className="contact-field">
-                  <span>Select Subject*</span>
-                  <select
-                    value={form.subject}
-                    onChange={(event) => updateField("subject", event.target.value)}
-                    required
-                    aria-invalid={errors.subject ? "true" : "false"}
-                    aria-describedby={errors.subject ? "contact-subject-error" : undefined}
-                  >
+                <FormSelect
+                  label="Select Subject*"
+                  value={form.subject}
+                  onChange={(event) => updateField("subject", event.target.value)}
+                  error={errors.subject}
+                  required
+                >
                     <option value="">Select a subject</option>
                     {subjectOptions.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
                       </option>
                     ))}
-                  </select>
-                  {errors.subject ? (
-                    <span id="contact-subject-error" className="contact-field-error">
-                      {errors.subject}
-                    </span>
-                  ) : null}
-                </label>
+                </FormSelect>
               </div>
 
-              <div className="contact-form-grid">
-                <label className="contact-field">
-                  <span>Company Name (Optional)</span>
-                  <input
-                    type="text"
-                    value={form.company}
-                    onChange={(event) => updateField("company", event.target.value)}
-                    autoComplete="organization"
-                  />
-                </label>
+              <div className={styles.formGrid}>
+                <FormInput
+                  label="Company Name (Optional)"
+                  type="text"
+                  value={form.company}
+                  onChange={(event) => updateField("company", event.target.value)}
+                  autoComplete="organization"
+                />
 
-                <label className="contact-field">
-                  <span>Contact Number*</span>
-                  <input
-                    type="tel"
-                    value={form.phone}
-                    onChange={(event) => updateField("phone", event.target.value)}
-                    required
-                    autoComplete="tel"
-                    aria-invalid={errors.phone ? "true" : "false"}
-                    aria-describedby={errors.phone ? "contact-phone-error" : undefined}
-                  />
-                  {errors.phone ? (
-                    <span id="contact-phone-error" className="contact-field-error">
-                      {errors.phone}
-                    </span>
-                  ) : null}
-                </label>
+                <FormInput
+                  label="Contact Number*"
+                  type="tel"
+                  value={form.phone}
+                  onChange={(event) => updateField("phone", event.target.value)}
+                  error={errors.phone}
+                  required
+                  autoComplete="tel"
+                />
               </div>
 
-              <label className="contact-field contact-honeypot" aria-hidden="true">
-                <span>Leave this field empty</span>
+              {/* Honeypot */}
+              <div className="sr-only">
+                <label htmlFor="contact-botfield">Leave this field empty</label>
                 <input
+                  id="contact-botfield"
                   tabIndex={-1}
                   autoComplete="off"
                   type="text"
                   value={form.botfield}
                   onChange={(event) => updateField("botfield", event.target.value)}
                 />
-              </label>
-
-              <label className="contact-field">
-                <span>Message*</span>
-                <textarea
-                  value={form.message}
-                  onChange={(event) => updateField("message", event.target.value)}
-                  required
-                  rows={4}
-                  aria-invalid={errors.message ? "true" : "false"}
-                  aria-describedby={errors.message ? "contact-message-error" : undefined}
-                />
-                {errors.message ? (
-                  <span id="contact-message-error" className="contact-field-error">
-                    {errors.message}
-                  </span>
-                ) : null}
-              </label>
-
-              <div className="contact-consent-wrap">
-                <label className="contact-consent-label">
-                  <input
-                    type="checkbox"
-                    checked={form.privacyConsent}
-                    onChange={(event) => updateField("privacyConsent", event.target.checked)}
-                    required
-                    aria-invalid={errors.privacyConsent ? "true" : "false"}
-                    aria-describedby={errors.privacyConsent ? "contact-privacy-error" : undefined}
-                  />
-                  <span className="contact-consent-text">
-                    I agree to the{" "}
-                    <Link href="/privacy" target="_blank" className="contact-link">
-                      Privacy Policy
-                    </Link>{" "}
-                    and consent to the processing of my personal data for the purpose of handling this
-                    inquiry.*
-                  </span>
-                </label>
-                {errors.privacyConsent ? (
-                  <span id="contact-privacy-error" className="contact-field-error">
-                    {errors.privacyConsent}
-                  </span>
-                ) : null}
               </div>
+
+              <FormTextarea
+                label="Message*"
+                value={form.message}
+                onChange={(event) => updateField("message", event.target.value)}
+                error={errors.message}
+                required
+                rows={4}
+              />
+
+              <FormCheckbox
+                label="I agree to the Privacy Policy and consent to the processing of my personal data for the purpose of handling this inquiry.*"
+                checked={form.privacyConsent}
+                onChange={(event) => updateField("privacyConsent", event.target.checked)}
+                error={errors.privacyConsent}
+                required
+              />
 
               {status.type !== "idle" ? (
                 <p
                   ref={statusRef}
                   tabIndex={-1}
                   role={status.type === "error" ? "alert" : "status"}
-                  className={`contact-form-status contact-form-status-${status.type}`}
+                  className={`${styles.status} ${
+                    status.type === "success" ? styles.statusSuccess : styles.statusError
+                  }`}
                 >
                   {status.message}
                 </p>
               ) : null}
 
-              <button type="submit" className="contact-submit" disabled={isSubmitting}>
+              <AppButton 
+                type="submit" 
+                variant="primary" 
+                size="lg" 
+                disabled={isSubmitting}
+                className={styles.submitButton}
+              >
                 {isSubmitting ? "Sending..." : "Submit"}
-              </button>
+              </AppButton>
             </form>
           </div>
         </div>
       </section>
-    </main>
   );
 }

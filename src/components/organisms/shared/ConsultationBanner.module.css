@@ -1,0 +1,81 @@
+@reference "../../../app/globals.css";
+
+.root {
+  @apply relative isolate overflow-hidden;
+  padding-inline: var(--layout-gutter);
+}
+
+.media {
+  @apply absolute inset-0;
+}
+
+.image {
+  @apply h-full w-full object-cover;
+}
+
+.overlay {
+  @apply absolute inset-0;
+  background:
+    linear-gradient(180deg, rgb(35 26 18 / 0.24), rgb(35 26 18 / 0.42)),
+    linear-gradient(90deg, rgb(255 255 255 / 0.08), transparent 30%, transparent 70%, rgb(255 255 255 / 0.05));
+}
+
+.content {
+  @apply relative z-10 mx-auto flex min-h-72 w-full max-w-4xl flex-col items-center justify-center text-center text-white md:min-h-84;
+}
+
+.title {
+  @apply text-[2.8rem] leading-[0.96] tracking-tight md:text-[4.2rem];
+  font-family: var(--font-display);
+}
+
+.emphasis {
+  @apply relative inline-block px-1.5;
+}
+
+.emphasis::after {
+  content: "";
+  @apply pointer-events-none absolute -inset-x-5 -inset-y-2 md:-inset-x-7 md:-inset-y-3;
+  border: 3px solid rgb(255 255 255 / 0.92);
+  border-radius: 58% 42% 54% 46% / 48% 55% 45% 52%;
+  transform: rotate(2deg);
+}
+
+.copy {
+  @apply mt-4 text-[1rem] leading-[1.5] text-white/95 md:text-[1.35rem];
+  font-family: var(--font-body);
+  max-width: min(100%, var(--measure-readable));
+}
+
+.button {
+  @apply mt-6;
+}
+
+@media (max-width: 767px) {
+  .root {
+    @apply px-0;
+  }
+
+  .content {
+    @apply min-h-64 px-5;
+  }
+
+  .title {
+    font-size: 2.35rem;
+    line-height: 0.98;
+  }
+
+  .copy {
+    @apply text-[0.98rem];
+    max-width: min(100%, var(--measure-readable-mobile));
+  }
+
+  .emphasis::after {
+    @apply -inset-x-4 -inset-y-1.5;
+    border-width: 2px;
+  }
+
+  .button {
+    @apply w-full max-w-xs justify-center;
+  }
+}

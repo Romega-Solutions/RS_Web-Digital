@@ -1,0 +1,87 @@
+.root {
+  @apply bg-white text-black;
+  padding-block: var(--section-space);
+  padding-inline: var(--layout-gutter);
+}
+
+.inner {
+  @apply mx-auto grid w-full max-w-6xl items-stretch gap-8 sm:grid-cols-[0.9fr_1.1fr] md:grid-cols-[0.95fr_1.05fr] md:gap-10;
+}
+
+.photoFrame {
+  @apply relative min-h-80 overflow-hidden bg-surface sm:min-h-[26rem] md:min-h-[32rem] rounded-2xl;
+}
+
+.photo {
+  @apply object-cover;
+  object-position: left center;
+}
+
+.copy {
+  @apply flex flex-col justify-center md:pl-2;
+}
+
+.title {
+  @apply text-[2.2rem] leading-none font-medium text-brand-secondary md:text-[3rem];
+  font-family: var(--font-display);
+}
+
+.lead {
+  @apply mt-4 text-[1rem] leading-[1.55] text-black md:text-[1.05rem];
+  font-family: var(--font-body);
+  max-width: min(100%, var(--measure-readable-tight));
+}
+
+.list {
+  @apply mt-8 flex flex-col gap-7;
+  font-family: var(--font-body);
+}
+
+.item h3 {
+  @apply max-w-lg text-[1.35rem] leading-[1.05] font-semibold text-brand-secondary md:text-[1.75rem];
+}
+
+.phrase {
+  @apply sm:whitespace-nowrap;
+}
+
+.initial {
+  @apply inline-block text-[1.6rem] leading-none font-bold md:text-[2.1rem];
+}
+
+.item p {
+  @apply mt-3 text-[0.98rem] leading-[1.5] text-black md:text-[1rem];
+  font-family: var(--font-body);
+  max-width: min(100%, var(--measure-readable-tight));
+}
+
+@media (max-width: 767px) {
+  .root {
+    padding-block: var(--section-space-compact);
+  }
+
+  .inner {
+    @apply gap-6;
+  }
+
+  .photoFrame {
+    @apply min-h-64 rounded-[1.5rem];
+  }
+
+  .title {
+    @apply text-[2.05rem];
+  }
+
+  .lead {
+    @apply mt-3 text-[0.98rem];
+  }
+
+  .list {
+    @apply mt-6 gap-6;
+  }
+
+  .item h3 {
+    @apply text-[1.22rem];
+  }
+}
+@reference "../../../app/globals.css";

@@ -1,33 +1,34 @@
 import Image from "next/image";
+import styles from "./AboutPartnersSection.module.css";
 
 export function AboutPartnersSection() {
   return (
-    <section className="about-partners-section" aria-labelledby="about-partners-title">
-      <div className="about-partners-inner">
-        <h2 id="about-partners-title" className="about-partners-title">
+    <section className={styles.root} aria-labelledby="about-partners-title">
+      <div className={styles.inner}>
+        <h2 id="about-partners-title" className={styles.title}>
           Who We Partner With
         </h2>
 
-        <div className="about-partners-copy">
+        <div className={styles.copy}>
           <p>
-            We work with founders, executives, and growing teams from startups to
-            established organizations, all who share one thing in common: a
-            commitment to build growth that&apos;s intentional, confident, and strategic.
+            We work with founders, executives, and growing teams, from startups
+            to established organizations, who share one common goal: building
+            growth that feels intentional, confident, and well-directed.
           </p>
           <p>
-            Whether you&apos;re expanding into new markets, building internal
-            capabilities, or strengthening your brand identity,{" "}
-            <strong>Romega stands with you as a growth partner.</strong>
+            Whether you&apos;re entering new markets, building internal
+            capability, or strengthening your brand,{" "}
+            <strong>Romega works alongside you as a growth partner.</strong>
           </p>
         </div>
 
-        <div className="about-partners-map" aria-label="Romega partner regions">
+        <div className={styles.map} aria-label="Romega partner regions">
           <Image
-            src="/map.png"
+            src="/map.webp"
             alt="World map showing Romega partner regions"
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1200px"
-            className="about-partners-world"
+            className={styles.world}
             priority={false}
           />
         </div>

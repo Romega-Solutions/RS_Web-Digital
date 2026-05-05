@@ -1,0 +1,83 @@
+.root {
+  @apply bg-white text-black;
+  padding-block: var(--section-space);
+  padding-inline: var(--layout-gutter);
+}
+
+.inner {
+  @apply mx-auto flex w-full max-w-6xl flex-col gap-12;
+}
+
+.row {
+  @apply grid items-start gap-8 md:grid-cols-[0.94fr_1.06fr] md:gap-10;
+}
+
+.rowReverse {
+  @apply md:grid-cols-[1.06fr_0.94fr];
+}
+
+.rowReverse .media {
+  @apply md:order-2;
+}
+
+.rowReverse .copy {
+  @apply md:order-1;
+}
+
+.media {
+  @apply relative min-h-76 overflow-hidden bg-[#d8ddd9] rounded-2xl md:min-h-92;
+  box-shadow: 0 18px 44px rgb(16 24 40 / 0.12);
+}
+
+.image {
+  @apply h-full w-full object-cover;
+}
+
+.copy {
+  @apply flex flex-col justify-center;
+}
+
+.intro {
+  @apply text-3xl leading-[0.95] font-bold text-brand-secondary md:text-[2.6rem];
+  font-family: var(--font-body);
+}
+
+.text {
+  @apply mt-4 text-sm leading-relaxed text-black/75 md:text-[1.06rem];
+  font-family: var(--font-body);
+  max-width: min(100%, var(--measure-readable-tight));
+}
+
+.offer {
+  @apply mt-5 text-2xl leading-none font-bold text-brand-secondary md:text-[2.15rem];
+  font-family: var(--font-body);
+}
+
+.list {
+  @apply mt-3 space-y-1.5 pl-5 text-sm leading-relaxed text-black/85 marker:text-brand-secondary md:text-[1.02rem];
+  font-family: var(--font-body);
+}
+
+.list li {
+  @apply list-disc;
+}
+
+.ctaWrap {
+  @apply flex justify-center pt-2;
+}
+
+@media (max-width: 767px) {
+  .root {
+    @apply py-12;
+  }
+
+  .intro {
+    @apply text-2xl;
+  }
+
+  .text,
+  .list {
+    @apply text-sm;
+  }
+}
+@reference "../../../app/globals.css";

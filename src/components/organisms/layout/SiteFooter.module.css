@@ -1,0 +1,430 @@
+@reference "../../../app/globals.css";
+
+.root {
+  @apply bg-white pt-10;
+  font-family: var(--font-body);
+  scroll-margin-top: 6rem;
+}
+
+.root * {
+  font-family: inherit;
+}
+
+.inner {
+  @apply relative mx-auto grid w-full max-w-7xl grid-cols-1 gap-7 pb-10;
+  padding-inline: var(--layout-gutter);
+}
+
+.brand {
+  @apply mx-auto flex max-w-xs flex-col items-center gap-4 text-center;
+  @apply md:mx-0 md:items-start md:text-left;
+}
+
+.mainRight {
+  @apply grid justify-items-center gap-5;
+}
+
+.logoWrap {
+  @apply flex shrink-0 items-start justify-center;
+  @apply md:justify-start;
+  width: 12rem;
+}
+
+.logoImage {
+  @apply block h-auto w-full object-contain;
+}
+
+@media (min-width: 640px) {
+  .logoWrap {
+    width: 12.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .logoWrap {
+    width: 13rem;
+  }
+}
+
+.tagline {
+  @apply w-full max-w-[18rem] text-center text-[0.84rem] leading-[1.6] text-brand-secondary/88;
+  @apply md:text-left md:text-[0.9rem];
+}
+
+.links {
+  @apply flex flex-col items-center gap-3 text-center text-brand-secondary;
+  @apply md:items-start md:text-left;
+  @apply lg:border-r lg:border-brand-secondary/12 lg:pr-5;
+}
+
+.links a {
+  @apply text-base font-medium transition-all duration-200;
+  color: rgb(28 95 165 / 0.75);
+}
+
+.navGroups {
+  @apply flex w-full flex-col gap-4;
+  width: 100%;
+  justify-content: center;
+}
+
+.navGroup {
+  @apply flex flex-col items-center gap-2 px-1 py-1;
+}
+
+.navGroupTitle {
+  @apply text-[0.68rem] font-bold uppercase tracking-[0.2em] text-brand-secondary/62;
+}
+
+.navList {
+  @apply m-0 flex list-none flex-col gap-1.5 p-0 text-center;
+}
+
+.navList li a {
+  @apply text-[0.98rem] font-medium leading-none;
+}
+
+.links a:hover {
+  @apply underline;
+  color: rgb(28 95 165 / 1);
+}
+
+.connect {
+  @apply flex flex-col items-center gap-4;
+  @apply md:items-stretch;
+}
+
+.connect h3 {
+  @apply text-[0.72rem] font-bold uppercase tracking-[0.2em] text-brand-secondary/62;
+}
+
+.socials {
+  @apply flex items-center gap-4;
+}
+
+.socialLink {
+  @apply inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-secondary/25 bg-white text-brand-secondary transition-all duration-200;
+  will-change: transform, box-shadow;
+}
+
+.socialLink:hover {
+  @apply border-brand-secondary/45 shadow-sm;
+  transform: translateY(-1px);
+}
+
+.socialLink:active {
+  @apply shadow-none;
+  transform: translateY(0);
+}
+
+.socialLink:focus-visible {
+  @apply outline-none ring-2 ring-brand-primary ring-offset-2 ring-offset-white;
+}
+
+.socialIcon {
+  @apply h-6 w-6 object-contain;
+  transition: opacity 0.2s ease;
+}
+
+.socialLink:focus-visible .socialIcon {
+  opacity: 1;
+}
+
+.socialLabel {
+  @apply sr-only;
+}
+
+.mapCard {
+  @apply w-full max-w-sm overflow-hidden rounded-2xl border border-brand-secondary/10 bg-brand-secondary/5 shadow-sm;
+  @apply md:max-w-none md:justify-self-stretch;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.mapLink {
+  @apply block overflow-hidden;
+}
+
+.mapFrame {
+  @apply block w-full object-cover;
+  border: 0;
+  height: 100%;
+  min-height: 11rem;
+}
+
+@media (min-width: 768px) {
+  .inner {
+    grid-template-columns: minmax(0, 1fr) minmax(19rem, 1.05fr);
+    align-items: stretch;
+    column-gap: 1.25rem;
+    row-gap: 1.25rem;
+  }
+
+  .mainRight {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+    justify-items: stretch;
+    row-gap: 1.25rem;
+  }
+
+  .mapFrame {
+    min-height: 15rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .inner {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    column-gap: 1.5rem;
+  }
+
+  .mainRight {
+    grid-template-columns: minmax(12rem, 0.65fr) minmax(11rem, 0.65fr) minmax(18rem, 1.4fr);
+    column-gap: 1.25rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .mapFrame {
+    min-height: 17rem;
+  }
+}
+
+.mapMeta {
+  grid-template-columns: minmax(12rem, 0.65fr) minmax(11rem, 0.65fr) minmax(18rem, 1.4fr);
+  @apply flex flex-col gap-1 px-4 py-3 text-center;
+  row-gap: 0;
+  @apply md:text-left;
+}
+
+.mapLabel {
+  @apply text-[0.68rem] font-bold uppercase tracking-[0.18em] text-brand-secondary/70;
+}
+
+.mapMeta a {
+  @apply text-[0.82rem] leading-snug text-brand-secondary underline-offset-2 hover:underline;
+}
+
+.contactBlock {
+  @apply mt-4 flex items-start justify-center gap-3 text-center text-[0.82rem] text-brand-secondary;
+  @apply md:justify-start md:text-left md:text-[0.9rem];
+}
+
+.contactIcon {
+  @apply h-[1.05rem] w-[1.05rem] shrink-0 text-brand-secondary;
+}
+
+.contactCopy {
+  @apply flex flex-col gap-0.5;
+}
+
+.contactLabel {
+  @apply text-[0.68rem] font-bold uppercase tracking-[0.18em] text-brand-secondary/70;
+}
+
+.contactText {
+  @apply text-brand-secondary underline-offset-2;
+}
+
+.contactBlock:focus-visible {
+  @apply outline-none ring-2 ring-brand-primary ring-offset-2 ring-offset-white;
+}
+
+.contactBlock:hover .contactText {
+  @apply underline;
+}
+
+.contactBlock address {
+  font-style: normal;
+}
+
+.contactCopy a,
+.contactCopy span:last-child {
+  @apply leading-snug;
+}
+
+.contactCopy a {
+  @apply flex flex-col;
+}
+
+.contactCopy a:hover {
+  @apply underline-offset-2 hover:underline;
+}
+
+.backtop {
+  @apply hidden items-center justify-center text-brand-secondary;
+  @apply lg:flex;
+  position: fixed;
+  right: 1.25rem;
+  bottom: 4.25rem;
+  z-index: 60;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 999px;
+  border: 1px solid rgb(28 95 165 / 0.18);
+  background: rgb(255 255 255 / 0.92);
+  box-shadow: 0 12px 30px rgb(16 24 40 / 0.14);
+  backdrop-filter: blur(10px);
+}
+
+.backtopArrow {
+  @apply text-xl leading-none;
+}
+
+.backtop span:last-child {
+  @apply sr-only;
+}
+
+.backtop:hover,
+.backtop:focus-visible {
+  @apply bg-brand-secondary text-white outline-none;
+  box-shadow: 0 16px 36px rgb(16 24 40 / 0.2);
+}
+
+.legal {
+  @apply bg-brand-secondary px-4 py-3 text-center text-xs text-white;
+  @apply md:text-sm;
+  font-family: var(--font-body);
+}
+
+.legal p {
+  @apply flex flex-wrap items-center justify-center gap-2;
+}
+
+.legal a {
+  @apply underline-offset-2 hover:underline text-white;
+}
+
+.legalSeparator {
+  @apply px-1 text-white/90;
+}
+
+@media (max-width: 767px) {
+  .root {
+    @apply pt-24;
+  }
+
+  .inner {
+    @apply gap-6;
+  }
+
+  .brand,
+  .links,
+  .connect {
+    @apply max-w-none border-none pr-0;
+    width: 100%;
+  }
+
+  .mapCard {
+    @apply hidden;
+  }
+
+  .links {
+    @apply gap-2;
+  }
+
+  .links a,
+  .connect h3 {
+    @apply text-sm;
+  }
+
+  .navGroups {
+    @apply gap-3;
+  }
+
+  .navGroup {
+    @apply w-full rounded-2xl border border-brand-secondary/10 bg-brand-secondary/5 px-4 py-3;
+  }
+
+  .navGroupTitle {
+    @apply text-[0.62rem];
+  }
+
+  .navList li a {
+    @apply text-[0.95rem];
+  }
+
+  .contactBlock {
+    @apply mt-3 w-full flex-col items-center justify-center rounded-2xl border border-brand-secondary/10 bg-white px-4 py-3 text-center text-xs shadow-sm;
+  }
+
+  .contactCopy {
+    @apply items-center text-center;
+  }
+
+  .contactCopy a {
+    @apply text-center;
+  }
+
+  .tagline {
+    @apply max-w-xs text-[0.82rem] leading-[1.6];
+  }
+
+  .socials {
+    @apply flex-wrap justify-center gap-3;
+  }
+
+  .mapCard {
+    @apply max-w-none rounded-3xl;
+  }
+
+  .mapFrame {
+    min-height: 13rem;
+  }
+}
+
+@media (max-height: 520px) and (orientation: landscape) {
+  .root {
+    @apply pt-20;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .inner {
+    grid-template-columns: minmax(16rem, 0.9fr) minmax(18rem, 1fr);
+  }
+
+  .brand {
+    align-self: start;
+  }
+
+  .mainRight {
+    display: contents;
+  }
+
+  .navGroups,
+  .links,
+  .connect {
+    width: 100%;
+  }
+
+  .links {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: start;
+  }
+
+  .navGroups {
+    @apply flex-row flex-wrap justify-start;
+  }
+
+  .navGroup {
+    @apply min-w-40 flex-1 rounded-2xl border border-brand-secondary/10 bg-brand-secondary/5 px-4 py-3;
+  }
+
+  .connect {
+    @apply gap-5;
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: start;
+  }
+
+  .contactBlock {
+    @apply mt-3 rounded-2xl border border-brand-secondary/10 bg-white px-4 py-3 shadow-sm;
+  }
+
+  .mapCard {
+    @apply hidden;
+  }
+}

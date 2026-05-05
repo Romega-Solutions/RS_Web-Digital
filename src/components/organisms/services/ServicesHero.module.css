@@ -1,0 +1,62 @@
+.root {
+  @apply relative isolate overflow-hidden;
+  min-height: var(--page-hero-min-height);
+}
+
+.media {
+  @apply absolute inset-0;
+}
+
+.image {
+  @apply h-full w-full object-cover;
+}
+
+.overlay {
+  @apply absolute inset-0;
+  background: linear-gradient(180deg, rgb(24 26 31 / 0.22), rgb(24 26 31 / 0.36));
+}
+
+.inner {
+  @apply relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center justify-center text-center text-white;
+  min-height: var(--page-hero-content-min-height);
+  padding-top: calc(var(--site-header-height, 5rem) + var(--space-7));
+  padding-bottom: var(--space-8);
+  padding-inline: var(--layout-gutter);
+}
+
+.title {
+  @apply text-[2.9rem] leading-[0.92] tracking-tight text-white md:text-[5.6rem];
+  font-family: var(--font-display);
+}
+
+.highlight {
+  @apply text-brand-primary;
+}
+
+.copy {
+  @apply mt-8 text-xl leading-tight text-white/95 md:text-[2rem];
+  font-family: var(--font-body);
+  max-width: min(100%, var(--measure-readable));
+}
+
+.button {
+  @apply mt-10;
+}
+
+@media (max-width: 767px) {
+  .inner {
+    padding-top: calc(var(--site-header-height, 4.75rem) + var(--space-6));
+    padding-bottom: var(--space-7);
+  }
+
+  .title {
+    font-size: 3rem;
+    line-height: 0.94;
+  }
+
+  .copy {
+    @apply text-lg;
+    max-width: min(100%, var(--measure-readable-mobile));
+  }
+}
+@reference "../../../app/globals.css";

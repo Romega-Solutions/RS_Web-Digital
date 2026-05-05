@@ -19,13 +19,21 @@ export function LegalPageCloseButton() {
     <motion.button
       type="button"
       onClick={handleClose}
-      className="inline-flex items-center justify-center rounded-full bg-brand-secondary px-8 py-2.5 text-base font-semibold text-white shadow-md transition-colors hover:bg-[#245fa2]"
+      className="group inline-flex items-center justify-center gap-2 rounded-full bg-brand-secondary px-10 py-4 text-lg font-bold text-white shadow-xl transition-all hover:bg-[#1a5595]"
       aria-label="Close legal page"
-      whileHover={{ y: -1, scale: 1.02, boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)" }}
-      whileTap={{ scale: 0.98 }}
-      transition={{ duration: 0.16, ease: "easeOut" }}
+      whileHover={{ y: -4, scale: 1.05, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.2)" }}
+      whileTap={{ scale: 0.95 }}
+      transition={{ duration: 0.2, ease: "backOut" }}
     >
-      Close Page
+      <span>Close Legal Review</span>
+      <svg
+        className="h-5 w-5 transition-transform group-hover:rotate-90"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+      </svg>
     </motion.button>
   );
 }

@@ -1,0 +1,64 @@
+@reference "../../../app/globals.css";
+
+.root {
+  @apply fixed bottom-8 right-8 z-90;
+  display: none;
+}
+
+.root.mobileOpen {
+  @apply fixed bottom-24 right-4 z-90 block w-[calc(100vw-2rem)] rounded-4xl bg-white p-8 border border-white;
+  box-shadow: 0 20px 50px rgba(8, 20, 36, 0.2);
+  display: block;
+}
+
+@media (min-width: 1024px) {
+  .root {
+    @apply sticky top-32 block w-72 max-h-[calc(100vh-10rem)] overflow-y-auto rounded-3xl p-6;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 20px 50px rgba(8, 20, 36, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    display: block;
+  }
+}
+
+.backdrop {
+  @apply fixed inset-0 z-85 bg-black/30 backdrop-blur-sm lg:hidden;
+}
+
+.toggleBtn {
+  @apply fixed bottom-8 right-8 z-100 flex items-center gap-3 rounded-full bg-brand-secondary px-8 py-4 font-bold text-white transition-all hover:scale-105 active:scale-95 lg:hidden;
+  box-shadow: 0 10px 20px rgba(28, 95, 165, 0.4);
+}
+
+.root::-webkit-scrollbar {
+  display: none;
+}
+
+.title {
+  @apply mb-6 pb-4 border-b border-brand-secondary/10 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-brand-secondary/90;
+  font-family: var(--font-heading);
+}
+
+.list {
+  @apply m-0 list-none space-y-1 p-0;
+}
+
+.item {
+  @apply m-0 p-0;
+}
+
+.link {
+  @apply relative flex items-center gap-4 py-2.5 px-3 rounded-xl text-[0.95rem] font-semibold text-brand-secondary/80 no-underline transition-all duration-300 hover:bg-brand-secondary/10 hover:text-brand-secondary;
+}
+
+.linkActive {
+  @apply text-brand-secondary font-black bg-brand-secondary/10;
+}
+
+.indicator {
+  @apply absolute left-0 h-8 w-1 rounded-r-full bg-brand-primary shadow-[0_0_10px_var(--color-primary)];
+}
+
+.text {
+  @apply truncate;
+}

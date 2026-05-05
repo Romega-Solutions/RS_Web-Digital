@@ -1,0 +1,60 @@
+@reference "../../../app/globals.css";
+
+.root {
+  @apply relative isolate min-h-144 overflow-hidden;
+  padding-inline: var(--layout-gutter);
+}
+
+.backdrop {
+  @apply absolute inset-0 -z-10 bg-[#8a725d];
+  background-image: url("/prompt-images/bg-services-bottom.webp");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.overlay {
+  @apply absolute inset-0 -z-10;
+  background: linear-gradient(to bottom, rgb(0 0 0 / 0.26), rgb(0 0 0 / 0.38));
+}
+
+.content {
+  @apply relative z-10 mx-auto flex min-h-144 w-full max-w-5xl flex-col items-center justify-center text-center;
+}
+
+.arrow {
+  @apply absolute top-1/2 z-20 -translate-y-1/2 border-none bg-transparent text-5xl font-medium leading-none text-white/95 cursor-pointer transition-all hover:scale-110 md:text-6xl;
+  font-family: var(--font-ui);
+}
+
+.arrowLeft {
+  @apply left-6 md:left-10;
+}
+
+.arrowRight {
+  @apply right-6 text-brand-primary md:right-10;
+}
+
+.dots {
+  @apply mt-10 flex items-center gap-2.5;
+}
+
+.dot {
+  @apply h-2.5 w-2.5 rounded-full bg-white border-0 p-0 cursor-pointer transition-all;
+}
+
+.dotActive {
+  @apply bg-brand-primary scale-125;
+}
+
+@media (max-width: 767px) {
+  .root,
+  .content {
+    min-height: 32rem;
+  }
+
+  .arrow {
+    @apply text-4xl;
+  }
+}
