@@ -49,8 +49,12 @@
 }
 
 .grid {
-  @apply mt-8 grid w-full grid-cols-1 md:grid-cols-3;
+  @apply mt-8 grid w-full grid-cols-1 md:grid-cols-2 lg:grid-cols-3;
   gap: var(--space-6);
+}
+
+.image {
+  @apply md:h-112 lg:h-136;
 }
 
 .button {

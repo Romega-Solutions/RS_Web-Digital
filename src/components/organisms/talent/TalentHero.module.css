@@ -5,7 +5,7 @@
   --talent-border: color-mix(in srgb, var(--color-brand-secondary) 18%, white);
   --talent-copy: color-mix(in srgb, var(--color-brand-secondary) 78%, #0f172a);
   --talent-muted: color-mix(in srgb, var(--color-brand-secondary) 64%, #1f2937);
-  padding: calc(var(--site-header-height, 5rem) + 3.5rem) 1rem 3.5rem;
+  padding: calc(var(--site-header-height, 5rem) + 6.75rem) 1rem 3.5rem;
   background: linear-gradient(180deg, var(--talent-surface) 0%, var(--talent-page-bg) 100%);
 }
 
@@ -97,7 +97,7 @@
 
 @media (min-width: 700px) {
   .root {
-    padding: calc(var(--site-header-height, 5rem) + 3rem) 1.5rem 4rem;
+    padding: calc(var(--site-header-height, 5rem) + 6.25rem) 1.5rem 4rem;
   }
 
   .stats {
