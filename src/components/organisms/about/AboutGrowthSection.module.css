@@ -109,11 +109,11 @@
 
 @media (min-width: 1024px) {
   .navLeft {
-    @apply -left-4;
+    @apply left-2;
   }
 
   .navRight {
-    @apply -right-4;
+    @apply right-2;
   }
 }
 

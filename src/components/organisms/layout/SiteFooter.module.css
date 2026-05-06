@@ -175,13 +175,21 @@
 
 @media (min-width: 1024px) {
   .inner {
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-columns: auto minmax(0, 1fr);
     column-gap: 1.5rem;
   }
 
   .mainRight {
-    grid-template-columns: minmax(12rem, 0.65fr) minmax(11rem, 0.65fr) minmax(18rem, 1.4fr);
+    grid-template-columns: minmax(10rem, 0.65fr) minmax(12rem, 0.85fr) minmax(16rem, 1.2fr);
     column-gap: 1.25rem;
+    min-width: 0;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1120px) {
+  .mainRight {
+    grid-template-columns: minmax(9rem, 0.6fr) minmax(12rem, 0.85fr) minmax(14rem, 1fr);
+    column-gap: 1rem;
   }
 }
 

@@ -37,7 +37,7 @@
 }
 
 .lineFirst {
-  @apply whitespace-nowrap;
+  text-wrap: balance;
 }
 
 .growingWord {
@@ -72,7 +72,7 @@
   font-weight: 400;
   line-height: var(--leading-display);
   text-shadow: 0 3px 22px rgb(0 0 0 / 0.32);
-  white-space: nowrap;
+  text-wrap: balance;
 }
 
 .accent {
@@ -132,6 +132,12 @@
   .subtitle {
     font-size: clamp(2.55rem, 12vw, 3rem);
     line-height: 1.06;
+  }
+
+  .headline,
+  .subtitle,
+  .lineFirst {
+    max-width: 100%;
   }
 
   .copy {

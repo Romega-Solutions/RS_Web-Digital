@@ -42,10 +42,12 @@
   @apply fixed inset-y-0 left-0 z-[46] w-[18rem] max-w-[85vw] -translate-x-full overflow-y-auto bg-white p-4 transition-transform duration-200 ease-in-out;
   border-right: 1px solid var(--talent-border);
   top: var(--site-header-height, 5rem);
+  visibility: hidden;
 }
 
 .sidebarOpen {
   @apply translate-x-0;
+  visibility: visible;
 }
 
 .closeButton {
@@ -367,6 +369,7 @@
     @apply sticky border-r-0 border rounded-lg -translate-x-0 w-auto max-w-none max-h-[calc(100vh-9rem)] p-[1.2rem];
     border-color: var(--talent-border);
     top: 7.5rem;
+    visibility: visible;
   }
 
   .grid {

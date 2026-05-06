@@ -166,6 +166,7 @@
 
 .controls {
   @apply mt-5 flex items-center justify-center gap-3 px-4;
+  max-width: 100%;
 }
 
 .button {
@@ -225,7 +226,7 @@
   }
 
   .item--position-3 .card {
-    width: 248px;
+    width: min(248px, calc(100vw - 4rem));
     height: 286px;
   }
 
@@ -313,17 +314,46 @@
 @media (min-width: 768px) and (max-width: 1023px) {
 
   .item--position-0,
+  .item--position-1,
+  .item--position-5,
   .item--position-6 {
     @apply hidden;
   }
 
-  .item--position-1 {
-    @apply -mr-6.25 z-1 opacity-60;
+  .item--position-2 {
+    @apply -mr-5 z-3 opacity-80;
   }
 
-  .item--position-1 .card {
-    width: 140px;
-    height: 160px;
+  .item--position-2 .card {
+    width: 180px;
+    height: 220px;
+  }
+
+  .item--position-3 {
+    @apply -mr-5 z-50 opacity-100;
+  }
+
+  .item--position-3 .card {
+    width: 280px;
+    height: 326px;
+  }
+
+  .item--position-4 {
+    @apply mr-0 z-3 opacity-80;
+  }
+
+  .item--position-4 .card {
+    width: 180px;
+    height: 220px;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .item--position-0,
+  .item--position-1,
+  .item--position-5,
+  .item--position-6 {
+    @apply hidden;
   }
 
   .item--position-2 {
@@ -331,8 +361,8 @@
   }
 
   .item--position-2 .card {
-    width: 200px;
-    height: 230px;
+    width: 240px;
+    height: 270px;
   }
 
   .item--position-3 {
@@ -340,30 +370,21 @@
   }
 
   .item--position-3 .card {
-    width: 300px;
-    height: 340px;
+    width: 320px;
+    height: 360px;
   }
 
   .item--position-4 {
-    @apply -mr-6.25 z-3 opacity-80;
+    @apply mr-0 z-3 opacity-80;
   }
 
   .item--position-4 .card {
-    width: 200px;
-    height: 230px;
-  }
-
-  .item--position-5 {
-    @apply mr-0 z-1 opacity-60;
-  }
-
-  .item--position-5 .card {
-    width: 140px;
-    height: 160px;
+    width: 240px;
+    height: 270px;
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1200px) {
   .track-wrapper {
     height: 450px;
   }
@@ -373,8 +394,8 @@
   }
 
   .item--position-0 .card {
-    width: 140px;
-    height: 140px;
+    width: 120px;
+    height: 120px;
   }
 
   .item--position-1 {
@@ -427,8 +448,8 @@
   }
 
   .item--position-6 .card {
-    width: 140px;
-    height: 140px;
+    width: 120px;
+    height: 120px;
   }
 
   .item--position-0 .name,
@@ -464,5 +485,25 @@
 
   .header :global(.body) {
     max-width: 20rem;
+  }
+
+  .controls {
+    @apply gap-2 px-0;
+  }
+
+  .button {
+    @apply h-10 w-10;
+  }
+
+  .dots {
+    @apply gap-1.5;
+  }
+
+  .dot {
+    @apply h-2.5 w-2.5 min-h-4 min-w-4;
+  }
+
+  .dot--active {
+    @apply h-3 w-3;
   }
 }

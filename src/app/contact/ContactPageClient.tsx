@@ -321,7 +321,7 @@ export default function ContactPageClient() {
               </div>
 
               {/* Honeypot */}
-              <div className="sr-only">
+              <div className={styles.honeypot} aria-hidden="true">
                 <label htmlFor="contact-botfield">Leave this field empty</label>
                 <input
                   id="contact-botfield"

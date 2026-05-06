@@ -193,6 +193,10 @@
   @apply flex flex-col gap-5;
 }
 
+.honeypot {
+  display: none;
+}
+
 .formGrid {
   @apply grid gap-5 md:grid-cols-2;
 }
