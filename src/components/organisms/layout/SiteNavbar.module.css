@@ -99,6 +99,17 @@
   @apply mt-1 block text-[0.75rem] leading-relaxed text-white/58;
 }
 
+.navLink {
+  @apply inline-flex min-h-11 items-center justify-center rounded-full px-3 py-2 text-sm font-bold uppercase no-underline transition-colors;
+  color: rgb(255 255 255 / 0.96);
+  font-family: var(--font-poppins), "Poppins", "Aptos", "Segoe UI", Arial, sans-serif;
+}
+
+.navLink:hover {
+  background: rgb(255 255 255 / 0.1);
+  color: rgb(255 255 255 / 1);
+}
+
 .mobileCaret {
   @apply text-xs transition-transform;
 }
@@ -136,7 +147,7 @@
 }
 
 .dropdownTrigger {
-  @apply inline-flex items-center gap-0.5 border-0 bg-transparent p-0;
+  @apply gap-1 border-0 bg-transparent;
 }
 
 .dropdownTrigger,

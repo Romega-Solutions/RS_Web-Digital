@@ -232,7 +232,7 @@
 
 @media (max-width: 767px) {
   .page {
-    padding-top: var(--section-space-compact);
+    padding-top: calc(var(--site-header-height, 5rem) + 2.5rem);
   }
 
   .copy {

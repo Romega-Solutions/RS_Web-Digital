@@ -6,10 +6,7 @@ import { siteConfig } from "@/lib/seo";
 import styles from "./SiteFooter.module.css";
 
 const officeAddressQuery = "222 Pacific Coast Hwy #10 El Segundo CA 90245";
-const googleMapsEmbedKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_API_KEY;
-const googleMapsEmbedSrc = googleMapsEmbedKey
-  ? `https://www.google.com/maps/embed/v1/place?key=${googleMapsEmbedKey}&q=${encodeURIComponent(officeAddressQuery)}`
-  : `https://www.google.com/maps?q=${encodeURIComponent(officeAddressQuery)}&output=embed`;
+const googleMapsSearchUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(officeAddressQuery)}`;
 
 function LinkedInIcon() {
   return (
@@ -219,7 +216,7 @@ export function SiteFooter() {
               <div className={styles.contactCopy}>
                 <span className={styles.contactLabel}>Office</span>
                 <a
-                  href="https://www.google.com/maps/search/?api=1&query=222+Pacific+Coast+Hwy+%2310+El+Segundo+CA+90245"
+                  href={googleMapsSearchUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -230,26 +227,41 @@ export function SiteFooter() {
             </address>
           </div>
 
-          <div className={styles.mapCard}>
-            <iframe
-              title="Romega Solutions office location in Google Maps"
-              src={googleMapsEmbedSrc}
-              className={styles.mapFrame}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
+          <a
+            href={googleMapsSearchUrl}
+            className={styles.mapCard}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Open Romega Solutions office location in Google Maps"
+          >
+            <Image
+              src="/maps_part.png"
+              alt=""
+              width={1020}
+              height={590}
+              sizes="(min-width: 1024px) 24rem, 100vw"
+              className={styles.mapImage}
             />
-          </div>
+            <span className={styles.mapOverlay}>
+              <span className={styles.mapLabel}>Office</span>
+              <span>222 Pacific Coast Hwy, #10</span>
+              <span>El Segundo, CA 90245</span>
+              <span className={styles.mapCta}>Open in Google Maps</span>
+            </span>
+          </a>
         </div>
 
         <a href="#top" className={styles.backtop}>
-          <span className={styles.backtopArrow}>↑</span>
+          <span className={styles.backtopArrow} aria-hidden="true">
+            &uarr;
+          </span>
           <span>back to top</span>
         </a>
       </div>
 
       <div className={styles.legal}>
         <p>
-          © 2026 Romega Solutions. All rights reserved.
+          &copy; 2026 Romega Solutions. All rights reserved.
           <span className={styles.legalSeparator}>|</span>
           <Link href="/privacy">Privacy Policy</Link>
           <span className={styles.legalSeparator}>|</span>

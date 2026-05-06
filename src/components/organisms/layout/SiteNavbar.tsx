@@ -322,7 +322,7 @@ export function SiteNavbar({
               href="/services#services-overview"
               className={`${styles.navLink} ${styles.dropdownTrigger} ${activeItem === "Services" ? styles.navLinkActive : ""}`}
               aria-expanded={isServicesDropdownOpen}
-              aria-controls={servicesDropdownId}
+              aria-controls={isServicesDropdownOpen ? servicesDropdownId : undefined}
               aria-haspopup="menu"
               role="button"
             >
@@ -330,28 +330,29 @@ export function SiteNavbar({
               <span className={styles.dropdownCaret} aria-hidden="true"><ChevronDown /></span>
             </Link>
 
-            <div
-              id={servicesDropdownId}
-              className={`${styles.dropdownMenu} ${isServicesDropdownOpen ? styles.dropdownMenuOpen : ""}`}
-              aria-hidden={!isServicesDropdownOpen}
-              role="menu"
-            >
-              {servicesMenuItems.map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  role="menuitem"
-                  className={`${styles.dropdownItem} ${isHrefActive(item.href) ? styles.dropdownItemActive : ""}`}
-                  onClick={closeServicesDropdown}
-                >
-                  <span className={styles.dropdownItemIcon} aria-hidden="true">{item.icon}</span>
-                  <span className={styles.dropdownItemContent}>
-                    <span className={styles.dropdownItemTitle}>{item.label}</span>
-                    <span className={styles.dropdownItemDesc}>{item.description}</span>
-                  </span>
-                </Link>
-              ))}
-            </div>
+            {isServicesDropdownOpen ? (
+              <div
+                id={servicesDropdownId}
+                className={`${styles.dropdownMenu} ${styles.dropdownMenuOpen}`}
+                role="menu"
+              >
+                {servicesMenuItems.map((item) => (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    role="menuitem"
+                    className={`${styles.dropdownItem} ${isHrefActive(item.href) ? styles.dropdownItemActive : ""}`}
+                    onClick={closeServicesDropdown}
+                  >
+                    <span className={styles.dropdownItemIcon} aria-hidden="true">{item.icon}</span>
+                    <span className={styles.dropdownItemContent}>
+                      <span className={styles.dropdownItemTitle}>{item.label}</span>
+                      <span className={styles.dropdownItemDesc}>{item.description}</span>
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            ) : null}
           </div>
 
           <div
@@ -366,7 +367,7 @@ export function SiteNavbar({
               href="/careers"
               className={`${styles.navLink} ${styles.dropdownTrigger} ${activeItem === "Careers" || activeItem === "Careers & Talents" ? styles.navLinkActive : ""}`}
               aria-expanded={isCareersDropdownOpen}
-              aria-controls={careersDropdownId}
+              aria-controls={isCareersDropdownOpen ? careersDropdownId : undefined}
               aria-haspopup="menu"
               role="button"
             >
@@ -374,28 +375,29 @@ export function SiteNavbar({
               <span className={styles.dropdownCaret} aria-hidden="true"><ChevronDown /></span>
             </Link>
 
-            <div
-              id={careersDropdownId}
-              className={`${styles.dropdownMenu} ${isCareersDropdownOpen ? styles.dropdownMenuOpen : ""}`}
-              aria-hidden={!isCareersDropdownOpen}
-              role="menu"
-            >
-              {careersMenuItems.map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  role="menuitem"
-                  className={`${styles.dropdownItem} ${item.isChild ? styles.dropdownItemChild : ""} ${isHrefActive(item.href) ? styles.dropdownItemActive : ""}`}
-                  onClick={closeCareersDropdown}
-                >
-                  <span className={styles.dropdownItemIcon} aria-hidden="true">{item.icon}</span>
-                  <span className={styles.dropdownItemContent}>
-                    <span className={styles.dropdownItemTitle}>{item.label}</span>
-                    <span className={styles.dropdownItemDesc}>{item.description}</span>
-                  </span>
-                </Link>
-              ))}
-            </div>
+            {isCareersDropdownOpen ? (
+              <div
+                id={careersDropdownId}
+                className={`${styles.dropdownMenu} ${styles.dropdownMenuOpen}`}
+                role="menu"
+              >
+                {careersMenuItems.map((item) => (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    role="menuitem"
+                    className={`${styles.dropdownItem} ${item.isChild ? styles.dropdownItemChild : ""} ${isHrefActive(item.href) ? styles.dropdownItemActive : ""}`}
+                    onClick={closeCareersDropdown}
+                  >
+                    <span className={styles.dropdownItemIcon} aria-hidden="true">{item.icon}</span>
+                    <span className={styles.dropdownItemContent}>
+                      <span className={styles.dropdownItemTitle}>{item.label}</span>
+                      <span className={styles.dropdownItemDesc}>{item.description}</span>
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            ) : null}
           </div>
         </nav>
 
