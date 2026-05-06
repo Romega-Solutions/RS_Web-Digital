@@ -59,7 +59,7 @@
 
 .links a {
   @apply text-base font-medium transition-all duration-200;
-  color: rgb(28 95 165 / 0.75);
+  color: var(--color-secondary-accessible);
 }
 
 .navGroups {
@@ -73,7 +73,7 @@
 }
 
 .navGroupTitle {
-  @apply text-[0.68rem] font-bold uppercase tracking-[0.2em] text-brand-secondary/62;
+  @apply text-[0.68rem] font-bold uppercase tracking-[0.2em] text-brand-secondary;
 }
 
 .navList {
@@ -95,7 +95,7 @@
 }
 
 .connect h3 {
-  @apply text-[0.72rem] font-bold uppercase tracking-[0.2em] text-brand-secondary/62;
+  @apply text-[0.72rem] font-bold uppercase tracking-[0.2em] text-brand-secondary;
 }
 
 .socials {
@@ -228,7 +228,7 @@
 }
 
 .contactLabel {
-  @apply text-[0.68rem] font-bold uppercase tracking-[0.18em] text-brand-secondary/70;
+  @apply text-[0.68rem] font-bold uppercase tracking-[0.18em] text-brand-secondary;
 }
 
 .contactText {

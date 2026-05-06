@@ -66,16 +66,16 @@ export function TalentHero({ totalTalents, totalCategories, totalLocations }: Ta
             </div>
           </ScrollReveal>
 
-          <dl className={styles.stats}>
+          <div className={styles.stats}>
             {stats.map((stat, index) => (
               <ScrollReveal key={stat.label} variant="scale" delay={0.3 + index * 0.1} duration={0.8} distance={0}>
-                <div className={styles.statItem}>
+                <dl className={styles.statItem}>
                   <dt className={styles.statLabel}>{stat.label}</dt>
                   <dd className={styles.statValue}>{stat.value}</dd>
-                </div>
+                </dl>
               </ScrollReveal>
             ))}
-          </dl>
+          </div>
 
           <div className={styles.features}>
             {features.map((feature, index) => (

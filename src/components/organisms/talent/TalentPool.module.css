@@ -32,6 +32,10 @@
   @apply text-brand-secondary;
 }
 
+.countBadgeMobile {
+  @apply text-brand-secondary;
+}
+
 .overlay {
   @apply fixed inset-0 z-[45];
   background: color-mix(in srgb, var(--color-brand-secondary) 38%, black);

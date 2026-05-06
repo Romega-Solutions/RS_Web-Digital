@@ -240,7 +240,6 @@ export default function ContactPageClient() {
                     target="_blank"
                     rel="noopener noreferrer"
                     title={social.title}
-                    aria-label={`Open Romega Solutions ${social.label}`}
                   >
                     {social.text}
                   </a>

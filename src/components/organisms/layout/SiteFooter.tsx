@@ -85,7 +85,7 @@ export function SiteFooter() {
           <nav className={styles.links} aria-label="Footer navigation">
             <div className={styles.navGroups}>
               <div className={styles.navGroup}>
-                <h4 className={styles.navGroupTitle}>Company</h4>
+                <div className={styles.navGroupTitle}>Company</div>
                 <ul className={styles.navList}>
                   <li>
                     <Link href="/">Home</Link>
@@ -103,7 +103,7 @@ export function SiteFooter() {
               </div>
 
               <div className={styles.navGroup}>
-                <h4 className={styles.navGroupTitle}>Solutions</h4>
+                <div className={styles.navGroupTitle}>Solutions</div>
                 <ul className={styles.navList}>
                   <li>
                     <Link href="/services">Services</Link>
@@ -161,7 +161,6 @@ export function SiteFooter() {
             <a
               href="mailto:info@romega-solutions.com"
               className={styles.contactBlock}
-              aria-label="Email info@romega-solutions.com"
             >
               <svg
                 aria-hidden="true"

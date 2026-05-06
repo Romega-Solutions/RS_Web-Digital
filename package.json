@@ -6,6 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "audit:responsive": "node scripts/audit-responsive.mjs",
+    "audit:wcag": "node scripts/audit-wcag.mjs",
+    "audit:lighthouse": "node scripts/audit-lighthouse.mjs",
     "validate:architecture": "node scripts/validate-architecture.mjs",
     "lint": "npm run validate:architecture && eslint"
   },
@@ -17,6 +20,7 @@
     "resend": "^6.1.2"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.3",
     "@playwright/test": "^1.59.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
@@ -24,6 +28,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.1",
+    "lighthouse": "^13.2.0",
     "sass": "^1.99.0",
     "tailwindcss": "^4",
     "typescript": "^5"

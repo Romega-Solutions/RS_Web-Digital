@@ -11,7 +11,7 @@
 }
 
 .root {
-  @apply relative bg-brand-tertiary;
+  @apply relative bg-brand-secondary;
   overflow: visible;
   font-family: var(--font-body);
   isolation: isolate;
@@ -33,12 +33,12 @@
 
 .root::before {
   left: 0;
-  background: linear-gradient(90deg, rgb(168 159 248), rgb(168 159 248 / 0));
+  background: linear-gradient(90deg, rgb(21 78 138), rgb(21 78 138 / 0));
 }
 
 .root::after {
   right: 0;
-  background: linear-gradient(270deg, rgb(168 159 248), rgb(168 159 248 / 0));
+  background: linear-gradient(270deg, rgb(21 78 138), rgb(21 78 138 / 0));
 }
 
 .viewport {

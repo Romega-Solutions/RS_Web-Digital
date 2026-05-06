@@ -41,11 +41,12 @@
 }
 
 .dot {
-  @apply h-2.5 w-2.5 rounded-full bg-white border-0 p-0 cursor-pointer transition-all;
+  @apply h-6 w-6 rounded-full border-0 p-0 cursor-pointer transition-all;
+  background: radial-gradient(circle, white 0 28%, transparent 30%);
 }
 
 .dotActive {
-  @apply bg-brand-primary scale-125;
+  background: radial-gradient(circle, var(--color-primary) 0 31%, transparent 33%);
 }
 
 @media (max-width: 767px) {
