@@ -1,5 +1,4 @@
-﻿import { AppButton } from "@/components/atoms/Button";
-import { ScrollReveal } from "@/components/atoms/Motion";
+import { AppButton } from "@/components/atoms/Button";
 import styles from "./TalentHero.module.css";
 
 const features = [
@@ -33,8 +32,8 @@ export function TalentHero({ totalTalents, totalCategories, totalLocations }: Ta
   return (
     <section className={styles.root} aria-labelledby="talent-hero-heading">
       <div className={styles.container}>
-        <div className={styles.content}>
-          <ScrollReveal variant="fade" duration={0.8} distance={20}>
+        <div className={styles.heroGrid}>
+          <div className={styles.content}>
             <p className={styles.badge}>
               <span className={styles.stars} aria-hidden="true">
                 ★★★★★
@@ -52,9 +51,7 @@ export function TalentHero({ totalTalents, totalCategories, totalLocations }: Ta
               Browse a curated pool of professionals across operations, brand, sales,
               product, and technical delivery — matched to the needs of growing businesses.
             </p>
-          </ScrollReveal>
 
-          <ScrollReveal variant="slideUp" delay={0.2} duration={0.8} distance={20}>
             <div className={styles.actions}>
               <AppButton href="#talent-pool" className={styles.primaryAction}>
                 Browse talent pool
@@ -63,23 +60,21 @@ export function TalentHero({ totalTalents, totalCategories, totalLocations }: Ta
                 Talk to a talent specialist
               </AppButton>
             </div>
-          </ScrollReveal>
+          </div>
 
-          <dl className={styles.stats}>
-            {stats.map((stat, index) => (
-              <ScrollReveal key={stat.label} variant="scale" delay={0.3 + index * 0.1} duration={0.8} distance={0}>
-                <div className={styles.statItem}>
+          <div className={styles.proofPanel} aria-label="Talent pool highlights">
+            <dl className={styles.stats}>
+              {stats.map((stat) => (
+                <div key={stat.label} className={styles.statItem}>
                   <dt className={styles.statLabel}>{stat.label}</dt>
                   <dd className={styles.statValue}>{stat.value}</dd>
                 </div>
-              </ScrollReveal>
-            ))}
-          </dl>
+              ))}
+            </dl>
 
-          <div className={styles.features}>
-            {features.map((feature, index) => (
-              <ScrollReveal key={feature.title} variant="fade" delay={0.4 + index * 0.1} duration={0.8} distance={20}>
-                <article className={styles.featureCard}>
+            <div className={styles.features}>
+              {features.map((feature) => (
+                <article key={feature.title} className={styles.featureCard}>
                   <div className={styles.featureIcon} aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none">
                       <path
@@ -91,11 +86,13 @@ export function TalentHero({ totalTalents, totalCategories, totalLocations }: Ta
                       />
                     </svg>
                   </div>
-                  <h2 className={styles.featureTitle}>{feature.title}</h2>
-                  <p className={styles.featureCopy}>{feature.description}</p>
+                  <div>
+                    <h2 className={styles.featureTitle}>{feature.title}</h2>
+                    <p className={styles.featureCopy}>{feature.description}</p>
+                  </div>
                 </article>
-              </ScrollReveal>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>

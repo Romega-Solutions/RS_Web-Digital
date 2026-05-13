@@ -1,3 +1,5 @@
+@reference "../../../app/globals.css";
+
 .root {
   @apply relative isolate overflow-hidden text-black;
   --talent-surface: var(--color-surface);
@@ -5,20 +7,28 @@
   --talent-border: color-mix(in srgb, var(--color-brand-secondary) 18%, white);
   --talent-copy: color-mix(in srgb, var(--color-brand-secondary) 78%, #0f172a);
   --talent-muted: color-mix(in srgb, var(--color-brand-secondary) 64%, #1f2937);
-  padding: calc(var(--site-header-height, 5rem) + 1.5rem) 1rem 3.5rem;
-  background: linear-gradient(180deg, var(--talent-surface) 0%, var(--talent-page-bg) 100%);
+  padding: calc(var(--site-header-height, 5rem) + clamp(1rem, 2vw, 2rem)) 1rem clamp(2rem, 5vw, 4.5rem);
+  background:
+    radial-gradient(circle at 88% 16%, color-mix(in srgb, var(--color-primary) 18%, transparent), transparent 24rem),
+    radial-gradient(circle at 8% 28%, color-mix(in srgb, var(--color-brand-secondary) 12%, transparent), transparent 22rem),
+    linear-gradient(180deg, var(--talent-surface) 0%, var(--talent-page-bg) 100%);
 }
 
 .container {
-  @apply mx-auto max-w-300;
+  @apply mx-auto max-w-[75rem];
+}
+
+.heroGrid {
+  @apply grid items-center gap-6;
 }
 
 .content {
-  @apply mx-auto max-w-232 text-center;
+  @apply mx-auto max-w-[48rem] text-center;
 }
 
 .badge {
-  @apply mb-4 inline-flex flex-wrap items-center justify-center gap-2 text-[0.95rem];
+  @apply mb-4 inline-flex min-h-10 flex-wrap items-center justify-center gap-2 rounded-full border bg-white/72 px-4 py-2 text-[0.9rem] shadow-sm;
+  border-color: var(--talent-border);
   color: var(--talent-muted);
 }
 
@@ -27,13 +37,15 @@
 }
 
 .title {
-  @apply mb-4 leading-[0.98] text-brand-secondary;
+  @apply mb-4 leading-[0.96] text-brand-secondary;
   font-family: var(--font-heading);
-  font-size: clamp(2.3rem, 5vw, 4.2rem);
+  font-size: clamp(2.45rem, 7vw, 4.8rem);
+  letter-spacing: 0;
+  text-wrap: balance;
 }
 
 .description {
-  @apply mx-auto text-[1.05rem] leading-[1.8];
+  @apply mx-auto text-[1rem] leading-[1.68] md:text-[1.08rem];
   color: var(--talent-copy);
   max-width: min(100%, var(--measure-readable));
 }
@@ -44,40 +56,45 @@
 
 .primaryAction,
 .secondaryAction {
-  @apply min-h-11 rounded-full px-5 py-[0.7rem] font-bold;
+  @apply min-h-12 rounded-full px-5 py-[0.75rem] font-bold;
+}
+
+.proofPanel {
+  @apply rounded-2xl border bg-white/78 p-4 shadow-[0_18px_44px_rgb(16_54_110/0.1)];
+  border-color: var(--talent-border);
+  backdrop-filter: blur(10px);
 }
 
 .stats {
-  @apply mt-6 grid grid-cols-1 gap-3;
+  @apply grid grid-cols-3 gap-2;
 }
 
 .statItem {
-  @apply rounded-lg border bg-white px-4 py-3;
+  @apply rounded-xl border bg-white px-3 py-3 text-center;
   border-color: var(--talent-border);
 }
 
 .statLabel {
-  @apply text-[0.82rem] font-semibold uppercase tracking-wide;
+  @apply text-[0.68rem] font-semibold uppercase tracking-[0.12em];
   color: var(--talent-muted);
 }
 
 .statValue {
-  @apply mt-1 text-[1.3rem] font-bold text-brand-secondary;
+  @apply mt-1 text-[1.45rem] font-bold text-brand-secondary;
   font-family: var(--font-heading);
 }
 
 .features {
-  @apply mt-10 grid grid-cols-1 gap-4;
+  @apply mt-3 grid grid-cols-1 gap-3;
 }
 
 .featureCard {
-  @apply rounded-lg border bg-white p-[1.35rem_1.1rem];
+  @apply grid grid-cols-[2.75rem_1fr] items-start gap-3 rounded-xl border bg-white p-3 text-left;
   border-color: var(--talent-border);
-  box-shadow: 0 10px 30px color-mix(in srgb, var(--color-brand-secondary) 10%, transparent);
 }
 
 .featureIcon {
-  @apply inline-flex h-11 w-11 items-center justify-center rounded-lg bg-brand-secondary/12 text-brand-secondary;
+  @apply inline-flex h-11 w-11 items-center justify-center rounded-xl bg-brand-secondary/12 text-brand-secondary;
 }
 
 .featureIcon svg {
@@ -85,28 +102,77 @@
 }
 
 .featureTitle {
-  @apply mb-2 mt-[0.9rem] text-[1.25rem];
+  @apply mb-1 text-[1.08rem];
   color: var(--talent-copy);
   font-family: var(--font-heading);
 }
 
 .featureCopy {
-  @apply m-0 leading-[1.7];
+  @apply m-0 text-[0.9rem] leading-[1.55];
   color: var(--talent-muted);
 }
 
-@media (min-width: 700px) {
+@media (min-width: 760px) {
   .root {
-    padding: calc(var(--site-header-height, 5rem) + 2rem) 1.5rem 4rem;
+    padding-inline: 1.5rem;
   }
 
-  .stats {
-    @apply grid-cols-3;
+  .heroGrid {
+    @apply grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.7fr)] gap-8;
   }
 
-  .features {
-    @apply grid-cols-3;
+  .content {
+    @apply mx-0 text-left;
+  }
+
+  .badge,
+  .actions {
+    @apply justify-start;
   }
 }
 
-@reference "../../../app/globals.css";
+@media (max-width: 539px) {
+  .root {
+    padding-bottom: 1.75rem;
+  }
+
+  .badge {
+    @apply text-[0.82rem];
+  }
+
+  .title {
+    font-size: clamp(2.2rem, 10.4vw, 3rem);
+  }
+
+  .description {
+    @apply leading-[1.58];
+  }
+
+  .proofPanel {
+    @apply p-3;
+  }
+
+  .stats {
+    @apply gap-1.5;
+  }
+
+  .statItem {
+    @apply px-2 py-2;
+  }
+
+  .statLabel {
+    @apply text-[0.58rem];
+  }
+
+  .statValue {
+    @apply text-[1.25rem];
+  }
+
+  .featureCard {
+    @apply grid-cols-[2.5rem_1fr] p-2.5;
+  }
+
+  .featureIcon {
+    @apply h-10 w-10;
+  }
+}

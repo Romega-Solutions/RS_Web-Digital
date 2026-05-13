@@ -5,8 +5,10 @@
   --talent-border-soft: color-mix(in srgb, var(--color-brand-secondary) 12%, white);
   --talent-muted: color-mix(in srgb, var(--color-brand-secondary) 64%, #1f2937);
   --talent-copy: color-mix(in srgb, var(--color-brand-secondary) 78%, #0f172a);
-  @apply py-[1.5rem_1rem_3.5rem];
-  background-color: var(--talent-page-bg);
+  @apply py-[1rem_1rem_3.5rem];
+  scroll-margin-top: calc(var(--site-header-height, 5rem) + 1rem);
+  background:
+    linear-gradient(180deg, var(--talent-page-bg) 0%, #eef4fb 100%);
 }
 
 .layout {
@@ -14,12 +16,15 @@
 }
 
 .mobileFilterBar {
-  @apply flex items-center justify-between gap-3;
+  @apply sticky z-30 flex items-center justify-between gap-3 rounded-2xl border bg-white/88 p-2 shadow-[0_12px_30px_rgb(16_54_110/0.09)];
+  top: calc(var(--site-header-height, 5rem) + 0.5rem);
+  border-color: var(--talent-border);
+  backdrop-filter: blur(12px);
 }
 
 .filterToggle,
 .countBadgeMobile {
-  @apply rounded-lg border bg-white px-[0.95rem] py-[0.65rem] text-[0.95rem] font-bold;
+  @apply min-h-11 rounded-xl border bg-white px-[0.95rem] py-[0.65rem] text-[0.95rem] font-bold;
   border-color: var(--talent-border);
 }
 
@@ -167,7 +172,8 @@
 }
 
 .searchRow {
-  @apply flex flex-col gap-3;
+  @apply flex flex-col gap-3 rounded-2xl border bg-white/72 p-3 shadow-sm;
+  border-color: var(--talent-border-soft);
 }
 
 .searchWrap {
@@ -193,7 +199,7 @@
 }
 
 .searchInput {
-  @apply w-full rounded-lg border bg-white px-4 py-[0.8rem] pl-10 text-[0.98rem];
+  @apply min-h-12 w-full rounded-xl border bg-white px-4 py-[0.8rem] pl-10 text-[0.98rem];
   border-color: var(--talent-border);
   color: var(--talent-copy);
 }
@@ -233,7 +239,7 @@
 }
 
 .quickSearch {
-  @apply inline-flex min-h-10 cursor-pointer items-center rounded-full border px-3 text-[0.82rem] font-semibold transition-all duration-200;
+  @apply inline-flex min-h-11 cursor-pointer items-center rounded-full border px-3 text-[0.82rem] font-semibold transition-all duration-200;
   border-color: var(--talent-border);
   background-color: color-mix(in srgb, var(--talent-page-bg) 78%, white);
   color: var(--talent-copy);
@@ -258,7 +264,7 @@
 }
 
 .sortSelect {
-  @apply min-h-11 rounded-lg border bg-white px-3 text-[0.92rem];
+  @apply min-h-11 rounded-xl border bg-white px-3 text-[0.92rem];
   border-color: var(--talent-border);
   color: var(--talent-copy);
 }
@@ -364,7 +370,7 @@
 
 @media (min-width: 900px) {
   .root {
-    @apply px-[1.5rem] py-[2.5rem_4rem];
+    @apply px-[1.5rem] py-[2rem_4rem];
   }
 
   .mobileFilterBar,
@@ -375,11 +381,11 @@
   }
 
   .layout {
-    @apply grid-cols-[16rem_1fr] items-start gap-8;
+    @apply grid-cols-[17rem_1fr] items-start gap-8;
   }
 
   .sidebar {
-    @apply sticky border-r-0 border rounded-lg -translate-x-0 w-auto max-w-none max-h-[calc(100vh-9rem)] p-[1.2rem];
+    @apply sticky border-r-0 border rounded-2xl -translate-x-0 w-auto max-w-none max-h-[calc(100vh-9rem)] p-[1.2rem] shadow-sm;
     border-color: var(--talent-border);
     top: 7.5rem;
   }
