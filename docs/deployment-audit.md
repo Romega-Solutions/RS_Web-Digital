@@ -2,6 +2,7 @@
 
 **Audited:** 2026-05-06  
 **Repo remediation pass:** 2026-05-13
+**Live deploy verification:** 2026-05-13
 **Stack:** Next.js 16.2.4 · React 19 · Tailwind v4 · pnpm  
 **Vercel project:** `romega-digitals` (`prj_4hyRbwLN9UAJN96JK58MyCyOTnpb`)  
 **Symptom:** Project builds locally but deployment on Vercel fails or behaves incorrectly.
@@ -22,6 +23,35 @@
 | 8 | 🔵 Low | `sw.js` service worker — orphaned | ✅ Fixed |
 | 9 | 🔵 Low | Node.js version mismatch (CI=20, Vercel default=24) | ✅ Fixed |
 | 10 | 🔵 Low | `experimental.viewTransition` enabled | ⚠️ Monitor |
+| 11 | 🟠 High | Production custom domain attached to stale app | ❌ External action required |
+| 12 | 🟡 Medium | Duplicate Vercel projects connected to same repo | ❌ External action required |
+
+---
+
+## 0. Live Deployment Verification — 2026-05-13
+
+Commit verified: `8863f65ae4e93dd57b1f9f83d1ea2b313a3c487d`
+
+GitHub/Vercel statuses for this commit:
+
+| Vercel context | GitHub status | Verified URL behavior |
+|---|---:|---|
+| `Vercel – romega-digitals` | success | `https://romega-digitals.vercel.app/` = 200, `/terms` = 200, `/api/careers/jobs` = 200 |
+| `Vercel – romega-digital` | success | `https://romega-digital.vercel.app/` = 200, `/terms` = 200, `/api/careers/jobs` = 200 |
+| `Vercel – rs-web-digital` | failure | `https://rs-web-digital.vercel.app/` = 404, `/terms` = 404 |
+| `www.romega-solutions.com` | stale live domain | `/` = 200 with old title `Home`, `/terms` = 404 |
+
+Access blocker:
+
+- The current Vercel CLI account is `iron-mark` under `iron-marks-projects`.
+- The successful GitHub deployment records and URLs are under `kpg782s-projects`.
+- `vercel domains inspect romega-solutions.com` fails from the current account because it does not have access to the domain owner scope.
+- Failed deployment logs for `rs-web-digital` cannot be inspected from the current account for the same reason.
+
+Conclusion:
+
+- The latest app is deployed and route-verified on `romega-digitals.vercel.app`.
+- The public production domain is still attached to a stale/different Vercel project and needs a dashboard-level domain move to `romega-digitals`.
 
 ---
 
@@ -242,6 +272,38 @@ The View Transition API flag is experimental in Next.js 16. Experimental flags c
 
 ---
 
+## 11. 🟠 Production Custom Domain Attached To Stale App
+
+**Verified:** `https://www.romega-solutions.com/terms` returns `404`, while `https://romega-digitals.vercel.app/terms` returns `200`.
+
+This means the custom domain is not serving the latest successful `romega-digitals` deployment.
+
+**Fix:** In the Vercel dashboard scope that owns `kpg782s-projects`, move both domains to the `romega-digitals` project:
+
+- `romega-solutions.com`
+- `www.romega-solutions.com`
+
+After moving the domains, redeploy or promote the latest successful `romega-digitals` deployment and recheck:
+
+```bash
+Invoke-WebRequest -UseBasicParsing https://www.romega-solutions.com/terms
+Invoke-WebRequest -UseBasicParsing https://www.romega-solutions.com/api/careers/jobs
+```
+
+---
+
+## 12. 🟡 Duplicate Vercel Projects Connected To Same Repo
+
+Three Vercel contexts reported statuses for the same GitHub commit:
+
+- `romega-digitals` succeeded and appears to be the intended target.
+- `romega-digital` succeeded but `/api/contact` returned `503 send_failed` during live probing.
+- `rs-web-digital` failed and causes the aggregate GitHub commit status to read `failure`.
+
+**Fix:** In Vercel, keep the intended `romega-digitals` Git integration and disconnect or archive stale duplicate project integrations if they are not needed.
+
+---
+
 ## Vercel Dashboard Checklist
 
 Before the next production deployment, verify the following in the Vercel dashboard:
@@ -254,11 +316,16 @@ Before the next production deployment, verify the following in the Vercel dashbo
 - [ ] Build command is `pnpm run build` (or auto)
 - [ ] Install command is `pnpm install` (or auto)
 - [ ] Node.js version is pinned to match CI
+- [ ] `romega-solutions.com` is assigned to `romega-digitals`
+- [ ] `www.romega-solutions.com` is assigned to `romega-digitals`
+- [ ] Duplicate Git integrations are removed or intentionally documented
 
 ---
 
 ## Recommended Fix Order
 
-1. **Now:** Verify required env vars in the Vercel dashboard, then redeploy.
-2. **Now:** Run local and CI checks from the pnpm-only setup.
-3. **Later:** Monitor `experimental.viewTransition` during Next.js upgrades.
+1. **Now:** Move `romega-solutions.com` and `www.romega-solutions.com` to `romega-digitals`.
+2. **Now:** Verify required env vars in the `romega-digitals` Vercel dashboard, then redeploy or promote the latest successful deployment.
+3. **Now:** Remove or disconnect stale duplicate Vercel projects from the GitHub repo.
+4. **Next:** Recheck live production routes and contact form behavior.
+5. **Later:** Monitor `experimental.viewTransition` during Next.js upgrades.

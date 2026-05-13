@@ -58,7 +58,7 @@
 }
 
 .links a {
-  @apply text-base font-medium transition-all duration-200;
+  @apply inline-flex min-h-6 items-center text-base font-medium transition-all duration-200;
   color: rgb(28 95 165 / 0.75);
 }
 
@@ -81,7 +81,7 @@
 }
 
 .navList li a {
-  @apply text-[0.98rem] font-medium leading-none;
+  @apply inline-flex min-h-6 items-center text-[0.98rem] font-medium leading-none;
 }
 
 .links a:hover {
@@ -173,7 +173,7 @@
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1120px) {
   .inner {
     grid-template-columns: auto minmax(0, 1fr) auto;
     column-gap: 1.5rem;
@@ -293,7 +293,7 @@
 }
 
 .legal a {
-  @apply underline-offset-2 hover:underline text-white;
+  @apply inline-flex min-h-6 items-center text-white underline-offset-2 hover:underline;
 }
 
 .legalSeparator {

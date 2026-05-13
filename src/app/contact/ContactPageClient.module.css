@@ -214,6 +214,16 @@
   @apply w-full md:w-fit;
 }
 
+.page :global(#contact-botfield) {
+  position: fixed;
+  left: -100vw;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
 @media (min-width: 1024px) {
   .inner {
     grid-template-columns: minmax(0, 0.85fr) minmax(32rem, 1fr);

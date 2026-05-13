@@ -107,6 +107,10 @@
   color: var(--talent-copy);
 }
 
+.checkboxRow input {
+  @apply h-6 w-6 shrink-0;
+}
+
 .clearFilters {
   @apply w-full cursor-pointer rounded-lg border px-[0.8rem] py-[0.55rem] font-bold text-brand-secondary transition-all duration-200;
   border-color: color-mix(in srgb, var(--color-brand-secondary) 26%, white);
@@ -334,6 +338,13 @@
   .filterToggle,
   .closeButton {
     @apply transition-none;
+  }
+}
+
+@media (max-width: 899px) {
+  .sidebar:not(.sidebarOpen) {
+    visibility: hidden;
+    pointer-events: none;
   }
 }
 

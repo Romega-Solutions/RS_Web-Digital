@@ -244,6 +244,18 @@
   .cta {
     @apply min-w-40 px-5 py-2.5 text-sm;
   }
+
+  .controls {
+    @apply gap-2 px-2;
+  }
+
+  .button {
+    @apply h-10 w-10;
+  }
+
+  .dots {
+    @apply gap-1;
+  }
 }
 
 @media (min-width: 640px) and (max-width: 767px) {

@@ -74,3 +74,9 @@ Docker was not available in the latest local Codex environment, so verify the im
 ## Deployment Notes
 
 The primary deployment target is Vercel. See `docs/deployment-audit.md` for the current deployment-readiness checklist and known external requirements.
+
+Current verified state:
+
+- Latest app routes are live on `https://romega-digitals.vercel.app`.
+- `www.romega-solutions.com` is still serving a stale Vercel app until the domain is moved in the owning Vercel scope.
+- Use `docs/domain-cutover-checklist.md` for the dashboard steps and post-cutover verification commands.
