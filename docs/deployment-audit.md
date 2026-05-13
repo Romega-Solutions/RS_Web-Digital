@@ -1,6 +1,7 @@
 # Deployment Audit — RS_Web-Digital (Vercel)
 
 **Audited:** 2026-05-06  
+**Repo remediation pass:** 2026-05-13
 **Stack:** Next.js 16.2.4 · React 19 · Tailwind v4 · pnpm  
 **Vercel project:** `romega-digitals` (`prj_4hyRbwLN9UAJN96JK58MyCyOTnpb`)  
 **Symptom:** Project builds locally but deployment on Vercel fails or behaves incorrectly.
@@ -12,14 +13,14 @@
 | # | Severity | Area | Status |
 |---|----------|------|--------|
 | 1 | 🔴 Critical | `output: standalone` in Next.js config | ✅ Fixed in `f6c0da2` |
-| 2 | 🔴 Critical | Missing env vars in Vercel dashboard | ❌ Action required |
-| 3 | 🟠 High | `romega-video.mp4` (91 MB) in `public/` | ❌ Action required |
-| 4 | 🟡 Medium | Dual lockfiles (`npm` + `pnpm`) | ❌ Action required |
-| 5 | 🟡 Medium | Dockerfile broken post-standalone removal | ❌ Action required |
-| 6 | 🟡 Medium | `JOBS_API_URL` missing from `.env.example` | ❌ Action required |
-| 7 | 🔵 Low | Stale zip files in `public/` | ⚠️ Clean up |
-| 8 | 🔵 Low | `sw.js` service worker — orphaned | ⚠️ Investigate |
-| 9 | 🔵 Low | Node.js version mismatch (CI=20, Vercel default=24) | ⚠️ Pin it |
+| 2 | 🔴 Critical | Missing env vars in Vercel dashboard | ❌ External action required |
+| 3 | 🟠 High | `romega-video.mp4` (91 MB) in `public/` | ✅ Fixed |
+| 4 | 🟡 Medium | Dual lockfiles (`npm` + `pnpm`) | ✅ Fixed |
+| 5 | 🟡 Medium | Dockerfile broken post-standalone removal | ✅ Config fixed in repo |
+| 6 | 🟡 Medium | `JOBS_API_URL` missing from `.env.example` | ✅ Fixed |
+| 7 | 🔵 Low | Stale zip files in `public/` | ✅ Fixed |
+| 8 | 🔵 Low | `sw.js` service worker — orphaned | ✅ Fixed |
+| 9 | 🔵 Low | Node.js version mismatch (CI=20, Vercel default=24) | ✅ Fixed |
 | 10 | 🔵 Low | `experimental.viewTransition` enabled | ⚠️ Monitor |
 
 ---
@@ -65,7 +66,6 @@ The contact form and SEO metadata rely on env vars that must be set in the Verce
 | Variable | Used In | Effect if Missing |
 |----------|---------|-------------------|
 | `RECAPTCHA_SECRET_KEY` | `/api/contact` | reCAPTCHA verification skipped — spam protection disabled |
-| `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_API_KEY` | Footer map embed | Maps won't load |
 | `JOBS_API_URL` | `/api/careers/jobs` | Falls back to hardcoded Google Apps Script URL (see Issue 6) |
 | `EMAIL_CONTACT_FALLBACK_ENABLED` | `/api/contact` | Only relevant in dev — set to `false` in Vercel |
 
@@ -87,7 +87,9 @@ vercel env pull .env.vercel.local
 
 ## 3. 🟠 Large Video File in `public/` (91 MB)
 
-**File:** `public/romega-video.mp4` — **91 MB**  
+**Status:** Fixed in repo. `public/romega-video.mp4` has been removed. The site still uses the compressed `public/romega-video-web.mp4` asset.
+
+**Original finding:** `public/romega-video.mp4` — **91 MB**
 **Also:** `public/romega-video-web.mp4` — 12 MB
 
 Every deployment uploads all files in `public/` to Vercel's CDN. The 91 MB file:
@@ -96,7 +98,7 @@ Every deployment uploads all files in `public/` to Vercel's CDN. The 91 MB file:
 - Pushes toward Vercel's deployment size limits
 - Serves directly from Vercel's CDN without adaptive bitrate streaming
 
-**Recommendation:** Move large video assets to a dedicated video host or Vercel Blob storage, then reference the external URL in the component.
+**Recommendation:** If video size becomes a deployment or performance issue again, move video assets to a dedicated video host or Vercel Blob storage, then reference the external URL in the component.
 
 ```tsx
 // Instead of:
@@ -120,7 +122,7 @@ Vercel auto-detects the package manager by looking for lockfiles. With both pres
 - Dockerfile uses npm (`npm ci`) → may install different dependency versions
 - Contributors may accidentally run `npm install`, regenerating `package-lock.json` with drift
 
-**Recommendation:** Remove `package-lock.json` and commit only `pnpm-lock.yaml`. Update the Dockerfile to use pnpm.
+**Status:** Fixed in repo. `package-lock.json` has been removed, `package.json` now pins `packageManager: pnpm@9.15.9`, and the Dockerfile uses pnpm.
 
 ```bash
 rm package-lock.json
@@ -140,13 +142,7 @@ The Dockerfile copies from `.next/standalone` — a directory that only exists w
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 ```
 
-**Note:** This does not affect Vercel deployments. Vercel ignores the Dockerfile. But it breaks any self-hosted or Docker-based deployment path.
-
-**If Docker deployment is still needed:**  
-Create a separate `next.config.docker.ts` with `output: 'standalone'` and pass it via `NEXT_CONFIG_FILE` at build time, or maintain a dedicated branch for Docker builds.
-
-**If Docker deployment is not needed:**  
-Add a comment in the Dockerfile noting it is currently non-functional, or remove it.
+**Status:** Config fixed in repo. The Dockerfile now installs with pnpm and runs the normal Next.js production server with `pnpm start` instead of copying `.next/standalone`.
 
 ---
 
@@ -167,7 +163,7 @@ Two problems:
 1. The Google Apps Script URL is **public in the source code** — anyone can hit it directly
 2. `JOBS_API_URL` is not documented in `.env.example`, so it's invisible to future developers
 
-**Fix:** Add it to `.env.example`:
+**Status:** Fixed in repo. `JOBS_API_URL` is now documented in `.env.example`.
 
 ```bash
 # Google Apps Script endpoint for live job listings
@@ -184,7 +180,7 @@ JOBS_API_URL=your-google-apps-script-url
 
 These are development artifacts (the zip archives used to install the Season font). The actual font file is already extracted to `public/season-webfont/Season-BF651e732546f7d.woff`. The zips are publicly accessible at `/season-webfont.zip` and `/season.zip` but serve no purpose.
 
-**Fix:** Delete both zip files and commit the removal.
+**Status:** Fixed in repo. Both zip files have been deleted.
 
 ```bash
 rm public/season-webfont.zip public/season.zip
@@ -200,7 +196,7 @@ A `sw.js` file exists in `public/` but there is no corresponding service worker 
 
 An unregistered service worker is harmless, but a stale one cached in a visitor's browser can cause hard-to-debug caching issues.
 
-**Recommendation:** If PWA support is not intentional, delete `sw.js`. If it is intentional, add proper registration and update the cache strategy.
+**Status:** Fixed in repo. `public/sw.js` has been deleted because no service worker registration exists in the codebase.
 
 ---
 
@@ -213,6 +209,8 @@ An unregistered service worker is harmless, but a stale one cached in a visitor'
 | Vercel default | **24** (LTS as of 2026) |
 
 Vercel runs Node.js 24 by default. The CI and Docker environments run Node.js 20. This mismatch can cause subtle behavior differences (crypto, URL parsing, stream handling).
+
+**Status:** Fixed in repo. `package.json` now pins Node.js to `20.x`, matching CI and the Docker base image.
 
 **Fix:** Pin the Node.js version in `package.json` so Vercel uses the same version as CI:
 
@@ -251,7 +249,6 @@ Before the next production deployment, verify the following in the Vercel dashbo
 - [ ] `RESEND_API_KEY` is set for Production environment
 - [ ] `ADMIN_EMAIL` is set for Production environment  
 - [ ] `NEXT_PUBLIC_SITE_URL` is set to `https://www.romega-solutions.com`
-- [ ] `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_API_KEY` is set (for footer map)
 - [ ] `RECAPTCHA_SECRET_KEY` is set (for spam protection)
 - [ ] Framework preset is **Next.js** (auto-detected)
 - [ ] Build command is `pnpm run build` (or auto)
@@ -262,9 +259,6 @@ Before the next production deployment, verify the following in the Vercel dashbo
 
 ## Recommended Fix Order
 
-1. **Now:** Add all missing env vars to Vercel dashboard → redeploy
-2. **Now:** Remove `public/romega-video.mp4` (91 MB) or move to external storage
-3. **Next PR:** Remove `package-lock.json`, standardize on pnpm
-4. **Next PR:** Add `JOBS_API_URL` to `.env.example`
-5. **Next PR:** Delete `public/season-webfont.zip`, `public/season.zip`, investigate `public/sw.js`
-6. **Later:** Fix or annotate Dockerfile, pin Node.js version in `package.json`
+1. **Now:** Verify required env vars in the Vercel dashboard, then redeploy.
+2. **Now:** Run local and CI checks from the pnpm-only setup.
+3. **Later:** Monitor `experimental.viewTransition` during Next.js upgrades.

@@ -1,57 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RS Web Digital
 
-## Getting Started
+Romega Solutions public website built with Next.js 16 App Router, React 19, CSS Modules, Tailwind v4, and pnpm.
 
-First, run the development server:
+## Requirements
+
+- Node.js `20.x`
+- pnpm `9.15.9`
+
+The repo pins both in `package.json` so CI, Vercel, and local installs use the same runtime family.
+
+## Local Development
+
+Install dependencies:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install --frozen-lockfile
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Run the development server:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open `http://localhost:3000`.
 
-## Learn More
+## Verification
 
-To learn more about Next.js, take a look at the following resources:
+Run the standard checks before shipping changes:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+pnpm run lint
+pnpm run build
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+`pnpm run lint` runs the repo architecture validator before ESLint. `next build` does not run lint automatically in Next.js 16.
 
-## Deploy on Vercel
+## Environment Variables
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Required for production:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `RESEND_API_KEY`: sends `/api/contact` email through Resend.
+- `ADMIN_EMAIL`: destination for contact form submissions.
+- `NEXT_PUBLIC_SITE_URL`: canonical site URL used in metadata and structured data.
 
-## Vercel Environment Setup
+Optional:
 
-Set these variables in Vercel before deploying:
+- `RECAPTCHA_SECRET_KEY`: server-side reCAPTCHA verification. Set only after the client sends a token.
+- `RECAPTCHA_TIMEOUT_MS`: timeout for reCAPTCHA verification. Defaults to `5000`.
+- `JOBS_API_URL`: Google Apps Script endpoint for live job listings. The API route has a fallback.
+- `EMAIL_CONTACT_FALLBACK_ENABLED`: local-only contact capture without Resend. Ignored in production.
 
-- `RESEND_API_KEY`: required for the contact form in production
-- `ADMIN_EMAIL`: destination for contact form submissions
-- `NEXT_PUBLIC_SITE_URL`: canonical site URL used for metadata and structured data
-- `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_API_KEY`: optional, but recommended for the footer map
+Use `.env.example` as the template. Do not commit real secret values.
 
-Optional variables:
+## Docker
 
-- `RECAPTCHA_SECRET_KEY`: only set this after adding client-side reCAPTCHA token support
-- `RECAPTCHA_TIMEOUT_MS`
-- `JOBS_API_URL`
-- `EMAIL_CONTACT_FALLBACK_ENABLED`: local development only, ignored in production
-
-## Run with Docker
+The Dockerfile uses pnpm and starts the normal Next.js production server.
 
 Build the image:
 
@@ -64,3 +68,9 @@ Run the container:
 ```bash
 docker run --rm -p 3000:3000 romega-digital
 ```
+
+Docker was not available in the latest local Codex environment, so verify the image build on a machine with Docker before relying on this path.
+
+## Deployment Notes
+
+The primary deployment target is Vercel. See `docs/deployment-audit.md` for the current deployment-readiness checklist and known external requirements.
