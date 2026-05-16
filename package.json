@@ -10,11 +10,12 @@
     "audit:wcag": "node scripts/audit-wcag.mjs",
     "audit:lighthouse": "node scripts/audit-lighthouse.mjs",
     "validate:architecture": "node scripts/validate-architecture.mjs",
+    "typecheck": "tsc --noEmit",
     "lint": "npm run validate:architecture && eslint"
   },
   "dependencies": {
     "framer-motion": "^12.38.0",
-    "next": "^16.2.4",
+    "next": "^16.2.6",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "resend": "^6.1.2"
@@ -27,7 +28,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.2.1",
+    "eslint-config-next": "^16.2.6",
     "lighthouse": "^13.2.0",
     "sass": "^1.99.0",
     "tailwindcss": "^4",

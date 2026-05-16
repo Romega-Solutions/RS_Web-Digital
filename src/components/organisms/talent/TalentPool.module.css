@@ -46,11 +46,13 @@
   @apply fixed inset-y-0 left-0 z-[46] w-[18rem] max-w-[85vw] -translate-x-full overflow-y-auto bg-white p-4 transition-transform duration-200 ease-in-out;
   border-right: 1px solid var(--talent-border);
   top: var(--site-header-height, 5rem);
+  display: none;
   visibility: hidden;
 }
 
 .sidebarOpen {
   @apply translate-x-0;
+  display: block;
   visibility: visible;
 }
 
@@ -174,6 +176,7 @@
 
 .searchWrap {
   @apply relative flex flex-col gap-2;
+  position: relative;
 }
 
 .searchLabel {
@@ -184,6 +187,10 @@
 .searchIcon {
   @apply absolute left-[0.95rem] top-1/2 -translate-y-1/2;
   color: var(--talent-muted);
+  left: 0.95rem;
+  position: absolute;
+  top: calc(50% + 0.85rem);
+  transform: translateY(-50%);
 }
 
 .searchIconSvg {
@@ -372,6 +379,7 @@
   .sidebar {
     @apply sticky border-r-0 border rounded-lg -translate-x-0 w-auto max-w-none max-h-[calc(100vh-9rem)] p-[1.2rem];
     border-color: var(--talent-border);
+    display: block;
     top: 7.5rem;
     visibility: visible;
   }

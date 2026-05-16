@@ -139,38 +139,6 @@
   font-size: 0.85em;
 }
 
-.tooltip {
-  position: absolute;
-  min-width: 12rem;
-  max-width: min(18rem, calc(100vw - 2rem));
-  transform: translateX(-50%);
-  background-color: rgb(13 20 36 / 0.96);
-  color: white;
-  padding: 0.7rem 0.85rem;
-  border-radius: 0.7rem;
-  font-size: 0.78rem;
-  white-space: normal;
-  text-transform: none;
-  font-weight: 400;
-  line-height: 1.4;
-  letter-spacing: normal;
-  pointer-events: none;
-  z-index: 80;
-  text-align: center;
-  box-shadow: 0 14px 30px rgb(4 12 22 / 0.22);
-  opacity: 1;
-}
-
-.tooltip::before {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 0.42rem solid transparent;
-  border-top-color: rgb(13 20 36 / 0.96);
-}
-
 .root:hover .track,
 .root:focus-within .track {
   animation-play-state: paused;
@@ -257,12 +225,6 @@
 
   .separator {
     display: none;
-  }
-
-  .tooltip {
-    max-width: min(15rem, calc(100vw - 1.5rem));
-    font-size: 0.72rem;
-    padding: 0.6rem 0.75rem;
   }
 
   .track {
