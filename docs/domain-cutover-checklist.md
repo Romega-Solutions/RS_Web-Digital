@@ -66,6 +66,7 @@ Invoke-WebRequest -UseBasicParsing "$base/privacy" -MaximumRedirection 5
 Invoke-WebRequest -UseBasicParsing "$base/api/careers/jobs" -MaximumRedirection 5
 $env:PRODUCT_AUDIT_BASE_URL=$base; pnpm run audit:product
 $env:VISUAL_AUDIT_BASE_URL=$base; pnpm run audit:visual
+$env:LIVE_AUDIT_BASE_URL=$base; pnpm run audit:live
 ```
 
 Expected:
@@ -75,6 +76,7 @@ Expected:
 - `/api/careers/jobs` returns JSON
 - The product-flow audit passes against the cutover domain
 - The visual render audit passes against the cutover domain
+- The live deployment audit passes against the cutover domain with no auth wall, stale CSS, route-content, or careers API failures
 - Contact form submission no longer fails due to missing or invalid email provider configuration
 
 ## Known Caveat

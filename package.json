@@ -15,6 +15,7 @@
     "audit:keyboard": "playwright test scripts/keyboard-audit.spec.ts",
     "audit:product": "playwright test scripts/product-flow-audit.spec.ts",
     "audit:visual": "playwright test scripts/visual-render-audit.spec.ts",
+    "audit:live": "node scripts/live-deployment-audit.mjs",
     "validate:architecture": "node scripts/validate-architecture.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "node scripts/validate-architecture.mjs && eslint"
