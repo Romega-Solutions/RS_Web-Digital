@@ -11,7 +11,7 @@ The branch now ships an automated responsive Playwright gate:
 pnpm run audit:responsive
 ```
 
-Run it against the local dev server or set `RESPONSIVE_AUDIT_BASE_URL` for another target.
+By default, Playwright starts the built app on `http://127.0.0.1:3007`. Run `pnpm run build` first, or set `RESPONSIVE_AUDIT_BASE_URL` to run the same audit against a separate local server or deployment.
 
 Verified on 2026-05-17 against `http://localhost:3000`:
 

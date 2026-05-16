@@ -33,7 +33,7 @@ Route smoke checks returned `200` locally for:
 - Framework: Next.js `16.2.6`
 - React: `19.2.5`
 - Lint includes architecture validation through `scripts/validate-architecture.mjs`
-- Responsive audit covers the main public routes and viewport sizes
+- Responsive audit covers the main public routes and viewport sizes against the built app, and CI runs that audit on the redesign branch under Node.js 20
 - Dockerfile uses pnpm and runs the standard Next.js production server
 
 ## External Release Blockers

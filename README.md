@@ -36,7 +36,7 @@ pnpm run build
 pnpm run audit:responsive
 ```
 
-`pnpm run lint` runs the repo architecture validator before ESLint. `next build` does not run lint automatically in Next.js 16. `pnpm run audit:responsive` expects the app to be running and defaults to `http://localhost:3000`; override with `RESPONSIVE_AUDIT_BASE_URL` when checking a different deployment.
+`pnpm run lint` runs the repo architecture validator before ESLint. `next build` does not run lint automatically in Next.js 16. `pnpm run audit:responsive` starts the built app on `http://127.0.0.1:3007` by default, so run `pnpm run build` first. Override with `RESPONSIVE_AUDIT_BASE_URL` when checking a separate running app or deployment.
 
 ## Environment Variables
 

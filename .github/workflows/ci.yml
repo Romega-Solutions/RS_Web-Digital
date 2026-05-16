@@ -1,9 +1,10 @@
 name: CI
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, redesign/ui-audit-fixes]
   pull_request:
     branches: [main, master]
+  workflow_dispatch:
 jobs:
   ci:
     runs-on: ubuntu-latest
@@ -19,3 +20,5 @@ jobs:
       - run: pnpm run lint
       - run: pnpm run typecheck
       - run: pnpm run build
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm run audit:responsive

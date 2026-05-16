@@ -77,6 +77,7 @@ Results:
 - Next.js production build passed and generated all app routes.
 - Responsive Playwright audit passed for `/`, `/about`, `/services`, `/talent`, `/careers`, `/contact`, `/privacy`, and `/terms` across mobile, tablet, desktop, and wide desktop viewports.
 - Local route smoke checks returned `200` for all key pages listed above.
+- CI is configured to run the same lint, typecheck, build, and responsive audit gates on Node.js 20 for pushes to `main`, `master`, and `redesign/ui-audit-fixes`, plus PRs targeting `main` or `master`.
 
 Local caveat:
 

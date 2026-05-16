@@ -2,7 +2,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { test, expect } from "@playwright/test";
 
-const baseUrl = process.env.RESPONSIVE_AUDIT_BASE_URL ?? "http://localhost:3007";
+const baseUrl = process.env.RESPONSIVE_AUDIT_BASE_URL ?? "http://127.0.0.1:3007";
 const outputDir = path.join(process.cwd(), "reports", "responsive-audit");
 
 const routes = [
