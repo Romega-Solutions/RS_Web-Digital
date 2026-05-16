@@ -12,9 +12,10 @@ pnpm run audit:responsive
 pnpm run audit:a11y
 pnpm run audit:keyboard
 pnpm run audit:product
+pnpm run audit:visual
 ```
 
-By default, Playwright starts the built app on `http://127.0.0.1:3007`. Run `pnpm run build` first, or set `RESPONSIVE_AUDIT_BASE_URL`, `ACCESSIBILITY_AUDIT_BASE_URL`, `KEYBOARD_AUDIT_BASE_URL`, or `PRODUCT_AUDIT_BASE_URL` to run the same audits against a separate local server or deployment.
+By default, Playwright starts the built app on `http://127.0.0.1:3007`. Run `pnpm run build` first, or set `RESPONSIVE_AUDIT_BASE_URL`, `ACCESSIBILITY_AUDIT_BASE_URL`, `KEYBOARD_AUDIT_BASE_URL`, `PRODUCT_AUDIT_BASE_URL`, or `VISUAL_AUDIT_BASE_URL` to run the same audits against a separate local server or deployment.
 
 Verified on 2026-05-17 against `http://localhost:3000`:
 
@@ -36,6 +37,7 @@ The audit checks mobile, tablet, desktop, and wide desktop widths for:
 - critical and serious axe accessibility violations across the main public routes
 - skip-link focus behavior, desktop dropdown keyboard behavior, and mobile menu focus containment
 - careers API response shape and contact API validation behavior without requiring email-provider secrets
+- route-specific titles, h1 content, app shell landmarks, visible assets, interactive controls, and Vercel auth-wall leakage across key viewports
 
 ## Accessibility Remediations Present in Code
 

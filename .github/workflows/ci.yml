@@ -25,3 +25,4 @@ jobs:
       - run: pnpm run audit:a11y
       - run: pnpm run audit:keyboard
       - run: pnpm run audit:product
+      - run: pnpm run audit:visual

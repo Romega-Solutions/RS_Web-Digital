@@ -72,6 +72,7 @@ $env:RESPONSIVE_AUDIT_BASE_URL="http://localhost:3000"; pnpm run audit:responsiv
 pnpm run audit:a11y
 pnpm run audit:keyboard
 pnpm run audit:product
+pnpm run audit:visual
 ```
 
 Results:
@@ -86,6 +87,7 @@ Results:
 - A follow-up branch gate adds axe-backed accessibility smoke coverage for the same public routes, blocking critical and serious findings.
 - A keyboard smoke gate covers the skip link, desktop dropdown focus/escape behavior, and mobile menu focus containment.
 - A product-flow smoke gate covers the careers API response shape and contact API validation/error behavior without requiring Resend, reCAPTCHA, or live email delivery.
+- A visual render smoke gate covers route-specific titles, h1s, app shell landmarks, visible visual assets, interactive controls, and Vercel auth-wall leakage across 320, 390, 768, and 1440 pixel widths.
 - Latest branch commit `57a1de52bb284e15576be1c795115cb369b2c8f6` passed GitHub Actions CI on Node.js 20, including responsive, axe accessibility, and keyboard audits.
 - Product-flow audit commit `7b8f536852f73c47eac03625c8489ddf70d5ad35` passed GitHub Actions CI run `25972988285` on Node.js 20, including responsive, axe accessibility, keyboard, and product-flow audits.
 - Latest branch docs commit `5c99754c5713f669aabd1c05705785ec27ba4518` passed GitHub Actions CI run `25973058941` on Node.js 20, including responsive, axe accessibility, keyboard, and product-flow audits.
