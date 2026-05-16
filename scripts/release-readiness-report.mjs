@@ -1,8 +1,14 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import path from "node:path";
 
 const outputDir = path.join(process.cwd(), "reports", "release-readiness");
+const liveAuditReportPath = path.join(
+  process.cwd(),
+  "reports",
+  "live-deployment-audit",
+  "live-deployment-audit.json",
+);
 const branchName = run("git", ["branch", "--show-current"]) || "unknown";
 const headSha = run("git", ["rev-parse", "HEAD"]) || "unknown";
 const shortSha = headSha.slice(0, 7);
@@ -59,6 +65,18 @@ function parseOptionalCsvEnv(name, fallback) {
 
 function isTruthyEnv(name) {
   return /^(1|true|yes)$/i.test(process.env[name] || "");
+}
+
+function readJsonFile(filePath) {
+  if (!existsSync(filePath)) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(readFileSync(filePath, "utf8"));
+  } catch {
+    return null;
+  }
 }
 
 function getGithubStatus() {
@@ -148,8 +166,18 @@ const latestRun = getLatestWorkflowRun();
 const ci = getCiSummary(latestRun);
 const vercel = getVercelSummary(statusSummaries);
 const expectedBranch = process.env.READINESS_EXPECTED_BRANCH || "redesign/ui-audit-fixes";
+const expectedProductionBaseUrl = (
+  process.env.READINESS_PRODUCTION_BASE_URL || "https://www.romega-solutions.com"
+).replace(/\/+$/, "");
+const liveAudit = readJsonFile(liveAuditReportPath);
+const productionLiveAuditPassed =
+  liveAudit?.passed === true &&
+  typeof liveAudit.baseUrl === "string" &&
+  liveAudit.baseUrl.replace(/\/+$/, "") === expectedProductionBaseUrl;
 const manualEvidence = {
-  productionDomainCutoverVerified: isTruthyEnv("READINESS_PRODUCTION_DOMAIN_VERIFIED"),
+  productionDomainCutoverVerified:
+    isTruthyEnv("READINESS_PRODUCTION_DOMAIN_VERIFIED") && productionLiveAuditPassed,
+  productionDomainFlagSet: isTruthyEnv("READINESS_PRODUCTION_DOMAIN_VERIFIED"),
   protectedDeploymentAuditPassed: isTruthyEnv("READINESS_PROTECTED_DEPLOYMENT_AUDIT_PASSED"),
   contactDeliveryVerified: isTruthyEnv("READINESS_CONTACT_DELIVERY_VERIFIED"),
 };
@@ -180,8 +208,12 @@ if (vercel.duplicateBlocksAggregate) {
   );
 }
 
-if (!manualEvidence.productionDomainCutoverVerified) {
+if (!manualEvidence.productionDomainFlagSet) {
   blockers.push("Production domain and alias freshness require owner-scope Vercel cutover verification.");
+} else if (!productionLiveAuditPassed) {
+  blockers.push(
+    `Production domain verification flag is set, but latest live audit artifact does not pass for ${expectedProductionBaseUrl}.`,
+  );
 }
 
 if (!manualEvidence.protectedDeploymentAuditPassed) {
@@ -204,6 +236,19 @@ const report = {
   commitStatusState: githubStatus?.state || "unavailable",
   statuses: statusSummaries,
   vercel,
+  expectedProductionBaseUrl,
+  liveAudit: liveAudit
+    ? {
+        available: true,
+        baseUrl: liveAudit.baseUrl,
+        passed: liveAudit.passed === true,
+        vercelProtectionBypassConfigured: liveAudit.vercelProtectionBypassConfigured === true,
+        finishedAt: liveAudit.finishedAt,
+        failureCount: Array.isArray(liveAudit.failures) ? liveAudit.failures.length : null,
+      }
+    : {
+        available: false,
+      },
   manualEvidence,
   submissionReady: blockers.length === 0,
   blockers,
@@ -228,9 +273,19 @@ Head: \`${report.headSha}\`
 - \`READINESS_INTENDED_VERCEL_CONTEXTS\`: ${report.vercel.intendedContexts.join(", ")}
 - \`READINESS_BLOCKING_DUPLICATE_VERCEL_CONTEXTS\`: ${report.vercel.blockingDuplicateContexts.join(", ") || "none"}
 - \`READINESS_EXPECTED_BRANCH\`: ${report.expectedBranch || "none"}
-- \`READINESS_PRODUCTION_DOMAIN_VERIFIED\`: ${report.manualEvidence.productionDomainCutoverVerified ? "yes" : "no"}
+- \`READINESS_PRODUCTION_BASE_URL\`: ${report.expectedProductionBaseUrl}
+- \`READINESS_PRODUCTION_DOMAIN_VERIFIED\`: ${report.manualEvidence.productionDomainFlagSet ? "yes" : "no"}
 - \`READINESS_PROTECTED_DEPLOYMENT_AUDIT_PASSED\`: ${report.manualEvidence.protectedDeploymentAuditPassed ? "yes" : "no"}
 - \`READINESS_CONTACT_DELIVERY_VERIFIED\`: ${report.manualEvidence.contactDeliveryVerified ? "yes" : "no"}
+
+## Live Audit Evidence
+
+- Available: ${report.liveAudit.available ? "yes" : "no"}
+- Base URL: ${report.liveAudit.baseUrl || "unavailable"}
+- Passed: ${report.liveAudit.passed ? "yes" : "no"}
+- Finished: ${report.liveAudit.finishedAt || "unavailable"}
+- Failure count: ${report.liveAudit.failureCount ?? "unavailable"}
+- Vercel bypass configured: ${report.liveAudit.vercelProtectionBypassConfigured ? "yes" : "no"}
 
 ## Status Contexts
 

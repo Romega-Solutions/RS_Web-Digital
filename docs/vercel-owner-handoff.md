@@ -83,15 +83,19 @@ pnpm run report:readiness
 
 ```powershell
 $env:READINESS_BLOCKING_DUPLICATE_VERCEL_CONTEXTS="none"
+$env:READINESS_PRODUCTION_BASE_URL="https://www.romega-solutions.com"
 $env:READINESS_PRODUCTION_DOMAIN_VERIFIED="true"
 $env:READINESS_PROTECTED_DEPLOYMENT_AUDIT_PASSED="true"
 $env:READINESS_CONTACT_DELIVERY_VERIFIED="true"
 pnpm run report:readiness
 Remove-Item Env:READINESS_BLOCKING_DUPLICATE_VERCEL_CONTEXTS
+Remove-Item Env:READINESS_PRODUCTION_BASE_URL
 Remove-Item Env:READINESS_PRODUCTION_DOMAIN_VERIFIED
 Remove-Item Env:READINESS_PROTECTED_DEPLOYMENT_AUDIT_PASSED
 Remove-Item Env:READINESS_CONTACT_DELIVERY_VERIFIED
 ```
+
+The readiness report reads `reports/live-deployment-audit/live-deployment-audit.json`; do not set `READINESS_PRODUCTION_DOMAIN_VERIFIED=true` until `LIVE_AUDIT_BASE_URL=https://www.romega-solutions.com pnpm run audit:live` has passed in the same checkout.
 
 ## Pass Criteria
 

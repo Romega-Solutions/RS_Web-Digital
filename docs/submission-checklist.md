@@ -90,15 +90,19 @@ After the owner-scope checks pass, set the evidence flags only for the final rea
 
 ```powershell
 $env:READINESS_BLOCKING_DUPLICATE_VERCEL_CONTEXTS="none"
+$env:READINESS_PRODUCTION_BASE_URL="https://www.romega-solutions.com"
 $env:READINESS_PRODUCTION_DOMAIN_VERIFIED="true"
 $env:READINESS_PROTECTED_DEPLOYMENT_AUDIT_PASSED="true"
 $env:READINESS_CONTACT_DELIVERY_VERIFIED="true"
 pnpm run report:readiness
 Remove-Item Env:READINESS_BLOCKING_DUPLICATE_VERCEL_CONTEXTS
+Remove-Item Env:READINESS_PRODUCTION_BASE_URL
 Remove-Item Env:READINESS_PRODUCTION_DOMAIN_VERIFIED
 Remove-Item Env:READINESS_PROTECTED_DEPLOYMENT_AUDIT_PASSED
 Remove-Item Env:READINESS_CONTACT_DELIVERY_VERIFIED
 ```
+
+The production-domain flag is accepted only when the latest `reports/live-deployment-audit/live-deployment-audit.json` artifact is passing for `READINESS_PRODUCTION_BASE_URL`. Run `LIVE_AUDIT_BASE_URL=$base pnpm run audit:live` immediately before the final report.
 
 ## External Owner Actions
 
