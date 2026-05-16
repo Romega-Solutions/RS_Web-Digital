@@ -5,6 +5,8 @@ const baseUrl = (process.env.LIVE_AUDIT_BASE_URL || "https://romega-digitals.ver
   /\/+$/,
   "",
 );
+const vercelProtectionBypassSecret =
+  process.env.LIVE_AUDIT_VERCEL_BYPASS_SECRET || process.env.VERCEL_AUTOMATION_BYPASS_SECRET || "";
 
 const routes = [
   {
@@ -36,13 +38,19 @@ function absoluteUrl(value) {
 }
 
 async function fetchText(url, init = {}) {
+  const headers = {
+    "User-Agent": "RS-Web-Digital-Live-Audit/1.0",
+    Accept: "text/html,application/json,text/css,*/*",
+    ...init.headers,
+  };
+
+  if (vercelProtectionBypassSecret) {
+    headers["x-vercel-protection-bypass"] = vercelProtectionBypassSecret;
+  }
+
   const response = await fetch(url, {
     redirect: "follow",
-    headers: {
-      "User-Agent": "RS-Web-Digital-Live-Audit/1.0",
-      Accept: "text/html,application/json,text/css,*/*",
-      ...init.headers,
-    },
+    headers,
     ...init,
   });
   const text = await response.text();
@@ -222,6 +230,7 @@ const report = {
   baseUrl,
   startedAt,
   finishedAt: new Date().toISOString(),
+  vercelProtectionBypassConfigured: Boolean(vercelProtectionBypassSecret),
   passed: failures.length === 0,
   failures,
   routeResults,

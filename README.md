@@ -50,6 +50,17 @@ $env:LIVE_AUDIT_BASE_URL="https://romega-digitals.vercel.app"; pnpm run audit:li
 
 The live audit checks route content, the careers API contract, Vercel auth-wall leakage, and stale footer CSS bundles. It is intentionally not part of local CI because it depends on the external deployment being refreshed.
 
+For protected Vercel preview URLs, set the project automation bypass secret before running the same command:
+
+```powershell
+$env:LIVE_AUDIT_BASE_URL="https://<deployment>.vercel.app"
+$env:LIVE_AUDIT_VERCEL_BYPASS_SECRET="<redacted>"
+pnpm run audit:live
+Remove-Item Env:LIVE_AUDIT_VERCEL_BYPASS_SECRET
+```
+
+The audit also reads Vercel's `VERCEL_AUTOMATION_BYPASS_SECRET` env var when available. The secret value is never written to the audit report.
+
 ## Environment Variables
 
 Required for production:

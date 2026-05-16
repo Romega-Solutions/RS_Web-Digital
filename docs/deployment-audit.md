@@ -76,6 +76,17 @@ pnpm run audit:visual
 $env:LIVE_AUDIT_BASE_URL="http://127.0.0.1:3008"; pnpm run audit:live
 ```
 
+Protected Vercel previews can be audited from the owning project scope by adding the project automation bypass secret:
+
+```powershell
+$env:LIVE_AUDIT_BASE_URL="https://<deployment>.vercel.app"
+$env:LIVE_AUDIT_VERCEL_BYPASS_SECRET="<redacted>"
+pnpm run audit:live
+Remove-Item Env:LIVE_AUDIT_VERCEL_BYPASS_SECRET
+```
+
+The script also accepts Vercel's `VERCEL_AUTOMATION_BYPASS_SECRET` system env var and does not write the secret value to `reports/live-deployment-audit/live-deployment-audit.json`.
+
 Results:
 
 - Architecture validation and ESLint passed.
@@ -89,7 +100,7 @@ Results:
 - A keyboard smoke gate covers the skip link, desktop dropdown focus/escape behavior, and mobile menu focus containment.
 - A product-flow smoke gate covers the careers API response shape and contact API validation/error behavior without requiring Resend, reCAPTCHA, or live email delivery.
 - A visual render smoke gate covers route-specific titles, h1s, app shell landmarks, visible visual assets, interactive controls, and Vercel auth-wall leakage across 320, 390, 768, and 1440 pixel widths.
-- A live deployment audit checks the public route freshness contract, careers API JSON shape, Vercel auth-wall leakage, and stale footer CSS bundles on any running URL through `LIVE_AUDIT_BASE_URL`.
+- A live deployment audit checks the public route freshness contract, careers API JSON shape, Vercel auth-wall leakage, stale footer CSS bundles on any running URL through `LIVE_AUDIT_BASE_URL`, and protected Vercel preview URLs when a project automation bypass secret is supplied.
 - Latest branch commit `57a1de52bb284e15576be1c795115cb369b2c8f6` passed GitHub Actions CI on Node.js 20, including responsive, axe accessibility, and keyboard audits.
 - Product-flow audit commit `7b8f536852f73c47eac03625c8489ddf70d5ad35` passed GitHub Actions CI run `25972988285` on Node.js 20, including responsive, axe accessibility, keyboard, and product-flow audits.
 - Latest branch docs commit `5c99754c5713f669aabd1c05705785ec27ba4518` passed GitHub Actions CI run `25973058941` on Node.js 20, including responsive, axe accessibility, keyboard, and product-flow audits.
@@ -98,7 +109,7 @@ Results:
 - GitHub commit statuses for `c03dee20ada83f9636807ef3f359701e8f135cde` show `Vercel - romega-digitals` and `Vercel - romega-digital` succeeded. The duplicate `Vercel - rs-web-digital` integration still fails and causes the aggregate GitHub commit status to read `failure`.
 - The successful `romega-digitals` immutable deployment URL for `c03dee20ada83f9636807ef3f359701e8f135cde` is `https://romega-digitals-fwbnrmutf-kpg782s-projects.vercel.app`, but unauthenticated live audit and route probes return Vercel Authentication `401`.
 - The `https://romega-digitals.vercel.app` alias returns `200` for `/`, `/terms`, and `/api/careers/jobs`; it passes live responsive, keyboard, and product-flow audits, but live axe and `LIVE_AUDIT_BASE_URL=https://romega-digitals.vercel.app pnpm run audit:live` still report older footer contrast CSS. Treat the alias as not fully refreshed for the latest accessibility patch until both live gates pass.
-- The immutable successful deployment URL for `romega-digitals` is protected by Vercel Authentication from this session, so unauthenticated Playwright audits hit Vercel's auth page instead of the app. Owner-scope access or a Vercel protection bypass is required to audit that immutable deployment directly.
+- The immutable successful deployment URL for `romega-digitals` is protected by Vercel Authentication from this session, so unauthenticated Playwright audits hit Vercel's auth page instead of the app. Owner-scope access plus `LIVE_AUDIT_VERCEL_BYPASS_SECRET` or `VERCEL_AUTOMATION_BYPASS_SECRET` is required to audit that immutable deployment directly.
 
 Local caveat:
 

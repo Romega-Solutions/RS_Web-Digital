@@ -69,6 +69,15 @@ $env:VISUAL_AUDIT_BASE_URL=$base; pnpm run audit:visual
 $env:LIVE_AUDIT_BASE_URL=$base; pnpm run audit:live
 ```
 
+If the target URL is a protected Vercel preview instead of a public alias or production domain, add the project automation bypass secret before the live audit:
+
+```powershell
+$env:LIVE_AUDIT_BASE_URL="https://<deployment>.vercel.app"
+$env:LIVE_AUDIT_VERCEL_BYPASS_SECRET="<redacted>"
+pnpm run audit:live
+Remove-Item Env:LIVE_AUDIT_VERCEL_BYPASS_SECRET
+```
+
 Expected:
 
 - All listed routes return `200`

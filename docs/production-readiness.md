@@ -23,6 +23,17 @@ $env:PRODUCT_AUDIT_BASE_URL="https://romega-digitals.vercel.app"; pnpm run audit
 $env:LIVE_AUDIT_BASE_URL="https://romega-digitals.vercel.app"; pnpm run audit:live
 ```
 
+For protected immutable Vercel preview URLs, run the live audit from the owner scope with a project automation bypass secret:
+
+```powershell
+$env:LIVE_AUDIT_BASE_URL="https://<deployment>.vercel.app"
+$env:LIVE_AUDIT_VERCEL_BYPASS_SECRET="<redacted>"
+pnpm run audit:live
+Remove-Item Env:LIVE_AUDIT_VERCEL_BYPASS_SECRET
+```
+
+`pnpm run audit:live` also reads Vercel's `VERCEL_AUTOMATION_BYPASS_SECRET` system env var when present. The generated report only records whether a bypass was configured, not the secret value.
+
 Route smoke checks returned `200` locally for:
 
 - `/`
@@ -46,7 +57,7 @@ Route smoke checks returned `200` locally for:
 - Keyboard audit covers skip-link behavior, desktop dropdown focus/escape handling, and mobile menu focus containment
 - Product-flow audit covers the careers API response contract and contact API validation/error behavior without requiring production email-provider secrets
 - Visual render audit covers route-specific titles, h1s, app shell landmarks, visible visual assets, and auth-wall detection across mobile, tablet, and desktop viewports
-- Live deployment audit covers public route freshness, careers API JSON shape, Vercel authentication-wall leakage, and stale footer CSS bundles on a running URL
+- Live deployment audit covers public route freshness, careers API JSON shape, Vercel authentication-wall leakage, stale footer CSS bundles on a running URL, and optional Vercel automation-bypass auth for protected preview URLs
 - Commit `669c5d8df307ae5f1c458cd491c79e7f887e92c7` passed GitHub Actions CI on Node.js 20
 - Commit `57a1de52bb284e15576be1c795115cb369b2c8f6` passed GitHub Actions CI on Node.js 20 with lint, typecheck, build, responsive, axe accessibility, and keyboard audits
 - Commit `7b8f536852f73c47eac03625c8489ddf70d5ad35` passed GitHub Actions CI on Node.js 20 with lint, typecheck, build, responsive, axe accessibility, keyboard, and product-flow audits
@@ -56,7 +67,7 @@ Route smoke checks returned `200` locally for:
 - Commit `c03dee20ada83f9636807ef3f359701e8f135cde` deployed successfully to the intended `Vercel - romega-digitals` context at `https://romega-digitals-fwbnrmutf-kpg782s-projects.vercel.app`, but that immutable URL returns Vercel Authentication `401` to unauthenticated checks
 - `https://romega-digitals.vercel.app` passed live responsive auditing for the main public routes
 - `https://romega-digitals.vercel.app` passed live keyboard and product-flow auditing, but live axe auditing and `pnpm run audit:live` still fail on older footer contrast CSS and should be rerun after the latest branch deployment is confirmed on that alias
-- Latest successful immutable Vercel deployment URLs under `kpg782s-projects` are protected by Vercel Authentication from this session, so public live accessibility evidence must come from the alias after it is refreshed or from an authenticated owner-scope check
+- Latest successful immutable Vercel deployment URLs under `kpg782s-projects` are protected by Vercel Authentication from this session, so public live accessibility evidence must come from the alias after it is refreshed or from an owner-scope check using `LIVE_AUDIT_VERCEL_BYPASS_SECRET` / `VERCEL_AUTOMATION_BYPASS_SECRET`
 - Dockerfile uses pnpm and runs the standard Next.js production server
 
 ## External Release Blockers
@@ -71,6 +82,7 @@ These items require dashboard, account, or live-service access:
 - Inspect latest Vercel deployment logs from the owning `kpg782s-projects` Vercel scope.
 - Re-run `ACCESSIBILITY_AUDIT_BASE_URL=https://romega-digitals.vercel.app pnpm run audit:a11y` after the latest redesign branch deployment is available; the current public preview still reflects older footer contrast styles.
 - Re-run `LIVE_AUDIT_BASE_URL=https://romega-digitals.vercel.app pnpm run audit:live` after the latest redesign branch deployment is available; the current public alias still serves the stale footer CSS bundle.
+- Re-run `pnpm run audit:live` against the protected immutable `romega-digitals` URL from the owner scope with `LIVE_AUDIT_VERCEL_BYPASS_SECRET` or `VERCEL_AUTOMATION_BYPASS_SECRET` set.
 - Fix or disconnect the duplicate Vercel integration: `rs-web-digital` currently reports failed on the latest commit status. `romega-digitals` and `romega-digital` report success for commit `c03dee20ada83f9636807ef3f359701e8f135cde`.
 
 ## Known Local Caveat
