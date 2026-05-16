@@ -326,6 +326,7 @@ export function SiteNavbar({
               aria-controls={isServicesDropdownOpen ? servicesDropdownId : undefined}
               aria-haspopup="menu"
               role="button"
+              onFocus={openServicesDropdown}
             >
               Services
               <span className={styles.dropdownCaret} aria-hidden="true"><ChevronDown /></span>
@@ -371,6 +372,7 @@ export function SiteNavbar({
               aria-controls={isCareersDropdownOpen ? careersDropdownId : undefined}
               aria-haspopup="menu"
               role="button"
+              onFocus={openCareersDropdown}
             >
               Careers & Talents
               <span className={styles.dropdownCaret} aria-hidden="true"><ChevronDown /></span>

@@ -80,6 +80,7 @@ Results:
 - GitHub Actions CI passed on Node.js 20 for commit `669c5d8df307ae5f1c458cd491c79e7f887e92c7`, including `pnpm install --frozen-lockfile`, lint, typecheck, build, Playwright browser install, and the responsive audit.
 - The public Vercel preview host `https://romega-digitals.vercel.app` passed the same responsive audit across the listed routes and viewport sizes.
 - A follow-up branch gate adds axe-backed accessibility smoke coverage for the same public routes, blocking critical and serious findings.
+- A keyboard smoke gate covers the skip link, desktop dropdown focus/escape behavior, and mobile menu focus containment.
 
 Local caveat:
 

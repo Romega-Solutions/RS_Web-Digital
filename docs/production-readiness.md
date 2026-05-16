@@ -14,6 +14,7 @@ pnpm run typecheck
 pnpm run build
 pnpm run audit:responsive
 pnpm run audit:a11y
+pnpm run audit:keyboard
 $env:RESPONSIVE_AUDIT_BASE_URL="https://romega-digitals.vercel.app"; pnpm run audit:responsive
 ```
 
@@ -37,6 +38,7 @@ Route smoke checks returned `200` locally for:
 - Lint includes architecture validation through `scripts/validate-architecture.mjs`
 - Responsive audit covers the main public routes and viewport sizes against the built app, and CI runs that audit on the redesign branch under Node.js 20
 - Accessibility audit blocks critical and serious axe violations on the main public routes
+- Keyboard audit covers skip-link behavior, desktop dropdown focus/escape handling, and mobile menu focus containment
 - Commit `669c5d8df307ae5f1c458cd491c79e7f887e92c7` passed GitHub Actions CI on Node.js 20
 - `https://romega-digitals.vercel.app` passed live responsive auditing for the main public routes
 - Dockerfile uses pnpm and runs the standard Next.js production server

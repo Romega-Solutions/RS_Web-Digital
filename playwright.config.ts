@@ -6,7 +6,11 @@ const defaultBaseUrl = "http://127.0.0.1:3007";
 
 export default defineConfig({
   testDir: ".",
-  testMatch: ["scripts/responsive-audit.spec.ts", "scripts/accessibility-audit.spec.ts"],
+  testMatch: [
+    "scripts/responsive-audit.spec.ts",
+    "scripts/accessibility-audit.spec.ts",
+    "scripts/keyboard-audit.spec.ts",
+  ],
   reporter: "list",
   use: {
     baseURL: configuredBaseUrl ?? defaultBaseUrl,
@@ -16,7 +20,7 @@ export default defineConfig({
     : {
         command: "pnpm exec next start -H 127.0.0.1 -p 3007",
         url: defaultBaseUrl,
-        reuseExistingServer: !process.env.CI,
+        reuseExistingServer: false,
         timeout: 120_000,
       },
 });

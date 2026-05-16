@@ -12,6 +12,7 @@
     "start": "next start",
     "audit:responsive": "playwright test scripts/responsive-audit.spec.ts",
     "audit:a11y": "playwright test scripts/accessibility-audit.spec.ts",
+    "audit:keyboard": "playwright test scripts/keyboard-audit.spec.ts",
     "validate:architecture": "node scripts/validate-architecture.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "node scripts/validate-architecture.mjs && eslint"
@@ -26,7 +27,6 @@
     "resend": "^6.12.2"
   },
   "devDependencies": {
-    "@axe-core/playwright": "^4.11.3",
     "@axe-core/playwright": "^4.11.3",
     "@playwright/test": "1.60.0",
     "@tailwindcss/postcss": "^4",

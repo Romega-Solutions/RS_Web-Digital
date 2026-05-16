@@ -10,6 +10,7 @@ The branch now ships an automated responsive Playwright gate:
 ```bash
 pnpm run audit:responsive
 pnpm run audit:a11y
+pnpm run audit:keyboard
 ```
 
 By default, Playwright starts the built app on `http://127.0.0.1:3007`. Run `pnpm run build` first, or set `RESPONSIVE_AUDIT_BASE_URL` / `ACCESSIBILITY_AUDIT_BASE_URL` to run the same audits against a separate local server or deployment.
@@ -32,6 +33,7 @@ The audit checks mobile, tablet, desktop, and wide desktop widths for:
 - undersized interactive targets
 - hidden or unusable primary content
 - critical and serious axe accessibility violations across the main public routes
+- skip-link focus behavior, desktop dropdown keyboard behavior, and mobile menu focus containment
 
 ## Accessibility Remediations Present in Code
 
@@ -58,4 +60,4 @@ The current automated gate is not a full WCAG certification. Before final public
 
 ## Remaining A11y Work
 
-Do not mark the site WCAG AA-ready until the automated axe gate, keyboard walkthrough, screen-reader smoke test, and zoom/reflow checks have all been completed. The automated gate now blocks critical and serious axe findings, but it does not replace manual assistive-technology QA.
+Do not mark the site WCAG AA-ready until the automated axe gate, keyboard walkthrough, screen-reader smoke test, and zoom/reflow checks have all been completed. The automated gates now cover the most important smoke paths, but they do not replace manual assistive-technology QA.
