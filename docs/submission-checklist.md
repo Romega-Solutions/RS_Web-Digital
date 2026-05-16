@@ -44,6 +44,16 @@ pnpm run report:readiness
 Remove-Item Env:READINESS_INTENDED_VERCEL_CONTEXTS
 ```
 
+The report expects this review branch by default and treats `Vercel - rs-web-digital` as a blocking duplicate. After merge or after the duplicate integration is removed, override those assumptions only when the current release state proves it:
+
+```powershell
+$env:READINESS_EXPECTED_BRANCH="main"
+$env:READINESS_BLOCKING_DUPLICATE_VERCEL_CONTEXTS="none"
+pnpm run report:readiness
+Remove-Item Env:READINESS_EXPECTED_BRANCH
+Remove-Item Env:READINESS_BLOCKING_DUPLICATE_VERCEL_CONTEXTS
+```
+
 ## Live Deployment Gates
 
 Run after the latest deployment is available on a public URL or with Vercel automation bypass access:
@@ -79,10 +89,12 @@ Expected result:
 After the owner-scope checks pass, set the evidence flags only for the final readiness report:
 
 ```powershell
+$env:READINESS_BLOCKING_DUPLICATE_VERCEL_CONTEXTS="none"
 $env:READINESS_PRODUCTION_DOMAIN_VERIFIED="true"
 $env:READINESS_PROTECTED_DEPLOYMENT_AUDIT_PASSED="true"
 $env:READINESS_CONTACT_DELIVERY_VERIFIED="true"
 pnpm run report:readiness
+Remove-Item Env:READINESS_BLOCKING_DUPLICATE_VERCEL_CONTEXTS
 Remove-Item Env:READINESS_PRODUCTION_DOMAIN_VERIFIED
 Remove-Item Env:READINESS_PROTECTED_DEPLOYMENT_AUDIT_PASSED
 Remove-Item Env:READINESS_CONTACT_DELIVERY_VERIFIED

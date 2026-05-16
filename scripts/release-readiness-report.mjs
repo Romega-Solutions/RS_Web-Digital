@@ -44,6 +44,19 @@ function parseCsvEnv(name, fallback) {
   return parsed.length > 0 ? parsed : fallback;
 }
 
+function parseOptionalCsvEnv(name, fallback) {
+  const value = process.env[name];
+  if (!value) {
+    return fallback;
+  }
+
+  if (/^(none|off|false)$/i.test(value.trim())) {
+    return [];
+  }
+
+  return parseCsvEnv(name, fallback);
+}
+
 function isTruthyEnv(name) {
   return /^(1|true|yes)$/i.test(process.env[name] || "");
 }
@@ -108,18 +121,24 @@ function getVercelSummary(statuses) {
   const intendedContexts = parseCsvEnv("READINESS_INTENDED_VERCEL_CONTEXTS", [
     "Vercel – romega-digitals",
   ]);
-  const duplicateContext = "Vercel – rs-web-digital";
+  const blockingDuplicateContexts = parseOptionalCsvEnv(
+    "READINESS_BLOCKING_DUPLICATE_VERCEL_CONTEXTS",
+    ["Vercel – rs-web-digital"],
+  );
   const intended = statuses.filter((status) => intendedContexts.includes(status.context));
-  const duplicate = statuses.find((status) => status.context === duplicateContext);
+  const duplicateContexts = statuses.filter((status) =>
+    blockingDuplicateContexts.includes(status.context),
+  );
 
   return {
     intendedContexts,
+    blockingDuplicateContexts,
     intendedPassed:
       intended.length === intendedContexts.length &&
       intended.every((status) => status.state === "success"),
     intended,
-    duplicateContext: duplicate || null,
-    duplicateBlocksAggregate: duplicate?.state === "failure",
+    duplicateContexts,
+    duplicateBlocksAggregate: duplicateContexts.some((status) => status.state === "failure"),
   };
 }
 
@@ -128,6 +147,7 @@ const statusSummaries = summarizeStatuses(githubStatus);
 const latestRun = getLatestWorkflowRun();
 const ci = getCiSummary(latestRun);
 const vercel = getVercelSummary(statusSummaries);
+const expectedBranch = process.env.READINESS_EXPECTED_BRANCH || "redesign/ui-audit-fixes";
 const manualEvidence = {
   productionDomainCutoverVerified: isTruthyEnv("READINESS_PRODUCTION_DOMAIN_VERIFIED"),
   protectedDeploymentAuditPassed: isTruthyEnv("READINESS_PROTECTED_DEPLOYMENT_AUDIT_PASSED"),
@@ -135,8 +155,8 @@ const manualEvidence = {
 };
 const blockers = [];
 
-if (branchName !== "redesign/ui-audit-fixes") {
-  blockers.push(`Current branch is ${branchName}, expected redesign/ui-audit-fixes.`);
+if (expectedBranch && branchName !== expectedBranch) {
+  blockers.push(`Current branch is ${branchName}, expected ${expectedBranch}.`);
 }
 
 if (statusShort) {
@@ -152,7 +172,12 @@ if (!vercel.intendedPassed) {
 }
 
 if (vercel.duplicateBlocksAggregate) {
-  blockers.push("Duplicate Vercel context rs-web-digital is failing and keeps aggregate commit status failed.");
+  blockers.push(
+    `Blocking duplicate Vercel context is failing and keeps aggregate commit status failed: ${vercel.duplicateContexts
+      .filter((status) => status.state === "failure")
+      .map((status) => status.context)
+      .join(", ")}.`,
+  );
 }
 
 if (!manualEvidence.productionDomainCutoverVerified) {
@@ -170,6 +195,7 @@ if (!manualEvidence.contactDeliveryVerified) {
 const report = {
   generatedAt: new Date().toISOString(),
   branch: branchName,
+  expectedBranch,
   headSha,
   shortSha,
   remoteTracking,
@@ -200,6 +226,8 @@ Head: \`${report.headSha}\`
 ## Manual Evidence Flags
 
 - \`READINESS_INTENDED_VERCEL_CONTEXTS\`: ${report.vercel.intendedContexts.join(", ")}
+- \`READINESS_BLOCKING_DUPLICATE_VERCEL_CONTEXTS\`: ${report.vercel.blockingDuplicateContexts.join(", ") || "none"}
+- \`READINESS_EXPECTED_BRANCH\`: ${report.expectedBranch || "none"}
 - \`READINESS_PRODUCTION_DOMAIN_VERIFIED\`: ${report.manualEvidence.productionDomainCutoverVerified ? "yes" : "no"}
 - \`READINESS_PROTECTED_DEPLOYMENT_AUDIT_PASSED\`: ${report.manualEvidence.protectedDeploymentAuditPassed ? "yes" : "no"}
 - \`READINESS_CONTACT_DELIVERY_VERIFIED\`: ${report.manualEvidence.contactDeliveryVerified ? "yes" : "no"}

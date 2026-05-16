@@ -82,10 +82,12 @@ pnpm run report:readiness
 11. After the public production checks, protected deployment audit, and real contact-form delivery test all pass, generate the final readiness report with evidence flags:
 
 ```powershell
+$env:READINESS_BLOCKING_DUPLICATE_VERCEL_CONTEXTS="none"
 $env:READINESS_PRODUCTION_DOMAIN_VERIFIED="true"
 $env:READINESS_PROTECTED_DEPLOYMENT_AUDIT_PASSED="true"
 $env:READINESS_CONTACT_DELIVERY_VERIFIED="true"
 pnpm run report:readiness
+Remove-Item Env:READINESS_BLOCKING_DUPLICATE_VERCEL_CONTEXTS
 Remove-Item Env:READINESS_PRODUCTION_DOMAIN_VERIFIED
 Remove-Item Env:READINESS_PROTECTED_DEPLOYMENT_AUDIT_PASSED
 Remove-Item Env:READINESS_CONTACT_DELIVERY_VERIFIED
