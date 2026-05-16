@@ -179,9 +179,12 @@ vercel env add NEXT_PUBLIC_SITE_URL production
 
 # Or pull .env to check what's currently set
 vercel env pull .env.vercel.local
+pnpm run check:env:production
 ```
 
 **Important:** `NEXT_PUBLIC_*` variables are baked into the client bundle at **build time**. If you add or change them in the dashboard, you must redeploy — a restart is not enough.
+
+`pnpm run check:env:production` reports configured/missing status and validation errors only. It must not be used to print or share secret values.
 
 ---
 
@@ -382,6 +385,7 @@ Before the next production deployment, verify the following in the Vercel dashbo
 - [ ] `ADMIN_EMAIL` is set for Production environment  
 - [ ] `NEXT_PUBLIC_SITE_URL` is set to `https://www.romega-solutions.com`
 - [ ] `RECAPTCHA_SECRET_KEY` is set (for spam protection)
+- [ ] `pnpm run check:env:production` passes after `vercel env pull .env.vercel.local`
 - [ ] Framework preset is **Next.js** (auto-detected)
 - [ ] Build command is `pnpm run build` (or auto)
 - [ ] Install command is `pnpm install` (or auto)

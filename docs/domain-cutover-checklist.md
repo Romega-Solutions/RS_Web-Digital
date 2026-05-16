@@ -46,8 +46,14 @@ Use the Vercel dashboard account/team that owns `kpg782s-projects`.
    - `NEXT_PUBLIC_SITE_URL=https://www.romega-solutions.com`
    - `RECAPTCHA_SECRET_KEY` if reCAPTCHA is intended for contact submissions
    - `JOBS_API_URL` if the hardcoded fallback should be replaced
-6. Promote or redeploy the latest successful `romega-digitals` deployment.
-7. Disconnect stale Git integrations if they are not needed:
+6. Pull and validate production env without printing secret values:
+
+   ```powershell
+   vercel env pull .env.vercel.local
+   pnpm run check:env:production
+   ```
+7. Promote or redeploy the latest successful `romega-digitals` deployment.
+8. Disconnect stale Git integrations if they are not needed:
    - `rs-web-digital`
    - `romega-digital`
 

@@ -61,6 +61,15 @@ Remove-Item Env:LIVE_AUDIT_VERCEL_BYPASS_SECRET
 
 The audit also reads Vercel's `VERCEL_AUTOMATION_BYPASS_SECRET` env var when available. The secret value is never written to the audit report.
 
+For production environment readiness after pulling Vercel env locally:
+
+```powershell
+vercel env pull .env.vercel.local
+pnpm run check:env:production
+```
+
+The env check reports only configured/missing status and validation failures. It does not print secret values.
+
 ## Environment Variables
 
 Required for production:
@@ -75,6 +84,8 @@ Optional:
 - `RECAPTCHA_TIMEOUT_MS`: timeout for reCAPTCHA verification. Defaults to `5000`.
 - `JOBS_API_URL`: Google Apps Script endpoint for live job listings. The API route has a fallback.
 - `EMAIL_CONTACT_FALLBACK_ENABLED`: local-only contact capture without Resend. Ignored in production.
+
+Run `pnpm run check:env:production` after `vercel env pull .env.vercel.local` to validate production env shape without printing secret values.
 
 Use `.env.example` as the template. Do not commit real secret values.
 

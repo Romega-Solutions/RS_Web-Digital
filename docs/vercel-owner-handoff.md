@@ -31,9 +31,16 @@ This handoff is for the Vercel owner scope `kpg782s-projects`. The local Codex s
    - `NEXT_PUBLIC_SITE_URL=https://www.romega-solutions.com`
    - `RECAPTCHA_SECRET_KEY` if contact-form spam protection is required
    - `JOBS_API_URL` if the fallback careers endpoint should be replaced
-5. Generate or select a Vercel Deployment Protection automation bypass secret for `romega-digitals`.
+5. Pull and validate production env locally without printing secret values:
+
+```powershell
+vercel env pull .env.vercel.local
+pnpm run check:env:production
+```
+
+6. Generate or select a Vercel Deployment Protection automation bypass secret for `romega-digitals`.
    - Vercel reference: https://vercel.com/docs/deployment-protection/methods-to-bypass-deployment-protection/protection-bypass-automation/
-6. Run the protected preview audit against the successful immutable deployment:
+7. Run the protected preview audit against the successful immutable deployment:
 
 ```powershell
 $env:LIVE_AUDIT_BASE_URL="https://romega-digitals-2ph3v77qv-kpg782s-projects.vercel.app"
@@ -44,11 +51,11 @@ Remove-Item Env:LIVE_AUDIT_VERCEL_BYPASS_SECRET
 
 Vercel also exposes the selected automation bypass secret as `VERCEL_AUTOMATION_BYPASS_SECRET` when configured for the project, and `pnpm run audit:live` reads that variable automatically. The audit report records only whether a bypass was configured, not the secret value.
 
-7. Move or assign production domains to `romega-digitals`:
+8. Move or assign production domains to `romega-digitals`:
    - `romega-solutions.com`
    - `www.romega-solutions.com`
-8. Promote or redeploy the latest successful `romega-digitals` deployment.
-9. Run the public production verification commands:
+9. Promote or redeploy the latest successful `romega-digitals` deployment.
+10. Run the public production verification commands:
 
 ```powershell
 $base = "https://www.romega-solutions.com"

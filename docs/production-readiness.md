@@ -17,6 +17,7 @@ pnpm run audit:a11y
 pnpm run audit:keyboard
 pnpm run audit:product
 pnpm run audit:visual
+pnpm run check:env:production
 $env:LIVE_AUDIT_BASE_URL="http://127.0.0.1:3008"; pnpm run audit:live
 $env:RESPONSIVE_AUDIT_BASE_URL="https://romega-digitals.vercel.app"; pnpm run audit:responsive
 $env:PRODUCT_AUDIT_BASE_URL="https://romega-digitals.vercel.app"; pnpm run audit:product
@@ -33,6 +34,15 @@ Remove-Item Env:LIVE_AUDIT_VERCEL_BYPASS_SECRET
 ```
 
 `pnpm run audit:live` also reads Vercel's `VERCEL_AUTOMATION_BYPASS_SECRET` system env var when present. The generated report only records whether a bypass was configured, not the secret value.
+
+For production env validation after owner-scope Vercel env pull:
+
+```powershell
+vercel env pull .env.vercel.local
+pnpm run check:env:production
+```
+
+The command validates required keys and common production mistakes without printing secret values.
 
 Route smoke checks returned `200` locally for:
 
@@ -58,6 +68,7 @@ Route smoke checks returned `200` locally for:
 - Product-flow audit covers the careers API response contract and contact API validation/error behavior without requiring production email-provider secrets
 - Visual render audit covers route-specific titles, h1s, app shell landmarks, visible visual assets, and auth-wall detection across mobile, tablet, and desktop viewports
 - Live deployment audit covers public route freshness, careers API JSON shape, Vercel authentication-wall leakage, stale footer CSS bundles on a running URL, and optional Vercel automation-bypass auth for protected preview URLs
+- Production env check validates required Vercel env shape without exposing secret values
 - Commit `669c5d8df307ae5f1c458cd491c79e7f887e92c7` passed GitHub Actions CI on Node.js 20
 - Commit `57a1de52bb284e15576be1c795115cb369b2c8f6` passed GitHub Actions CI on Node.js 20 with lint, typecheck, build, responsive, axe accessibility, and keyboard audits
 - Commit `7b8f536852f73c47eac03625c8489ddf70d5ad35` passed GitHub Actions CI on Node.js 20 with lint, typecheck, build, responsive, axe accessibility, keyboard, and product-flow audits
@@ -77,6 +88,7 @@ These items require dashboard, account, or live-service access:
 
 - Move `romega-solutions.com` and `www.romega-solutions.com` to the intended `romega-digitals` Vercel project.
 - Confirm production Vercel environment variables: `RESEND_API_KEY`, `ADMIN_EMAIL`, `NEXT_PUBLIC_SITE_URL`, and optional `RECAPTCHA_SECRET_KEY` / `JOBS_API_URL`.
+- Run `pnpm run check:env:production` after owner-scope `vercel env pull .env.vercel.local`.
 - Remove or intentionally document duplicate Vercel project integrations.
 - Re-run live route checks after domain cutover.
 - Run contact form success testing with the real email provider configured.
