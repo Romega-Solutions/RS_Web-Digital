@@ -9,6 +9,8 @@
 **Vercel project:** `romega-digitals` (`prj_4hyRbwLN9UAJN96JK58MyCyOTnpb`)  
 **Symptom:** Project builds locally but deployment on Vercel fails or behaves incorrectly.
 
+For the current branch review package, use `docs/submission-checklist.md`. For current commit-specific GitHub Actions and Vercel status targets, run `pnpm run report:readiness`.
+
 ---
 
 ## Issue Summary
@@ -30,7 +32,7 @@
 
 ---
 
-## 0. Live Deployment Verification — 2026-05-13
+## 0. Historical Live Deployment Verification — 2026-05-13
 
 Commit verified: `8863f65ae4e93dd57b1f9f83d1ea2b313a3c487d`
 
@@ -57,7 +59,7 @@ Conclusion:
 
 ---
 
-## 0.1 Local Redesign Branch Verification — 2026-05-17
+## 0.1 Current Redesign Branch Verification — 2026-05-17
 
 Branch verified: `redesign/ui-audit-fixes` after merging `origin/main`.
 
@@ -107,8 +109,9 @@ Results:
 - Visual render audit commit `6f363a94cce05cac7a2a66bfc043d864f4efd883` passed GitHub Actions CI run `25973495064` on Node.js 20, including responsive, axe accessibility, keyboard, product-flow, and visual render audits.
 - Live deployment audit commit `c03dee20ada83f9636807ef3f359701e8f135cde` passed GitHub Actions CI run `25973797941` on Node.js 20, including responsive, axe accessibility, keyboard, product-flow, and visual render audits.
 - Protected preview audit commit `313df7f485b2b48e4c60b5d6d3871b3c6e4bee9d` passed GitHub Actions CI run `25974097469` on Node.js 20, including responsive, axe accessibility, keyboard, product-flow, and visual render audits.
-- GitHub commit statuses for `313df7f485b2b48e4c60b5d6d3871b3c6e4bee9d` show `Vercel - romega-digitals` and `Vercel - romega-digital` succeeded. The duplicate `Vercel - rs-web-digital` integration still fails and causes the aggregate GitHub commit status to read `failure`.
-- The successful `romega-digitals` immutable deployment URL for `313df7f485b2b48e4c60b5d6d3871b3c6e4bee9d` is `https://romega-digitals-2ph3v77qv-kpg782s-projects.vercel.app`, but unauthenticated live audit and route probes return Vercel Authentication `401`.
+- Release-readiness report commit `8f52e25add18abcd4a75f402974f2be3205866db` passed GitHub Actions CI run `25974770926` on Node.js 20, including lint, typecheck, production env checker, build, responsive, axe accessibility, keyboard, product-flow, and visual render audits.
+- GitHub commit statuses on the redesign branch show the intended `Vercel - romega-digitals` context succeeding. The duplicate `Vercel - rs-web-digital` integration still fails and causes the aggregate GitHub commit status to read `failure`. Run `pnpm run report:readiness` for the current commit-specific status targets.
+- Successful `romega-digitals` immutable deployment URLs are protected by Vercel Authentication from this session, so unauthenticated live audit and route probes return Vercel Authentication `401`.
 - The `https://romega-digitals.vercel.app` alias returns `200` for `/`, `/terms`, and `/api/careers/jobs`; it passes live responsive, keyboard, and product-flow audits, but live axe and `LIVE_AUDIT_BASE_URL=https://romega-digitals.vercel.app pnpm run audit:live` still report older footer contrast CSS. Treat the alias as not fully refreshed for the latest accessibility patch until both live gates pass.
 - The immutable successful deployment URL for `romega-digitals` is protected by Vercel Authentication from this session, so unauthenticated Playwright audits hit Vercel's auth page instead of the app. Owner-scope access plus `LIVE_AUDIT_VERCEL_BYPASS_SECRET` or `VERCEL_AUTOMATION_BYPASS_SECRET` is required to audit that immutable deployment directly.
 

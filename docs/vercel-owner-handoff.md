@@ -2,23 +2,23 @@
 
 Updated: 2026-05-17  
 Branch: `redesign/ui-audit-fixes`  
-Latest verified commit: `313df7f485b2b48e4c60b5d6d3871b3c6e4bee9d`
+Latest evidence command: `pnpm run report:readiness`
 
 This handoff is for the Vercel owner scope `kpg782s-projects`. The local Codex session is authenticated as `iron-mark` under `iron-marks-projects`, so it cannot inspect protected deployments, failed duplicate-project logs, production domain settings, or owner-scope environment variables.
 
 ## Current Evidence
 
-- GitHub Actions CI run `25974097469` passed on Node.js 20 for commit `313df7f485b2b48e4c60b5d6d3871b3c6e4bee9d`.
+- Run `pnpm run report:readiness` after pulling the latest `redesign/ui-audit-fixes` branch. It records the current branch, head commit, GitHub Actions status, Vercel commit statuses, and remaining blockers under ignored `reports/release-readiness/` files.
+- Recent branch evidence: GitHub Actions CI run `25974770926` passed on Node.js 20 for commit `8f52e25add18abcd4a75f402974f2be3205866db`.
 - CI passed `pnpm install --frozen-lockfile`, `pnpm run lint`, `pnpm run typecheck`, `pnpm run build`, Playwright Chromium install, `pnpm run audit:responsive`, `pnpm run audit:a11y`, `pnpm run audit:keyboard`, `pnpm run audit:product`, and `pnpm run audit:visual`.
 - The branch CI now runs `pnpm run check:env:production` with placeholder-valid values to prevent the env checker from breaking. Real production values still require owner-scope `vercel env pull .env.vercel.local` plus `pnpm run check:env:production`.
-- `pnpm run report:readiness` generates an ignored local summary under `reports/release-readiness/` with branch, CI, Vercel commit status, and remaining blocker evidence.
+- `docs/submission-checklist.md` is the review checklist for this branch and lists repo-controlled gates separately from Vercel-owner gates.
 - Intended Vercel project `romega-digitals` deployed successfully:
-  - `https://romega-digitals-2ph3v77qv-kpg782s-projects.vercel.app`
+  - Use the latest `Vercel - romega-digitals` commit status target from `pnpm run report:readiness`.
 - Secondary Vercel project `romega-digital` also deployed successfully:
-  - `https://romega-digital-as1lgga7j-kpg782s-projects.vercel.app`
+  - Use the latest `Vercel - romega-digital` commit status target from `pnpm run report:readiness`.
 - Duplicate Vercel project `rs-web-digital` failed:
-  - `https://rs-web-digital-pyj3kst6e-kpg782s-projects.vercel.app`
-  - Vercel log command from the owning scope: `npx vercel inspect dpl_G54pvowbWdRunXjSjHxPzz4U7Rzb --logs`
+  - Use the latest `Vercel - rs-web-digital` commit status target and inspect command from `pnpm run report:readiness`.
 - Public alias `https://romega-digitals.vercel.app` is reachable but still serves stale footer CSS, so it is not valid final release evidence yet.
 - Current production domain `https://www.romega-solutions.com` is still attached to a stale app until moved or refreshed in Vercel.
 

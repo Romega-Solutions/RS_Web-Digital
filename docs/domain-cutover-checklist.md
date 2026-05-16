@@ -1,12 +1,14 @@
 # Domain Cutover Checklist
 
-Date prepared: 2026-05-13
+Updated: 2026-05-17  
+Branch: `redesign/ui-audit-fixes`
 
 For the current owner-scope action list, see `docs/vercel-owner-handoff.md`.
+For the review and final release gate list, see `docs/submission-checklist.md`.
 
-## Verified State
+## Historical Verified State
 
-Latest pushed commit:
+Previously verified pushed commit:
 
 ```text
 8863f65ae4e93dd57b1f9f83d1ea2b313a3c487d
@@ -17,6 +19,8 @@ Working deployment:
 - `https://romega-digitals.vercel.app/` returns `200`
 - `https://romega-digitals.vercel.app/terms` returns `200`
 - `https://romega-digitals.vercel.app/api/careers/jobs` returns `200`
+
+Run `pnpm run report:readiness` for the current branch head, latest GitHub Actions run, and current Vercel status targets before cutover.
 
 Current production domain mismatch:
 
@@ -53,7 +57,7 @@ Use the Vercel dashboard account/team that owns `kpg782s-projects`.
    pnpm run check:env:production
    ```
 7. Promote or redeploy the latest successful `romega-digitals` deployment.
-8. Disconnect stale Git integrations if they are not needed:
+8. Disconnect duplicate Git integrations if they are not intentionally used. Keep `romega-digitals` as the intended project unless the owner decides otherwise:
    - `rs-web-digital`
    - `romega-digital`
 
