@@ -19,6 +19,12 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm run lint
       - run: pnpm run typecheck
+      - run: pnpm run check:env:production
+        env:
+          NEXT_PUBLIC_SITE_URL: https://www.romega-solutions.com
+          RESEND_API_KEY: re_ci_placeholder_123456
+          ADMIN_EMAIL: info@romega-solutions.com
+          RECAPTCHA_TIMEOUT_MS: "5000"
       - run: pnpm run build
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm run audit:responsive

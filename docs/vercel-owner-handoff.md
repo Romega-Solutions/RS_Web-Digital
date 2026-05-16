@@ -10,6 +10,7 @@ This handoff is for the Vercel owner scope `kpg782s-projects`. The local Codex s
 
 - GitHub Actions CI run `25974097469` passed on Node.js 20 for commit `313df7f485b2b48e4c60b5d6d3871b3c6e4bee9d`.
 - CI passed `pnpm install --frozen-lockfile`, `pnpm run lint`, `pnpm run typecheck`, `pnpm run build`, Playwright Chromium install, `pnpm run audit:responsive`, `pnpm run audit:a11y`, `pnpm run audit:keyboard`, `pnpm run audit:product`, and `pnpm run audit:visual`.
+- The branch CI now runs `pnpm run check:env:production` with placeholder-valid values to prevent the env checker from breaking. Real production values still require owner-scope `vercel env pull .env.vercel.local` plus `pnpm run check:env:production`.
 - Intended Vercel project `romega-digitals` deployed successfully:
   - `https://romega-digitals-2ph3v77qv-kpg782s-projects.vercel.app`
 - Secondary Vercel project `romega-digital` also deployed successfully:
