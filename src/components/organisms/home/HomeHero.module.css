@@ -30,6 +30,7 @@
   line-height: var(--leading-display);
   letter-spacing: var(--tracking-display);
   text-shadow: 0 3px 24px rgb(0 0 0 / 0.32);
+  text-wrap: balance;
 }
 
 .line {
@@ -37,7 +38,7 @@
 }
 
 .lineFirst {
-  text-wrap: balance;
+  @apply whitespace-nowrap;
 }
 
 .growingWord {
@@ -72,6 +73,7 @@
   font-weight: 400;
   line-height: var(--leading-display);
   text-shadow: 0 3px 22px rgb(0 0 0 / 0.32);
+  white-space: nowrap;
   text-wrap: balance;
 }
 
@@ -130,14 +132,14 @@
 
   .headline,
   .subtitle {
-    font-size: clamp(2.55rem, 12vw, 3rem);
+    font-size: clamp(2.35rem, 10.4vw, 3rem);
     line-height: 1.06;
+    max-width: min(100%, 22rem);
+    white-space: normal;
   }
 
-  .headline,
-  .subtitle,
   .lineFirst {
-    max-width: 100%;
+    white-space: normal;
   }
 
   .copy {

@@ -2,34 +2,37 @@
   "name": "romega-digital",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "audit:responsive": "node scripts/audit-responsive.mjs",
-    "audit:wcag": "node scripts/audit-wcag.mjs",
-    "audit:lighthouse": "node scripts/audit-lighthouse.mjs",
+    "audit:responsive": "playwright test scripts/responsive-audit.spec.ts",
     "validate:architecture": "node scripts/validate-architecture.mjs",
     "typecheck": "tsc --noEmit",
-    "lint": "npm run validate:architecture && eslint"
+    "lint": "node scripts/validate-architecture.mjs && eslint"
   },
   "dependencies": {
     "framer-motion": "^12.38.0",
+    "leaflet": "^1.9.4",
     "next": "^16.2.6",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
-    "resend": "^6.1.2"
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
+    "react-leaflet": "^5.0.0",
+    "resend": "^6.12.2"
   },
   "devDependencies": {
-    "@axe-core/playwright": "^4.11.3",
-    "@playwright/test": "^1.59.1",
+    "@playwright/test": "1.60.0",
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/leaflet": "^1.9.21",
+    "@types/node": "^25",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "^16.2.6",
-    "lighthouse": "^13.2.0",
+    "eslint-config-next": "16.2.6",
     "sass": "^1.99.0",
     "tailwindcss": "^4",
     "typescript": "^5"

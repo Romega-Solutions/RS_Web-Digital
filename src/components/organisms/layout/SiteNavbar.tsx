@@ -11,7 +11,8 @@ export type SiteHeaderActiveItem =
   | "About"
   | "Services"
   | "Careers & Talents"
-  | "Careers";
+  | "Careers"
+  | "Talent";
 
 type SiteNavbarProps = {
   activeItem?: SiteHeaderActiveItem;
@@ -25,8 +26,8 @@ const navItems = [
 ] as const;
 
 const servicesMenuItems = [
-  { 
-    label: "Overview", 
+  {
+    label: "Overview",
     href: "/services#services-overview",
     description: "Strategic growth support for your business.",
     icon: (
@@ -35,8 +36,8 @@ const servicesMenuItems = [
       </svg>
     )
   },
-  { 
-    label: "Talent Solutions", 
+  {
+    label: "Talent Solutions",
     href: "/services#talent-solutions",
     description: "Build teams aligned with your long-term vision.",
     icon: (
@@ -45,8 +46,8 @@ const servicesMenuItems = [
       </svg>
     )
   },
-  { 
-    label: "Brand & Growth", 
+  {
+    label: "Brand & Growth",
     href: "/services#brand-growth-support",
     description: "Clarify your message and build brand trust.",
     icon: (
@@ -55,8 +56,8 @@ const servicesMenuItems = [
       </svg>
     )
   },
-  { 
-    label: "Strategic Ops", 
+  {
+    label: "Strategic Ops",
     href: "/services#strategic-operations",
     description: "Optimize workflows for scalable success.",
     icon: (
@@ -101,8 +102,8 @@ const careersMenuItems = [
       </svg>
     )
   },
-  { 
-    label: "Talent Pool", 
+  {
+    label: "Talent Pool",
     href: "/talent",
     description: "Browse our curated pool of professionals.",
     isChild: false,
@@ -306,7 +307,7 @@ export function SiteNavbar({
               href={item.href}
               className={`${styles.navLink} ${item.label === activeItem ? styles.navLinkActive : ""}`}
             >
-              {item.label}
+              <span className="site-nav__link-text">{item.label}</span>
             </Link>
           ))}
 

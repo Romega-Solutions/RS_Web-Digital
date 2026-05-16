@@ -3,8 +3,7 @@ import { MainTemplate } from "@/components/templates/MainTemplate";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
 import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
-import { mockCareerJobs } from "@/lib/mock-careers";
-import { absoluteUrl, createMetadata, siteConfig, createBreadcrumbSchema } from "@/lib/seo";
+import { absoluteUrl, createMetadata, createBreadcrumbSchema } from "@/lib/seo";
 import CareersPageClient from "./CareersPageClient";
 
 export const metadata: Metadata = createMetadata({
@@ -41,29 +40,6 @@ export default function CareersPage() {
         isPartOf: {
           "@id": absoluteUrl("/#website"),
         },
-      },
-      {
-        "@type": "ItemList",
-        name: "Current Career Opportunities",
-        numberOfItems: mockCareerJobs.length,
-        itemListElement: mockCareerJobs.map((job, index) => ({
-          "@type": "ListItem",
-          position: index + 1,
-          item: {
-            "@type": "JobPosting",
-            title: job.title,
-            description: job.summary,
-            employmentType: job.type,
-            hiringOrganization: {
-              "@type": "Organization",
-              name: siteConfig.name,
-              sameAs: absoluteUrl("/"),
-            },
-            jobLocationType: "TELECOMMUTE",
-            applicantLocationRequirements: job.location,
-            url: job.applyUrl,
-          },
-        })),
       },
     ],
   };

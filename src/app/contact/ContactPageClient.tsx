@@ -68,7 +68,11 @@ const socialLinks: { href: string; label: string; text: string; title: string }[
   },
 ];
 
-export default function ContactPageClient() {
+type ContactPageClientProps = {
+  contactFormAvailable: boolean;
+};
+
+export default function ContactPageClient({ contactFormAvailable }: ContactPageClientProps) {
   const [form, setForm] = useState<FormState>(initialFormState);
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -349,6 +353,17 @@ export default function ContactPageClient() {
                 required
               />
 
+              {!contactFormAvailable ? (
+                <p
+                  role="status"
+                  className={`${styles.status} ${styles.statusError}`}
+                >
+                  The contact form is temporarily unavailable. Please email{" "}
+                  <a href="mailto:info@romega-solutions.com">info@romega-solutions.com</a>{" "}
+                  or call {siteConfig.phone}.
+                </p>
+              ) : null}
+
               {status.type !== "idle" ? (
                 <p
                   ref={statusRef}
@@ -366,10 +381,10 @@ export default function ContactPageClient() {
                 type="submit" 
                 variant="primary" 
                 size="lg" 
-                disabled={isSubmitting}
+                disabled={isSubmitting || !contactFormAvailable}
                 className={styles.submitButton}
               >
-                {isSubmitting ? "Sending..." : "Submit"}
+                {!contactFormAvailable ? "Form Unavailable" : isSubmitting ? "Sending..." : "Submit"}
               </AppButton>
             </form>
           </div>

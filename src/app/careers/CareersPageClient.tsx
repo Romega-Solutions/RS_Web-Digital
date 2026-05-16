@@ -5,7 +5,7 @@ import { CareersHero } from "@/components/organisms/careers/CareersHero";
 import { CareersValuesSection } from "@/components/organisms/careers/CareersValuesSection";
 import { CareersPrivacySection } from "@/components/organisms/careers/CareersPrivacySection";
 import { CareersJobSidebar } from "@/components/organisms/careers/CareersJobSidebar";
-import type { CareerJob } from "@/lib/mock-careers";
+import type { CareerJob } from "@/types/careers";
 
 type JobsResponse = {
   jobs?: CareerJob[];

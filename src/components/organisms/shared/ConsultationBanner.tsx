@@ -27,10 +27,10 @@ export function ConsultationBanner() {
           that help you scale with confidence.
         </p>
 
-        <AppButton 
-          href="/contact" 
-          variant="primary" 
-          size="lg" 
+        <AppButton
+          href="/contact"
+          variant="primary"
+          size="lg"
           className={styles.button}
         >
           Schedule a Consultation

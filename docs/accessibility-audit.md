@@ -1,10 +1,19 @@
-# Accessibility Audit
+# Accessibility and Responsiveness Audit
 
-Last verified: 2026-05-17 on branch `redesign/ui-audit-fixes`.
+Updated: 2026-05-17
+Branch: `redesign/ui-audit-fixes`
 
-## Scope
+## Current Automated Gates
 
-Automated Axe checks were run against the local rendered app at `http://localhost:3000` for:
+The branch now ships an automated responsive Playwright gate:
+
+```bash
+pnpm run audit:responsive
+```
+
+Run it against the local dev server or set `RESPONSIVE_AUDIT_BASE_URL` for another target.
+
+Verified on 2026-05-17 against `http://localhost:3000`:
 
 - `/`
 - `/about`
@@ -12,67 +21,56 @@ Automated Axe checks were run against the local rendered app at `http://localhos
 - `/talent`
 - `/careers`
 - `/contact`
+- `/privacy`
+- `/terms`
 
-Viewport coverage:
+The audit checks mobile, tablet, desktop, and wide desktop widths for:
 
-- mobile: `375x812`
-- tablet: `768x1024`
-- desktop: `1440x900`
+- page-level horizontal overflow
+- elements extending outside the viewport
+- undersized interactive targets
+- hidden or unusable primary content
 
-Command:
+## Accessibility Remediations Present in Code
+
+Current source review confirms these earlier blockers have been addressed:
+
+- A skip link is rendered before the app shell and targets `#main-content`.
+- `MainTemplate` renders the shared `main` landmark with `id="main-content"`.
+- `RouteAnnouncer` provides polite route-change announcements for client navigation.
+- Global `:focus-visible` styles are defined in `src/app/globals.css`.
+- Contact form, talent filters, and result counts expose live status messaging.
+- Footer social and legal links point to real destinations instead of `href="#"`.
+- Services anchor links target the existing `#services-overview` section.
+
+## Manual QA Still Required
+
+The current automated gate is not a full WCAG certification. Before final public launch, manually verify:
+
+- keyboard-only navigation through desktop and mobile nav
+- focus order and focus return for menus, filters, and open panels
+- contact form validation, success, rate-limit, and provider-failure messages
+- 200% browser zoom and small-screen reflow
+- NVDA or VoiceOver navigation through all top-level routes
+- contrast in real browser rendering for all CTA states and image overlays
+
+## Recommended Next A11y Gate
+
+Add an axe-backed Playwright smoke test before calling WCAG AA complete:
 
 ```bash
-$env:AUDIT_BASE_URL="http://localhost:3000"
-npm run audit:wcag
+pnpm add -D @axe-core/playwright
 ```
 
-## Result
+Suggested route coverage:
 
-Automated WCAG audit passed with zero non-minor Axe violations across all tested routes and viewports.
+- home
+- about
+- services
+- talent
+- careers
+- contact
+- privacy
+- terms
 
-Observed output:
-
-```text
-/ mobile: violations=0
-/ tablet: violations=0
-/ desktop: violations=0
-/about mobile: violations=0
-/about tablet: violations=0
-/about desktop: violations=0
-/services mobile: violations=0
-/services tablet: violations=0
-/services desktop: violations=0
-/talent mobile: violations=0
-/talent tablet: violations=0
-/talent desktop: violations=0
-/careers mobile: violations=0
-/careers tablet: violations=0
-/careers desktop: violations=0
-/contact mobile: violations=0
-/contact tablet: violations=0
-/contact desktop: violations=0
-```
-
-## Current Accessibility Features
-
-- Shared skip-link and main-content target are present.
-- Route announcements are wired through `RouteAnnouncer`.
-- Mobile talent filters use dialog semantics and focus management.
-- Form and filter result status messages use live-region patterns where currently implemented.
-- Responsive audit confirms no horizontal page overflow across 320px to 1920px tested widths.
-
-## Manual QA Still Recommended
-
-Automated Axe checks do not fully prove keyboard and screen-reader quality. Before final production launch, manually verify:
-
-- Header navigation and mobile menu open, close, focus order, and focus return.
-- Talent filter drawer open, close, keyboard trap, and result-count announcement.
-- Careers opportunities panel open, close, scroll behavior, and external apply link behavior.
-- Contact form validation, submit loading state, success state, and service-unavailable state.
-- 200 percent browser zoom and keyboard-only navigation on the main public routes.
-
-## Known Limitations
-
-- reCAPTCHA is optional and only enforced when backend configuration is present.
-- Careers data currently comes from local mock data via `/api/careers/jobs`.
-- Manual assistive-technology testing with NVDA, VoiceOver, or JAWS has not been recorded in this repo.
+Do not mark the site WCAG AA-ready until the axe gate, keyboard walkthrough, screen-reader smoke test, and zoom/reflow checks have all been completed.

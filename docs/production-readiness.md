@@ -1,60 +1,51 @@
 # Production Readiness
 
-Last updated: 2026-05-17
-
+Updated: 2026-05-17
 Branch: `redesign/ui-audit-fixes`
 
-## Current Status
+## Verified Locally
 
-RS Web Digital is a public marketing site for Romega Solutions. The current branch is focused on production polish, especially responsive behavior from smallest mobile screens to wide desktop.
+Commands run after merging `origin/main` into the redesign branch:
 
-## Verified Gates
+```bash
+pnpm install --frozen-lockfile
+pnpm run lint
+pnpm run typecheck
+pnpm run build
+$env:RESPONSIVE_AUDIT_BASE_URL="http://localhost:3000"; pnpm run audit:responsive
+```
 
-- `npm run lint`
-- `npm run build`
-- Route smoke checks on local dev server for `/`, `/about`, `/services`, `/talent`, `/careers`, and `/contact`
-- `AUDIT_BASE_URL=http://localhost:3000 npm run audit:responsive`
-- `AUDIT_BASE_URL=http://localhost:3000 npm run audit:wcag`
-- `AUDIT_BASE_URL=http://localhost:3000 npm run audit:lighthouse`
-- `npm audit --omit=dev`
+Route smoke checks returned `200` locally for:
 
-## Responsive QA Result
+- `/`
+- `/about`
+- `/services`
+- `/talent`
+- `/careers`
+- `/contact`
+- `/privacy`
+- `/terms`
 
-The responsive audit passed for all tested routes at:
+## Current Release Gates
 
-- `320x568`
-- `568x320`
-- `375x812`
-- `812x375`
-- `430x932`
-- `932x430`
-- `768x1024`
-- `1024x768`
-- `1366x768`
-- `1440x900`
-- `1920x1080`
+- Package manager: pnpm `9.15.9`
+- Runtime target: Node.js `20.x`
+- Framework: Next.js `16.2.6`
+- React: `19.2.5`
+- Lint includes architecture validation through `scripts/validate-architecture.mjs`
+- Responsive audit covers the main public routes and viewport sizes
+- Dockerfile uses pnpm and runs the standard Next.js production server
 
-Every route reported `overflowX=0` and `offenders=0`.
+## External Release Blockers
 
-## Production Checklist
+These items require dashboard, account, or live-service access:
 
-- [x] Public routes return 200 locally.
-- [x] No horizontal overflow found in automated responsive audit.
-- [x] Automated WCAG audit reports zero non-minor violations.
-- [x] Careers job cards link to existing external application URLs instead of missing detail routes.
-- [x] CI uses npm and `package-lock.json`, matching Docker.
-- [x] Next.js is updated to latest stable `16.2.6`.
-- [x] README documents setup, env, QA commands, Docker, and limitations.
-- [x] Local Lighthouse audit passes configured thresholds for accessibility, best practices, SEO, and performance.
-- [ ] Production deployment env vars are configured and verified.
-- [ ] Manual keyboard and assistive-technology QA is recorded.
-- [ ] Lighthouse audit is run against the final deployment target after deployment.
+- Move `romega-solutions.com` and `www.romega-solutions.com` to the intended `romega-digitals` Vercel project.
+- Confirm production Vercel environment variables: `RESEND_API_KEY`, `ADMIN_EMAIL`, `NEXT_PUBLIC_SITE_URL`, and optional `RECAPTCHA_SECRET_KEY` / `JOBS_API_URL`.
+- Remove or intentionally document duplicate Vercel project integrations.
+- Re-run live route checks after domain cutover.
+- Run contact form success testing with the real email provider configured.
 
-## Known Limitations
+## Known Local Caveat
 
-- Careers listings are mock-backed through `src/lib/mock-careers.ts`.
-- Contact email delivery requires `RESEND_API_KEY` and `ADMIN_EMAIL` in production.
-- reCAPTCHA enforcement is optional and depends on `RECAPTCHA_SECRET_KEY`.
-- Rate limiting and duplicate submission checks are in-memory, so they reset on process restart and are not shared across scaled instances.
-- `npm audit --omit=dev` still reports two moderate Next/PostCSS advisories on the latest stable Next.js release. npm's current `latest` dist-tag is `16.2.6`; upgrading to canary was intentionally avoided for production stability.
-- Manual screen-reader QA has not been captured yet.
+The 2026-05-17 local verification was run from a shell using Node.js `v25.2.1`, while the project pins Node.js `20.x`. The successful checks are still useful for code correctness, but final release verification should be repeated under Node 20 or in CI/Vercel.

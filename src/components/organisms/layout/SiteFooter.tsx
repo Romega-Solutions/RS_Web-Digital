@@ -1,12 +1,18 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { siteConfig } from "@/lib/seo";
 import styles from "./SiteFooter.module.css";
 
-const officeAddressQuery = "222 Pacific Coast Hwy #10 El Segundo CA 90245";
-const googleMapsSearchUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(officeAddressQuery)}`;
+const FooterMap = dynamic(
+  () => import("./FooterMap").then((m) => m.FooterMap),
+  { ssr: false },
+);
+
+const osmAddressHref =
+  "https://www.openstreetmap.org/?mlat=33.9176&mlon=-118.4129#map=17/33.9176/-118.4129";
 
 function LinkedInIcon() {
   return (
@@ -82,7 +88,7 @@ export function SiteFooter() {
           <nav className={styles.links} aria-label="Footer navigation">
             <div className={styles.navGroups}>
               <div className={styles.navGroup}>
-                <div className={styles.navGroupTitle}>Company</div>
+                <h4 className={styles.navGroupTitle}>Company</h4>
                 <ul className={styles.navList}>
                   <li>
                     <Link href="/">Home</Link>
@@ -100,7 +106,7 @@ export function SiteFooter() {
               </div>
 
               <div className={styles.navGroup}>
-                <div className={styles.navGroupTitle}>Solutions</div>
+                <h4 className={styles.navGroupTitle}>Solutions</h4>
                 <ul className={styles.navList}>
                   <li>
                     <Link href="/services">Services</Link>
@@ -158,6 +164,7 @@ export function SiteFooter() {
             <a
               href="mailto:info@romega-solutions.com"
               className={styles.contactBlock}
+              aria-label="Email info@romega-solutions.com"
             >
               <svg
                 aria-hidden="true"
@@ -216,7 +223,7 @@ export function SiteFooter() {
               <div className={styles.contactCopy}>
                 <span className={styles.contactLabel}>Office</span>
                 <a
-                  href={googleMapsSearchUrl}
+                  href={osmAddressHref}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -227,41 +234,20 @@ export function SiteFooter() {
             </address>
           </div>
 
-          <a
-            href={googleMapsSearchUrl}
-            className={styles.mapCard}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Open Romega Solutions office location in Google Maps"
-          >
-            <Image
-              src="/maps_part.png"
-              alt=""
-              width={1020}
-              height={590}
-              sizes="(min-width: 1024px) 24rem, 100vw"
-              className={styles.mapImage}
-            />
-            <span className={styles.mapOverlay}>
-              <span className={styles.mapLabel}>Office</span>
-              <span>222 Pacific Coast Hwy, #10</span>
-              <span>El Segundo, CA 90245</span>
-              <span className={styles.mapCta}>Open in Google Maps</span>
-            </span>
-          </a>
+          <div className={styles.mapCard}>
+            <FooterMap className={styles.mapFrame} />
+          </div>
         </div>
 
         <a href="#top" className={styles.backtop}>
-          <span className={styles.backtopArrow} aria-hidden="true">
-            &uarr;
-          </span>
+          <span className={styles.backtopArrow}>↑</span>
           <span>back to top</span>
         </a>
       </div>
 
       <div className={styles.legal}>
         <p>
-          &copy; 2026 Romega Solutions. All rights reserved.
+          © 2026 Romega Solutions. All rights reserved.
           <span className={styles.legalSeparator}>|</span>
           <Link href="/privacy">Privacy Policy</Link>
           <span className={styles.legalSeparator}>|</span>

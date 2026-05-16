@@ -1,119 +1,84 @@
-# Romega Digital
+# RS Web Digital
 
-Romega Digital is the public Next.js site for Romega Solutions. It presents the company home page, service catalog, talent showcase, careers page, contact form, and legal pages.
+Romega Solutions public website built with Next.js 16 App Router, React 19, CSS Modules, Tailwind v4, and pnpm.
 
-## Stack
+## Requirements
 
-- Next.js 16 App Router
-- React 19
-- CSS Modules with Tailwind CSS v4 references
-- Resend for contact form email delivery
-- Playwright-based local audit scripts for responsive layout, WCAG checks, and Lighthouse
+- Node.js `20.x`
+- pnpm `9.15.9`
 
-## Package Manager
+The repo pins both in `package.json` so CI, Vercel, and local installs use the same runtime family.
 
-Use npm for this repo. The authoritative lockfile is `package-lock.json`.
+## Local Development
 
-```bash
-npm ci
-```
-
-## Environment
-
-Copy `.env.example` to `.env.local` for local development.
-
-Required for production contact submissions:
-
-- `NEXT_PUBLIC_SITE_URL`
-- `RESEND_API_KEY`
-- `ADMIN_EMAIL`
-
-Optional:
-
-- `RECAPTCHA_SECRET_KEY`
-- `RECAPTCHA_TIMEOUT_MS`
-- `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_API_KEY`
-- `EMAIL_CONTACT_FALLBACK_ENABLED` for local-only form capture without Resend
-
-Do not commit real `.env*` secret values.
-
-## Development
+Install dependencies:
 
 ```bash
-npm run dev
+pnpm install --frozen-lockfile
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Run the development server:
 
-Key routes:
+```bash
+pnpm dev
+```
 
-- `/`
-- `/about`
-- `/services`
-- `/talent`
-- `/careers`
-- `/contact`
-- `/privacy`
-- `/terms`
+Open `http://localhost:3000`.
 
 ## Verification
 
-Run the standard local gates:
+Run the standard checks before shipping changes:
 
 ```bash
-npm run lint
-npm run typecheck
-npm run build
+pnpm run lint
+pnpm run typecheck
+pnpm run build
+pnpm run audit:responsive
 ```
 
-For rendered-page QA, start the dev server first:
+`pnpm run lint` runs the repo architecture validator before ESLint. `next build` does not run lint automatically in Next.js 16. `pnpm run audit:responsive` expects the app to be running and defaults to `http://localhost:3000`; override with `RESPONSIVE_AUDIT_BASE_URL` when checking a different deployment.
 
-```bash
-npm run dev
-```
+## Environment Variables
 
-Then run:
+Required for production:
 
-```bash
-$env:AUDIT_BASE_URL="http://localhost:3000"
-npm run audit:responsive
-npm run audit:wcag
-npm run audit:lighthouse
-```
+- `RESEND_API_KEY`: sends `/api/contact` email through Resend.
+- `ADMIN_EMAIL`: destination for contact form submissions.
+- `NEXT_PUBLIC_SITE_URL`: canonical site URL used in metadata and structured data.
 
-`audit:responsive` covers `/`, `/about`, `/services`, `/talent`, `/careers`, and `/contact` across 320px mobile through 1920px wide desktop. It writes screenshots and `results.json` to `playwright-audit/`.
+Optional:
 
-`audit:wcag` runs Axe checks on mobile, tablet, and desktop for the same route set.
+- `RECAPTCHA_SECRET_KEY`: server-side reCAPTCHA verification. Set only after the client sends a token.
+- `RECAPTCHA_TIMEOUT_MS`: timeout for reCAPTCHA verification. Defaults to `5000`.
+- `JOBS_API_URL`: Google Apps Script endpoint for live job listings. The API route has a fallback.
+- `EMAIL_CONTACT_FALLBACK_ENABLED`: local-only contact capture without Resend. Ignored in production.
 
-`audit:lighthouse` writes JSON reports to `lighthouse-audit/`.
-
-## Contact Form Behavior
-
-`POST /api/contact` validates JSON requests, checks required fields, applies honeypot and suspicious-content checks, deduplicates repeated submissions, and sends mail through Resend when `RESEND_API_KEY` is configured.
-
-If `RESEND_API_KEY` is missing in production, the route returns a service-unavailable response. Local development can use `EMAIL_CONTACT_FALLBACK_ENABLED=true` to avoid sending email while testing form UX.
-
-## Careers
-
-Careers listings are currently served from `src/lib/mock-careers.ts` through `/api/careers/jobs`. Job cards link to the configured `applyUrl`, currently Romega's LinkedIn jobs page. There is no `/careers/[id]` detail route.
+Use `.env.example` as the template. Do not commit real secret values.
 
 ## Docker
 
+The Dockerfile uses pnpm and starts the normal Next.js production server.
+
+Build the image:
+
 ```bash
 docker build -t romega-digital .
+```
+
+Run the container:
+
+```bash
 docker run --rm -p 3000:3000 romega-digital
 ```
 
-The Dockerfile uses npm and `package-lock.json`, matching CI.
+Docker was not available in the latest local Codex environment, so verify the image build on a machine with Docker before relying on this path.
 
-## Production Readiness Checklist
+## Deployment Notes
 
-- `npm ci`
-- `npm run lint`
-- `npm run typecheck`
-- `npm run build`
-- Route smoke checks return 200 for the key public routes
-- `AUDIT_BASE_URL=http://localhost:3000 npm run audit:responsive`
-- `AUDIT_BASE_URL=http://localhost:3000 npm run audit:wcag`
-- `AUDIT_BASE_URL=http://localhost:3000 npm run audit:lighthouse`
-- Required production env vars are present in the deployment platform
+The primary deployment target is Vercel. See `docs/deployment-audit.md` for the current deployment-readiness checklist and known external requirements.
+
+Current verified state:
+
+- Latest app routes are live on `https://romega-digitals.vercel.app`.
+- `www.romega-solutions.com` is still serving a stale Vercel app until the domain is moved in the owning Vercel scope.
+- Use `docs/domain-cutover-checklist.md` for the dashboard steps and post-cutover verification commands.

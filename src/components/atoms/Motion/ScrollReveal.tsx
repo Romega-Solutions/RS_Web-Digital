@@ -49,8 +49,9 @@ export function ScrollReveal({
 
   return (
     <motion.div
-      initial="hidden"
-      whileInView="visible"
+      initial={shouldReduceMotion ? "visible" : "hidden"}
+      animate={shouldReduceMotion ? "visible" : undefined}
+      whileInView={shouldReduceMotion ? undefined : "visible"}
       viewport={{ once, margin: "-10% 0px" }}
       variants={baseVariants}
       className={className}

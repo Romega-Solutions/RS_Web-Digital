@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { useCallback, useId, useRef, useState } from "react";
+import type { FocusEvent, MouseEvent, ReactNode } from "react";
 import styles from "./ServiceStrip.module.css";
 
 type ServiceItem = {
@@ -143,6 +144,44 @@ const defaultItems: ServiceItem[] = [
   },
 ];
 
+type MarqueeLinkProps = {
+  item: ServiceItem;
+  onShow: (event: MouseEvent<HTMLAnchorElement> | FocusEvent<HTMLAnchorElement>, item: ServiceItem) => void;
+  activeTooltipLabel: string | undefined;
+  tooltipId: string;
+  tabIndex?: number;
+  hidden?: boolean;
+};
+
+function MarqueeLink({ item, onShow, activeTooltipLabel, tooltipId, tabIndex, hidden }: MarqueeLinkProps) {
+  const handleMouseEnter = useCallback(
+    (event: MouseEvent<HTMLAnchorElement>) => onShow(event, item),
+    [item, onShow],
+  );
+  const handleFocus = useCallback(
+    (event: FocusEvent<HTMLAnchorElement>) => onShow(event, item),
+    [item, onShow],
+  );
+  return (
+    <Link
+      className={styles.link}
+      href={item.href ?? "/services"}
+      title={item.tooltip}
+      aria-describedby={
+        activeTooltipLabel === item.label && item.tooltip ? tooltipId : undefined
+      }
+      tabIndex={tabIndex}
+      aria-hidden={hidden}
+      aria-label={item.tooltip ? `${item.label}. ${item.tooltip}` : item.label}
+      onMouseEnter={handleMouseEnter}
+      onFocus={handleFocus}
+    >
+      {item.icon && <span className={styles.iconWrapper}>{item.icon}</span>}
+      {item.label}
+    </Link>
+  );
+}
+
 function normalizeItems(items: Array<string | ServiceItem>): ServiceItem[] {
   return items.map((item) => {
     if (typeof item === "string") {
@@ -161,11 +200,67 @@ function normalizeItems(items: Array<string | ServiceItem>): ServiceItem[] {
 export function ServiceStrip({ items = defaultItems }: ServiceStripProps) {
   const normalizedItems = normalizeItems(items);
   const [featuredItem, ...marqueeItems] = normalizedItems;
+  const rootRef = useRef<HTMLElement | null>(null);
+  const viewportRef = useRef<HTMLDivElement | null>(null);
+  const [activeTooltip, setActiveTooltip] = useState<{
+    label: string;
+    text: string;
+    left: number;
+    bottom: number;
+  } | null>(null);
+  const tooltipId = useId();
+
+  const hideTooltip = useCallback(() => {
+    setActiveTooltip(null);
+  }, []);
+
+  const showTooltip = useCallback((
+    event: MouseEvent<HTMLAnchorElement> | FocusEvent<HTMLAnchorElement>,
+    item: ServiceItem,
+  ) => {
+    if (!item.tooltip) {
+      setActiveTooltip(null);
+      return;
+    }
+
+    const linkRect = event.currentTarget.getBoundingClientRect();
+    const rootRect = rootRef.current?.getBoundingClientRect();
+    const viewportRect = viewportRef.current?.getBoundingClientRect();
+
+    if (!rootRect || !viewportRect) {
+      setActiveTooltip(null);
+      return;
+    }
+
+    const horizontalPadding = 16;
+    const tooltipWidth = Math.min(
+      288,
+      Math.max(rootRect.width - horizontalPadding * 2, 0),
+    );
+    const tooltipHalfWidth = tooltipWidth / 2;
+    const centeredLeft =
+      linkRect.left + linkRect.width / 2 - rootRect.left;
+    const minLeft = horizontalPadding + tooltipHalfWidth;
+    const maxLeft = Math.max(
+      rootRect.width - horizontalPadding - tooltipHalfWidth,
+      minLeft,
+    );
+
+    setActiveTooltip({
+      label: item.label,
+      text: item.tooltip,
+      left: Math.min(Math.max(centeredLeft, minLeft), maxLeft),
+      bottom: rootRect.bottom - linkRect.top + 14,
+    });
+  }, []);
 
   return (
     <section
+      ref={rootRef}
       className={styles.root}
       aria-label="Service categories"
+      onMouseLeave={hideTooltip}
+      onBlur={hideTooltip}
     >
       {featuredItem ? (
         <div className={styles.featuredWrap}>
@@ -173,17 +268,24 @@ export function ServiceStrip({ items = defaultItems }: ServiceStripProps) {
             className={styles.featuredLink}
             href={featuredItem.href ?? "/services"}
             title={featuredItem.tooltip}
+            aria-describedby={
+              activeTooltip?.label === featuredItem.label && featuredItem.tooltip
+                ? tooltipId
+                : undefined
+            }
             aria-label={
               featuredItem.tooltip
                 ? `${featuredItem.label}. ${featuredItem.tooltip}`
                 : featuredItem.label
             }
+            onMouseEnter={(event) => showTooltip(event, featuredItem)}
+            onFocus={(event) => showTooltip(event, featuredItem)}
           >
             {featuredItem.label}
           </Link>
         </div>
       ) : null}
-      <div className={styles.viewport}>
+      <div ref={viewportRef} className={styles.viewport}>
         <div className={styles.track}>
           {marqueeItems.length > 0 ? [0, 1, 2, 3].map((groupIndex) => (
             <ul
@@ -196,30 +298,16 @@ export function ServiceStrip({ items = defaultItems }: ServiceStripProps) {
                   key={`${item.label}-${groupIndex}`}
                   className={styles.item}
                 >
-                  <Link
-                    className={styles.link}
-                    href={item.href ?? "/services"}
-                    title={item.tooltip}
+                  <MarqueeLink
+                    item={item}
+                    onShow={showTooltip}
+                    activeTooltipLabel={activeTooltip?.label}
+                    tooltipId={tooltipId}
                     tabIndex={groupIndex > 0 ? -1 : undefined}
-                    aria-hidden={groupIndex > 0}
-                    aria-label={
-                      item.tooltip
-                        ? `${item.label}. ${item.tooltip}`
-                        : item.label
-                    }
-                  >
-                    {item.icon && (
-                      <span className={styles.iconWrapper}>
-                        {item.icon}
-                      </span>
-                    )}
-                    {item.label}
-                  </Link>
+                    hidden={groupIndex > 0}
+                  />
                   {index < marqueeItems.length - 1 ? (
-                    <span
-                      className={styles.separator}
-                      aria-hidden="true"
-                    >
+                    <span className={styles.separator} aria-hidden="true">
                       *
                     </span>
                   ) : null}
@@ -229,6 +317,19 @@ export function ServiceStrip({ items = defaultItems }: ServiceStripProps) {
           )) : null}
         </div>
       </div>
+      {activeTooltip ? (
+        <div
+          id={tooltipId}
+          className={styles.tooltip}
+          role="tooltip"
+          style={{
+            left: `${activeTooltip.left}px`,
+            bottom: `${activeTooltip.bottom}px`,
+          }}
+        >
+          {activeTooltip.text}
+        </div>
+      ) : null}
     </section>
   );
 }

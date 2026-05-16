@@ -8,7 +8,7 @@
 }
 
 .card {
-  @apply mx-auto grid max-w-[75rem] grid-cols-1 gap-6 rounded-lg border bg-white p-6;
+  @apply mx-auto grid max-w-[75rem] grid-cols-1 gap-6 rounded-2xl border bg-white p-6;
   border-color: var(--talent-border);
   box-shadow: 0 16px 40px color-mix(in srgb, var(--color-brand-secondary) 10%, transparent);
 }

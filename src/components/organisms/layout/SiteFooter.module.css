@@ -58,8 +58,8 @@
 }
 
 .links a {
-  @apply text-base font-medium transition-all duration-200;
-  color: var(--color-secondary-accessible);
+  @apply inline-flex min-h-6 items-center text-base font-medium transition-all duration-200;
+  color: rgb(28 95 165 / 0.75);
 }
 
 .navGroups {
@@ -73,7 +73,7 @@
 }
 
 .navGroupTitle {
-  @apply text-[0.68rem] font-bold uppercase tracking-[0.2em] text-brand-secondary;
+  @apply text-[0.68rem] font-bold uppercase tracking-[0.2em] text-brand-secondary/62;
 }
 
 .navList {
@@ -81,7 +81,7 @@
 }
 
 .navList li a {
-  @apply text-[0.98rem] font-medium leading-none;
+  @apply inline-flex min-h-6 items-center text-[0.98rem] font-medium leading-none;
 }
 
 .links a:hover {
@@ -95,7 +95,7 @@
 }
 
 .connect h3 {
-  @apply text-[0.72rem] font-bold uppercase tracking-[0.2em] text-brand-secondary;
+  @apply text-[0.72rem] font-bold uppercase tracking-[0.2em] text-brand-secondary/62;
 }
 
 .socials {
@@ -135,56 +135,19 @@
 }
 
 .mapCard {
-  @apply relative w-full max-w-sm overflow-hidden rounded-2xl border border-brand-secondary/10 bg-brand-secondary/5 shadow-sm;
+  @apply w-full max-w-sm overflow-hidden rounded-2xl border border-brand-secondary/10 bg-brand-secondary/5 shadow-sm;
   @apply md:max-w-none md:justify-self-stretch;
   height: 100%;
   display: flex;
   flex-direction: column;
-  min-height: 11rem;
-  color: var(--color-secondary-accessible);
-  text-decoration: none;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
 }
 
-.mapCard:hover {
-  border-color: rgb(28 95 165 / 0.24);
-  box-shadow: 0 16px 34px rgb(16 24 40 / 0.16);
-  transform: translateY(-1px);
-}
-
-.mapCard:focus-visible {
-  @apply outline-none ring-2 ring-brand-primary ring-offset-2 ring-offset-white;
-}
-
-.mapImage {
-  @apply block h-full w-full object-cover;
-  filter: saturate(0.9);
-  opacity: 0.72;
-}
-
-.mapOverlay {
-  @apply absolute inset-0 flex flex-col justify-end gap-1 p-5 text-sm font-semibold;
-  background: linear-gradient(
-    180deg,
-    rgb(255 255 255 / 0.08) 0%,
-    rgb(255 255 255 / 0.82) 52%,
-    rgb(255 255 255 / 0.96) 100%
-  );
-}
-
-.mapOverlay span {
-  @apply leading-tight;
-}
-
-.mapCta {
-  @apply mt-2 inline-flex w-fit rounded-full bg-brand-secondary px-3 py-1.5 text-xs font-bold uppercase tracking-[0.12em] text-white;
+.mapLink {
+  @apply block overflow-hidden;
 }
 
 .mapFrame {
-  @apply block w-full object-cover;
+  @apply block w-full;
   border: 0;
   height: 100%;
   min-height: 11rem;
@@ -210,23 +173,15 @@
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1120px) {
   .inner {
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: auto minmax(0, 1fr) auto;
     column-gap: 1.5rem;
   }
 
   .mainRight {
-    grid-template-columns: minmax(10rem, 0.65fr) minmax(12rem, 0.85fr) minmax(16rem, 1.2fr);
+    grid-template-columns: minmax(12rem, 0.65fr) minmax(11rem, 0.65fr) minmax(18rem, 1.4fr);
     column-gap: 1.25rem;
-    min-width: 0;
-  }
-}
-
-@media (min-width: 1024px) and (max-width: 1120px) {
-  .mainRight {
-    grid-template-columns: minmax(9rem, 0.6fr) minmax(12rem, 0.85fr) minmax(14rem, 1fr);
-    column-gap: 1rem;
   }
 }
 
@@ -265,7 +220,7 @@
 }
 
 .contactLabel {
-  @apply text-[0.68rem] font-bold uppercase tracking-[0.18em] text-brand-secondary;
+  @apply text-[0.68rem] font-bold uppercase tracking-[0.18em] text-brand-secondary/70;
 }
 
 .contactText {
@@ -338,7 +293,7 @@
 }
 
 .legal a {
-  @apply underline-offset-2 hover:underline text-white;
+  @apply inline-flex min-h-6 items-center text-white underline-offset-2 hover:underline;
 }
 
 .legalSeparator {

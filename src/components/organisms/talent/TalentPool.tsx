@@ -69,6 +69,7 @@ export function TalentPool({ talents }: TalentPoolProps) {
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
+  const [suggestionsOpen, setSuggestionsOpen] = useState(true);
 
   const filterKey = useMemo(
     () =>
@@ -193,7 +194,7 @@ export function TalentPool({ talents }: TalentPoolProps) {
   const visibleCount = visibleState.filterKey === filterKey ? visibleState.count : PAGE_SIZE;
   const visibleTalents = sortedTalents.slice(0, visibleCount);
   const hasActiveFilters = activeFilterCount > 0 || search.trim().length > 0;
-  const hasSuggestions = suggestionTerms.length > 0;
+  const hasSuggestions = suggestionsOpen && suggestionTerms.length > 0;
   const suggestionsListId = "talent-search-suggestions";
 
   useEffect(() => {
@@ -472,7 +473,8 @@ export function TalentPool({ talents }: TalentPoolProps) {
               <label htmlFor="talent-search-input" className={styles.searchLabel}>
                 Search talent
               </label>
-              <span className={styles.searchIcon} aria-hidden="true">
+              <div className={styles.searchInputWrap}>
+                <span className={styles.searchIcon} aria-hidden="true">
                 <svg
                   className={styles.searchIconSvg}
                   viewBox="0 0 24 24"
@@ -495,6 +497,7 @@ export function TalentPool({ talents }: TalentPoolProps) {
                 onChange={(event) => {
                   setSearch(event.target.value);
                   setActiveSuggestionIndex(-1);
+                  setSuggestionsOpen(true);
                 }}
                 onKeyDown={(event) => {
                   if (!hasSuggestions) {
@@ -522,6 +525,7 @@ export function TalentPool({ talents }: TalentPoolProps) {
 
                   if (event.key === "Escape") {
                     setActiveSuggestionIndex(-1);
+                    setSuggestionsOpen(false);
                   }
                 }}
                 placeholder="Search by role, skill, location, or keyword..."
@@ -537,8 +541,10 @@ export function TalentPool({ talents }: TalentPoolProps) {
                     : undefined
                 }
               />
+              </div>
               <p className={styles.searchHelper}>Try role, location, skill, or candidate name.</p>
-              {search.trim().length > 1 ? (
+
+              {search.trim().length > 1 && suggestionsOpen ? (
                 hasSuggestions ? (
                   <ul className={styles.autoSuggestList} id={suggestionsListId} role="listbox" aria-label="Search suggestions">
                     {suggestionTerms.map((term, index) => (
@@ -560,18 +566,20 @@ export function TalentPool({ talents }: TalentPoolProps) {
                   <p className={styles.autoSuggestEmpty}>No direct suggestions. Try a broader keyword.</p>
                 )
               ) : null}
-              <div className={styles.quickSearches} aria-label="Popular searches">
-                {quickSearches.map((term) => (
-                  <button
-                    key={term}
-                    type="button"
-                    className={styles.quickSearch}
-                    onClick={() => applySearchTerm(term)}
-                  >
-                    {term}
-                  </button>
-                ))}
-              </div>
+              {search.trim().length === 0 ? (
+                <div className={styles.quickSearches} aria-label="Popular searches">
+                  {quickSearches.map((term) => (
+                    <button
+                      key={term}
+                      type="button"
+                      className={styles.quickSearch}
+                      onClick={() => applySearchTerm(term)}
+                    >
+                      {term}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
             </div>
             <span className={styles.countBadge} role="status" aria-live="polite">
               Available talents: {sortedTalents.length}

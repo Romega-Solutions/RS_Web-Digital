@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef, useEffect, useState, type ReactNode } from "react";
 import { useAccessibleOverlay } from "@/components/accessibility/useAccessibleOverlay";
-import type { CareerJob } from "@/lib/mock-careers";
+import type { CareerJob } from "@/types/careers";
 import styles from "./CareersJobSidebar.module.css";
 
 interface CareersJobSidebarProps {

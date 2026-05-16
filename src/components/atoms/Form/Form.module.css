@@ -50,7 +50,7 @@
 }
 
 .checkbox {
-  @apply mt-1 h-4 w-4 shrink-0 rounded border border-brand-secondary/40 text-brand-secondary focus:ring-2 focus:ring-brand-secondary;
+  @apply mt-0.5 h-6 w-6 shrink-0 rounded border border-brand-secondary/40 text-brand-secondary focus:ring-2 focus:ring-brand-secondary;
 }
 
 .checkboxLabel {

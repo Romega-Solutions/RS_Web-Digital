@@ -140,38 +140,20 @@ body {
     @apply translate-y-0 outline-none ring-4 ring-brand-primary ring-offset-2;
   }
 
+
   :focus-visible {
     @apply outline-none ring-2 ring-brand-secondary ring-offset-2;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: var(--font-heading);
+  /* High-contrast focus for primary colors */
+  .bg-brand-secondary :focus-visible,
+  .bg-brand-secondary:focus-visible,
+  .bg-brand-tertiary :focus-visible,
+  .bg-brand-tertiary:focus-visible,
+  .home-hero :focus-visible {
+    @apply ring-brand-primary ring-offset-brand-secondary;
   }
 
-  p,
-  li,
-  a,
-  button,
-  input,
-  textarea,
-  select,
-  label {
-    font-family: var(--font-body);
-  }
-
-  h1 *,
-  h2 *,
-  h3 *,
-  h4 *,
-  h5 *,
-  h6 * {
-    font-family: inherit;
-  }
 }
 
 @theme inline {
@@ -183,4 +165,30 @@ body {
   --color-page: var(--color-page);
   --color-surface: var(--color-surface);
   --color-muted: var(--color-muted);
+
+}
+
+
+@keyframes service-marquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Typography for Legal Pages */
+.legal-page-shell {
+  background:
+    radial-gradient(circle at top left, rgb(53 141 240 / 0.09), transparent 28%),
+    radial-gradient(circle at bottom right, rgb(168 159 248 / 0.1), transparent 26%),
+    linear-gradient(180deg, #f7f9fd, #eef3fb);
+  min-height: calc(100svh - var(--site-header-height, 5rem));
+  @apply mx-auto flex w-full items-start justify-center px-4 py-10 md:px-6 md:py-16;
+}
+
+.legal-page-card {
+  @apply w-full max-w-4xl rounded-[28px] border border-brand-secondary/12 bg-white p-6 shadow-[0_26px_70px_rgb(17_24_39/0.12)] md:p-10 lg:p-12;
 }

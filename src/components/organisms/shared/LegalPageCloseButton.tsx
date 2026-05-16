@@ -26,10 +26,10 @@ export function LegalPageCloseButton() {
       transition={{ duration: 0.2, ease: "backOut" }}
     >
       <span>Close Legal Review</span>
-      <svg 
-        className="h-5 w-5 transition-transform group-hover:rotate-90" 
-        fill="none" 
-        viewBox="0 0 24 24" 
+      <svg
+        className="h-5 w-5 transition-transform group-hover:rotate-90"
+        fill="none"
+        viewBox="0 0 24 24"
         stroke="currentColor"
       >
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -37,4 +37,3 @@ export function LegalPageCloseButton() {
     </motion.button>
   );
 }
-
