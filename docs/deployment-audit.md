@@ -4,6 +4,7 @@
 **Repo remediation pass:** 2026-05-13
 **Live deploy verification:** 2026-05-13
 **Redesign branch merge verification:** 2026-05-17
+**Latest branch deployment check:** 2026-05-17
 **Stack:** Next.js 16.2.6 · React 19.2.5 · Tailwind v4 · pnpm 9.15.9
 **Vercel project:** `romega-digitals` (`prj_4hyRbwLN9UAJN96JK58MyCyOTnpb`)  
 **Symptom:** Project builds locally but deployment on Vercel fails or behaves incorrectly.
@@ -87,8 +88,10 @@ Results:
 - A product-flow smoke gate covers the careers API response shape and contact API validation/error behavior without requiring Resend, reCAPTCHA, or live email delivery.
 - Latest branch commit `57a1de52bb284e15576be1c795115cb369b2c8f6` passed GitHub Actions CI on Node.js 20, including responsive, axe accessibility, and keyboard audits.
 - Product-flow audit commit `7b8f536852f73c47eac03625c8489ddf70d5ad35` passed GitHub Actions CI run `25972988285` on Node.js 20, including responsive, axe accessibility, keyboard, and product-flow audits.
-- GitHub commit statuses show `Vercel - romega-digitals` succeeded for `57a1de52bb284e15576be1c795115cb369b2c8f6`, while duplicate Vercel contexts remain unhealthy: `rs-web-digital` failed and `romega-digital` stayed pending.
-- The `https://romega-digitals.vercel.app` alias returns `200` for `/`, `/terms`, and `/api/careers/jobs`; it passes live responsive and keyboard audits, but live axe still reports older footer contrast CSS. Treat the alias as not fully refreshed for the latest accessibility patch until `ACCESSIBILITY_AUDIT_BASE_URL=https://romega-digitals.vercel.app pnpm run audit:a11y` passes.
+- Latest branch docs commit `5c99754c5713f669aabd1c05705785ec27ba4518` passed GitHub Actions CI run `25973058941` on Node.js 20, including responsive, axe accessibility, keyboard, and product-flow audits.
+- GitHub commit statuses for `5c99754c5713f669aabd1c05705785ec27ba4518` show `Vercel - romega-digitals` and `Vercel - romega-digital` succeeded. The duplicate `Vercel - rs-web-digital` integration still fails and causes the aggregate GitHub commit status to read `failure`.
+- The `https://romega-digitals.vercel.app` alias returns `200` for `/`, `/terms`, and `/api/careers/jobs`; it passes live responsive, keyboard, and product-flow audits, but live axe still reports older footer contrast CSS. Treat the alias as not fully refreshed for the latest accessibility patch until `ACCESSIBILITY_AUDIT_BASE_URL=https://romega-digitals.vercel.app pnpm run audit:a11y` passes.
+- The immutable successful deployment URL for `romega-digitals` is protected by Vercel Authentication from this session, so unauthenticated Playwright audits hit Vercel's auth page instead of the app. Owner-scope access or a Vercel protection bypass is required to audit that immutable deployment directly.
 
 Local caveat:
 
@@ -96,9 +99,9 @@ Local caveat:
 
 Deployment-status caveat:
 
-- GitHub commit statuses for the latest pushed redesign commit remained `pending` for the three Vercel contexts after polling from the local GitHub CLI.
+- GitHub commit statuses for the latest pushed redesign commit show success for `romega-digitals` and `romega-digital`, and failure for the duplicate `rs-web-digital` project.
 - The local Vercel CLI account is `iron-mark`, which cannot inspect the `kpg782s-projects` deployments linked from those statuses.
-- The working preview host can be route- and responsiveness-verified publicly, but deployment logs and the final Vercel status require access to the owning Vercel scope.
+- The public alias can be route-, responsiveness-, keyboard-, and product-flow-verified publicly, but deployment logs, failed duplicate-project logs, and protected immutable deployment audits require access to the owning Vercel scope.
 
 ---
 

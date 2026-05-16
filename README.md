@@ -82,6 +82,6 @@ The primary deployment target is Vercel. See `docs/deployment-audit.md` for the 
 
 Current verified state:
 
-- Latest app routes are live on `https://romega-digitals.vercel.app`.
+- Latest app routes are publicly reachable on `https://romega-digitals.vercel.app`, but that alias can lag the latest redesign branch deployment. Re-run the live audit commands before using it as final release evidence.
 - `www.romega-solutions.com` is still serving a stale Vercel app until the domain is moved in the owning Vercel scope.
 - Use `docs/domain-cutover-checklist.md` for the dashboard steps and post-cutover verification commands.
