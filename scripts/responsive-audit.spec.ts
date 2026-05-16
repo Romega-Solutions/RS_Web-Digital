@@ -17,6 +17,7 @@ const routes = [
 ] as const;
 
 const viewports = [
+  { name: "mobile-280", width: 280, height: 653 },
   { name: "mobile-320", width: 320, height: 568 },
   { name: "mobile-375", width: 375, height: 667 },
   { name: "mobile-390", width: 390, height: 844 },
@@ -25,6 +26,8 @@ const viewports = [
   { name: "tablet-landscape-1024", width: 1024, height: 768 },
   { name: "desktop-1280", width: 1280, height: 720 },
   { name: "desktop-1440", width: 1440, height: 900 },
+  { name: "desktop-1536", width: 1536, height: 864 },
+  { name: "desktop-1920", width: 1920, height: 1080 },
 ] as const;
 
 type OverflowItem = {
@@ -160,7 +163,7 @@ test.describe("responsive viewport audit", () => {
 
         results.push(result);
 
-        if (["mobile-390", "tablet-768", "desktop-1440"].includes(viewport.name)) {
+        if (["mobile-280", "mobile-390", "tablet-768", "desktop-1440", "desktop-1920"].includes(viewport.name)) {
           await page.screenshot({
             path: path.join(outputDir, `${route.name}-${viewport.name}.png`),
             fullPage: true,
