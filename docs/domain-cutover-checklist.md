@@ -75,6 +75,7 @@ Invoke-WebRequest -UseBasicParsing "$base/api/careers/jobs" -MaximumRedirection 
 $env:PRODUCT_AUDIT_BASE_URL=$base; pnpm run audit:product
 $env:VISUAL_AUDIT_BASE_URL=$base; pnpm run audit:visual
 $env:LIVE_AUDIT_BASE_URL=$base; pnpm run audit:live
+pnpm run report:readiness
 ```
 
 If the target URL is a protected Vercel preview instead of a public alias or production domain, add the project automation bypass secret before the live audit:
@@ -94,6 +95,7 @@ Expected:
 - The product-flow audit passes against the cutover domain
 - The visual render audit passes against the cutover domain
 - The live deployment audit passes against the cutover domain with no auth wall, stale CSS, route-content, or careers API failures
+- The readiness report shows no remaining blockers
 - Contact form submission no longer fails due to missing or invalid email provider configuration
 
 ## Known Caveat

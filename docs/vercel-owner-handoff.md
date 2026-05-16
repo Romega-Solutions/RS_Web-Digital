@@ -11,6 +11,7 @@ This handoff is for the Vercel owner scope `kpg782s-projects`. The local Codex s
 - GitHub Actions CI run `25974097469` passed on Node.js 20 for commit `313df7f485b2b48e4c60b5d6d3871b3c6e4bee9d`.
 - CI passed `pnpm install --frozen-lockfile`, `pnpm run lint`, `pnpm run typecheck`, `pnpm run build`, Playwright Chromium install, `pnpm run audit:responsive`, `pnpm run audit:a11y`, `pnpm run audit:keyboard`, `pnpm run audit:product`, and `pnpm run audit:visual`.
 - The branch CI now runs `pnpm run check:env:production` with placeholder-valid values to prevent the env checker from breaking. Real production values still require owner-scope `vercel env pull .env.vercel.local` plus `pnpm run check:env:production`.
+- `pnpm run report:readiness` generates an ignored local summary under `reports/release-readiness/` with branch, CI, Vercel commit status, and remaining blocker evidence.
 - Intended Vercel project `romega-digitals` deployed successfully:
   - `https://romega-digitals-2ph3v77qv-kpg782s-projects.vercel.app`
 - Secondary Vercel project `romega-digital` also deployed successfully:
@@ -75,6 +76,7 @@ $env:KEYBOARD_AUDIT_BASE_URL=$base; pnpm run audit:keyboard
 $env:PRODUCT_AUDIT_BASE_URL=$base; pnpm run audit:product
 $env:VISUAL_AUDIT_BASE_URL=$base; pnpm run audit:visual
 $env:LIVE_AUDIT_BASE_URL=$base; pnpm run audit:live
+pnpm run report:readiness
 ```
 
 ## Pass Criteria
@@ -85,3 +87,4 @@ $env:LIVE_AUDIT_BASE_URL=$base; pnpm run audit:live
 - `pnpm run audit:live` passes on the public production domain.
 - `ACCESSIBILITY_AUDIT_BASE_URL=https://www.romega-solutions.com pnpm run audit:a11y` passes on the public production domain.
 - A real browser contact-form success path is verified with production email provider variables configured.
+- `pnpm run report:readiness` reports no remaining blockers.

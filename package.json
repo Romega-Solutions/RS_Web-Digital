@@ -17,6 +17,7 @@
     "audit:visual": "playwright test scripts/visual-render-audit.spec.ts",
     "audit:live": "node scripts/live-deployment-audit.mjs",
     "check:env:production": "node scripts/check-production-env.mjs",
+    "report:readiness": "node scripts/release-readiness-report.mjs",
     "validate:architecture": "node scripts/validate-architecture.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "node scripts/validate-architecture.mjs && eslint"

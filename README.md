@@ -70,6 +70,14 @@ pnpm run check:env:production
 
 The env check reports only configured/missing status and validation failures. It does not print secret values.
 
+To generate a local release-readiness summary from git, GitHub Actions, and commit status evidence:
+
+```powershell
+pnpm run report:readiness
+```
+
+The report is written to ignored files under `reports/release-readiness/` and records known external blockers without exposing secrets.
+
 ## Environment Variables
 
 Required for production:

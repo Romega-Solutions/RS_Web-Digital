@@ -18,6 +18,7 @@ pnpm run audit:keyboard
 pnpm run audit:product
 pnpm run audit:visual
 pnpm run check:env:production
+pnpm run report:readiness
 $env:LIVE_AUDIT_BASE_URL="http://127.0.0.1:3008"; pnpm run audit:live
 $env:RESPONSIVE_AUDIT_BASE_URL="https://romega-digitals.vercel.app"; pnpm run audit:responsive
 $env:PRODUCT_AUDIT_BASE_URL="https://romega-digitals.vercel.app"; pnpm run audit:product
@@ -44,6 +45,14 @@ pnpm run check:env:production
 
 The command validates required keys and common production mistakes without printing secret values.
 
+Generate a local evidence summary after the branch is clean and pushed:
+
+```powershell
+pnpm run report:readiness
+```
+
+The report writes ignored artifacts to `reports/release-readiness/` and summarizes branch, CI, Vercel commit statuses, and remaining blockers.
+
 Route smoke checks returned `200` locally for:
 
 - `/`
@@ -69,6 +78,7 @@ Route smoke checks returned `200` locally for:
 - Visual render audit covers route-specific titles, h1s, app shell landmarks, visible visual assets, and auth-wall detection across mobile, tablet, and desktop viewports
 - Live deployment audit covers public route freshness, careers API JSON shape, Vercel authentication-wall leakage, stale footer CSS bundles on a running URL, and optional Vercel automation-bypass auth for protected preview URLs
 - Production env check validates required Vercel env shape without exposing secret values; CI runs it with placeholder-valid values to protect the checker, and owner-scope Vercel env pull must still verify the real production values
+- Readiness report summarizes current branch, GitHub Actions, commit status contexts, intended Vercel contexts, and known production blockers into ignored local artifacts
 - Commit `669c5d8df307ae5f1c458cd491c79e7f887e92c7` passed GitHub Actions CI on Node.js 20
 - Commit `57a1de52bb284e15576be1c795115cb369b2c8f6` passed GitHub Actions CI on Node.js 20 with lint, typecheck, build, responsive, axe accessibility, and keyboard audits
 - Commit `7b8f536852f73c47eac03625c8489ddf70d5ad35` passed GitHub Actions CI on Node.js 20 with lint, typecheck, build, responsive, axe accessibility, keyboard, and product-flow audits
