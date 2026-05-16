@@ -9,7 +9,7 @@ This handoff is for the Vercel owner scope `kpg782s-projects`. The local Codex s
 ## Current Evidence
 
 - Run `pnpm run report:readiness` after pulling the latest `redesign/ui-audit-fixes` branch. It records the current branch, head commit, GitHub Actions status, Vercel commit statuses, and remaining blockers under ignored `reports/release-readiness/` files.
-- Recent branch evidence: GitHub Actions CI run `25974770926` passed on Node.js 20 for commit `8f52e25add18abcd4a75f402974f2be3205866db`.
+- Latest branch evidence: GitHub Actions CI run `25975616207` passed on Node.js 20 for commit `aa9f8f00458b4cbbd5bc78342b71aba703053275`.
 - CI passed `pnpm install --frozen-lockfile`, `pnpm run lint`, `pnpm run typecheck`, `pnpm run build`, Playwright Chromium install, `pnpm run audit:responsive`, `pnpm run audit:a11y`, `pnpm run audit:keyboard`, `pnpm run audit:product`, and `pnpm run audit:visual`.
 - The branch CI now runs `pnpm run check:env:production` with placeholder-valid values to prevent the env checker from breaking. Real production values still require owner-scope `vercel env pull .env.vercel.local` plus `pnpm run check:env:production`.
 - `docs/submission-checklist.md` is the review checklist for this branch and lists repo-controlled gates separately from Vercel-owner gates.
@@ -19,7 +19,7 @@ This handoff is for the Vercel owner scope `kpg782s-projects`. The local Codex s
   - Use the latest `Vercel - romega-digital` commit status target from `pnpm run report:readiness`.
 - Duplicate Vercel project `rs-web-digital` failed:
   - Use the latest `Vercel - rs-web-digital` commit status target and inspect command from `pnpm run report:readiness`.
-- Public alias `https://romega-digitals.vercel.app` is reachable but still serves stale footer CSS, so it is not valid final release evidence yet.
+- Public alias `https://romega-digitals.vercel.app` is reachable, but `pnpm run audit:live` still reports a stale footer CSS bundle there, so it is not valid final release evidence yet.
 - Current production domain `https://www.romega-solutions.com` is still attached to a stale app until moved or refreshed in Vercel.
 
 ## Owner Actions

@@ -89,9 +89,10 @@ Route smoke checks returned `200` locally for:
 - Commit `c03dee20ada83f9636807ef3f359701e8f135cde` passed GitHub Actions CI run `25973797941` on Node.js 20 with lint, typecheck, build, responsive, axe accessibility, keyboard, product-flow, and visual render audits
 - Commit `313df7f485b2b48e4c60b5d6d3871b3c6e4bee9d` passed GitHub Actions CI run `25974097469` on Node.js 20 with lint, typecheck, build, responsive, axe accessibility, keyboard, product-flow, and visual render audits
 - Commit `8f52e25add18abcd4a75f402974f2be3205866db` passed GitHub Actions CI run `25974770926` on Node.js 20 with lint, typecheck, production env checker, build, responsive, axe accessibility, keyboard, product-flow, and visual render audits
+- Commit `aa9f8f00458b4cbbd5bc78342b71aba703053275` passed GitHub Actions CI run `25975616207` on Node.js 20 with lint, typecheck, production env checker, build, responsive, axe accessibility, keyboard, product-flow, and visual render audits
 - Commit `313df7f485b2b48e4c60b5d6d3871b3c6e4bee9d` deployed successfully to the intended `Vercel - romega-digitals` context at `https://romega-digitals-2ph3v77qv-kpg782s-projects.vercel.app`, but that immutable URL returns Vercel Authentication `401` to unauthenticated checks without a Vercel automation bypass secret
 - `https://romega-digitals.vercel.app` passed live responsive auditing for the main public routes
-- `https://romega-digitals.vercel.app` passed live keyboard and product-flow auditing, but live axe auditing and `pnpm run audit:live` still fail on older footer contrast CSS and should be rerun after the latest branch deployment is confirmed on that alias
+- `https://romega-digitals.vercel.app` passes basic route probes for `/`, `/terms`, and `/api/careers/jobs`, but `pnpm run audit:live` still fails on older footer contrast CSS and should be rerun after the latest branch deployment is confirmed on that alias
 - Latest successful immutable Vercel deployment URLs under `kpg782s-projects` are protected by Vercel Authentication from this session, so public live accessibility evidence must come from the alias after it is refreshed or from an owner-scope check using `LIVE_AUDIT_VERCEL_BYPASS_SECRET` / `VERCEL_AUTOMATION_BYPASS_SECRET`
 - Dockerfile uses pnpm and runs the standard Next.js production server
 
