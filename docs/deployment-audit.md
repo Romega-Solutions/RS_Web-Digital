@@ -59,7 +59,9 @@ Conclusion:
 
 ---
 
-## 0.1 Current Redesign Branch Verification — 2026-05-17
+## 0.1 Current Redesign Branch Verification Process — 2026-05-17
+
+This section records the branch verification process and historical evidence. For the current head commit, current GitHub Actions state, and current Vercel status targets, run `pnpm run report:readiness` after pulling the latest branch.
 
 Branch verified: `redesign/ui-audit-fixes` after merging `origin/main`.
 

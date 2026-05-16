@@ -36,6 +36,14 @@ Expected result:
 - Production env checker passes with real production values after owner-scope env pull, or with CI placeholder-valid values when only testing the checker.
 - Readiness report is generated under ignored `reports/release-readiness/` artifacts.
 
+By default, `pnpm run report:readiness` treats only `Vercel - romega-digitals` as the intended Vercel project. If the owner intentionally keeps another Vercel project as part of production, pass it explicitly:
+
+```powershell
+$env:READINESS_INTENDED_VERCEL_CONTEXTS="Vercel - romega-digitals,Vercel - romega-digital"
+pnpm run report:readiness
+Remove-Item Env:READINESS_INTENDED_VERCEL_CONTEXTS
+```
+
 ## Live Deployment Gates
 
 Run after the latest deployment is available on a public URL or with Vercel automation bypass access:
@@ -67,6 +75,18 @@ Expected result:
 - `pnpm run audit:live` passes with no stale CSS, auth-wall, route-content, or careers API failures.
 - Real contact-form success is verified in a browser with production email-provider variables configured.
 - `pnpm run report:readiness` reports `Submission ready: yes`.
+
+After the owner-scope checks pass, set the evidence flags only for the final readiness report:
+
+```powershell
+$env:READINESS_PRODUCTION_DOMAIN_VERIFIED="true"
+$env:READINESS_PROTECTED_DEPLOYMENT_AUDIT_PASSED="true"
+$env:READINESS_CONTACT_DELIVERY_VERIFIED="true"
+pnpm run report:readiness
+Remove-Item Env:READINESS_PRODUCTION_DOMAIN_VERIFIED
+Remove-Item Env:READINESS_PROTECTED_DEPLOYMENT_AUDIT_PASSED
+Remove-Item Env:READINESS_CONTACT_DELIVERY_VERIFIED
+```
 
 ## External Owner Actions
 

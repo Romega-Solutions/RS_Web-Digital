@@ -42,10 +42,10 @@ pnpm run check:env:production
 
 6. Generate or select a Vercel Deployment Protection automation bypass secret for `romega-digitals`.
    - Vercel reference: https://vercel.com/docs/deployment-protection/methods-to-bypass-deployment-protection/protection-bypass-automation/
-7. Run the protected preview audit against the successful immutable deployment:
+7. Run the protected preview audit against the latest successful `romega-digitals` deployment URL from `pnpm run report:readiness` or the Vercel dashboard:
 
 ```powershell
-$env:LIVE_AUDIT_BASE_URL="https://romega-digitals-2ph3v77qv-kpg782s-projects.vercel.app"
+$env:LIVE_AUDIT_BASE_URL="https://<latest-romega-digitals-deployment>.vercel.app"
 $env:LIVE_AUDIT_VERCEL_BYPASS_SECRET="<redacted>"
 pnpm run audit:live
 Remove-Item Env:LIVE_AUDIT_VERCEL_BYPASS_SECRET
@@ -77,6 +77,18 @@ $env:PRODUCT_AUDIT_BASE_URL=$base; pnpm run audit:product
 $env:VISUAL_AUDIT_BASE_URL=$base; pnpm run audit:visual
 $env:LIVE_AUDIT_BASE_URL=$base; pnpm run audit:live
 pnpm run report:readiness
+```
+
+11. After the public production checks, protected deployment audit, and real contact-form delivery test all pass, generate the final readiness report with evidence flags:
+
+```powershell
+$env:READINESS_PRODUCTION_DOMAIN_VERIFIED="true"
+$env:READINESS_PROTECTED_DEPLOYMENT_AUDIT_PASSED="true"
+$env:READINESS_CONTACT_DELIVERY_VERIFIED="true"
+pnpm run report:readiness
+Remove-Item Env:READINESS_PRODUCTION_DOMAIN_VERIFIED
+Remove-Item Env:READINESS_PROTECTED_DEPLOYMENT_AUDIT_PASSED
+Remove-Item Env:READINESS_CONTACT_DELIVERY_VERIFIED
 ```
 
 ## Pass Criteria

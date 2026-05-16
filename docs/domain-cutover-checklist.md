@@ -8,6 +8,8 @@ For the review and final release gate list, see `docs/submission-checklist.md`.
 
 ## Historical Verified State
 
+This section is historical context only. Before acting on domain status, re-run the verification commands below and regenerate `pnpm run report:readiness`.
+
 Previously verified pushed commit:
 
 ```text

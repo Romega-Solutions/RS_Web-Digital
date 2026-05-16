@@ -5,6 +5,8 @@ Branch: `redesign/ui-audit-fixes`
 
 ## Verified Locally
 
+Current release evidence should be generated with `pnpm run report:readiness` after pulling the latest branch head. The commit-by-commit notes below are historical proof points, not a substitute for the current readiness report.
+
 Commands run after merging `origin/main` into the redesign branch:
 
 ```bash

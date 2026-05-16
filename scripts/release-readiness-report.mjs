@@ -30,6 +30,24 @@ function parseJson(value, fallback) {
   }
 }
 
+function parseCsvEnv(name, fallback) {
+  const value = process.env[name];
+  if (!value) {
+    return fallback;
+  }
+
+  const parsed = value
+    .split(",")
+    .map((item) => item.trim().replace(/\s+-\s+/, " – "))
+    .filter(Boolean);
+
+  return parsed.length > 0 ? parsed : fallback;
+}
+
+function isTruthyEnv(name) {
+  return /^(1|true|yes)$/i.test(process.env[name] || "");
+}
+
 function getGithubStatus() {
   const raw = run("gh", ["api", `repos/Romega-Solutions/RS_Web-Digital/commits/${headSha}/status`]);
   return parseJson(raw, null);
@@ -87,14 +105,18 @@ function getCiSummary(workflowRun) {
 }
 
 function getVercelSummary(statuses) {
-  const intendedContexts = ["Vercel – romega-digitals", "Vercel – romega-digital"];
+  const intendedContexts = parseCsvEnv("READINESS_INTENDED_VERCEL_CONTEXTS", [
+    "Vercel – romega-digitals",
+  ]);
   const duplicateContext = "Vercel – rs-web-digital";
   const intended = statuses.filter((status) => intendedContexts.includes(status.context));
   const duplicate = statuses.find((status) => status.context === duplicateContext);
 
   return {
+    intendedContexts,
     intendedPassed:
-      intended.length > 0 && intended.every((status) => status.state === "success"),
+      intended.length === intendedContexts.length &&
+      intended.every((status) => status.state === "success"),
     intended,
     duplicateContext: duplicate || null,
     duplicateBlocksAggregate: duplicate?.state === "failure",
@@ -106,6 +128,11 @@ const statusSummaries = summarizeStatuses(githubStatus);
 const latestRun = getLatestWorkflowRun();
 const ci = getCiSummary(latestRun);
 const vercel = getVercelSummary(statusSummaries);
+const manualEvidence = {
+  productionDomainCutoverVerified: isTruthyEnv("READINESS_PRODUCTION_DOMAIN_VERIFIED"),
+  protectedDeploymentAuditPassed: isTruthyEnv("READINESS_PROTECTED_DEPLOYMENT_AUDIT_PASSED"),
+  contactDeliveryVerified: isTruthyEnv("READINESS_CONTACT_DELIVERY_VERIFIED"),
+};
 const blockers = [];
 
 if (branchName !== "redesign/ui-audit-fixes") {
@@ -128,9 +155,17 @@ if (vercel.duplicateBlocksAggregate) {
   blockers.push("Duplicate Vercel context rs-web-digital is failing and keeps aggregate commit status failed.");
 }
 
-blockers.push("Production domain and alias freshness require owner-scope Vercel cutover verification.");
-blockers.push("Protected immutable deployment audit requires owner-scope Vercel automation bypass secret.");
-blockers.push("Real contact-form delivery requires production email-provider env verification and browser test.");
+if (!manualEvidence.productionDomainCutoverVerified) {
+  blockers.push("Production domain and alias freshness require owner-scope Vercel cutover verification.");
+}
+
+if (!manualEvidence.protectedDeploymentAuditPassed) {
+  blockers.push("Protected immutable deployment audit requires owner-scope Vercel automation bypass secret.");
+}
+
+if (!manualEvidence.contactDeliveryVerified) {
+  blockers.push("Real contact-form delivery requires production email-provider env verification and browser test.");
+}
 
 const report = {
   generatedAt: new Date().toISOString(),
@@ -143,6 +178,7 @@ const report = {
   commitStatusState: githubStatus?.state || "unavailable",
   statuses: statusSummaries,
   vercel,
+  manualEvidence,
   submissionReady: blockers.length === 0,
   blockers,
 };
@@ -161,10 +197,20 @@ Head: \`${report.headSha}\`
 - Intended Vercel contexts: ${report.vercel.intendedPassed ? "passed" : "not fully passed"}
 - Submission ready: ${report.submissionReady ? "yes" : "no"}
 
+## Manual Evidence Flags
+
+- \`READINESS_INTENDED_VERCEL_CONTEXTS\`: ${report.vercel.intendedContexts.join(", ")}
+- \`READINESS_PRODUCTION_DOMAIN_VERIFIED\`: ${report.manualEvidence.productionDomainCutoverVerified ? "yes" : "no"}
+- \`READINESS_PROTECTED_DEPLOYMENT_AUDIT_PASSED\`: ${report.manualEvidence.protectedDeploymentAuditPassed ? "yes" : "no"}
+- \`READINESS_CONTACT_DELIVERY_VERIFIED\`: ${report.manualEvidence.contactDeliveryVerified ? "yes" : "no"}
+
 ## Status Contexts
 
 ${report.statuses
-  .map((status) => `- ${status.context}: ${status.state} - ${status.description || "no description"}`)
+  .map((status) => {
+    const target = status.targetUrl ? ` (${status.targetUrl})` : "";
+    return `- ${status.context}: ${status.state} - ${status.description || "no description"}${target}`;
+  })
   .join("\n") || "- unavailable"}
 
 ## Blockers
