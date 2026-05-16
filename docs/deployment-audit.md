@@ -68,6 +68,9 @@ pnpm run lint
 pnpm run typecheck
 pnpm run build
 $env:RESPONSIVE_AUDIT_BASE_URL="http://localhost:3000"; pnpm run audit:responsive
+pnpm run audit:a11y
+pnpm run audit:keyboard
+pnpm run audit:product
 ```
 
 Results:
@@ -81,6 +84,7 @@ Results:
 - The public Vercel preview host `https://romega-digitals.vercel.app` passed the same responsive audit across the listed routes and viewport sizes.
 - A follow-up branch gate adds axe-backed accessibility smoke coverage for the same public routes, blocking critical and serious findings.
 - A keyboard smoke gate covers the skip link, desktop dropdown focus/escape behavior, and mobile menu focus containment.
+- A product-flow smoke gate covers the careers API response shape and contact API validation/error behavior without requiring Resend, reCAPTCHA, or live email delivery.
 - Latest branch commit `57a1de52bb284e15576be1c795115cb369b2c8f6` passed GitHub Actions CI on Node.js 20, including responsive, axe accessibility, and keyboard audits.
 - GitHub commit statuses show `Vercel - romega-digitals` succeeded for `57a1de52bb284e15576be1c795115cb369b2c8f6`, while duplicate Vercel contexts remain unhealthy: `rs-web-digital` failed and `romega-digital` stayed pending.
 - The `https://romega-digitals.vercel.app` alias returns `200` for `/`, `/terms`, and `/api/careers/jobs`; it passes live responsive and keyboard audits, but live axe still reports older footer contrast CSS. Treat the alias as not fully refreshed for the latest accessibility patch until `ACCESSIBILITY_AUDIT_BASE_URL=https://romega-digitals.vercel.app pnpm run audit:a11y` passes.

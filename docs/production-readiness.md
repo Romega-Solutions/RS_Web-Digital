@@ -15,6 +15,7 @@ pnpm run build
 pnpm run audit:responsive
 pnpm run audit:a11y
 pnpm run audit:keyboard
+pnpm run audit:product
 $env:RESPONSIVE_AUDIT_BASE_URL="https://romega-digitals.vercel.app"; pnpm run audit:responsive
 ```
 
@@ -39,6 +40,7 @@ Route smoke checks returned `200` locally for:
 - Responsive audit covers the main public routes and viewport sizes against the built app, and CI runs that audit on the redesign branch under Node.js 20
 - Accessibility audit blocks critical and serious axe violations on the main public routes
 - Keyboard audit covers skip-link behavior, desktop dropdown focus/escape handling, and mobile menu focus containment
+- Product-flow audit covers the careers API response contract and contact API validation/error behavior without requiring production email-provider secrets
 - Commit `669c5d8df307ae5f1c458cd491c79e7f887e92c7` passed GitHub Actions CI on Node.js 20
 - Commit `57a1de52bb284e15576be1c795115cb369b2c8f6` passed GitHub Actions CI on Node.js 20 with lint, typecheck, build, responsive, axe accessibility, and keyboard audits
 - `https://romega-digitals.vercel.app` passed live responsive auditing for the main public routes

@@ -64,6 +64,7 @@ Invoke-WebRequest -UseBasicParsing "$base/contact" -MaximumRedirection 5
 Invoke-WebRequest -UseBasicParsing "$base/terms" -MaximumRedirection 5
 Invoke-WebRequest -UseBasicParsing "$base/privacy" -MaximumRedirection 5
 Invoke-WebRequest -UseBasicParsing "$base/api/careers/jobs" -MaximumRedirection 5
+$env:PRODUCT_AUDIT_BASE_URL=$base; pnpm run audit:product
 ```
 
 Expected:
@@ -71,6 +72,7 @@ Expected:
 - All listed routes return `200`
 - `/terms` title includes `Terms and Conditions`
 - `/api/careers/jobs` returns JSON
+- The product-flow audit passes against the cutover domain
 - Contact form submission no longer fails due to missing or invalid email provider configuration
 
 ## Known Caveat

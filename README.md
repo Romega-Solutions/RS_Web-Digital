@@ -36,9 +36,10 @@ pnpm run build
 pnpm run audit:responsive
 pnpm run audit:a11y
 pnpm run audit:keyboard
+pnpm run audit:product
 ```
 
-`pnpm run lint` runs the repo architecture validator before ESLint. `next build` does not run lint automatically in Next.js 16. The Playwright audits start the built app on `http://127.0.0.1:3007` by default, so run `pnpm run build` first. Override with `RESPONSIVE_AUDIT_BASE_URL` or `ACCESSIBILITY_AUDIT_BASE_URL` when checking a separate running app or deployment.
+`pnpm run lint` runs the repo architecture validator before ESLint. `next build` does not run lint automatically in Next.js 16. The Playwright audits start the built app on `http://127.0.0.1:3007` by default, so run `pnpm run build` first. Override with `RESPONSIVE_AUDIT_BASE_URL`, `ACCESSIBILITY_AUDIT_BASE_URL`, `KEYBOARD_AUDIT_BASE_URL`, or `PRODUCT_AUDIT_BASE_URL` when checking a separate running app or deployment.
 
 ## Environment Variables
 
