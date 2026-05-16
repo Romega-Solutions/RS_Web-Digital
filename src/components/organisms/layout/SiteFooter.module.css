@@ -47,7 +47,7 @@
 }
 
 .tagline {
-  @apply w-full max-w-[18rem] text-center text-[0.84rem] leading-[1.6] text-brand-secondary/88;
+  @apply w-full max-w-[18rem] text-center text-[0.84rem] leading-[1.6] text-brand-secondary;
   @apply md:text-left md:text-[0.9rem];
 }
 
@@ -59,7 +59,7 @@
 
 .links a {
   @apply inline-flex min-h-6 items-center text-base font-medium transition-all duration-200;
-  color: rgb(28 95 165 / 0.75);
+  color: var(--color-brand-secondary);
 }
 
 .navGroups {
@@ -73,7 +73,7 @@
 }
 
 .navGroupTitle {
-  @apply text-[0.68rem] font-bold uppercase tracking-[0.2em] text-brand-secondary/62;
+  @apply text-[0.68rem] font-bold uppercase tracking-[0.2em] text-brand-secondary;
 }
 
 .navList {
@@ -95,7 +95,7 @@
 }
 
 .connect h3 {
-  @apply text-[0.72rem] font-bold uppercase tracking-[0.2em] text-brand-secondary/62;
+  @apply text-[0.72rem] font-bold uppercase tracking-[0.2em] text-brand-secondary;
 }
 
 .socials {
@@ -199,7 +199,7 @@
 }
 
 .mapLabel {
-  @apply text-[0.68rem] font-bold uppercase tracking-[0.18em] text-brand-secondary/70;
+  @apply text-[0.68rem] font-bold uppercase tracking-[0.18em] text-brand-secondary;
 }
 
 .mapMeta a {
@@ -220,7 +220,7 @@
 }
 
 .contactLabel {
-  @apply text-[0.68rem] font-bold uppercase tracking-[0.18em] text-brand-secondary/70;
+  @apply text-[0.68rem] font-bold uppercase tracking-[0.18em] text-brand-secondary;
 }
 
 .contactText {

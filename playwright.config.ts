@@ -1,11 +1,12 @@
 import { defineConfig } from "@playwright/test";
 
-const configuredBaseUrl = process.env.RESPONSIVE_AUDIT_BASE_URL;
+const configuredBaseUrl =
+  process.env.RESPONSIVE_AUDIT_BASE_URL ?? process.env.ACCESSIBILITY_AUDIT_BASE_URL;
 const defaultBaseUrl = "http://127.0.0.1:3007";
 
 export default defineConfig({
   testDir: ".",
-  testMatch: ["scripts/responsive-audit.spec.ts"],
+  testMatch: ["scripts/responsive-audit.spec.ts", "scripts/accessibility-audit.spec.ts"],
   reporter: "list",
   use: {
     baseURL: configuredBaseUrl ?? defaultBaseUrl,
