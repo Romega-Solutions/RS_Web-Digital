@@ -216,7 +216,7 @@
   .featuredLink {
     /* keep link inline on small screens instead of full-width button */
     width: auto;
-    min-height: auto;
+    min-height: 2.75rem;
     padding-inline: 0.75rem;
     padding-block: 0.45rem;
     font-size: 0.72rem;

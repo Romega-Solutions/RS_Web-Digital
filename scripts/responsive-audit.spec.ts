@@ -36,6 +36,7 @@ type OverflowItem = {
   left: number;
   right: number;
   width: number;
+  height: number;
 };
 
 type AuditResult = {
@@ -71,9 +72,10 @@ test.describe("responsive viewport audit", () => {
         await page.waitForLoadState("load", { timeout: 10000 }).catch(() => undefined);
         await page.waitForTimeout(800);
 
-        const metrics = await page.evaluate(() => {
+        const metrics = await page.evaluate((viewportWidth) => {
           const clientWidth = document.documentElement.clientWidth;
           const scrollWidth = document.documentElement.scrollWidth;
+          const minTouchTarget = viewportWidth <= 768 ? 44 : 24;
           const isVisible = (element: Element) => {
             const style = window.getComputedStyle(element);
             const rect = element.getBoundingClientRect();
@@ -112,6 +114,7 @@ test.describe("responsive viewport audit", () => {
                 left: Math.round(rect.left),
                 right: Math.round(rect.right),
                 width: Math.round(rect.width),
+                height: Math.round(rect.height),
               };
             })
             .filter((item) => {
@@ -122,7 +125,19 @@ test.describe("responsive viewport audit", () => {
 
           const tapTargetIssues = allElements
             .filter((element) => !hasIgnoredAncestor(element))
-            .filter((element) => element.matches("button, input, select, textarea"))
+            .filter((element) => {
+              if (!element.matches("a[href], button, input, select, textarea, summary, [role='button'], [role='menuitem']")) {
+                return false;
+              }
+
+              const style = window.getComputedStyle(element);
+              const isInlineProseLink =
+                element.matches("a[href]") &&
+                style.display === "inline" &&
+                !element.closest("header, nav, footer, [role='navigation'], [class*='button'], [class*='Button']");
+
+              return !isInlineProseLink;
+            })
             .map((element) => {
               const rect = element.getBoundingClientRect();
               return {
@@ -139,7 +154,7 @@ test.describe("responsive viewport audit", () => {
             })
             .filter((item) => {
               const center = item.left + item.width / 2;
-              return center > 0 && center < clientWidth && (item.width < 24 || item.height < 24);
+              return center > 0 && center < clientWidth && (item.width < minTouchTarget || item.height < minTouchTarget);
             })
             .slice(0, 12);
 
@@ -150,7 +165,7 @@ test.describe("responsive viewport audit", () => {
             overflowingElements,
             tapTargetIssues,
           };
-        });
+        }, viewport.width);
 
         const result: AuditResult = {
           route: route.path,

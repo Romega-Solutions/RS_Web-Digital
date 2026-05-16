@@ -28,7 +28,7 @@ Expected result:
 - Architecture validation and ESLint pass.
 - TypeScript passes with `tsc --noEmit`.
 - Next.js production build completes.
-- Responsive audit passes across the main public routes and ultra-small mobile, common mobile, tablet, desktop, and wide desktop viewports.
+- Responsive audit passes across the main public routes and ultra-small mobile, common mobile, tablet, desktop, and wide desktop viewports, including 44px touch-target checks on mobile and tablet controls.
 - Accessibility audit has no critical or serious axe violations.
 - Keyboard audit passes skip-link, desktop menu, and mobile menu flows.
 - Product audit passes careers API and contact API validation/error checks.

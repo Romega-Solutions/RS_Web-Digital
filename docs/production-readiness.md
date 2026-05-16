@@ -73,7 +73,7 @@ Route smoke checks returned `200` locally for:
 - Framework: Next.js `16.2.6`
 - React: `19.2.5`
 - Lint includes architecture validation through `scripts/validate-architecture.mjs`
-- Responsive audit covers the main public routes from ultra-small 280px mobile through 1920px wide desktop against the built app, and CI runs that audit on the redesign branch under Node.js 20
+- Responsive audit covers the main public routes from ultra-small 280px mobile through 1920px wide desktop against the built app, enforces 44px mobile/tablet touch targets, and CI runs that audit on the redesign branch under Node.js 20
 - Accessibility audit blocks critical and serious axe violations on the main public routes
 - Keyboard audit covers skip-link behavior, desktop dropdown focus/escape handling, and mobile menu focus containment
 - Product-flow audit covers the careers API response contract and contact API validation/error behavior without requiring production email-provider secrets

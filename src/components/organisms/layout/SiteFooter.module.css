@@ -58,7 +58,7 @@
 }
 
 .links a {
-  @apply inline-flex min-h-6 items-center text-base font-medium transition-all duration-200;
+  @apply inline-flex min-h-11 min-w-11 items-center justify-center text-base font-medium transition-all duration-200;
   color: var(--color-brand-secondary);
 }
 
@@ -81,7 +81,7 @@
 }
 
 .navList li a {
-  @apply inline-flex min-h-6 items-center text-[0.98rem] font-medium leading-none;
+  @apply inline-flex min-h-11 min-w-11 items-center justify-center text-[0.98rem] font-medium leading-none;
 }
 
 .links a:hover {
@@ -103,7 +103,7 @@
 }
 
 .socialLink {
-  @apply inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-secondary/25 bg-white text-brand-secondary transition-all duration-200;
+  @apply inline-flex h-11 w-11 items-center justify-center rounded-full border border-brand-secondary/25 bg-white text-brand-secondary transition-all duration-200;
   will-change: transform, box-shadow;
 }
 
@@ -203,7 +203,7 @@
 }
 
 .mapMeta a {
-  @apply text-[0.82rem] leading-snug text-brand-secondary underline-offset-2 hover:underline;
+  @apply inline-flex min-h-11 min-w-11 items-center justify-center text-[0.82rem] leading-snug text-brand-secondary underline-offset-2 hover:underline;
 }
 
 .contactBlock {
@@ -245,7 +245,7 @@
 }
 
 .contactCopy a {
-  @apply flex flex-col;
+  @apply flex min-h-11 min-w-11 flex-col justify-center;
 }
 
 .contactCopy a:hover {
@@ -293,7 +293,7 @@
 }
 
 .legal a {
-  @apply inline-flex min-h-6 items-center text-white underline-offset-2 hover:underline;
+  @apply inline-flex min-h-11 min-w-11 items-center justify-center text-white underline-offset-2 hover:underline;
 }
 
 .legalSeparator {

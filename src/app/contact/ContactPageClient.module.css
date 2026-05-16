@@ -128,7 +128,7 @@
 }
 
 .block a {
-  @apply inline-flex max-w-fit rounded-full border border-brand-secondary/14 bg-brand-secondary/8 px-3 py-1 text-brand-secondary/95 underline-offset-4 transition-colors hover:border-brand-secondary/30 hover:bg-brand-secondary/15 hover:text-brand-secondary hover:underline;
+  @apply inline-flex min-h-11 max-w-fit items-center rounded-full border border-brand-secondary/14 bg-brand-secondary/8 px-3 py-1 text-brand-secondary/95 underline-offset-4 transition-colors hover:border-brand-secondary/30 hover:bg-brand-secondary/15 hover:text-brand-secondary hover:underline;
 }
 
 .socials {
@@ -136,7 +136,7 @@
 }
 
 .socials a {
-  @apply inline-flex h-9 min-w-0 items-center rounded-full border border-brand-secondary/20 bg-brand-secondary px-3 py-1 text-[0.78rem] font-semibold leading-none tracking-[0.01em] text-white shadow-sm transition-all duration-200;
+  @apply inline-flex min-h-11 min-w-0 items-center rounded-full border border-brand-secondary/20 bg-brand-secondary px-3 py-1 text-[0.78rem] font-semibold leading-none tracking-[0.01em] text-white shadow-sm transition-all duration-200;
   text-transform: none;
   white-space: nowrap;
   width: max-content;
