@@ -2,6 +2,8 @@
 
 Date prepared: 2026-05-13
 
+For the current owner-scope action list, see `docs/vercel-owner-handoff.md`.
+
 ## Verified State
 
 Latest pushed commit:

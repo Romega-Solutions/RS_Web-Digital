@@ -102,6 +102,7 @@ The primary deployment target is Vercel. See `docs/deployment-audit.md` for the 
 
 Current verified state:
 
+- Owner-scope Vercel handoff is in `docs/vercel-owner-handoff.md`.
 - Latest app routes are publicly reachable on `https://romega-digitals.vercel.app`, but that alias can lag the latest redesign branch deployment. `pnpm run audit:live` currently catches stale low-contrast footer CSS on that alias; re-run it after Vercel refreshes the deployment before using the alias as final release evidence.
 - `www.romega-solutions.com` is still serving a stale Vercel app until the domain is moved in the owning Vercel scope.
 - Use `docs/domain-cutover-checklist.md` for the dashboard steps and post-cutover verification commands.

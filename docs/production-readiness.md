@@ -64,7 +64,8 @@ Route smoke checks returned `200` locally for:
 - Commit `5c99754c5713f669aabd1c05705785ec27ba4518` passed GitHub Actions CI run `25973058941` on Node.js 20 with lint, typecheck, build, responsive, axe accessibility, keyboard, and product-flow audits
 - Commit `6f363a94cce05cac7a2a66bfc043d864f4efd883` passed GitHub Actions CI run `25973495064` on Node.js 20 with lint, typecheck, build, responsive, axe accessibility, keyboard, product-flow, and visual render audits
 - Commit `c03dee20ada83f9636807ef3f359701e8f135cde` passed GitHub Actions CI run `25973797941` on Node.js 20 with lint, typecheck, build, responsive, axe accessibility, keyboard, product-flow, and visual render audits
-- Commit `c03dee20ada83f9636807ef3f359701e8f135cde` deployed successfully to the intended `Vercel - romega-digitals` context at `https://romega-digitals-fwbnrmutf-kpg782s-projects.vercel.app`, but that immutable URL returns Vercel Authentication `401` to unauthenticated checks
+- Commit `313df7f485b2b48e4c60b5d6d3871b3c6e4bee9d` passed GitHub Actions CI run `25974097469` on Node.js 20 with lint, typecheck, build, responsive, axe accessibility, keyboard, product-flow, and visual render audits
+- Commit `313df7f485b2b48e4c60b5d6d3871b3c6e4bee9d` deployed successfully to the intended `Vercel - romega-digitals` context at `https://romega-digitals-2ph3v77qv-kpg782s-projects.vercel.app`, but that immutable URL returns Vercel Authentication `401` to unauthenticated checks without a Vercel automation bypass secret
 - `https://romega-digitals.vercel.app` passed live responsive auditing for the main public routes
 - `https://romega-digitals.vercel.app` passed live keyboard and product-flow auditing, but live axe auditing and `pnpm run audit:live` still fail on older footer contrast CSS and should be rerun after the latest branch deployment is confirmed on that alias
 - Latest successful immutable Vercel deployment URLs under `kpg782s-projects` are protected by Vercel Authentication from this session, so public live accessibility evidence must come from the alias after it is refreshed or from an owner-scope check using `LIVE_AUDIT_VERCEL_BYPASS_SECRET` / `VERCEL_AUTOMATION_BYPASS_SECRET`
@@ -83,7 +84,8 @@ These items require dashboard, account, or live-service access:
 - Re-run `ACCESSIBILITY_AUDIT_BASE_URL=https://romega-digitals.vercel.app pnpm run audit:a11y` after the latest redesign branch deployment is available; the current public preview still reflects older footer contrast styles.
 - Re-run `LIVE_AUDIT_BASE_URL=https://romega-digitals.vercel.app pnpm run audit:live` after the latest redesign branch deployment is available; the current public alias still serves the stale footer CSS bundle.
 - Re-run `pnpm run audit:live` against the protected immutable `romega-digitals` URL from the owner scope with `LIVE_AUDIT_VERCEL_BYPASS_SECRET` or `VERCEL_AUTOMATION_BYPASS_SECRET` set.
-- Fix or disconnect the duplicate Vercel integration: `rs-web-digital` currently reports failed on the latest commit status. `romega-digitals` and `romega-digital` report success for commit `c03dee20ada83f9636807ef3f359701e8f135cde`.
+- Fix or disconnect the duplicate Vercel integration: `rs-web-digital` currently reports failed on the latest commit status. `romega-digitals` and `romega-digital` report success for commit `313df7f485b2b48e4c60b5d6d3871b3c6e4bee9d`.
+- Follow `docs/vercel-owner-handoff.md` for the exact owner-scope production cutover and verification sequence.
 
 ## Known Local Caveat
 
