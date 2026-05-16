@@ -12,7 +12,8 @@ pnpm install --frozen-lockfile
 pnpm run lint
 pnpm run typecheck
 pnpm run build
-$env:RESPONSIVE_AUDIT_BASE_URL="http://localhost:3000"; pnpm run audit:responsive
+pnpm run audit:responsive
+$env:RESPONSIVE_AUDIT_BASE_URL="https://romega-digitals.vercel.app"; pnpm run audit:responsive
 ```
 
 Route smoke checks returned `200` locally for:
@@ -34,6 +35,8 @@ Route smoke checks returned `200` locally for:
 - React: `19.2.5`
 - Lint includes architecture validation through `scripts/validate-architecture.mjs`
 - Responsive audit covers the main public routes and viewport sizes against the built app, and CI runs that audit on the redesign branch under Node.js 20
+- Commit `669c5d8df307ae5f1c458cd491c79e7f887e92c7` passed GitHub Actions CI on Node.js 20
+- `https://romega-digitals.vercel.app` passed live responsive auditing for the main public routes
 - Dockerfile uses pnpm and runs the standard Next.js production server
 
 ## External Release Blockers
@@ -45,6 +48,7 @@ These items require dashboard, account, or live-service access:
 - Remove or intentionally document duplicate Vercel project integrations.
 - Re-run live route checks after domain cutover.
 - Run contact form success testing with the real email provider configured.
+- Inspect latest Vercel deployment logs and clear stuck `pending` GitHub deployment statuses from the owning `kpg782s-projects` Vercel scope.
 
 ## Known Local Caveat
 

@@ -77,11 +77,18 @@ Results:
 - Next.js production build passed and generated all app routes.
 - Responsive Playwright audit passed for `/`, `/about`, `/services`, `/talent`, `/careers`, `/contact`, `/privacy`, and `/terms` across mobile, tablet, desktop, and wide desktop viewports.
 - Local route smoke checks returned `200` for all key pages listed above.
-- CI is configured to run the same lint, typecheck, build, and responsive audit gates on Node.js 20 for pushes to `main`, `master`, and `redesign/ui-audit-fixes`, plus PRs targeting `main` or `master`.
+- GitHub Actions CI passed on Node.js 20 for commit `669c5d8df307ae5f1c458cd491c79e7f887e92c7`, including `pnpm install --frozen-lockfile`, lint, typecheck, build, Playwright browser install, and the responsive audit.
+- The public Vercel preview host `https://romega-digitals.vercel.app` passed the same responsive audit across the listed routes and viewport sizes.
 
 Local caveat:
 
 - The local Codex shell was running Node.js `v25.2.1`; the repo, CI, Dockerfile, and intended Vercel runtime are pinned to Node.js `20.x`. Re-run the same gates on Node 20 before treating local evidence as a final release artifact.
+
+Deployment-status caveat:
+
+- GitHub commit statuses for the latest pushed redesign commit remained `pending` for the three Vercel contexts after polling from the local GitHub CLI.
+- The local Vercel CLI account is `iron-mark`, which cannot inspect the `kpg782s-projects` deployments linked from those statuses.
+- The working preview host can be route- and responsiveness-verified publicly, but deployment logs and the final Vercel status require access to the owning Vercel scope.
 
 ---
 
