@@ -43,6 +43,7 @@ Route smoke checks returned `200` locally for:
 - Product-flow audit covers the careers API response contract and contact API validation/error behavior without requiring production email-provider secrets
 - Commit `669c5d8df307ae5f1c458cd491c79e7f887e92c7` passed GitHub Actions CI on Node.js 20
 - Commit `57a1de52bb284e15576be1c795115cb369b2c8f6` passed GitHub Actions CI on Node.js 20 with lint, typecheck, build, responsive, axe accessibility, and keyboard audits
+- Commit `7b8f536852f73c47eac03625c8489ddf70d5ad35` passed GitHub Actions CI on Node.js 20 with lint, typecheck, build, responsive, axe accessibility, keyboard, and product-flow audits
 - `https://romega-digitals.vercel.app` passed live responsive auditing for the main public routes
 - `https://romega-digitals.vercel.app` passed live keyboard auditing, but live axe auditing still fails on older footer contrast CSS and should be rerun after the latest branch deployment is confirmed on that alias
 - Dockerfile uses pnpm and runs the standard Next.js production server
