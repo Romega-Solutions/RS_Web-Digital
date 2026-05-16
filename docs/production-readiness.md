@@ -48,6 +48,7 @@ Route smoke checks returned `200` locally for:
 - Commit `57a1de52bb284e15576be1c795115cb369b2c8f6` passed GitHub Actions CI on Node.js 20 with lint, typecheck, build, responsive, axe accessibility, and keyboard audits
 - Commit `7b8f536852f73c47eac03625c8489ddf70d5ad35` passed GitHub Actions CI on Node.js 20 with lint, typecheck, build, responsive, axe accessibility, keyboard, and product-flow audits
 - Commit `5c99754c5713f669aabd1c05705785ec27ba4518` passed GitHub Actions CI run `25973058941` on Node.js 20 with lint, typecheck, build, responsive, axe accessibility, keyboard, and product-flow audits
+- Commit `6f363a94cce05cac7a2a66bfc043d864f4efd883` passed GitHub Actions CI run `25973495064` on Node.js 20 with lint, typecheck, build, responsive, axe accessibility, keyboard, product-flow, and visual render audits
 - `https://romega-digitals.vercel.app` passed live responsive auditing for the main public routes
 - `https://romega-digitals.vercel.app` passed live keyboard and product-flow auditing, but live axe auditing still fails on older footer contrast CSS and should be rerun after the latest branch deployment is confirmed on that alias
 - Latest successful immutable Vercel deployment URLs under `kpg782s-projects` are protected by Vercel Authentication from this session, so public live accessibility evidence must come from the alias after it is refreshed or from an authenticated owner-scope check
@@ -64,7 +65,7 @@ These items require dashboard, account, or live-service access:
 - Run contact form success testing with the real email provider configured.
 - Inspect latest Vercel deployment logs from the owning `kpg782s-projects` Vercel scope.
 - Re-run `ACCESSIBILITY_AUDIT_BASE_URL=https://romega-digitals.vercel.app pnpm run audit:a11y` after the latest redesign branch deployment is available; the current public preview still reflects older footer contrast styles.
-- Fix or disconnect the duplicate Vercel integration: `rs-web-digital` currently reports failed on the latest commit status. `romega-digitals` and `romega-digital` report success for commit `5c99754c5713f669aabd1c05705785ec27ba4518`.
+- Fix or disconnect the duplicate Vercel integration: `rs-web-digital` currently reports failed on the latest commit status. `romega-digitals` and `romega-digital` report success for commit `6f363a94cce05cac7a2a66bfc043d864f4efd883`.
 
 ## Known Local Caveat
 
