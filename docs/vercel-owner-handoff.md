@@ -10,17 +10,12 @@ This handoff is for the Vercel owner scope `kpg782s-projects`. The local Codex s
 
 - Run `pnpm run report:readiness` after pulling the latest `redesign/ui-audit-fixes` branch. It records the current branch, head commit, GitHub Actions status, Vercel commit statuses, and remaining blockers under ignored `reports/release-readiness/` files.
 - Run `pnpm run report:owner-unblock` to write the latest Vercel owner-scope unblock evidence under ignored `reports/owner-unblock/` files, including the active Vercel login, failed duplicate context target URL, and whether this checkout can inspect the failed deployment.
-- Recent code QA evidence: GitHub Actions CI run `25975616207` passed on Node.js 20 for commit `aa9f8f00458b4cbbd5bc78342b71aba703053275`.
+- Current-head code QA evidence: GitHub Actions CI passed on Node.js 20 for commit `948541e7177514d87105774ad0fcc1de11787c67` in push run `25977453032` and pull-request run `25977453698`.
 - CI passed `pnpm install --frozen-lockfile`, `pnpm run lint`, `pnpm run typecheck`, `pnpm run build`, Playwright Chromium install, `pnpm run audit:responsive`, `pnpm run audit:a11y`, `pnpm run audit:keyboard`, `pnpm run audit:product`, and `pnpm run audit:visual`.
 - The branch CI now runs `pnpm run check:env:production` with placeholder-valid values to prevent the env checker from breaking. Real production values still require owner-scope `vercel env pull .env.vercel.local` plus `pnpm run check:env:production`.
 - `docs/submission-checklist.md` is the review checklist for this branch and lists repo-controlled gates separately from Vercel-owner gates.
-- Intended Vercel project `romega-digitals` deployed successfully:
-  - Use the latest `Vercel - romega-digitals` commit status target from `pnpm run report:readiness`.
-- Secondary Vercel project `romega-digital` also deployed successfully:
-  - Use the latest `Vercel - romega-digital` commit status target from `pnpm run report:readiness`.
-- Duplicate Vercel project `rs-web-digital` failed:
-  - Use the latest `Vercel - rs-web-digital` commit status target and inspect command from `pnpm run report:readiness`.
-- If the latest Vercel target URL contains `upgradeToPro=build-rate-limit`, the owning Vercel team has hit the build quota before a deployment could start. Wait for quota reset, reduce duplicate project builds, or upgrade the Vercel plan, then redeploy the latest branch head.
+- Current-head Vercel commit statuses are build-rate-limited for `romega-digitals`, `romega-digital`, and duplicate `rs-web-digital`; use the latest status targets from `pnpm run report:readiness`.
+- If a Vercel target URL contains `upgradeToPro=build-rate-limit`, the owning Vercel team has hit the build quota before a deployment could start. Wait for quota reset, reduce duplicate project builds, or upgrade the Vercel plan, then redeploy the latest branch head.
 - Public alias `https://romega-digitals.vercel.app` is reachable. The branch removes the footer low-contrast CSS pattern locally, but `pnpm run audit:live` must pass against the alias after Vercel serves the latest commit before the alias is valid final release evidence.
 - Current production domain `https://www.romega-solutions.com` is still attached to a stale app until moved or refreshed in Vercel.
 
