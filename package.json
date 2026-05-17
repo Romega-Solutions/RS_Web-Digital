@@ -19,6 +19,7 @@
     "audit:contact:delivery": "node scripts/contact-delivery-audit.mjs",
     "check:env:production": "node scripts/check-production-env.mjs",
     "qa:local": "node scripts/run-local-qa.mjs",
+    "qa:production": "node scripts/run-production-qa.mjs",
     "report:owner-unblock": "node scripts/owner-unblock-report.mjs",
     "report:readiness": "node scripts/release-readiness-report.mjs",
     "vercel:ignore-build": "node scripts/vercel-ignore-build.mjs",

@@ -1,6 +1,7 @@
+import { execFileSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import { test, expect } from "@playwright/test";
+import { test } from "@playwright/test";
 
 const baseUrl = process.env.RESPONSIVE_AUDIT_BASE_URL ?? "http://127.0.0.1:3007";
 const outputDir = path.join(process.cwd(), "reports", "responsive-audit");
@@ -51,6 +52,18 @@ type AuditResult = {
   overflowingElements: OverflowItem[];
   tapTargetIssues: OverflowItem[];
 };
+
+function getHeadSha() {
+  try {
+    return execFileSync("git", ["rev-parse", "HEAD"], {
+      cwd: process.cwd(),
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim();
+  } catch {
+    return "unknown";
+  }
+}
 
 test.describe("responsive viewport audit", () => {
   test("key routes fit mobile, tablet, and desktop viewports", async ({ page }) => {
@@ -199,6 +212,41 @@ test.describe("responsive viewport audit", () => {
         result.tapTargetIssues.length > 0,
     );
 
-    expect(failing, JSON.stringify(failing, null, 2)).toEqual([]);
+    writeFileSync(
+      path.join(outputDir, "responsive-audit-summary.json"),
+      JSON.stringify(
+        {
+          headSha: getHeadSha(),
+          baseUrl,
+          passed: failing.length === 0,
+          finishedAt: new Date().toISOString(),
+          routeCount: routes.length,
+          viewportCount: viewports.length,
+          resultCount: results.length,
+          failureCount: failing.length,
+          failures: failing,
+        },
+        null,
+        2,
+      ),
+    );
+
+    const maxTerminalFailures = 20;
+    const failureSummary = {
+      failureCount: failing.length,
+      omittedFailureCount: Math.max(0, failing.length - maxTerminalFailures),
+      failures: failing.slice(0, maxTerminalFailures).map((result) => ({
+        route: result.route,
+        viewport: result.viewport,
+        status: result.status,
+        horizontalOverflow: result.horizontalOverflow,
+        overflowingElementCount: result.overflowingElements.length,
+        tapTargetIssueCount: result.tapTargetIssues.length,
+      })),
+    };
+
+    if (failing.length > 0) {
+      throw new Error(`Responsive audit failed. See reports/responsive-audit for full details.\n${JSON.stringify(failureSummary, null, 2)}`);
+    }
   });
 });

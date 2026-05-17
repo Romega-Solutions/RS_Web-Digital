@@ -1,8 +1,26 @@
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import path from "node:path";
 
 const outputDir = path.join(process.cwd(), "reports", "owner-unblock");
+const productionQaReportPath = path.join(
+  process.cwd(),
+  "reports",
+  "production-qa",
+  "production-qa.json",
+);
+const readinessReportPath = path.join(
+  process.cwd(),
+  "reports",
+  "release-readiness",
+  "release-readiness.json",
+);
+const contactDeliveryAuditReportPath = path.join(
+  process.cwd(),
+  "reports",
+  "contact-delivery-audit",
+  "contact-delivery-audit.json",
+);
 const repo = process.env.OWNER_UNBLOCK_REPO || "Romega-Solutions/RS_Web-Digital";
 const intendedContexts = parseCsvEnv("OWNER_UNBLOCK_INTENDED_VERCEL_CONTEXTS", [
   "Vercel – romega-digitals",
@@ -61,11 +79,11 @@ function runVercel(args) {
     return runStrict("pwsh", [
       "-NoProfile",
       "-Command",
-      `& ${["npx", "vercel", ...args].map(quotePwsh).join(" ")}`,
+      `& ${["vercel", ...args].map(quotePwsh).join(" ")}`,
     ]);
   }
 
-  return runStrict("npx", ["vercel", ...args]);
+  return runStrict("vercel", args);
 }
 
 function parseJson(value, fallback) {
@@ -73,6 +91,18 @@ function parseJson(value, fallback) {
     return JSON.parse(value);
   } catch {
     return fallback;
+  }
+}
+
+function readJsonFile(filePath) {
+  if (!existsSync(filePath)) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(readFileSync(filePath, "utf8"));
+  } catch {
+    return null;
   }
 }
 
@@ -101,7 +131,10 @@ function summarizeStatuses(statusPayload) {
     description: status.description,
     targetUrl: status.target_url,
     buildRateLimited: isVercelBuildRateLimited(status.target_url),
-    deploymentId: extractDeploymentId(status.target_url),
+    deploymentId:
+      extractDeploymentIdFromDescription(status.description) ||
+      extractDeploymentId(status.target_url),
+    deploymentSlug: extractDeploymentId(status.target_url),
     projectSlug: extractVercelProjectSlug(status.target_url),
   }));
 }
@@ -154,6 +187,11 @@ function extractDeploymentId(targetUrl = "") {
   }
 }
 
+function extractDeploymentIdFromDescription(description = "") {
+  const match = String(description).match(/\b(dpl_[A-Za-z0-9]+)\b/);
+  return match?.[1] || "";
+}
+
 function extractVercelProjectSlug(targetUrl = "") {
   try {
     const url = new URL(targetUrl);
@@ -200,6 +238,14 @@ function redact(value = "") {
     .replace(/(Authorization:\s*Bearer\s+)\S+/gi, "$1<redacted>");
 }
 
+function formatFailureCount(count) {
+  if (typeof count !== "number") {
+    return "";
+  }
+
+  return ` (${count} ${count === 1 ? "failure" : "failures"})`;
+}
+
 const githubStatus = parseJson(
   run("gh", ["api", `repos/${repo}/commits/${headSha}/status`]),
   null,
@@ -208,11 +254,23 @@ const deployments = getGithubDeployments();
 const statuses = summarizeStatuses(githubStatus);
 const intended = statuses.filter((status) => intendedContexts.includes(status.context));
 const duplicates = statuses.filter((status) => duplicateContexts.includes(status.context));
+const unexpectedVercelContexts = statuses.filter(
+  (status) =>
+    /^Vercel\b/.test(status.context) &&
+    !intendedContexts.includes(status.context) &&
+    !duplicateContexts.includes(status.context),
+);
+const unexpectedFailingVercelContexts = unexpectedVercelContexts.filter(
+  (status) => status.state === "failure",
+);
 const buildRateLimitedContexts = statuses.filter((status) => status.buildRateLimited);
 const vercelWhoamiResult = runVercel(["whoami"]);
 const vercelTeamsResult = runVercel(["teams", "ls"]);
 const vercelWhoami = vercelWhoamiResult.ok ? vercelWhoamiResult.output : "unavailable";
 const vercelTeams = vercelTeamsResult.ok ? vercelTeamsResult.output : "unavailable";
+const productionQa = readJsonFile(productionQaReportPath);
+const readiness = readJsonFile(readinessReportPath);
+const contactDeliveryAudit = readJsonFile(contactDeliveryAuditReportPath);
 const duplicateInspections = duplicates.map((status) => ({
   ...status,
   githubDeployment: findDeploymentForContext(status),
@@ -224,6 +282,9 @@ const missingOwnerScope =
     vercelTeams,
   );
 const blockers = [];
+const productionQaCurrentHead = productionQa?.headSha === headSha;
+const readinessCurrentHead = readiness?.headSha === headSha;
+const contactDeliveryCurrentHead = contactDeliveryAudit?.headSha === headSha;
 
 if (missingOwnerScope) {
   blockers.push(
@@ -240,9 +301,37 @@ if (duplicates.some((status) => status.state === "failure")) {
   );
 }
 
+const inaccessibleDuplicateInspections = duplicateInspections.filter(
+  (status) => status.inspection.attempted && !status.inspection.accessible,
+);
+const duplicateInspectCommands = duplicateInspections
+  .filter((status) => Boolean(status.inspection.deploymentId))
+  .map((status) => ({
+    context: status.context,
+    projectSlug: status.projectSlug || "unknown project",
+    deploymentId: status.inspection.deploymentId,
+    command: `vercel inspect ${status.inspection.deploymentId} --logs --scope ${vercelOwnerScope}`,
+  }));
+
+if (inaccessibleDuplicateInspections.length > 0) {
+  blockers.push(
+    `Failed duplicate Vercel deployment logs require owner scope: ${inaccessibleDuplicateInspections
+      .map((status) => status.inspection.deploymentId)
+      .join(", ")}.`,
+  );
+}
+
 if (buildRateLimitedContexts.length > 0) {
   blockers.push(
     `Vercel build rate limit is blocking deployment for: ${buildRateLimitedContexts
+      .map((status) => status.context)
+      .join(", ")}.`,
+  );
+}
+
+if (unexpectedFailingVercelContexts.length > 0) {
+  blockers.push(
+    `Unexpected Vercel context is failing: ${unexpectedFailingVercelContexts
       .map((status) => status.context)
       .join(", ")}.`,
   );
@@ -264,9 +353,74 @@ const report = {
   intendedContexts,
   duplicateContexts,
   intended,
+  unexpectedVercelContexts,
+  unexpectedFailingVercelContexts,
   deployments,
   duplicateInspections,
+  duplicateInspectCommands,
   buildRateLimitedContexts,
+  productionReadiness: {
+    readinessAvailable: Boolean(readiness),
+    readinessCurrentHead,
+    submissionReady: readiness?.submissionReady === true,
+    expectedProductionBaseUrl: readiness?.expectedProductionBaseUrl || "unavailable",
+    productionDomainProbePassed: readiness?.productionDomainProbe?.passed === true,
+    productionQaAvailable: Boolean(productionQa),
+    productionQaCurrentHead,
+    productionQaBaseUrl: productionQa?.baseUrl || "unavailable",
+    productionQaPassed: productionQa?.passed === true,
+    productionQaFailureCount:
+      typeof productionQa?.failureCount === "number" ? productionQa.failureCount : null,
+    productionQaArtifactConfirmationPassed:
+      productionQa?.readinessArtifactConfirmationResult?.passed === true,
+    productionQaGates: Array.isArray(productionQa?.gateResults)
+      ? productionQa.gateResults.map((gate) => ({
+          label: gate.label,
+          passed: gate.passed === true,
+          status: typeof gate.status === "number" ? gate.status : null,
+          error: gate.error || null,
+        }))
+      : [],
+    productionQaArtifactChecks: Array.isArray(productionQa?.artifactChecks)
+      ? productionQa.artifactChecks.map((artifact) => ({
+          label: artifact.label,
+          passed: artifact.passed === true,
+          failureCount:
+            typeof artifact.failureCount === "number" ? artifact.failureCount : null,
+          failureSamples: Array.isArray(artifact.failureSamples)
+            ? artifact.failureSamples.slice(0, 3)
+            : [],
+        }))
+      : [],
+    readinessBlockers: Array.isArray(readiness?.blockers) ? readiness.blockers : [],
+    localQaAvailable: readiness?.localQa?.available === true,
+    localQaCurrentHead: readiness?.localQa?.currentHead === true,
+    localQaPassed: readiness?.localQa?.passed === true,
+    localQaArtifactDir: readiness?.localQa?.artifactDir || "unavailable",
+    localQaArtifacts: Array.isArray(readiness?.localQa?.artifacts)
+      ? readiness.localQa.artifacts.map((artifact) => ({
+          label: artifact.label,
+          passed: artifact.passed === true,
+          currentHead: artifact.currentHead === true,
+          baseUrl: artifact.baseUrl || "unavailable",
+          failureCount:
+            typeof artifact.failureCount === "number" ? artifact.failureCount : null,
+        }))
+      : [],
+    contactDeliveryAvailable: Boolean(contactDeliveryAudit),
+    contactDeliveryCurrentHead,
+    contactDeliveryBaseUrl: contactDeliveryAudit?.baseUrl || "unavailable",
+    contactDeliveryMode: contactDeliveryAudit?.mode || "unavailable",
+    contactDeliveryPassed: contactDeliveryAudit?.passed === true,
+    contactDeliverySent: contactDeliveryAudit?.sent === true,
+    contactDeliverySubmissionAttempted:
+      contactDeliveryAudit?.submissionAttempted === true,
+    contactDeliveryResponseReceived: contactDeliveryAudit?.responseReceived === true,
+    contactDeliveryConfirmed: contactDeliveryAudit?.deliveryConfirmed === true,
+    contactDeliveryFailures: Array.isArray(contactDeliveryAudit?.failures)
+      ? contactDeliveryAudit.failures
+      : [],
+  },
   blockers,
 };
 
@@ -304,7 +458,23 @@ ${report.duplicateInspections
     const environmentUrl = status.githubDeployment?.environmentUrl
       ? `\n  - Environment URL: ${status.githubDeployment.environmentUrl}`
       : "";
-    return `- ${status.context}: ${status.state} (${status.projectSlug || "unknown project"}) ${status.targetUrl || ""}${environmentUrl}${rateLimit}\n  - Deployment id: \`${status.deploymentId || "unavailable"}\`\n  - Local inspection: ${access}`;
+    const inspectOutput = status.inspection.output
+      ? `\n  - Inspection output: ${status.inspection.output.replace(/\n/g, " | ")}`
+      : "";
+    const deploymentSlug =
+      status.deploymentSlug && status.deploymentSlug !== status.deploymentId
+        ? `\n  - Deployment URL slug: \`${status.deploymentSlug}\``
+        : "";
+    return `- ${status.context}: ${status.state} (${status.projectSlug || "unknown project"}) ${status.targetUrl || ""}${environmentUrl}${rateLimit}\n  - Deployment id: \`${status.deploymentId || "unavailable"}\`${deploymentSlug}\n  - Local inspection: ${access}${inspectOutput}`;
+  })
+  .join("\n") || "- none found"}
+
+## Unexpected Vercel Contexts
+
+${report.unexpectedVercelContexts
+  .map((status) => {
+    const rateLimit = status.buildRateLimited ? "\n  - Build rate limited: yes" : "";
+    return `- ${status.context}: ${status.state} (${status.projectSlug || "unknown project"}) ${status.targetUrl || ""}${rateLimit}`;
   })
   .join("\n") || "- none found"}
 
@@ -325,6 +495,67 @@ ${report.buildRateLimitedContexts
   .map((status) => `- ${status.context}: ${status.targetUrl || "no target URL"}`)
   .join("\n") || "- none detected"}
 
+## Production Readiness Snapshot
+
+- Readiness artifact current head: ${report.productionReadiness.readinessCurrentHead ? "yes" : "no"}
+- Submission ready: ${report.productionReadiness.submissionReady ? "yes" : "no"}
+- Expected production URL: ${report.productionReadiness.expectedProductionBaseUrl}
+- Production domain probe passed: ${report.productionReadiness.productionDomainProbePassed ? "yes" : "no"}
+- Production QA artifact current head: ${report.productionReadiness.productionQaCurrentHead ? "yes" : "no"}
+- Production QA URL: ${report.productionReadiness.productionQaBaseUrl}
+- Production QA passed: ${report.productionReadiness.productionQaPassed ? "yes" : "no"}
+- Production QA failure count: ${report.productionReadiness.productionQaFailureCount ?? "unavailable"}
+- Production QA artifact confirmation passed: ${report.productionReadiness.productionQaArtifactConfirmationPassed ? "yes" : "no"}
+
+Local QA:
+- Available: ${report.productionReadiness.localQaAvailable ? "yes" : "no"}
+- Current head: ${report.productionReadiness.localQaCurrentHead ? "yes" : "no"}
+- Passed: ${report.productionReadiness.localQaPassed ? "yes" : "no"}
+- Artifact directory: ${report.productionReadiness.localQaArtifactDir}
+
+${report.productionReadiness.localQaArtifacts
+  .map((artifact) => {
+    const failureCount = formatFailureCount(artifact.failureCount);
+    return `- ${artifact.label}: ${artifact.passed ? "passed" : `failed${failureCount}`}; current head: ${artifact.currentHead ? "yes" : "no"}; base URL: ${artifact.baseUrl}`;
+  })
+  .join("\n") || "- unavailable"}
+
+Production QA gates:
+${report.productionReadiness.productionQaGates
+  .map((gate) => {
+    const error = gate.error ? ` - ${gate.error}` : "";
+    return `- ${gate.label}: ${gate.passed ? "passed" : `failed with exit ${gate.status ?? "unavailable"}${error}`}`;
+  })
+  .join("\n") || "- unavailable"}
+
+Artifact checks:
+${report.productionReadiness.productionQaArtifactChecks
+  .map((artifact) => {
+    const failureCount = formatFailureCount(artifact.failureCount);
+    const samples = artifact.failureSamples.length
+      ? `\n  - Samples: ${artifact.failureSamples.join(" | ")}`
+      : "";
+    return `- ${artifact.label}: ${artifact.passed ? "passed" : `failed${failureCount}`}${samples}`;
+  })
+  .join("\n") || "- unavailable"}
+
+Readiness blockers:
+${report.productionReadiness.readinessBlockers
+  .map((blocker) => `- ${blocker}`)
+  .join("\n") || "- unavailable"}
+
+Contact delivery:
+- Artifact available: ${report.productionReadiness.contactDeliveryAvailable ? "yes" : "no"}
+- Current head: ${report.productionReadiness.contactDeliveryCurrentHead ? "yes" : "no"}
+- Base URL: ${report.productionReadiness.contactDeliveryBaseUrl}
+- Mode: ${report.productionReadiness.contactDeliveryMode}
+- Passed: ${report.productionReadiness.contactDeliveryPassed ? "yes" : "no"}
+- Sent: ${report.productionReadiness.contactDeliverySent ? "yes" : "no"}
+- Submission attempted: ${report.productionReadiness.contactDeliverySubmissionAttempted ? "yes" : "no"}
+- Response received: ${report.productionReadiness.contactDeliveryResponseReceived ? "yes" : "no"}
+- Delivery confirmed: ${report.productionReadiness.contactDeliveryConfirmed ? "yes" : "no"}
+- Failures: ${report.productionReadiness.contactDeliveryFailures.join(" | ") || "none"}
+
 ## Blockers
 
 ${report.blockers.map((blocker) => `- ${blocker}`).join("\n") || "- none"}
@@ -333,11 +564,14 @@ ${report.blockers.map((blocker) => `- ${blocker}`).join("\n") || "- none"}
 
 1. Sign in to Vercel with access to \`${report.vercelOwnerScope}\`.
 2. If the report shows \`upgradeToPro=build-rate-limit\`, wait for the build quota to reset, reduce duplicate project builds, or upgrade the owning Vercel team plan before redeploying.
-3. Open the failed duplicate project from the commit status target URL when a deployment id is available.
-4. If \`rs-web-digital\` is not the intended production project, disconnect its GitHub integration or archive/delete that duplicate project.
-5. Keep the intended \`romega-digitals\` project connected and passing.
-6. Move \`romega-solutions.com\` and \`www.romega-solutions.com\` to the intended project.
-7. Re-run \`pnpm run report:readiness\` after the duplicate context is gone and production checks pass.
+3. Open the failed duplicate project from the commit status target URL when a deployment id is available. If using the CLI, run ${report.duplicateInspectCommands.length > 0 ? report.duplicateInspectCommands.map((item) => `\`${item.command}\``).join(", ") : `\`vercel inspect <deployment-id> --logs --scope ${report.vercelOwnerScope}\``} from an owner-scoped login.
+4. Review unexpected Vercel contexts. Add intentional projects to the release policy, or disconnect/archive extra projects that keep failing commit status.
+5. If \`rs-web-digital\` is not the intended production project, disconnect its GitHub integration or archive/delete that duplicate project.
+6. Keep the intended \`romega-digitals\` project connected and passing.
+7. Move \`romega-solutions.com\` and \`www.romega-solutions.com\` to the intended project.
+8. Run \`$env:PRODUCTION_QA_BASE_URL="https://www.romega-solutions.com"; pnpm run qa:production\` after cutover. This clears stale per-gate production artifacts, runs every non-contact production responsive, accessibility, keyboard, product-flow, visual, and live deployment gate, writes \`reports/production-qa/\`, checks every expected gate artifact, records post-final, recorded-artifact, published-artifact, and artifact-confirmation readiness evidence, and leaves the readiness report displaying that confirmation even if one production gate fails.
+9. Run the guarded real contact delivery audit only after production email-provider env is configured and sending is approved.
+10. Re-run \`pnpm run report:readiness\` after the duplicate context is gone and all production-domain artifacts pass. The readiness report must also show the built-in production-domain probe passing for \`/\`, \`/terms\`, \`/contact\`, and \`/api/careers/jobs\`.
 `;
 
 mkdirSync(outputDir, { recursive: true });

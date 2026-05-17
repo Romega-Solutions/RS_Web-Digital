@@ -1,6 +1,7 @@
-import { mkdirSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import { expect, test } from "@playwright/test";
+import { expect, test, type TestInfo } from "@playwright/test";
 
 const baseUrl =
   process.env.VISUAL_AUDIT_BASE_URL ??
@@ -11,6 +12,71 @@ const baseUrl =
   "http://127.0.0.1:3007";
 
 const outputDir = path.join(process.cwd(), "reports", "visual-render-audit");
+const summaryPath = path.join(outputDir, "visual-render-audit-summary.json");
+
+type AuditResult = {
+  title: string;
+  status: TestInfo["status"];
+  expectedStatus: TestInfo["expectedStatus"];
+  durationMs: number;
+  errors: string[];
+};
+
+type ScreenshotArtifact = {
+  route: string;
+  viewport: string;
+  path: string;
+};
+
+const results: AuditResult[] = [];
+const screenshots: ScreenshotArtifact[] = [];
+
+function getHeadSha() {
+  try {
+    return execFileSync("git", ["rev-parse", "HEAD"], {
+      cwd: process.cwd(),
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim();
+  } catch {
+    return "unknown";
+  }
+}
+
+test.afterEach(({}, testInfo) => {
+  results.push({
+    title: testInfo.title,
+    status: testInfo.status,
+    expectedStatus: testInfo.expectedStatus,
+    durationMs: testInfo.duration,
+    errors: testInfo.errors.map((error) => error.message ?? String(error)),
+  });
+});
+
+test.afterAll(() => {
+  mkdirSync(outputDir, { recursive: true });
+  const failures = results.filter((result) => result.status !== result.expectedStatus);
+  writeFileSync(
+    summaryPath,
+    `${JSON.stringify(
+      {
+        headSha: getHeadSha(),
+        baseUrl,
+        passed: failures.length === 0,
+        finishedAt: new Date().toISOString(),
+        routeCount: routes.length,
+        viewportCount: viewports.length,
+        screenshotCount: screenshots.length,
+        resultCount: results.length,
+        failureCount: failures.length,
+        screenshots,
+        results,
+      },
+      null,
+      2,
+    )}\n`,
+  );
+});
 
 const routes = [
   {
@@ -170,9 +236,12 @@ test.describe("visual render smoke audit", () => {
         );
 
         if (viewport.name === "mobile-390" || viewport.name === "desktop-1440") {
-          await page.screenshot({
-            path: path.join(outputDir, `${route.name}-${viewport.name}.png`),
-            fullPage: true,
+          const screenshotPath = path.join(outputDir, `${route.name}-${viewport.name}.png`);
+          await page.screenshot({ path: screenshotPath, fullPage: true });
+          screenshots.push({
+            route: route.path,
+            viewport: viewport.name,
+            path: path.relative(process.cwd(), screenshotPath),
           });
         }
       }

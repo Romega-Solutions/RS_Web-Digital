@@ -8,8 +8,9 @@ This handoff is for the Vercel owner scope `kpg782s-projects`. The local Codex s
 
 ## Current Evidence
 
-- Run `pnpm run report:readiness` after pulling the latest `redesign/ui-audit-fixes` branch. It records the current branch, head commit, GitHub Actions status, Vercel commit statuses, GitHub deployment environment URLs, current-head audit evidence, and remaining blockers under ignored `reports/release-readiness/` files.
-- Run `pnpm run report:owner-unblock` to write the latest Vercel owner-scope unblock evidence under ignored `reports/owner-unblock/` files, including the active Vercel login, failed duplicate context target URL, GitHub deployment environment URLs, and whether this checkout can inspect the failed deployment.
+- Run `pnpm run report:readiness` after pulling the latest `redesign/ui-audit-fixes` branch. It records the current branch, head commit, GitHub Actions status, Vercel commit statuses, GitHub deployment environment URLs, direct production-domain probes, current-head production QA/responsive/accessibility/keyboard/product-flow/visual/live/contact audit evidence, and remaining blockers under ignored `reports/release-readiness/` files.
+- Run `pnpm run report:owner-unblock` to write the latest Vercel owner-scope unblock evidence under ignored `reports/owner-unblock/` files, including the active Vercel login, failed duplicate and unexpected context target URLs, build-rate-limit signals, GitHub deployment environment URLs, and whether this checkout can inspect the failed deployment.
+- Current failing duplicate deployment evidence is `Vercel – rs-web-digital`, project `rs-web-digital`, deployment id `dpl_Go6ykWH8aVwWRFnnS9pPrJeeNEH5`, URL slug `Go6ykWH8aVwWRFnnS9pPrJeeNEH5`. Owner-scope inspection command: `vercel inspect dpl_Go6ykWH8aVwWRFnnS9pPrJeeNEH5 --logs --scope kpg782s-projects`.
 - Vercel connector checks also require the same owner scope. In this session, `kpg782s-projects` project reads and failed duplicate deployment logs returned authorization errors, so the dashboard/token owner still needs to perform those steps.
 - Current-head code QA evidence should come from `pnpm run report:readiness` and the PR check rollup, because each handoff docs commit creates a new branch head.
 - CI passed `pnpm install --frozen-lockfile`, `pnpm run lint`, `pnpm run typecheck`, `pnpm run build`, Playwright Chromium install, `pnpm run audit:responsive`, `pnpm run audit:a11y`, `pnpm run audit:keyboard`, `pnpm run audit:product`, and `pnpm run audit:visual`.
@@ -17,16 +18,16 @@ This handoff is for the Vercel owner scope `kpg782s-projects`. The local Codex s
 - `docs/submission-checklist.md` is the review checklist for this branch and lists repo-controlled gates separately from Vercel-owner gates.
 - Current-head Vercel commit status changes as new handoff commits are pushed; use the latest status targets and deployment environment URLs from `pnpm run report:readiness`.
 - `vercel.json` now points Vercel's ignored build step to `node scripts/vercel-ignore-build.mjs`. Future docs-only commits should skip Vercel builds and avoid burning owner-scope quota; app, config, workflow, package, and script changes still deploy.
-- Live deployment and contact delivery audits record the git `HEAD` they were run against. If a new commit is added after those audits, rerun them before treating `pnpm run report:readiness` as final release evidence.
+- Responsive, accessibility, keyboard, product-flow, visual, live deployment, and contact delivery audits record the git `HEAD` they were run against. If a new commit is added after those audits, rerun them before treating `pnpm run report:readiness` as final release evidence.
 - If a future Vercel target URL contains `upgradeToPro=build-rate-limit`, the owning Vercel team has hit the build quota before a deployment could start. Wait for quota reset, reduce duplicate project builds, or upgrade the Vercel plan, then redeploy the latest branch head.
-- Public alias `https://romega-digitals.vercel.app` is reachable. The branch removes the footer low-contrast CSS pattern locally, but `pnpm run audit:live` must pass against the alias after Vercel serves the latest commit before the alias is valid final release evidence.
-- Current production domain `https://www.romega-solutions.com` is still attached to a stale app until moved or refreshed in Vercel.
+- Public alias `https://romega-digitals.vercel.app` is reachable, but it is not valid final release evidence until Vercel serves the latest commit there and `audit:responsive`, `audit:a11y`, and `audit:live` pass against it. Current public alias checks still reflect stale deployed responsive and footer contrast behavior.
+- Current production domain `https://www.romega-solutions.com` is still attached to a stale app until moved or refreshed in Vercel. The readiness report now records this directly by probing `/`, `/terms`, `/contact`, and `/api/careers/jobs`.
 
 ## Owner Actions
 
 1. Open Vercel under the `kpg782s-projects` team.
 2. Keep `romega-digitals` as the intended project for RS_Web-Digital.
-3. Disconnect or archive the duplicate `rs-web-digital` Git integration if it is not intentionally used.
+3. Inspect the failed duplicate deployment with `vercel inspect dpl_Go6ykWH8aVwWRFnnS9pPrJeeNEH5 --logs --scope kpg782s-projects`, then disconnect or archive duplicate and unexpected Git integrations such as `rs-web-digital` or `romega-digital` if they are not intentionally used.
 4. Confirm or add production environment variables on `romega-digitals`:
    - `RESEND_API_KEY`
    - `ADMIN_EMAIL`
@@ -70,12 +71,8 @@ Invoke-WebRequest -UseBasicParsing "$base/contact" -MaximumRedirection 5
 Invoke-WebRequest -UseBasicParsing "$base/privacy" -MaximumRedirection 5
 Invoke-WebRequest -UseBasicParsing "$base/terms" -MaximumRedirection 5
 Invoke-WebRequest -UseBasicParsing "$base/api/careers/jobs" -MaximumRedirection 5
-$env:RESPONSIVE_AUDIT_BASE_URL=$base; pnpm run audit:responsive
-$env:ACCESSIBILITY_AUDIT_BASE_URL=$base; pnpm run audit:a11y
-$env:KEYBOARD_AUDIT_BASE_URL=$base; pnpm run audit:keyboard
-$env:PRODUCT_AUDIT_BASE_URL=$base; pnpm run audit:product
-$env:VISUAL_AUDIT_BASE_URL=$base; pnpm run audit:visual
-$env:LIVE_AUDIT_BASE_URL=$base; pnpm run audit:live
+$env:PRODUCTION_QA_BASE_URL=$base; pnpm run qa:production
+Remove-Item Env:PRODUCTION_QA_BASE_URL
 $env:CONTACT_AUDIT_BASE_URL=$base; $env:CONTACT_AUDIT_CONFIRM_SEND="true"; pnpm run audit:contact:delivery
 pnpm run report:readiness
 ```
@@ -97,13 +94,17 @@ Remove-Item Env:READINESS_CONTACT_DELIVERY_VERIFIED
 ```
 
 The readiness report reads `reports/live-deployment-audit/live-deployment-audit.json`; do not set `READINESS_PRODUCTION_DOMAIN_VERIFIED=true` until `LIVE_AUDIT_BASE_URL=https://www.romega-solutions.com pnpm run audit:live` has passed in the same checkout.
-It also reads `reports/contact-delivery-audit/contact-delivery-audit.json`; do not set `READINESS_CONTACT_DELIVERY_VERIFIED=true` until `CONTACT_AUDIT_BASE_URL=https://www.romega-solutions.com CONTACT_AUDIT_CONFIRM_SEND=true pnpm run audit:contact:delivery` has passed in the same checkout.
+The readiness report also runs its own production-domain probe for `READINESS_PRODUCTION_BASE_URL`; do not treat the domain cutover as complete while that probe is failing.
+It also reads `reports/responsive-audit/responsive-audit-summary.json` and `reports/accessibility-audit/accessibility-audit-summary.json`; those artifacts must pass for `https://www.romega-solutions.com` in the same checkout before the final readiness report can clear production responsive/accessibility blockers.
+It also reads `reports/contact-delivery-audit/contact-delivery-audit.json`; do not set `READINESS_CONTACT_DELIVERY_VERIFIED=true` until `CONTACT_AUDIT_BASE_URL=https://www.romega-solutions.com CONTACT_AUDIT_CONFIRM_SEND=true pnpm run audit:contact:delivery` has passed in browser mode in the same checkout.
 
 ## Pass Criteria
 
 - The aggregate GitHub commit status no longer fails because of `rs-web-digital`.
 - The intended `romega-digitals` deployment is auditable with either public access or the automation bypass secret.
 - `https://www.romega-solutions.com` serves the latest app, including `/terms` and `/api/careers/jobs`.
+- The readiness report production-domain probe passes for `https://www.romega-solutions.com`.
+- `RESPONSIVE_AUDIT_BASE_URL=https://www.romega-solutions.com pnpm run audit:responsive` passes on the public production domain.
 - `pnpm run audit:live` passes on the public production domain.
 - `ACCESSIBILITY_AUDIT_BASE_URL=https://www.romega-solutions.com pnpm run audit:a11y` passes on the public production domain.
 - A real browser contact-form success path is verified with production email provider variables configured.

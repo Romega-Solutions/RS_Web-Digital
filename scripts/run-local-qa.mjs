@@ -1,11 +1,22 @@
 import { createServer } from "node:net";
-import { existsSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync } from "node:fs";
 import { spawn, spawnSync } from "node:child_process";
+import path from "node:path";
 
 const isWindows = process.platform === "win32";
 const pnpm = "pnpm";
+const qaStepTimeoutMs = Number(process.env.LOCAL_QA_STEP_TIMEOUT_MS ?? "300000");
 const liveAuditPort = Number(process.env.LOCAL_LIVE_AUDIT_PORT ?? "3008");
 const liveAuditBaseUrl = `http://127.0.0.1:${liveAuditPort}`;
+const localQaArtifactDir = path.join(process.cwd(), "reports", "local-qa", "latest");
+const auditArtifactPaths = [
+  path.join("reports", "responsive-audit", "responsive-audit-summary.json"),
+  path.join("reports", "accessibility-audit", "accessibility-audit-summary.json"),
+  path.join("reports", "keyboard-audit", "keyboard-audit-summary.json"),
+  path.join("reports", "product-flow-audit", "product-flow-audit-summary.json"),
+  path.join("reports", "visual-render-audit", "visual-render-audit-summary.json"),
+  path.join("reports", "live-deployment-audit", "live-deployment-audit.json"),
+];
 
 const qaEnvFallback = {
   NEXT_PUBLIC_SITE_URL: "https://www.romega-solutions.com",
@@ -26,21 +37,47 @@ function hasProductionEnvSource() {
 function runPnpm(label, args, options = {}) {
   console.log(`\n==> ${label}`);
   const command = getCommand(pnpm, args);
-  const result = spawnSync(command.command, command.args, {
-    cwd: process.cwd(),
-    env: { ...process.env, ...options.env },
-    stdio: "inherit",
-    shell: false,
+  return new Promise((resolve, reject) => {
+    let timedOut = false;
+    const child = spawn(command.command, command.args, {
+      cwd: process.cwd(),
+      env: { ...process.env, ...options.env },
+      stdio: "inherit",
+      shell: false,
+      windowsHide: true,
+    });
+
+    const timeout = setTimeout(() => {
+      timedOut = true;
+      stopProcessTree(child);
+    }, qaStepTimeoutMs);
+
+    child.on("error", (error) => {
+      clearTimeout(timeout);
+      const wrappedError = new Error(`${label} failed to start: ${error.message}`);
+      wrappedError.status = 1;
+      reject(wrappedError);
+    });
+
+    child.on("close", (status) => {
+      clearTimeout(timeout);
+      if (timedOut) {
+        const error = new Error(`${label} timed out after ${qaStepTimeoutMs}ms.`);
+        error.status = 1;
+        reject(error);
+        return;
+      }
+
+      if (status !== 0) {
+        const error = new Error(`${label} failed with exit ${status ?? 1}.`);
+        error.status = status ?? 1;
+        reject(error);
+        return;
+      }
+
+      resolve();
+    });
   });
-
-  if (result.error) {
-    console.error(`${label} failed to start: ${result.error.message}`);
-    process.exit(1);
-  }
-
-  if (result.status !== 0) {
-    process.exit(result.status ?? 1);
-  }
 }
 
 function quoteForCmd(value) {
@@ -138,7 +175,74 @@ function stopProcessTree(child) {
   child.kill("SIGTERM");
 }
 
+function readArtifactBaseUrl(absolutePath) {
+  try {
+    const artifact = JSON.parse(readFileSync(absolutePath, "utf8"));
+    return typeof artifact?.baseUrl === "string" ? artifact.baseUrl : "";
+  } catch {
+    return "";
+  }
+}
+
+function isLocalArtifact(absolutePath) {
+  const baseUrl = readArtifactBaseUrl(absolutePath);
+  return /https?:\/\/(127\.0\.0\.1|localhost)(?::\d+)?/i.test(baseUrl);
+}
+
+function getExistingArtifactSnapshots({ productionOnly = false } = {}) {
+  return auditArtifactPaths
+    .map((relativePath) => {
+      const absolutePath = path.join(process.cwd(), relativePath);
+      return existsSync(absolutePath) ? { relativePath, absolutePath } : null;
+    })
+    .filter(Boolean)
+    .filter((artifact) => !productionOnly || !isLocalArtifact(artifact.absolutePath));
+}
+
+function copyArtifactsToDirectory(artifacts, targetDir) {
+  mkdirSync(targetDir, { recursive: true });
+
+  for (const artifact of artifacts) {
+    const targetPath = path.join(targetDir, artifact.relativePath);
+    mkdirSync(path.dirname(targetPath), { recursive: true });
+    copyFileSync(artifact.absolutePath, targetPath);
+  }
+}
+
+function archiveLocalQaArtifacts() {
+  const currentArtifacts = getExistingArtifactSnapshots();
+
+  if (currentArtifacts.length === 0) {
+    return;
+  }
+
+  rmSync(localQaArtifactDir, { recursive: true, force: true });
+  copyArtifactsToDirectory(currentArtifacts, localQaArtifactDir);
+  console.log(`\n==> Archived local QA audit artifacts to ${path.relative(process.cwd(), localQaArtifactDir)}`);
+}
+
+function restoreArtifactSnapshots(snapshots) {
+  for (const relativePath of auditArtifactPaths) {
+    rmSync(path.join(process.cwd(), relativePath), { force: true });
+  }
+
+  for (const snapshot of snapshots) {
+    const sourcePath = path.join(localQaArtifactDir, "..", "pre-local-qa", snapshot.relativePath);
+    mkdirSync(path.dirname(snapshot.absolutePath), { recursive: true });
+    copyFileSync(sourcePath, snapshot.absolutePath);
+  }
+
+  console.log("\n==> Cleared local audit artifacts and restored pre-existing production artifacts before readiness reports");
+}
+
 const envForProductionCheck = hasProductionEnvSource() ? {} : qaEnvFallback;
+const preLocalQaArtifacts = getExistingArtifactSnapshots({ productionOnly: true });
+const preLocalQaBackupDir = path.join(localQaArtifactDir, "..", "pre-local-qa");
+
+if (preLocalQaArtifacts.length > 0) {
+  rmSync(preLocalQaBackupDir, { recursive: true, force: true });
+  copyArtifactsToDirectory(preLocalQaArtifacts, preLocalQaBackupDir);
+}
 
 if (Object.keys(envForProductionCheck).length > 0) {
   console.log(
@@ -146,31 +250,43 @@ if (Object.keys(envForProductionCheck).length > 0) {
   );
 }
 
-runPnpm("Lint and architecture validation", ["run", "lint"]);
-runPnpm("TypeScript typecheck", ["run", "typecheck"]);
-runPnpm("Production env shape check", ["run", "check:env:production"], {
-  env: envForProductionCheck,
-});
-runPnpm("Next.js production build", ["run", "build"]);
-runPnpm("Responsive audit", ["run", "audit:responsive"]);
-runPnpm("Accessibility audit", ["run", "audit:a11y"]);
-runPnpm("Keyboard audit", ["run", "audit:keyboard"]);
-runPnpm("Product-flow audit", ["run", "audit:product"]);
-runPnpm("Visual render audit", ["run", "audit:visual"]);
-
 let server;
+let qaExitCode = 0;
 try {
+  await runPnpm("Lint and architecture validation", ["run", "lint"]);
+  await runPnpm("TypeScript typecheck", ["run", "typecheck"]);
+  await runPnpm("Production env shape check", ["run", "check:env:production"], {
+    env: envForProductionCheck,
+  });
+  await runPnpm("Next.js production build", ["run", "build"]);
+  await runPnpm("Responsive audit", ["run", "audit:responsive"]);
+  await runPnpm("Accessibility audit", ["run", "audit:a11y"]);
+  await runPnpm("Keyboard audit", ["run", "audit:keyboard"]);
+  await runPnpm("Product-flow audit", ["run", "audit:product"]);
+  await runPnpm("Visual render audit", ["run", "audit:visual"]);
+
   await assertPortAvailable(liveAuditPort);
   server = startProductionServer(liveAuditPort);
   await waitForUrl(liveAuditBaseUrl);
-  runPnpm("Local live deployment audit", ["run", "audit:live"], {
+  await runPnpm("Local live deployment audit", ["run", "audit:live"], {
     env: { LIVE_AUDIT_BASE_URL: liveAuditBaseUrl },
   });
+} catch (error) {
+  qaExitCode = typeof error?.status === "number" ? error.status : 1;
+  console.error(error instanceof Error ? error.message : String(error));
 } finally {
   stopProcessTree(server);
+  archiveLocalQaArtifacts();
+  restoreArtifactSnapshots(preLocalQaArtifacts);
 }
 
-runPnpm("Release-readiness report", ["run", "report:readiness"]);
-runPnpm("Vercel owner-unblock report", ["run", "report:owner-unblock"]);
+if (qaExitCode !== 0) {
+  process.exit(qaExitCode);
+}
 
-console.log("\nLocal QA completed. Review the generated readiness reports for external production blockers.");
+await runPnpm("Release-readiness report", ["run", "report:readiness"]);
+await runPnpm("Vercel owner-unblock report", ["run", "report:owner-unblock"]);
+
+console.log(
+  "\nLocal QA completed. Local audit artifacts were archived under reports/local-qa/latest, and production-readiness artifacts were preserved for the readiness reports.",
+);
