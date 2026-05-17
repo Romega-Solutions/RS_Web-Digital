@@ -9,6 +9,12 @@ const liveAuditReportPath = path.join(
   "live-deployment-audit",
   "live-deployment-audit.json",
 );
+const contactDeliveryAuditReportPath = path.join(
+  process.cwd(),
+  "reports",
+  "contact-delivery-audit",
+  "contact-delivery-audit.json",
+);
 const branchName = run("git", ["branch", "--show-current"]) || "unknown";
 const headSha = run("git", ["rev-parse", "HEAD"]) || "unknown";
 const shortSha = headSha.slice(0, 7);
@@ -170,16 +176,23 @@ const expectedProductionBaseUrl = (
   process.env.READINESS_PRODUCTION_BASE_URL || "https://www.romega-solutions.com"
 ).replace(/\/+$/, "");
 const liveAudit = readJsonFile(liveAuditReportPath);
+const contactDeliveryAudit = readJsonFile(contactDeliveryAuditReportPath);
 const productionLiveAuditPassed =
   liveAudit?.passed === true &&
   typeof liveAudit.baseUrl === "string" &&
   liveAudit.baseUrl.replace(/\/+$/, "") === expectedProductionBaseUrl;
+const contactDeliveryAuditPassed =
+  contactDeliveryAudit?.passed === true &&
+  typeof contactDeliveryAudit.baseUrl === "string" &&
+  contactDeliveryAudit.baseUrl.replace(/\/+$/, "") === expectedProductionBaseUrl;
 const manualEvidence = {
   productionDomainCutoverVerified:
     isTruthyEnv("READINESS_PRODUCTION_DOMAIN_VERIFIED") && productionLiveAuditPassed,
   productionDomainFlagSet: isTruthyEnv("READINESS_PRODUCTION_DOMAIN_VERIFIED"),
   protectedDeploymentAuditPassed: isTruthyEnv("READINESS_PROTECTED_DEPLOYMENT_AUDIT_PASSED"),
-  contactDeliveryVerified: isTruthyEnv("READINESS_CONTACT_DELIVERY_VERIFIED"),
+  contactDeliveryVerified:
+    isTruthyEnv("READINESS_CONTACT_DELIVERY_VERIFIED") && contactDeliveryAuditPassed,
+  contactDeliveryFlagSet: isTruthyEnv("READINESS_CONTACT_DELIVERY_VERIFIED"),
 };
 const blockers = [];
 
@@ -220,8 +233,12 @@ if (!manualEvidence.protectedDeploymentAuditPassed) {
   blockers.push("Protected immutable deployment audit requires owner-scope Vercel automation bypass secret.");
 }
 
-if (!manualEvidence.contactDeliveryVerified) {
+if (!manualEvidence.contactDeliveryFlagSet) {
   blockers.push("Real contact-form delivery requires production email-provider env verification and browser test.");
+} else if (!contactDeliveryAuditPassed) {
+  blockers.push(
+    `Contact delivery verification flag is set, but latest contact delivery audit artifact does not pass for ${expectedProductionBaseUrl}.`,
+  );
 }
 
 const report = {
@@ -245,6 +262,21 @@ const report = {
         vercelProtectionBypassConfigured: liveAudit.vercelProtectionBypassConfigured === true,
         finishedAt: liveAudit.finishedAt,
         failureCount: Array.isArray(liveAudit.failures) ? liveAudit.failures.length : null,
+      }
+    : {
+        available: false,
+      },
+  contactDeliveryAudit: contactDeliveryAudit
+    ? {
+        available: true,
+        baseUrl: contactDeliveryAudit.baseUrl,
+        passed: contactDeliveryAudit.passed === true,
+        sent: contactDeliveryAudit.sent === true,
+        finishedAt: contactDeliveryAudit.finishedAt,
+        status: contactDeliveryAudit.status,
+        failureCount: Array.isArray(contactDeliveryAudit.failures)
+          ? contactDeliveryAudit.failures.length
+          : null,
       }
     : {
         available: false,
@@ -276,7 +308,7 @@ Head: \`${report.headSha}\`
 - \`READINESS_PRODUCTION_BASE_URL\`: ${report.expectedProductionBaseUrl}
 - \`READINESS_PRODUCTION_DOMAIN_VERIFIED\`: ${report.manualEvidence.productionDomainFlagSet ? "yes" : "no"}
 - \`READINESS_PROTECTED_DEPLOYMENT_AUDIT_PASSED\`: ${report.manualEvidence.protectedDeploymentAuditPassed ? "yes" : "no"}
-- \`READINESS_CONTACT_DELIVERY_VERIFIED\`: ${report.manualEvidence.contactDeliveryVerified ? "yes" : "no"}
+- \`READINESS_CONTACT_DELIVERY_VERIFIED\`: ${report.manualEvidence.contactDeliveryFlagSet ? "yes" : "no"}
 
 ## Live Audit Evidence
 
@@ -286,6 +318,16 @@ Head: \`${report.headSha}\`
 - Finished: ${report.liveAudit.finishedAt || "unavailable"}
 - Failure count: ${report.liveAudit.failureCount ?? "unavailable"}
 - Vercel bypass configured: ${report.liveAudit.vercelProtectionBypassConfigured ? "yes" : "no"}
+
+## Contact Delivery Evidence
+
+- Available: ${report.contactDeliveryAudit.available ? "yes" : "no"}
+- Base URL: ${report.contactDeliveryAudit.baseUrl || "unavailable"}
+- Passed: ${report.contactDeliveryAudit.passed ? "yes" : "no"}
+- Sent: ${report.contactDeliveryAudit.sent ? "yes" : "no"}
+- Finished: ${report.contactDeliveryAudit.finishedAt || "unavailable"}
+- HTTP status: ${report.contactDeliveryAudit.status ?? "unavailable"}
+- Failure count: ${report.contactDeliveryAudit.failureCount ?? "unavailable"}
 
 ## Status Contexts
 

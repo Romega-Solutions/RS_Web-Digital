@@ -76,6 +76,7 @@ $env:KEYBOARD_AUDIT_BASE_URL=$base; pnpm run audit:keyboard
 $env:PRODUCT_AUDIT_BASE_URL=$base; pnpm run audit:product
 $env:VISUAL_AUDIT_BASE_URL=$base; pnpm run audit:visual
 $env:LIVE_AUDIT_BASE_URL=$base; pnpm run audit:live
+$env:CONTACT_AUDIT_BASE_URL=$base; $env:CONTACT_AUDIT_CONFIRM_SEND="true"; pnpm run audit:contact:delivery
 pnpm run report:readiness
 ```
 
@@ -96,6 +97,7 @@ Remove-Item Env:READINESS_CONTACT_DELIVERY_VERIFIED
 ```
 
 The readiness report reads `reports/live-deployment-audit/live-deployment-audit.json`; do not set `READINESS_PRODUCTION_DOMAIN_VERIFIED=true` until `LIVE_AUDIT_BASE_URL=https://www.romega-solutions.com pnpm run audit:live` has passed in the same checkout.
+It also reads `reports/contact-delivery-audit/contact-delivery-audit.json`; do not set `READINESS_CONTACT_DELIVERY_VERIFIED=true` until `CONTACT_AUDIT_BASE_URL=https://www.romega-solutions.com CONTACT_AUDIT_CONFIRM_SEND=true pnpm run audit:contact:delivery` has passed in the same checkout.
 
 ## Pass Criteria
 

@@ -66,6 +66,7 @@ $env:KEYBOARD_AUDIT_BASE_URL=$base; pnpm run audit:keyboard
 $env:PRODUCT_AUDIT_BASE_URL=$base; pnpm run audit:product
 $env:VISUAL_AUDIT_BASE_URL=$base; pnpm run audit:visual
 $env:LIVE_AUDIT_BASE_URL=$base; pnpm run audit:live
+$env:CONTACT_AUDIT_BASE_URL=$base; $env:CONTACT_AUDIT_CONFIRM_SEND="true"; pnpm run audit:contact:delivery
 pnpm run report:readiness
 ```
 
@@ -103,6 +104,7 @@ Remove-Item Env:READINESS_CONTACT_DELIVERY_VERIFIED
 ```
 
 The production-domain flag is accepted only when the latest `reports/live-deployment-audit/live-deployment-audit.json` artifact is passing for `READINESS_PRODUCTION_BASE_URL`. Run `LIVE_AUDIT_BASE_URL=$base pnpm run audit:live` immediately before the final report.
+The contact-delivery flag is accepted only when the latest `reports/contact-delivery-audit/contact-delivery-audit.json` artifact is passing for the same production base URL. The contact audit sends a real contact submission, so run it only after the owner confirms production email-provider env is configured.
 
 ## External Owner Actions
 

@@ -70,6 +70,18 @@ pnpm run check:env:production
 
 The env check reports only configured/missing status and validation failures. It does not print secret values.
 
+To verify real production contact delivery after owner-scope env setup, run the guarded delivery audit:
+
+```powershell
+$env:CONTACT_AUDIT_BASE_URL="https://www.romega-solutions.com"
+$env:CONTACT_AUDIT_CONFIRM_SEND="true"
+pnpm run audit:contact:delivery
+Remove-Item Env:CONTACT_AUDIT_BASE_URL
+Remove-Item Env:CONTACT_AUDIT_CONFIRM_SEND
+```
+
+This sends a real contact submission to the configured production recipient and writes an ignored report under `reports/contact-delivery-audit/`. If production reCAPTCHA is enabled, provide `CONTACT_AUDIT_RECAPTCHA_TOKEN` from a real browser session.
+
 To generate a local release-readiness summary from git, GitHub Actions, and commit status evidence:
 
 ```powershell
