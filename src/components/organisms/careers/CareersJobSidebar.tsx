@@ -146,12 +146,14 @@ export function CareersJobSidebar({
                         ))}
                       </ul>
                     )}
-                    <Link
-                      href={`/careers/${job.id}`}
+                    <a
+                      href={job.applyUrl}
                       className={styles.jobLink}
+                      target="_blank"
+                      rel="noreferrer"
                     >
-                      View Role Details
-                    </Link>
+                      Apply on LinkedIn
+                    </a>
                   </article>
                 </li>
               ))}

@@ -31,11 +31,12 @@
 
 .emphasis {
   @apply relative inline-block px-1.5;
+  margin-inline: 0.08em;
 }
 
 .emphasis::after {
   content: "";
-  @apply pointer-events-none absolute -inset-x-5 -inset-y-2 md:-inset-x-7 md:-inset-y-3;
+  @apply pointer-events-none absolute -inset-x-4 -inset-y-2 md:-inset-x-5 md:-inset-y-2.5;
   border: 3px solid rgb(255 255 255 / 0.92);
   border-radius: 58% 42% 54% 46% / 48% 55% 45% 52%;
   transform: rotate(2deg);
@@ -71,7 +72,7 @@
   }
 
   .emphasis::after {
-    @apply -inset-x-4 -inset-y-1.5;
+    @apply -inset-x-3 -inset-y-1;
     border-width: 2px;
   }
 

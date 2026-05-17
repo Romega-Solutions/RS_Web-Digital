@@ -136,7 +136,6 @@ export function TeamCarousel({ onMemberClick }: TeamCarouselProps) {
                     className={`${styles.card} ${
                       member.id === "rich-salvador" ? styles["card--white-bg"] : ""
                     }`}
-                    aria-label={`${member.name}, ${member.title}`}
                     disabled={!isCenter}
                     onClick={() => isCenter && onMemberClick?.(member)}
                   >

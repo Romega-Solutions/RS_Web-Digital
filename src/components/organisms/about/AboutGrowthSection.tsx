@@ -93,7 +93,11 @@ export function AboutGrowthSection() {
                 exit={{ opacity: 0, y: -10, transition: { duration: 0.16, ease: "easeIn" } }}
                 whileHover={{ y: -3 }}
               >
-                <div className={styles.stars} aria-label={`${testimonial.rating} out of 5 rating`}>
+                <div
+                  className={styles.stars}
+                  role="img"
+                  aria-label={`${testimonial.rating} out of 5 rating`}
+                >
                   {Array.from({ length: 5 }, (_, index) => (
                     <span
                       key={index}

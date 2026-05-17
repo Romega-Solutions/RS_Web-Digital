@@ -1,9 +1,10 @@
 name: CI
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, redesign/ui-audit-fixes]
   pull_request:
     branches: [main, master]
+  workflow_dispatch:
 jobs:
   ci:
     runs-on: ubuntu-latest
@@ -16,5 +17,18 @@ jobs:
         with:
           version: 9.15.9
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run --if-present lint
-      - run: pnpm run --if-present build
+      - run: pnpm run lint
+      - run: pnpm run typecheck
+      - run: pnpm run check:env:production
+        env:
+          NEXT_PUBLIC_SITE_URL: https://www.romega-solutions.com
+          RESEND_API_KEY: re_ci_placeholder_123456
+          ADMIN_EMAIL: info@romega-solutions.com
+          RECAPTCHA_TIMEOUT_MS: "5000"
+      - run: pnpm run build
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm run audit:responsive
+      - run: pnpm run audit:a11y
+      - run: pnpm run audit:keyboard
+      - run: pnpm run audit:product
+      - run: pnpm run audit:visual

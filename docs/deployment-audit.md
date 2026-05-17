@@ -3,9 +3,14 @@
 **Audited:** 2026-05-06  
 **Repo remediation pass:** 2026-05-13
 **Live deploy verification:** 2026-05-13
-**Stack:** Next.js 16.2.4 · React 19 · Tailwind v4 · pnpm  
+**Redesign branch merge verification:** 2026-05-17
+**Latest branch deployment check:** 2026-05-17
+**Latest local QA runner verification:** 2026-05-17
+**Stack:** Next.js 16.2.6 · React 19.2.5 · Tailwind v4 · pnpm 9.15.9
 **Vercel project:** `romega-digitals` (`prj_4hyRbwLN9UAJN96JK58MyCyOTnpb`)  
 **Symptom:** Project builds locally but deployment on Vercel fails or behaves incorrectly.
+
+For the current branch review package, use `docs/submission-checklist.md`. For current commit-specific GitHub Actions and Vercel status targets, run `pnpm run report:readiness`.
 
 ---
 
@@ -28,7 +33,7 @@
 
 ---
 
-## 0. Live Deployment Verification — 2026-05-13
+## 0. Historical Live Deployment Verification — 2026-05-13
 
 Commit verified: `8863f65ae4e93dd57b1f9f83d1ea2b313a3c487d`
 
@@ -50,8 +55,94 @@ Access blocker:
 
 Conclusion:
 
-- The latest app is deployed and route-verified on `romega-digitals.vercel.app`.
+- Historically verified app routes were reachable on `romega-digitals.vercel.app`, but the alias must be rechecked with `audit:responsive`, `audit:a11y`, and `audit:live` for the current branch head before it can be used as final release evidence.
 - The public production domain is still attached to a stale/different Vercel project and needs a dashboard-level domain move to `romega-digitals`.
+
+---
+
+## 0.1 Current Redesign Branch Verification Process — 2026-05-17
+
+This section records the branch verification process and historical evidence. For the current head commit, current GitHub Actions state, and current Vercel status targets, run `pnpm run report:readiness` after pulling the latest branch.
+
+Branch verified: `redesign/ui-audit-fixes` after merging `origin/main`.
+
+Local checks:
+
+```bash
+pnpm install --frozen-lockfile
+pnpm run qa:local
+```
+
+The preferred local release gate is `pnpm run qa:local`. It runs the checks below sequentially to avoid Playwright server-port collisions, starts a temporary production server for the local live audit, archives localhost audit outputs under `reports/local-qa/latest/`, restores pre-existing production-domain audit artifacts, and regenerates the readiness and owner-unblock reports without replacing production evidence with local URLs.
+
+Individual local checks:
+
+```bash
+pnpm run lint
+pnpm run typecheck
+pnpm run check:env:production
+pnpm run build
+pnpm run audit:responsive
+pnpm run audit:a11y
+pnpm run audit:keyboard
+pnpm run audit:product
+pnpm run audit:visual
+$env:LIVE_AUDIT_BASE_URL="http://127.0.0.1:3008"; pnpm run audit:live
+```
+
+Protected Vercel previews can be audited from the owning project scope by adding the project automation bypass secret:
+
+```powershell
+$env:LIVE_AUDIT_BASE_URL="https://<deployment>.vercel.app"
+$env:LIVE_AUDIT_VERCEL_BYPASS_SECRET="<redacted>"
+pnpm run audit:live
+Remove-Item Env:LIVE_AUDIT_VERCEL_BYPASS_SECRET
+```
+
+The script also accepts Vercel's `VERCEL_AUTOMATION_BYPASS_SECRET` system env var and does not write the secret value to `reports/live-deployment-audit/live-deployment-audit.json`.
+
+Results:
+
+- Architecture validation and ESLint passed.
+- TypeScript passed with `tsc --noEmit`.
+- Next.js production build passed and generated all app routes.
+- Responsive Playwright audit passed for `/`, `/about`, `/services`, `/talent`, `/careers`, `/contact`, `/privacy`, and `/terms` across mobile, tablet, desktop, and wide desktop viewports.
+- Local route smoke checks returned `200` for all key pages listed above.
+- GitHub Actions CI passed on Node.js 20 for commit `669c5d8df307ae5f1c458cd491c79e7f887e92c7`, including `pnpm install --frozen-lockfile`, lint, typecheck, build, Playwright browser install, and the responsive audit.
+- Earlier in this branch, the public Vercel preview host `https://romega-digitals.vercel.app` passed the same responsive audit. It is no longer valid final release evidence until Vercel serves the latest branch deployment there; current alias checks still reflect older tap-target, carousel overflow, and footer color-contrast behavior.
+- A follow-up branch gate adds axe-backed accessibility smoke coverage for the same public routes, blocking critical and serious findings.
+- A keyboard smoke gate covers the skip link, desktop dropdown focus/escape behavior, and mobile menu focus containment.
+- A product-flow smoke gate covers the careers API response shape and contact API validation/error behavior without requiring Resend, reCAPTCHA, or live email delivery.
+- A visual render smoke gate covers route-specific titles, h1s, app shell landmarks, visible visual assets, interactive controls, and Vercel auth-wall leakage across 320, 390, 768, and 1440 pixel widths.
+- A live deployment audit checks the public route freshness contract, careers API JSON shape, Vercel auth-wall leakage, stale footer CSS bundles on any running URL through `LIVE_AUDIT_BASE_URL`, and protected Vercel preview URLs when a project automation bypass secret is supplied.
+- Latest branch commit `57a1de52bb284e15576be1c795115cb369b2c8f6` passed GitHub Actions CI on Node.js 20, including responsive, axe accessibility, and keyboard audits.
+- Product-flow audit commit `7b8f536852f73c47eac03625c8489ddf70d5ad35` passed GitHub Actions CI run `25972988285` on Node.js 20, including responsive, axe accessibility, keyboard, and product-flow audits.
+- Latest branch docs commit `5c99754c5713f669aabd1c05705785ec27ba4518` passed GitHub Actions CI run `25973058941` on Node.js 20, including responsive, axe accessibility, keyboard, and product-flow audits.
+- Visual render audit commit `6f363a94cce05cac7a2a66bfc043d864f4efd883` passed GitHub Actions CI run `25973495064` on Node.js 20, including responsive, axe accessibility, keyboard, product-flow, and visual render audits.
+- Live deployment audit commit `c03dee20ada83f9636807ef3f359701e8f135cde` passed GitHub Actions CI run `25973797941` on Node.js 20, including responsive, axe accessibility, keyboard, product-flow, and visual render audits.
+- Protected preview audit commit `313df7f485b2b48e4c60b5d6d3871b3c6e4bee9d` passed GitHub Actions CI run `25974097469` on Node.js 20, including responsive, axe accessibility, keyboard, product-flow, and visual render audits.
+- Release-readiness report commit `8f52e25add18abcd4a75f402974f2be3205866db` passed GitHub Actions CI run `25974770926` on Node.js 20, including lint, typecheck, production env checker, build, responsive, axe accessibility, keyboard, product-flow, and visual render audits.
+- Touch-target readiness commit `aa9f8f00458b4cbbd5bc78342b71aba703053275` passed GitHub Actions CI run `25975616207` on Node.js 20, including lint, typecheck, production env checker, build, responsive, axe accessibility, keyboard, product-flow, and visual render audits.
+- The current uncommitted QA-runner working tree passed local `pnpm run qa:local` on 2026-05-17 with bounded per-step process-tree cleanup. The run covered lint, typecheck, production env-shape validation with non-secret placeholder values because owner-scope env was not present locally, build, responsive, axe accessibility, keyboard, product-flow, visual render, local live deployment audit, release-readiness report, and owner-unblock report. Local artifacts were archived under `reports/local-qa/latest/`, while production-domain artifacts were restored before readiness reporting.
+- The current uncommitted QA/report scripts, TypeScript project, and Next production build also passed a focused temporary Node.js `20.20.2` verification on 2026-05-17, covering direct script syntax checks, ESLint for the changed QA/report scripts, `tsc --noEmit`, and `next build`.
+- Earlier sequential local QA runner commit `917def89c7555db0ccae6e567f378898f30f3785` passed local `pnpm run qa:local` on 2026-05-17. That proof remains historical only; use the current `reports/local-qa/latest/` artifacts and `pnpm run report:readiness` for this working tree.
+- Sequential local QA runner commit `917def89c7555db0ccae6e567f378898f30f3785` passed GitHub Actions CI push run `25977318419` and pull-request run `25977318932` on Node.js 20, including lint, typecheck, production env checker, build, responsive, axe accessibility, keyboard, product-flow, and visual render audits.
+- Latest deployment handoff commits should be verified with `pnpm run report:readiness` and the PR check rollup because each evidence-doc update creates a new branch head and can change Vercel status outcomes.
+- GitHub commit statuses on the redesign branch can change after each pushed handoff commit. Run `pnpm run report:readiness` for the current commit-specific status targets and deployment environment URLs.
+- `pnpm run report:readiness` now records GitHub deployment environment URLs for the current commit when GitHub exposes them and runs direct production-domain probes for `/`, `/terms`, `/contact`, and `/api/careers/jobs`. Successful immutable deployment URLs under `kpg782s-projects` have been protected by Vercel Authentication from this session, so unauthenticated live audit and route probes can return Vercel Authentication `401`.
+- The `https://romega-digitals.vercel.app` alias returns `200` for key routes, but current alias checks still report older tap-target, carousel overflow, and footer contrast behavior. Treat the alias as not fully refreshed for the latest branch deployment until `audit:responsive`, `audit:a11y`, and `audit:live` pass there.
+- The immutable successful deployment URL for `romega-digitals` is protected by Vercel Authentication from this session, so unauthenticated Playwright audits hit Vercel's auth page instead of the app. Owner-scope access plus `LIVE_AUDIT_VERCEL_BYPASS_SECRET` or `VERCEL_AUTOMATION_BYPASS_SECRET` is required to audit that immutable deployment directly.
+
+Local caveat:
+
+- The local Codex shell was running Node.js `v25.2.1`; the repo, CI, Dockerfile, and intended Vercel runtime are pinned to Node.js `20.x`. Re-run the same gates on Node 20 before treating local evidence as a final release artifact.
+
+Deployment-status caveat:
+
+- GitHub commit statuses for the latest pushed redesign commit are intentionally not hardcoded here because they change after every pushed handoff commit. Run `pnpm run report:readiness` and check the PR rollup for the current `romega-digitals`, `romega-digital`, and duplicate `rs-web-digital` status outcomes.
+- The local Vercel CLI account is `iron-mark`, which cannot inspect the `kpg782s-projects` deployments linked from those statuses.
+- The public alias can be route-, responsiveness-, keyboard-, and product-flow-verified publicly, but deployment logs, failed duplicate-project logs, and protected immutable deployment audits require access to the owning Vercel scope.
+- Exact owner-scope cutover and verification commands are maintained in `docs/vercel-owner-handoff.md`.
 
 ---
 
@@ -109,9 +200,12 @@ vercel env add NEXT_PUBLIC_SITE_URL production
 
 # Or pull .env to check what's currently set
 vercel env pull .env.vercel.local
+pnpm run check:env:production
 ```
 
 **Important:** `NEXT_PUBLIC_*` variables are baked into the client bundle at **build time**. If you add or change them in the dashboard, you must redeploy — a restart is not enough.
+
+`pnpm run check:env:production` reports configured/missing status and validation errors only. It must not be used to print or share secret values.
 
 ---
 
@@ -312,6 +406,7 @@ Before the next production deployment, verify the following in the Vercel dashbo
 - [ ] `ADMIN_EMAIL` is set for Production environment  
 - [ ] `NEXT_PUBLIC_SITE_URL` is set to `https://www.romega-solutions.com`
 - [ ] `RECAPTCHA_SECRET_KEY` is set (for spam protection)
+- [ ] `pnpm run check:env:production` passes after `vercel env pull .env.vercel.local`
 - [ ] Framework preset is **Next.js** (auto-detected)
 - [ ] Build command is `pnpm run build` (or auto)
 - [ ] Install command is `pnpm install` (or auto)

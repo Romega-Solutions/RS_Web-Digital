@@ -30,6 +30,7 @@ export function AboutPartnersSection() {
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1200px"
             className={styles.world}
             priority={false}
+            unoptimized
           />
         </div>
       </div>

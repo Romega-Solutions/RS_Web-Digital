@@ -48,7 +48,8 @@
 .title {
   line-height: 0.92;
   letter-spacing: -0.045em;
-  white-space: nowrap;
+  white-space: normal;
+  text-wrap: balance;
 }
 
 .followRow {
@@ -260,7 +261,8 @@
 .title {
   line-height: 0.92;
   letter-spacing: -0.045em;
-  white-space: nowrap;
+  white-space: normal;
+  text-wrap: balance;
 }
 
 .followRow {
