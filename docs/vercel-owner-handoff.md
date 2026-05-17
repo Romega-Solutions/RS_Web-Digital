@@ -8,13 +8,13 @@ This handoff is for the Vercel owner scope `kpg782s-projects`. The local Codex s
 
 ## Current Evidence
 
-- Run `pnpm run report:readiness` after pulling the latest `redesign/ui-audit-fixes` branch. It records the current branch, head commit, GitHub Actions status, Vercel commit statuses, and remaining blockers under ignored `reports/release-readiness/` files.
-- Run `pnpm run report:owner-unblock` to write the latest Vercel owner-scope unblock evidence under ignored `reports/owner-unblock/` files, including the active Vercel login, failed duplicate context target URL, and whether this checkout can inspect the failed deployment.
-- Current-head code QA evidence: GitHub Actions CI passed on Node.js 20 for commit `4c0725acb1def0d7b6538bc9cd6be10beccac9ac` in push run `25979351220` and pull-request run `25979351651`.
+- Run `pnpm run report:readiness` after pulling the latest `redesign/ui-audit-fixes` branch. It records the current branch, head commit, GitHub Actions status, Vercel commit statuses, GitHub deployment environment URLs, and remaining blockers under ignored `reports/release-readiness/` files.
+- Run `pnpm run report:owner-unblock` to write the latest Vercel owner-scope unblock evidence under ignored `reports/owner-unblock/` files, including the active Vercel login, failed duplicate context target URL, GitHub deployment environment URLs, and whether this checkout can inspect the failed deployment.
+- Current-head code QA evidence: GitHub Actions CI passed on Node.js 20 for commit `6f88264f403597b784297c09c22df5e2ec1fd5a8` in push run `25979446454` and pull-request run `25979447174`.
 - CI passed `pnpm install --frozen-lockfile`, `pnpm run lint`, `pnpm run typecheck`, `pnpm run build`, Playwright Chromium install, `pnpm run audit:responsive`, `pnpm run audit:a11y`, `pnpm run audit:keyboard`, `pnpm run audit:product`, and `pnpm run audit:visual`.
 - The branch CI now runs `pnpm run check:env:production` with placeholder-valid values to prevent the env checker from breaking. Real production values still require owner-scope `vercel env pull .env.vercel.local` plus `pnpm run check:env:production`.
 - `docs/submission-checklist.md` is the review checklist for this branch and lists repo-controlled gates separately from Vercel-owner gates.
-- Current-head Vercel commit statuses succeeded for `romega-digitals` and `romega-digital`, while duplicate `rs-web-digital` failed and keeps the aggregate commit status failed; use the latest status targets from `pnpm run report:readiness`.
+- Current-head Vercel commit statuses succeeded for `romega-digitals` and `romega-digital`, while duplicate `rs-web-digital` failed and keeps the aggregate commit status failed; use the latest status targets and deployment environment URLs from `pnpm run report:readiness`.
 - If a future Vercel target URL contains `upgradeToPro=build-rate-limit`, the owning Vercel team has hit the build quota before a deployment could start. Wait for quota reset, reduce duplicate project builds, or upgrade the Vercel plan, then redeploy the latest branch head.
 - Public alias `https://romega-digitals.vercel.app` is reachable. The branch removes the footer low-contrast CSS pattern locally, but `pnpm run audit:live` must pass against the alias after Vercel serves the latest commit before the alias is valid final release evidence.
 - Current production domain `https://www.romega-solutions.com` is still attached to a stale app until moved or refreshed in Vercel.
@@ -39,7 +39,7 @@ pnpm run check:env:production
 
 6. Generate or select a Vercel Deployment Protection automation bypass secret for `romega-digitals`.
    - Vercel reference: https://vercel.com/docs/deployment-protection/methods-to-bypass-deployment-protection/protection-bypass-automation/
-7. Run the protected preview audit against the latest successful `romega-digitals` deployment URL from `pnpm run report:readiness` or the Vercel dashboard:
+7. Run the protected preview audit against the latest successful `romega-digitals` deployment environment URL from `pnpm run report:readiness` or the Vercel dashboard:
 
 ```powershell
 $env:LIVE_AUDIT_BASE_URL="https://<latest-romega-digitals-deployment>.vercel.app"

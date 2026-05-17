@@ -90,6 +90,36 @@ function getGithubStatus() {
   return parseJson(raw, null);
 }
 
+function getGithubDeployments() {
+  const raw = run("gh", [
+    "api",
+    "repos/Romega-Solutions/RS_Web-Digital/deployments",
+    "--paginate",
+  ]);
+  const deployments = parseJson(raw, []);
+
+  return deployments
+    .filter((deployment) => deployment.sha === headSha)
+    .map((deployment) => {
+      const statusRaw = run("gh", [
+        "api",
+        `repos/Romega-Solutions/RS_Web-Digital/deployments/${deployment.id}/statuses`,
+      ]);
+      const latestStatus = parseJson(statusRaw, [])[0] || null;
+
+      return {
+        id: deployment.id,
+        environment: deployment.environment,
+        state: latestStatus?.state || "unavailable",
+        description: latestStatus?.description || deployment.description || "",
+        environmentUrl: latestStatus?.environment_url || "",
+        targetUrl: latestStatus?.target_url || "",
+        logUrl: latestStatus?.log_url || "",
+        createdAt: latestStatus?.created_at || deployment.created_at,
+      };
+    });
+}
+
 function getLatestWorkflowRun() {
   const raw = run("gh", [
     "run",
@@ -179,6 +209,7 @@ function getVercelSummary(statuses) {
 }
 
 const githubStatus = getGithubStatus();
+const deployments = getGithubDeployments();
 const statusSummaries = summarizeStatuses(githubStatus);
 const latestRun = getLatestWorkflowRun();
 const ci = getCiSummary(latestRun);
@@ -272,6 +303,7 @@ const report = {
   ci,
   commitStatusState: githubStatus?.state || "unavailable",
   statuses: statusSummaries,
+  deployments,
   vercel,
   expectedProductionBaseUrl,
   liveAudit: liveAudit
@@ -357,6 +389,16 @@ ${report.statuses
     const rateLimit = status.buildRateLimited ? " [build-rate-limit]" : "";
     const target = status.targetUrl ? ` (${status.targetUrl})` : "";
     return `- ${status.context}: ${status.state}${rateLimit} - ${status.description || "no description"}${target}`;
+  })
+  .join("\n") || "- unavailable"}
+
+## GitHub Deployment URLs
+
+${report.deployments
+  .map((deployment) => {
+    const envUrl = deployment.environmentUrl ? `\n  - Environment URL: ${deployment.environmentUrl}` : "";
+    const targetUrl = deployment.targetUrl ? `\n  - Target URL: ${deployment.targetUrl}` : "";
+    return `- ${deployment.environment}: ${deployment.state} - ${deployment.description || "no description"}${envUrl}${targetUrl}`;
   })
   .join("\n") || "- unavailable"}
 

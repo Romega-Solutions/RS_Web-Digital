@@ -106,6 +106,43 @@ function summarizeStatuses(statusPayload) {
   }));
 }
 
+function getGithubDeployments() {
+  const deployments = parseJson(
+    run("gh", ["api", `repos/${repo}/deployments`, "--paginate"]),
+    [],
+  );
+
+  return deployments
+    .filter((deployment) => deployment.sha === headSha)
+    .map((deployment) => {
+      const latestStatus = parseJson(
+        run("gh", ["api", `repos/${repo}/deployments/${deployment.id}/statuses`]),
+        [],
+      )[0];
+
+      return {
+        id: deployment.id,
+        environment: deployment.environment,
+        state: latestStatus?.state || "unavailable",
+        description: latestStatus?.description || deployment.description || "",
+        environmentUrl: latestStatus?.environment_url || "",
+        targetUrl: latestStatus?.target_url || "",
+        logUrl: latestStatus?.log_url || "",
+        createdAt: latestStatus?.created_at || deployment.created_at,
+      };
+    });
+}
+
+function findDeploymentForContext(status) {
+  if (!status?.projectSlug) {
+    return null;
+  }
+
+  return deployments.find((deployment) =>
+    deployment.environment?.toLowerCase().endsWith(status.projectSlug.toLowerCase()),
+  );
+}
+
 function extractDeploymentId(targetUrl = "") {
   try {
     const url = new URL(targetUrl);
@@ -167,6 +204,7 @@ const githubStatus = parseJson(
   run("gh", ["api", `repos/${repo}/commits/${headSha}/status`]),
   null,
 );
+const deployments = getGithubDeployments();
 const statuses = summarizeStatuses(githubStatus);
 const intended = statuses.filter((status) => intendedContexts.includes(status.context));
 const duplicates = statuses.filter((status) => duplicateContexts.includes(status.context));
@@ -177,6 +215,7 @@ const vercelWhoami = vercelWhoamiResult.ok ? vercelWhoamiResult.output : "unavai
 const vercelTeams = vercelTeamsResult.ok ? vercelTeamsResult.output : "unavailable";
 const duplicateInspections = duplicates.map((status) => ({
   ...status,
+  githubDeployment: findDeploymentForContext(status),
   inspection: inspectDeployment(status.deploymentId),
 }));
 const missingOwnerScope =
@@ -225,6 +264,7 @@ const report = {
   intendedContexts,
   duplicateContexts,
   intended,
+  deployments,
   duplicateInspections,
   buildRateLimitedContexts,
   blockers,
@@ -246,10 +286,13 @@ Commit status: \`${report.commitStatusState}\`
 ## Intended Vercel Contexts
 
 ${report.intended
-  .map(
-    (status) =>
-      `- ${status.context}: ${status.state} (${status.projectSlug || "unknown project"}) ${status.targetUrl || ""}`,
-  )
+  .map((status) => {
+    const deployment = findDeploymentForContext(status);
+    const environmentUrl = deployment?.environmentUrl
+      ? `\n  - Environment URL: ${deployment.environmentUrl}`
+      : "";
+    return `- ${status.context}: ${status.state} (${status.projectSlug || "unknown project"}) ${status.targetUrl || ""}${environmentUrl}`;
+  })
   .join("\n") || "- none found"}
 
 ## Duplicate Vercel Contexts
@@ -258,9 +301,23 @@ ${report.duplicateInspections
   .map((status) => {
     const access = status.inspection.accessible ? "inspectable locally" : "not inspectable locally";
     const rateLimit = status.buildRateLimited ? "\n  - Build rate limited: yes" : "";
-    return `- ${status.context}: ${status.state} (${status.projectSlug || "unknown project"}) ${status.targetUrl || ""}${rateLimit}\n  - Deployment id: \`${status.deploymentId || "unavailable"}\`\n  - Local inspection: ${access}`;
+    const environmentUrl = status.githubDeployment?.environmentUrl
+      ? `\n  - Environment URL: ${status.githubDeployment.environmentUrl}`
+      : "";
+    return `- ${status.context}: ${status.state} (${status.projectSlug || "unknown project"}) ${status.targetUrl || ""}${environmentUrl}${rateLimit}\n  - Deployment id: \`${status.deploymentId || "unavailable"}\`\n  - Local inspection: ${access}`;
   })
   .join("\n") || "- none found"}
+
+## GitHub Deployment URLs
+
+${report.deployments
+  .map((deployment) => {
+    const environmentUrl = deployment.environmentUrl
+      ? `\n  - Environment URL: ${deployment.environmentUrl}`
+      : "";
+    return `- ${deployment.environment}: ${deployment.state} - ${deployment.description || "no description"}${environmentUrl}`;
+  })
+  .join("\n") || "- unavailable"}
 
 ## Vercel Build Rate Limit
 
