@@ -47,14 +47,16 @@
 }
 
 .tagline {
-  @apply w-full max-w-[18rem] text-center text-[0.84rem] leading-[1.6] text-brand-secondary;
+  @apply w-full max-w-[18rem] text-center text-[0.84rem] leading-[1.6];
   @apply md:text-left md:text-[0.9rem];
+  color: var(--color-brand-secondary);
 }
 
 .links {
-  @apply flex flex-col items-center gap-3 text-center text-brand-secondary;
+  @apply flex flex-col items-center gap-3 text-center;
   @apply md:items-start md:text-left;
   @apply lg:border-r lg:border-brand-secondary/12 lg:pr-5;
+  color: var(--color-brand-secondary);
 }
 
 .links a {
@@ -73,7 +75,8 @@
 }
 
 .navGroupTitle {
-  @apply text-[0.68rem] font-bold uppercase tracking-[0.2em] text-brand-secondary;
+  @apply text-[0.68rem] font-bold uppercase tracking-[0.2em];
+  color: var(--color-brand-secondary);
 }
 
 .navList {
@@ -95,7 +98,8 @@
 }
 
 .connect h3 {
-  @apply text-[0.72rem] font-bold uppercase tracking-[0.2em] text-brand-secondary;
+  @apply text-[0.72rem] font-bold uppercase tracking-[0.2em];
+  color: var(--color-brand-secondary);
 }
 
 .socials {
@@ -103,7 +107,8 @@
 }
 
 .socialLink {
-  @apply inline-flex h-11 w-11 items-center justify-center rounded-full border border-brand-secondary/25 bg-white text-brand-secondary transition-all duration-200;
+  @apply inline-flex h-11 w-11 items-center justify-center rounded-full border border-brand-secondary/25 bg-white transition-all duration-200;
+  color: var(--color-brand-secondary);
   will-change: transform, box-shadow;
 }
 
@@ -199,20 +204,24 @@
 }
 
 .mapLabel {
-  @apply text-[0.68rem] font-bold uppercase tracking-[0.18em] text-brand-secondary;
+  @apply text-[0.68rem] font-bold uppercase tracking-[0.18em];
+  color: var(--color-brand-secondary);
 }
 
 .mapMeta a {
-  @apply inline-flex min-h-11 min-w-11 items-center justify-center text-[0.82rem] leading-snug text-brand-secondary underline-offset-2 hover:underline;
+  @apply inline-flex min-h-11 min-w-11 items-center justify-center text-[0.82rem] leading-snug underline-offset-2 hover:underline;
+  color: var(--color-brand-secondary);
 }
 
 .contactBlock {
-  @apply mt-4 flex items-start justify-center gap-3 text-center text-[0.82rem] text-brand-secondary;
+  @apply mt-4 flex items-start justify-center gap-3 text-center text-[0.82rem];
   @apply md:justify-start md:text-left md:text-[0.9rem];
+  color: var(--color-brand-secondary);
 }
 
 .contactIcon {
-  @apply h-[1.05rem] w-[1.05rem] shrink-0 text-brand-secondary;
+  @apply h-[1.05rem] w-[1.05rem] shrink-0;
+  color: var(--color-brand-secondary);
 }
 
 .contactCopy {
@@ -220,11 +229,13 @@
 }
 
 .contactLabel {
-  @apply text-[0.68rem] font-bold uppercase tracking-[0.18em] text-brand-secondary;
+  @apply text-[0.68rem] font-bold uppercase tracking-[0.18em];
+  color: var(--color-brand-secondary);
 }
 
 .contactText {
-  @apply text-brand-secondary underline-offset-2;
+  @apply underline-offset-2;
+  color: var(--color-brand-secondary);
 }
 
 .contactBlock:focus-visible {
@@ -253,8 +264,9 @@
 }
 
 .backtop {
-  @apply hidden items-center justify-center text-brand-secondary;
+  @apply hidden items-center justify-center;
   @apply lg:flex;
+  color: var(--color-brand-secondary);
   position: fixed;
   right: 1.25rem;
   bottom: 4.25rem;

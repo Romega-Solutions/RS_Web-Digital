@@ -145,6 +145,6 @@ Current verified state:
 
 - Owner-scope Vercel handoff is in `docs/vercel-owner-handoff.md`.
 - Review and submission handoff is in `docs/submission-checklist.md`.
-- Latest app routes are publicly reachable on `https://romega-digitals.vercel.app`, but that alias can lag the latest redesign branch deployment. `pnpm run audit:live` currently catches stale low-contrast footer CSS on that alias; re-run it after Vercel refreshes the deployment before using the alias as final release evidence.
+- Latest app routes are publicly reachable on `https://romega-digitals.vercel.app`, but that alias can lag the latest redesign branch deployment. The current branch removes the footer low-contrast CSS pattern that `pnpm run audit:live` catches; re-run the live audit after Vercel serves the latest commit before using the alias as final release evidence.
 - `www.romega-solutions.com` is still serving a stale Vercel app until the domain is moved in the owning Vercel scope.
 - Use `docs/domain-cutover-checklist.md` for the dashboard steps and post-cutover verification commands.

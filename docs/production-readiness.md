@@ -112,7 +112,7 @@ These items require dashboard, account, or live-service access:
 - Run contact form success testing with the real email provider configured.
 - Inspect latest Vercel deployment logs from the owning `kpg782s-projects` Vercel scope.
 - Re-run `ACCESSIBILITY_AUDIT_BASE_URL=https://romega-digitals.vercel.app pnpm run audit:a11y` after the latest redesign branch deployment is available; the current public preview still reflects older footer contrast styles.
-- Re-run `LIVE_AUDIT_BASE_URL=https://romega-digitals.vercel.app pnpm run audit:live` after the latest redesign branch deployment is available; the current public alias still serves the stale footer CSS bundle.
+- Re-run `LIVE_AUDIT_BASE_URL=https://romega-digitals.vercel.app pnpm run audit:live` after the latest redesign branch deployment is available. The branch now removes the footer low-contrast CSS pattern locally, but the public alias must serve the new deployment before it can be used as release evidence.
 - Re-run `pnpm run audit:live` against the protected immutable `romega-digitals` URL from the owner scope with `LIVE_AUDIT_VERCEL_BYPASS_SECRET` or `VERCEL_AUTOMATION_BYPASS_SECRET` set.
 - Fix or disconnect the duplicate Vercel integration: `rs-web-digital` currently reports failed on the latest commit status while the intended `romega-digitals` context reports success. Run `pnpm run report:readiness` for the current commit-specific URLs and status targets.
 - Follow `docs/vercel-owner-handoff.md` for the exact owner-scope production cutover and verification sequence.
