@@ -55,7 +55,7 @@ Access blocker:
 
 Conclusion:
 
-- The latest app is deployed and route-verified on `romega-digitals.vercel.app`.
+- Historically verified app routes were reachable on `romega-digitals.vercel.app`, but the alias must be rechecked with `pnpm run audit:live` for the current branch head before it can be used as final release evidence.
 - The public production domain is still attached to a stale/different Vercel project and needs a dashboard-level domain move to `romega-digitals`.
 
 ---
