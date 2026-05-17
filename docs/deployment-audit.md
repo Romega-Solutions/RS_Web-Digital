@@ -127,7 +127,7 @@ Results:
 - Sequential local QA runner commit `917def89c7555db0ccae6e567f378898f30f3785` passed GitHub Actions CI push run `25977318419` and pull-request run `25977318932` on Node.js 20, including lint, typecheck, production env checker, build, responsive, axe accessibility, keyboard, product-flow, and visual render audits.
 - Latest deployment handoff commits should be verified with `pnpm run report:readiness` and the PR check rollup because each evidence-doc update creates a new branch head and can change Vercel status outcomes.
 - GitHub commit statuses on the redesign branch can change after each pushed handoff commit. Run `pnpm run report:readiness` for the current commit-specific status targets and deployment environment URLs.
-- `pnpm run report:readiness` now records GitHub deployment environment URLs for the current commit. Current successful immutable deployment URLs under `kpg782s-projects` are protected by Vercel Authentication from this session, so unauthenticated live audit and route probes return Vercel Authentication `401`.
+- `pnpm run report:readiness` now records GitHub deployment environment URLs for the current commit when GitHub exposes them. Successful immutable deployment URLs under `kpg782s-projects` have been protected by Vercel Authentication from this session, so unauthenticated live audit and route probes can return Vercel Authentication `401`.
 - The `https://romega-digitals.vercel.app` alias returns `200` for `/`, `/terms`, and `/api/careers/jobs`, but `LIVE_AUDIT_BASE_URL=https://romega-digitals.vercel.app pnpm run audit:live` still reports older footer contrast CSS. Treat the alias as not fully refreshed for the latest branch deployment until the live gate passes.
 - The immutable successful deployment URL for `romega-digitals` is protected by Vercel Authentication from this session, so unauthenticated Playwright audits hit Vercel's auth page instead of the app. Owner-scope access plus `LIVE_AUDIT_VERCEL_BYPASS_SECRET` or `VERCEL_AUTOMATION_BYPASS_SECRET` is required to audit that immutable deployment directly.
 
@@ -137,7 +137,7 @@ Local caveat:
 
 Deployment-status caveat:
 
-- GitHub commit statuses for the latest pushed redesign commit succeed for `romega-digitals` and `romega-digital`, but duplicate `rs-web-digital` still fails.
+- GitHub commit statuses for the latest pushed redesign commit are intentionally not hardcoded here because they change after every pushed handoff commit. Run `pnpm run report:readiness` and check the PR rollup for the current `romega-digitals`, `romega-digital`, and duplicate `rs-web-digital` status outcomes.
 - The local Vercel CLI account is `iron-mark`, which cannot inspect the `kpg782s-projects` deployments linked from those statuses.
 - The public alias can be route-, responsiveness-, keyboard-, and product-flow-verified publicly, but deployment logs, failed duplicate-project logs, and protected immutable deployment audits require access to the owning Vercel scope.
 - Exact owner-scope cutover and verification commands are maintained in `docs/vercel-owner-handoff.md`.
