@@ -43,6 +43,7 @@ Expected result:
 - Product audit passes careers API and contact API validation/error checks.
 - Visual audit confirms route-specific titles, h1s, shell landmarks, visible assets, and no Vercel auth wall.
 - Production env checker passes with real production values after owner-scope env pull, or with CI placeholder-valid values when only testing the checker.
+- Vercel ignored-build script is verified so docs-only handoff commits skip future Vercel builds without suppressing app/config deployments.
 - Readiness report is generated under ignored `reports/release-readiness/` artifacts, including GitHub deployment environment URLs when GitHub exposes them for the current head.
 - Readiness report shows `Current head: yes` for live deployment and contact delivery audit artifacts before those artifacts are used as release evidence.
 - Owner-unblock report is generated under ignored `reports/owner-unblock/` artifacts when Vercel owner-scope work remains, including environment URLs for intended and duplicate Vercel deployments when available.

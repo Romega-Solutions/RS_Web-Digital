@@ -89,6 +89,7 @@ Route smoke checks returned `200` locally for:
 - Product-flow audit covers the careers API response contract and contact API validation/error behavior without requiring production email-provider secrets
 - Visual render audit covers route-specific titles, h1s, app shell landmarks, visible visual assets, and auth-wall detection across mobile, tablet, and desktop viewports
 - Live deployment audit covers public route freshness, careers API JSON shape, Vercel authentication-wall leakage, stale footer CSS bundles on a running URL, and optional Vercel automation-bypass auth for protected preview URLs
+- Vercel ignored-build config skips future docs-only commits through `scripts/vercel-ignore-build.mjs`, while app, config, workflow, package, and script changes still trigger builds
 - Production env check validates required Vercel env shape without exposing secret values; CI runs it with placeholder-valid values to protect the checker, and owner-scope Vercel env pull must still verify the real production values
 - Readiness report summarizes current branch, GitHub Actions, commit status contexts, intended Vercel contexts, GitHub deployment environment URLs, current-head live/contact audit artifacts, and known production blockers into ignored local artifacts
 - Commit `669c5d8df307ae5f1c458cd491c79e7f887e92c7` passed GitHub Actions CI on Node.js 20

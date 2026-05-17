@@ -35,6 +35,8 @@ pnpm run qa:local
 
 `pnpm run qa:local` runs the local release gates sequentially: lint, typecheck, production env-shape validation, build, responsive audit, axe accessibility audit, keyboard audit, product-flow audit, visual render audit, local live audit, release-readiness report, and Vercel owner-unblock report. The Playwright audits share a default server port, so the combined runner intentionally runs them one at a time. If no pulled production env file or required env vars are available, it uses non-secret placeholder values only for the local env-shape gate; owner-scope production env still needs real Vercel validation before release.
 
+`vercel.json` uses `node scripts/vercel-ignore-build.mjs` as Vercel's ignored build step. Future commits that only touch `README.md` or files under `docs/` should skip Vercel builds to reduce owner-scope quota burn; app, config, workflow, package, and script changes still build.
+
 For targeted checks, run individual commands:
 
 ```bash

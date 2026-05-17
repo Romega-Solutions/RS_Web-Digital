@@ -21,6 +21,7 @@
     "qa:local": "node scripts/run-local-qa.mjs",
     "report:owner-unblock": "node scripts/owner-unblock-report.mjs",
     "report:readiness": "node scripts/release-readiness-report.mjs",
+    "vercel:ignore-build": "node scripts/vercel-ignore-build.mjs",
     "validate:architecture": "node scripts/validate-architecture.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "node scripts/validate-architecture.mjs && eslint"
