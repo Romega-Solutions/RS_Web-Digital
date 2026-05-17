@@ -4,12 +4,13 @@ Updated: 2026-05-17
 Branch: `redesign/ui-audit-fixes`  
 Latest evidence command: `pnpm run report:readiness`
 
-This handoff is for the Vercel owner scope `kpg782s-projects`. The local Codex session is authenticated as `iron-mark` under `iron-marks-projects`, so it cannot inspect protected deployments, failed duplicate-project logs, production domain settings, or owner-scope environment variables.
+This handoff is for the Vercel owner scope `kpg782s-projects`. The local Codex session is authenticated as `iron-mark` under `iron-marks-projects`, and the Vercel connector also lists only `iron-marks-projects`, so this session cannot inspect protected deployments, failed duplicate-project logs, production domain settings, or owner-scope environment variables.
 
 ## Current Evidence
 
 - Run `pnpm run report:readiness` after pulling the latest `redesign/ui-audit-fixes` branch. It records the current branch, head commit, GitHub Actions status, Vercel commit statuses, GitHub deployment environment URLs, current-head audit evidence, and remaining blockers under ignored `reports/release-readiness/` files.
 - Run `pnpm run report:owner-unblock` to write the latest Vercel owner-scope unblock evidence under ignored `reports/owner-unblock/` files, including the active Vercel login, failed duplicate context target URL, GitHub deployment environment URLs, and whether this checkout can inspect the failed deployment.
+- Vercel connector checks also require the same owner scope. In this session, `kpg782s-projects` project reads and failed duplicate deployment logs returned authorization errors, so the dashboard/token owner still needs to perform those steps.
 - Current-head code QA evidence should come from `pnpm run report:readiness` and the PR check rollup, because each handoff docs commit creates a new branch head.
 - CI passed `pnpm install --frozen-lockfile`, `pnpm run lint`, `pnpm run typecheck`, `pnpm run build`, Playwright Chromium install, `pnpm run audit:responsive`, `pnpm run audit:a11y`, `pnpm run audit:keyboard`, `pnpm run audit:product`, and `pnpm run audit:visual`.
 - The branch CI now runs `pnpm run check:env:production` with placeholder-valid values to prevent the env checker from breaking. Real production values still require owner-scope `vercel env pull .env.vercel.local` plus `pnpm run check:env:production`.
