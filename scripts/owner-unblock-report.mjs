@@ -100,20 +100,42 @@ function summarizeStatuses(statusPayload) {
     state: status.state,
     description: status.description,
     targetUrl: status.target_url,
+    buildRateLimited: isVercelBuildRateLimited(status.target_url),
     deploymentId: extractDeploymentId(status.target_url),
     projectSlug: extractVercelProjectSlug(status.target_url),
   }));
 }
 
 function extractDeploymentId(targetUrl = "") {
-  const parts = targetUrl.split("/").filter(Boolean);
-  return parts.length > 0 ? parts.at(-1) : "";
+  try {
+    const url = new URL(targetUrl);
+    const parts = url.pathname.split("/").filter(Boolean);
+    return parts.length >= 3 ? parts[2] : "";
+  } catch {
+    const parts = targetUrl.split("/").filter(Boolean);
+    return parts.length >= 4 ? parts.at(-1) : "";
+  }
 }
 
 function extractVercelProjectSlug(targetUrl = "") {
-  const parts = targetUrl.split("/").filter(Boolean);
-  const vercelIndex = parts.findIndex((part) => part === "vercel.com");
-  return vercelIndex >= 0 && parts.length > vercelIndex + 2 ? parts[vercelIndex + 2] : "";
+  try {
+    const url = new URL(targetUrl);
+    const parts = url.pathname.split("/").filter(Boolean);
+    return parts.length >= 2 ? parts[1] : "";
+  } catch {
+    const parts = targetUrl.split("/").filter(Boolean);
+    const vercelIndex = parts.findIndex((part) => part === "vercel.com");
+    return vercelIndex >= 0 && parts.length > vercelIndex + 2 ? parts[vercelIndex + 2] : "";
+  }
+}
+
+function isVercelBuildRateLimited(targetUrl = "") {
+  try {
+    const url = new URL(targetUrl);
+    return url.searchParams.get("upgradeToPro") === "build-rate-limit";
+  } catch {
+    return /upgradeToPro=build-rate-limit/i.test(targetUrl);
+  }
 }
 
 function inspectDeployment(deploymentId) {
@@ -148,6 +170,7 @@ const githubStatus = parseJson(
 const statuses = summarizeStatuses(githubStatus);
 const intended = statuses.filter((status) => intendedContexts.includes(status.context));
 const duplicates = statuses.filter((status) => duplicateContexts.includes(status.context));
+const buildRateLimitedContexts = statuses.filter((status) => status.buildRateLimited);
 const vercelWhoamiResult = runVercel(["whoami"]);
 const vercelTeamsResult = runVercel(["teams", "ls"]);
 const vercelWhoami = vercelWhoamiResult.ok ? vercelWhoamiResult.output : "unavailable";
@@ -178,6 +201,14 @@ if (duplicates.some((status) => status.state === "failure")) {
   );
 }
 
+if (buildRateLimitedContexts.length > 0) {
+  blockers.push(
+    `Vercel build rate limit is blocking deployment for: ${buildRateLimitedContexts
+      .map((status) => status.context)
+      .join(", ")}.`,
+  );
+}
+
 if (intended.length !== intendedContexts.length || intended.some((status) => status.state !== "success")) {
   blockers.push("Intended Vercel context is not fully successful.");
 }
@@ -195,6 +226,7 @@ const report = {
   duplicateContexts,
   intended,
   duplicateInspections,
+  buildRateLimitedContexts,
   blockers,
 };
 
@@ -225,9 +257,16 @@ ${report.intended
 ${report.duplicateInspections
   .map((status) => {
     const access = status.inspection.accessible ? "inspectable locally" : "not inspectable locally";
-    return `- ${status.context}: ${status.state} (${status.projectSlug || "unknown project"}) ${status.targetUrl || ""}\n  - Deployment id: \`${status.deploymentId || "unavailable"}\`\n  - Local inspection: ${access}`;
+    const rateLimit = status.buildRateLimited ? "\n  - Build rate limited: yes" : "";
+    return `- ${status.context}: ${status.state} (${status.projectSlug || "unknown project"}) ${status.targetUrl || ""}${rateLimit}\n  - Deployment id: \`${status.deploymentId || "unavailable"}\`\n  - Local inspection: ${access}`;
   })
   .join("\n") || "- none found"}
+
+## Vercel Build Rate Limit
+
+${report.buildRateLimitedContexts
+  .map((status) => `- ${status.context}: ${status.targetUrl || "no target URL"}`)
+  .join("\n") || "- none detected"}
 
 ## Blockers
 
@@ -236,11 +275,12 @@ ${report.blockers.map((blocker) => `- ${blocker}`).join("\n") || "- none"}
 ## Owner Actions
 
 1. Sign in to Vercel with access to \`${report.vercelOwnerScope}\`.
-2. Open the failed duplicate project from the commit status target URL.
-3. If \`rs-web-digital\` is not the intended production project, disconnect its GitHub integration or archive/delete that duplicate project.
-4. Keep the intended \`romega-digitals\` project connected and passing.
-5. Move \`romega-solutions.com\` and \`www.romega-solutions.com\` to the intended project.
-6. Re-run \`pnpm run report:readiness\` after the duplicate context is gone and production checks pass.
+2. If the report shows \`upgradeToPro=build-rate-limit\`, wait for the build quota to reset, reduce duplicate project builds, or upgrade the owning Vercel team plan before redeploying.
+3. Open the failed duplicate project from the commit status target URL when a deployment id is available.
+4. If \`rs-web-digital\` is not the intended production project, disconnect its GitHub integration or archive/delete that duplicate project.
+5. Keep the intended \`romega-digitals\` project connected and passing.
+6. Move \`romega-solutions.com\` and \`www.romega-solutions.com\` to the intended project.
+7. Re-run \`pnpm run report:readiness\` after the duplicate context is gone and production checks pass.
 `;
 
 mkdirSync(outputDir, { recursive: true });

@@ -115,6 +115,7 @@ These remain outside this local session because the active Vercel login is not i
 - Keep `romega-digitals` as the intended Vercel project for this app.
 - Disconnect or archive duplicate Vercel Git integrations that keep reporting failed status, especially `rs-web-digital`.
 - Use `pnpm run report:owner-unblock` to capture the latest failed duplicate context target URL and deployment ID before changing Vercel project settings.
+- If Vercel status target URLs point to `upgradeToPro=build-rate-limit`, the owner must wait for build quota reset, reduce duplicate builds, or upgrade the Vercel team plan before redeploying.
 - Confirm production env vars on the intended Vercel project:
   - `RESEND_API_KEY`
   - `ADMIN_EMAIL`

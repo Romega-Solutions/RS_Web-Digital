@@ -20,6 +20,7 @@ This handoff is for the Vercel owner scope `kpg782s-projects`. The local Codex s
   - Use the latest `Vercel - romega-digital` commit status target from `pnpm run report:readiness`.
 - Duplicate Vercel project `rs-web-digital` failed:
   - Use the latest `Vercel - rs-web-digital` commit status target and inspect command from `pnpm run report:readiness`.
+- If the latest Vercel target URL contains `upgradeToPro=build-rate-limit`, the owning Vercel team has hit the build quota before a deployment could start. Wait for quota reset, reduce duplicate project builds, or upgrade the Vercel plan, then redeploy the latest branch head.
 - Public alias `https://romega-digitals.vercel.app` is reachable. The branch removes the footer low-contrast CSS pattern locally, but `pnpm run audit:live` must pass against the alias after Vercel serves the latest commit before the alias is valid final release evidence.
 - Current production domain `https://www.romega-solutions.com` is still attached to a stale app until moved or refreshed in Vercel.
 

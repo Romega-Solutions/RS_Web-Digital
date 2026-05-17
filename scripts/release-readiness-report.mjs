@@ -114,7 +114,17 @@ function summarizeStatuses(statusPayload) {
     state: status.state,
     description: status.description,
     targetUrl: status.target_url,
+    buildRateLimited: isVercelBuildRateLimited(status.target_url),
   }));
+}
+
+function isVercelBuildRateLimited(targetUrl = "") {
+  try {
+    const url = new URL(targetUrl);
+    return url.searchParams.get("upgradeToPro") === "build-rate-limit";
+  } catch {
+    return /upgradeToPro=build-rate-limit/i.test(targetUrl);
+  }
 }
 
 function getCiSummary(workflowRun) {
@@ -153,10 +163,12 @@ function getVercelSummary(statuses) {
   const duplicateContexts = statuses.filter((status) =>
     blockingDuplicateContexts.includes(status.context),
   );
+  const rateLimitedContexts = statuses.filter((status) => status.buildRateLimited);
 
   return {
     intendedContexts,
     blockingDuplicateContexts,
+    rateLimitedContexts,
     intendedPassed:
       intended.length === intendedContexts.length &&
       intended.every((status) => status.state === "success"),
@@ -210,6 +222,14 @@ if (!ci.passed) {
 
 if (!vercel.intendedPassed) {
   blockers.push("Intended Vercel contexts are not all successful or are unavailable.");
+}
+
+if (vercel.rateLimitedContexts.length > 0) {
+  blockers.push(
+    `Vercel build rate limit is blocking deployment for: ${vercel.rateLimitedContexts
+      .map((status) => status.context)
+      .join(", ")}.`,
+  );
 }
 
 if (vercel.duplicateBlocksAggregate) {
@@ -298,6 +318,7 @@ Head: \`${report.headSha}\`
 - Latest CI for this head: ${report.ci.passed ? "passed" : "not passed or unavailable"}
 - Commit status state: \`${report.commitStatusState}\`
 - Intended Vercel contexts: ${report.vercel.intendedPassed ? "passed" : "not fully passed"}
+- Vercel build rate limited: ${report.vercel.rateLimitedContexts.length > 0 ? "yes" : "no"}
 - Submission ready: ${report.submissionReady ? "yes" : "no"}
 
 ## Manual Evidence Flags
@@ -333,8 +354,9 @@ Head: \`${report.headSha}\`
 
 ${report.statuses
   .map((status) => {
+    const rateLimit = status.buildRateLimited ? " [build-rate-limit]" : "";
     const target = status.targetUrl ? ` (${status.targetUrl})` : "";
-    return `- ${status.context}: ${status.state} - ${status.description || "no description"}${target}`;
+    return `- ${status.context}: ${status.state}${rateLimit} - ${status.description || "no description"}${target}`;
   })
   .join("\n") || "- unavailable"}
 
