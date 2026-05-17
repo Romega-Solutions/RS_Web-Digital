@@ -5,6 +5,7 @@
 **Live deploy verification:** 2026-05-13
 **Redesign branch merge verification:** 2026-05-17
 **Latest branch deployment check:** 2026-05-17
+**Latest local QA runner verification:** 2026-05-17
 **Stack:** Next.js 16.2.6 · React 19.2.5 · Tailwind v4 · pnpm 9.15.9
 **Vercel project:** `romega-digitals` (`prj_4hyRbwLN9UAJN96JK58MyCyOTnpb`)  
 **Symptom:** Project builds locally but deployment on Vercel fails or behaves incorrectly.
@@ -69,10 +70,19 @@ Local checks:
 
 ```bash
 pnpm install --frozen-lockfile
+pnpm run qa:local
+```
+
+The preferred local release gate is `pnpm run qa:local`. It runs the checks below sequentially to avoid Playwright server-port collisions, starts a temporary production server for the local live audit, and regenerates the readiness and owner-unblock reports.
+
+Individual local checks:
+
+```bash
 pnpm run lint
 pnpm run typecheck
+pnpm run check:env:production
 pnpm run build
-$env:RESPONSIVE_AUDIT_BASE_URL="http://localhost:3000"; pnpm run audit:responsive
+pnpm run audit:responsive
 pnpm run audit:a11y
 pnpm run audit:keyboard
 pnpm run audit:product
@@ -113,7 +123,9 @@ Results:
 - Protected preview audit commit `313df7f485b2b48e4c60b5d6d3871b3c6e4bee9d` passed GitHub Actions CI run `25974097469` on Node.js 20, including responsive, axe accessibility, keyboard, product-flow, and visual render audits.
 - Release-readiness report commit `8f52e25add18abcd4a75f402974f2be3205866db` passed GitHub Actions CI run `25974770926` on Node.js 20, including lint, typecheck, production env checker, build, responsive, axe accessibility, keyboard, product-flow, and visual render audits.
 - Touch-target readiness commit `aa9f8f00458b4cbbd5bc78342b71aba703053275` passed GitHub Actions CI run `25975616207` on Node.js 20, including lint, typecheck, production env checker, build, responsive, axe accessibility, keyboard, product-flow, and visual render audits.
-- GitHub commit statuses on the redesign branch show the intended `Vercel - romega-digitals` context succeeding. The duplicate `Vercel - rs-web-digital` integration still fails and causes the aggregate GitHub commit status to read `failure`. Run `pnpm run report:readiness` for the current commit-specific status targets.
+- Sequential local QA runner commit `917def89c7555db0ccae6e567f378898f30f3785` passed local `pnpm run qa:local` on 2026-05-17. The run covered lint, typecheck, production env-shape validation with non-secret placeholder values because owner-scope env was not present locally, build, responsive, axe accessibility, keyboard, product-flow, visual render, local live deployment audit, release-readiness report, and owner-unblock report.
+- Sequential local QA runner commit `917def89c7555db0ccae6e567f378898f30f3785` passed GitHub Actions CI push run `25977318419` and pull-request run `25977318932` on Node.js 20, including lint, typecheck, production env checker, build, responsive, axe accessibility, keyboard, product-flow, and visual render audits.
+- GitHub commit statuses on the latest redesign branch head show the intended `Vercel - romega-digitals` context succeeding. `Vercel - rs-web-digital` and `Vercel - romega-digital` are blocked by Vercel build-rate limits, and the duplicate `Vercel - rs-web-digital` context still causes the aggregate GitHub commit status to read `failure`. Run `pnpm run report:readiness` for the current commit-specific status targets.
 - Successful `romega-digitals` immutable deployment URLs are protected by Vercel Authentication from this session, so unauthenticated live audit and route probes return Vercel Authentication `401`.
 - The `https://romega-digitals.vercel.app` alias returns `200` for `/`, `/terms`, and `/api/careers/jobs`, but `LIVE_AUDIT_BASE_URL=https://romega-digitals.vercel.app pnpm run audit:live` still reports older footer contrast CSS. Treat the alias as not fully refreshed for the latest branch deployment until the live gate passes.
 - The immutable successful deployment URL for `romega-digitals` is protected by Vercel Authentication from this session, so unauthenticated Playwright audits hit Vercel's auth page instead of the app. Owner-scope access plus `LIVE_AUDIT_VERCEL_BYPASS_SECRET` or `VERCEL_AUTOMATION_BYPASS_SECRET` is required to audit that immutable deployment directly.
@@ -124,7 +136,7 @@ Local caveat:
 
 Deployment-status caveat:
 
-- GitHub commit statuses for the latest pushed redesign commit show success for `romega-digitals` and `romega-digital`, and failure for the duplicate `rs-web-digital` project.
+- GitHub commit statuses for the latest pushed redesign commit show success for `romega-digitals`, but `romega-digital` and duplicate `rs-web-digital` are currently blocked by Vercel build-rate limits.
 - The local Vercel CLI account is `iron-mark`, which cannot inspect the `kpg782s-projects` deployments linked from those statuses.
 - The public alias can be route-, responsiveness-, keyboard-, and product-flow-verified publicly, but deployment logs, failed duplicate-project logs, and protected immutable deployment audits require access to the owning Vercel scope.
 - Exact owner-scope cutover and verification commands are maintained in `docs/vercel-owner-handoff.md`.

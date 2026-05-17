@@ -24,6 +24,14 @@ Working deployment:
 
 Run `pnpm run report:readiness` for the current branch head, latest GitHub Actions run, and current Vercel status targets before cutover.
 
+Latest branch-head status from `pnpm run report:readiness` on 2026-05-17:
+
+- Head `917def89c7555db0ccae6e567f378898f30f3785`
+- GitHub Actions CI passed for push run `25977318419` and pull-request run `25977318932`
+- Intended `Vercel - romega-digitals` context passed
+- `Vercel - romega-digital` and duplicate `Vercel - rs-web-digital` are build-rate limited
+- Production domain cutover, protected deployment audit, and real contact delivery are still owner-scope blockers
+
 Current production domain mismatch:
 
 - `https://www.romega-solutions.com/` returns `200`, but serves an older app with title `Home`
@@ -59,7 +67,7 @@ Use the Vercel dashboard account/team that owns `kpg782s-projects`.
    pnpm run check:env:production
    ```
 7. Promote or redeploy the latest successful `romega-digitals` deployment.
-8. Disconnect duplicate Git integrations if they are not intentionally used. Keep `romega-digitals` as the intended project unless the owner decides otherwise:
+8. Disconnect duplicate Git integrations if they are not intentionally used, or explicitly mark them as non-blocking in the release process. Keep `romega-digitals` as the intended project unless the owner decides otherwise:
    - `rs-web-digital`
    - `romega-digital`
 
