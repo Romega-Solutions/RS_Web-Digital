@@ -90,6 +90,14 @@ pnpm run report:readiness
 
 The report is written to ignored files under `reports/release-readiness/` and records known external blockers without exposing secrets.
 
+To generate a Vercel owner-scope unblock report from the current commit status:
+
+```powershell
+pnpm run report:owner-unblock
+```
+
+The report is written to ignored files under `reports/owner-unblock/`. It records the active Vercel login, intended and duplicate Vercel contexts, failed duplicate deployment IDs, and whether the current account can inspect the owner-scope deployment.
+
 For review and release handoff, use `docs/submission-checklist.md`. It separates repo-controlled gates from Vercel-owner actions so the branch can be reviewed before production domain and environment access is available.
 
 ## Environment Variables

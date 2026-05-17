@@ -21,6 +21,7 @@ pnpm run audit:product
 pnpm run audit:visual
 pnpm run check:env:production
 pnpm run report:readiness
+pnpm run report:owner-unblock
 ```
 
 Expected result:
@@ -35,6 +36,7 @@ Expected result:
 - Visual audit confirms route-specific titles, h1s, shell landmarks, visible assets, and no Vercel auth wall.
 - Production env checker passes with real production values after owner-scope env pull, or with CI placeholder-valid values when only testing the checker.
 - Readiness report is generated under ignored `reports/release-readiness/` artifacts.
+- Owner-unblock report is generated under ignored `reports/owner-unblock/` artifacts when Vercel owner-scope work remains.
 
 By default, `pnpm run report:readiness` treats only `Vercel - romega-digitals` as the intended Vercel project. If the owner intentionally keeps another Vercel project as part of production, pass it explicitly:
 
@@ -112,6 +114,7 @@ These remain outside this local session because the active Vercel login is not i
 
 - Keep `romega-digitals` as the intended Vercel project for this app.
 - Disconnect or archive duplicate Vercel Git integrations that keep reporting failed status, especially `rs-web-digital`.
+- Use `pnpm run report:owner-unblock` to capture the latest failed duplicate context target URL and deployment ID before changing Vercel project settings.
 - Confirm production env vars on the intended Vercel project:
   - `RESEND_API_KEY`
   - `ADMIN_EMAIL`
