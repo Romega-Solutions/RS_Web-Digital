@@ -30,14 +30,26 @@ Open `http://localhost:3000`.
 Run the standard checks before shipping changes:
 
 ```bash
+pnpm run qa:local
+```
+
+`pnpm run qa:local` runs the local release gates sequentially: lint, typecheck, production env-shape validation, build, responsive audit, axe accessibility audit, keyboard audit, product-flow audit, visual render audit, local live audit, release-readiness report, and Vercel owner-unblock report. The Playwright audits share a default server port, so the combined runner intentionally runs them one at a time. If no pulled production env file or required env vars are available, it uses non-secret placeholder values only for the local env-shape gate; owner-scope production env still needs real Vercel validation before release.
+
+For targeted checks, run individual commands:
+
+```bash
 pnpm run lint
 pnpm run typecheck
+pnpm run check:env:production
 pnpm run build
 pnpm run audit:responsive
 pnpm run audit:a11y
 pnpm run audit:keyboard
 pnpm run audit:product
 pnpm run audit:visual
+pnpm run audit:live
+pnpm run report:readiness
+pnpm run report:owner-unblock
 ```
 
 `pnpm run lint` runs the repo architecture validator before ESLint. `next build` does not run lint automatically in Next.js 16. The Playwright audits start the built app on `http://127.0.0.1:3007` by default, so run `pnpm run build` first. Override with `RESPONSIVE_AUDIT_BASE_URL`, `ACCESSIBILITY_AUDIT_BASE_URL`, `KEYBOARD_AUDIT_BASE_URL`, `PRODUCT_AUDIT_BASE_URL`, or `VISUAL_AUDIT_BASE_URL` when checking a separate running app or deployment.

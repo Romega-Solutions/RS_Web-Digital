@@ -11,6 +11,14 @@ Commands run after merging `origin/main` into the redesign branch:
 
 ```bash
 pnpm install --frozen-lockfile
+pnpm run qa:local
+```
+
+`pnpm run qa:local` runs the local gates sequentially to avoid Playwright audit port collisions, starts a temporary production server for the local live audit, and regenerates the release-readiness and owner-unblock reports. It may use non-secret placeholder values for the env-shape check when owner-scope Vercel env values are not available locally; that does not replace the real production env pull and validation before release.
+
+Individual gate commands:
+
+```bash
 pnpm run lint
 pnpm run typecheck
 pnpm run build

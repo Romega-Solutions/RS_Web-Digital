@@ -18,6 +18,7 @@
     "audit:live": "node scripts/live-deployment-audit.mjs",
     "audit:contact:delivery": "node scripts/contact-delivery-audit.mjs",
     "check:env:production": "node scripts/check-production-env.mjs",
+    "qa:local": "node scripts/run-local-qa.mjs",
     "report:owner-unblock": "node scripts/owner-unblock-report.mjs",
     "report:readiness": "node scripts/release-readiness-report.mjs",
     "validate:architecture": "node scripts/validate-architecture.mjs",

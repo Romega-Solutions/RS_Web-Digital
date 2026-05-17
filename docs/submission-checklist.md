@@ -11,6 +11,14 @@ Run from `RS_Web-Digital`:
 
 ```powershell
 pnpm install --frozen-lockfile
+pnpm run qa:local
+```
+
+`pnpm run qa:local` is the preferred local release gate because it runs the Playwright suites sequentially and avoids local port collisions on the shared audit server. It also starts a temporary production server for `audit:live`, then generates the readiness and owner-unblock reports. If real Vercel production env values are not pulled locally, the script uses non-secret placeholder values only to exercise the env checker; the owner-scope production env validation remains required before release.
+
+For targeted reruns, use the individual gates:
+
+```powershell
 pnpm run lint
 pnpm run typecheck
 pnpm run build
