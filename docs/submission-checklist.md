@@ -44,6 +44,7 @@ Expected result:
 - Visual audit confirms route-specific titles, h1s, shell landmarks, visible assets, and no Vercel auth wall.
 - Production env checker passes with real production values after owner-scope env pull, or with CI placeholder-valid values when only testing the checker.
 - Readiness report is generated under ignored `reports/release-readiness/` artifacts, including GitHub deployment environment URLs when GitHub exposes them for the current head.
+- Readiness report shows `Current head: yes` for live deployment and contact delivery audit artifacts before those artifacts are used as release evidence.
 - Owner-unblock report is generated under ignored `reports/owner-unblock/` artifacts when Vercel owner-scope work remains, including environment URLs for intended and duplicate Vercel deployments when available.
 
 By default, `pnpm run report:readiness` treats only `Vercel - romega-digitals` as the intended Vercel project. If the owner intentionally keeps another Vercel project as part of production, pass it explicitly:
@@ -79,6 +80,8 @@ $env:LIVE_AUDIT_BASE_URL=$base; pnpm run audit:live
 $env:CONTACT_AUDIT_BASE_URL=$base; $env:CONTACT_AUDIT_CONFIRM_SEND="true"; pnpm run audit:contact:delivery
 pnpm run report:readiness
 ```
+
+Both live audit commands write the current git `HEAD` into their ignored report artifacts. If another commit is added after running them, rerun the audits before using `pnpm run report:readiness` as submission evidence.
 
 For a protected immutable Vercel deployment:
 

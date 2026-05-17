@@ -220,11 +220,15 @@ const expectedProductionBaseUrl = (
 ).replace(/\/+$/, "");
 const liveAudit = readJsonFile(liveAuditReportPath);
 const contactDeliveryAudit = readJsonFile(contactDeliveryAuditReportPath);
+const liveAuditCurrentHead = liveAudit?.headSha === headSha;
+const contactDeliveryAuditCurrentHead = contactDeliveryAudit?.headSha === headSha;
 const productionLiveAuditPassed =
+  liveAuditCurrentHead &&
   liveAudit?.passed === true &&
   typeof liveAudit.baseUrl === "string" &&
   liveAudit.baseUrl.replace(/\/+$/, "") === expectedProductionBaseUrl;
 const contactDeliveryAuditPassed =
+  contactDeliveryAuditCurrentHead &&
   contactDeliveryAudit?.passed === true &&
   typeof contactDeliveryAudit.baseUrl === "string" &&
   contactDeliveryAudit.baseUrl.replace(/\/+$/, "") === expectedProductionBaseUrl;
@@ -276,7 +280,7 @@ if (!manualEvidence.productionDomainFlagSet) {
   blockers.push("Production domain and alias freshness require owner-scope Vercel cutover verification.");
 } else if (!productionLiveAuditPassed) {
   blockers.push(
-    `Production domain verification flag is set, but latest live audit artifact does not pass for ${expectedProductionBaseUrl}.`,
+    `Production domain verification flag is set, but the latest current-head live audit artifact does not pass for ${expectedProductionBaseUrl}.`,
   );
 }
 
@@ -288,7 +292,7 @@ if (!manualEvidence.contactDeliveryFlagSet) {
   blockers.push("Real contact-form delivery requires production email-provider env verification and browser test.");
 } else if (!contactDeliveryAuditPassed) {
   blockers.push(
-    `Contact delivery verification flag is set, but latest contact delivery audit artifact does not pass for ${expectedProductionBaseUrl}.`,
+    `Contact delivery verification flag is set, but the latest current-head contact delivery audit artifact does not pass for ${expectedProductionBaseUrl}.`,
   );
 }
 
@@ -309,6 +313,8 @@ const report = {
   liveAudit: liveAudit
     ? {
         available: true,
+        currentHead: liveAuditCurrentHead,
+        headSha: liveAudit.headSha || "unavailable",
         baseUrl: liveAudit.baseUrl,
         passed: liveAudit.passed === true,
         vercelProtectionBypassConfigured: liveAudit.vercelProtectionBypassConfigured === true,
@@ -321,6 +327,8 @@ const report = {
   contactDeliveryAudit: contactDeliveryAudit
     ? {
         available: true,
+        currentHead: contactDeliveryAuditCurrentHead,
+        headSha: contactDeliveryAudit.headSha || "unavailable",
         baseUrl: contactDeliveryAudit.baseUrl,
         passed: contactDeliveryAudit.passed === true,
         sent: contactDeliveryAudit.sent === true,
@@ -366,6 +374,8 @@ Head: \`${report.headSha}\`
 ## Live Audit Evidence
 
 - Available: ${report.liveAudit.available ? "yes" : "no"}
+- Current head: ${report.liveAudit.currentHead ? "yes" : "no"}
+- Head: ${report.liveAudit.headSha || "unavailable"}
 - Base URL: ${report.liveAudit.baseUrl || "unavailable"}
 - Passed: ${report.liveAudit.passed ? "yes" : "no"}
 - Finished: ${report.liveAudit.finishedAt || "unavailable"}
@@ -375,6 +385,8 @@ Head: \`${report.headSha}\`
 ## Contact Delivery Evidence
 
 - Available: ${report.contactDeliveryAudit.available ? "yes" : "no"}
+- Current head: ${report.contactDeliveryAudit.currentHead ? "yes" : "no"}
+- Head: ${report.contactDeliveryAudit.headSha || "unavailable"}
 - Base URL: ${report.contactDeliveryAudit.baseUrl || "unavailable"}
 - Passed: ${report.contactDeliveryAudit.passed ? "yes" : "no"}
 - Sent: ${report.contactDeliveryAudit.sent ? "yes" : "no"}

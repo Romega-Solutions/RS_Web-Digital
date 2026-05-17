@@ -1,4 +1,5 @@
 import { mkdirSync, writeFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import path from "node:path";
 
 const baseUrl = (process.env.LIVE_AUDIT_BASE_URL || "https://romega-digitals.vercel.app").replace(
@@ -29,6 +30,19 @@ const staleFooterCssPattern =
   /color-mix\(in oklab,\s*var\(--color-secondary-accessible\)\s*(?:62|70|88)%,\s*transparent\)/i;
 
 const outputDir = path.join(process.cwd(), "reports", "live-deployment-audit");
+const headSha = getHeadSha();
+
+function getHeadSha() {
+  try {
+    return execFileSync("git", ["rev-parse", "HEAD"], {
+      cwd: process.cwd(),
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim();
+  } catch {
+    return "unknown";
+  }
+}
 
 function absoluteUrl(value) {
   if (value.startsWith("http://") || value.startsWith("https://")) {
@@ -228,6 +242,7 @@ const failures = allResults.flatMap((result) =>
 
 const report = {
   baseUrl,
+  headSha,
   startedAt,
   finishedAt: new Date().toISOString(),
   vercelProtectionBypassConfigured: Boolean(vercelProtectionBypassSecret),

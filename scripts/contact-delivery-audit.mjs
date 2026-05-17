@@ -1,10 +1,24 @@
 import { mkdirSync, writeFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import path from "node:path";
 
 const outputDir = path.join(process.cwd(), "reports", "contact-delivery-audit");
 const baseUrl = (process.env.CONTACT_AUDIT_BASE_URL || "").replace(/\/+$/, "");
 const confirmSend = /^(1|true|yes)$/i.test(process.env.CONTACT_AUDIT_CONFIRM_SEND || "");
 const recaptchaToken = process.env.CONTACT_AUDIT_RECAPTCHA_TOKEN || "";
+const headSha = getHeadSha();
+
+function getHeadSha() {
+  try {
+    return execFileSync("git", ["rev-parse", "HEAD"], {
+      cwd: process.cwd(),
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim();
+  } catch {
+    return "unknown";
+  }
+}
 
 function createPayload() {
   const timestamp = new Date().toISOString();
@@ -33,6 +47,7 @@ const startedAt = new Date().toISOString();
 if (!baseUrl) {
   const report = {
     baseUrl,
+    headSha,
     startedAt,
     finishedAt: new Date().toISOString(),
     passed: false,
@@ -47,6 +62,7 @@ if (!baseUrl) {
 if (!confirmSend) {
   const report = {
     baseUrl,
+    headSha,
     startedAt,
     finishedAt: new Date().toISOString(),
     passed: false,
@@ -101,6 +117,7 @@ try {
 
 const report = {
   baseUrl,
+  headSha,
   url,
   startedAt,
   finishedAt: new Date().toISOString(),

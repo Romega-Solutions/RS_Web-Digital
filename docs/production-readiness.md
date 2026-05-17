@@ -61,7 +61,7 @@ Generate a local evidence summary after the branch is clean and pushed:
 pnpm run report:readiness
 ```
 
-The report writes ignored artifacts to `reports/release-readiness/` and summarizes branch, CI, Vercel commit statuses, GitHub deployment environment URLs, and remaining blockers.
+The report writes ignored artifacts to `reports/release-readiness/` and summarizes branch, CI, Vercel commit statuses, GitHub deployment environment URLs, current-head audit evidence, and remaining blockers.
 
 Use `docs/submission-checklist.md` as the final review checklist. It is intentionally split between repo-controlled gates and Vercel-owner gates.
 
@@ -90,7 +90,7 @@ Route smoke checks returned `200` locally for:
 - Visual render audit covers route-specific titles, h1s, app shell landmarks, visible visual assets, and auth-wall detection across mobile, tablet, and desktop viewports
 - Live deployment audit covers public route freshness, careers API JSON shape, Vercel authentication-wall leakage, stale footer CSS bundles on a running URL, and optional Vercel automation-bypass auth for protected preview URLs
 - Production env check validates required Vercel env shape without exposing secret values; CI runs it with placeholder-valid values to protect the checker, and owner-scope Vercel env pull must still verify the real production values
-- Readiness report summarizes current branch, GitHub Actions, commit status contexts, intended Vercel contexts, GitHub deployment environment URLs, and known production blockers into ignored local artifacts
+- Readiness report summarizes current branch, GitHub Actions, commit status contexts, intended Vercel contexts, GitHub deployment environment URLs, current-head live/contact audit artifacts, and known production blockers into ignored local artifacts
 - Commit `669c5d8df307ae5f1c458cd491c79e7f887e92c7` passed GitHub Actions CI on Node.js 20
 - Commit `57a1de52bb284e15576be1c795115cb369b2c8f6` passed GitHub Actions CI on Node.js 20 with lint, typecheck, build, responsive, axe accessibility, and keyboard audits
 - Commit `7b8f536852f73c47eac03625c8489ddf70d5ad35` passed GitHub Actions CI on Node.js 20 with lint, typecheck, build, responsive, axe accessibility, keyboard, and product-flow audits
