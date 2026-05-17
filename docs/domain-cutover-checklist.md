@@ -26,10 +26,11 @@ Run `pnpm run report:readiness` for the current branch head, latest GitHub Actio
 
 Latest branch-head status from `pnpm run report:readiness` on 2026-05-17:
 
-- Head `948541e7177514d87105774ad0fcc1de11787c67`
-- GitHub Actions CI passed for push run `25977453032` and pull-request run `25977453698`
-- `Vercel - romega-digitals`, `Vercel - romega-digital`, and duplicate `Vercel - rs-web-digital` are build-rate limited
-- Intended `Vercel - romega-digitals` context is not fully passed for the current head
+- Head `4c0725acb1def0d7b6538bc9cd6be10beccac9ac`
+- GitHub Actions CI passed for push run `25979351220` and pull-request run `25979351651`
+- Intended `Vercel - romega-digitals` context passed
+- Secondary `Vercel - romega-digital` context passed
+- Duplicate `Vercel - rs-web-digital` context failed and keeps the aggregate commit status failed
 - Production domain cutover, protected deployment audit, and real contact delivery are still owner-scope blockers
 
 Current production domain mismatch:
