@@ -192,48 +192,6 @@
   }
 }
 
-@media (max-width: 767px) {
-  .inner {
-    @apply gap-7;
-    justify-items: center;
-  }
-
-  .copy {
-    @apply pt-0;
-    margin-inline: auto;
-    width: 100%;
-    max-width: min(100%, 33.5rem);
-    text-align: center;
-  }
-
-  .copy::before {
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .title {
-    font-size: clamp(2.45rem, 11vw, 3rem);
-    line-height: 0.96;
-    margin-inline: auto;
-  }
-
-  .text {
-    @apply mt-5 text-lg;
-    line-height: 1.45;
-    margin-inline: auto;
-    max-width: min(100%, var(--measure-readable-mobile));
-  }
-
-  .textLast {
-    @apply mt-5;
-  }
-
-  .visual {
-    @apply max-w-sm;
-    margin-inline: auto;
-  }
-}
-
 /* SocialConnect visual polish overrides */
 .root {
   background:
@@ -438,4 +396,84 @@
 
 .imageWrap:hover {
   transform: rotate(0deg) translateY(-4px);
+}
+
+@media (max-width: 767px) {
+  .root {
+    padding-block: var(--section-space-compact);
+  }
+
+  .inner {
+    @apply gap-0;
+    display: grid;
+    justify-items: center;
+  }
+
+  .copy {
+    @apply pt-0;
+    position: relative;
+    z-index: 2;
+    grid-area: 1 / 1;
+    margin-inline: auto;
+    padding: clamp(2rem, 8vw, 2.85rem) clamp(1.15rem, 5vw, 1.75rem);
+    width: 100%;
+    max-width: min(100%, 33.5rem);
+    min-height: 34rem;
+    text-align: center;
+    background: linear-gradient(
+      180deg,
+      rgb(247 251 255 / 0.82),
+      rgb(247 251 255 / 0.56) 56%,
+      rgb(247 251 255 / 0.28)
+    );
+    text-shadow: 0 1px 0 rgb(255 255 255 / 0.82);
+  }
+
+  .copy::before {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .title {
+    font-size: clamp(2.45rem, 11vw, 3rem);
+    line-height: 0.96;
+    margin-inline: auto;
+  }
+
+  .text {
+    @apply mt-5 text-lg;
+    line-height: 1.45;
+    margin-inline: auto;
+    max-width: min(100%, var(--measure-readable-mobile));
+  }
+
+  .textLast {
+    @apply mt-5;
+  }
+
+  .visual {
+    grid-area: 1 / 1;
+    align-self: end;
+    z-index: 1;
+    max-width: none;
+    width: 100%;
+    margin-inline: 0;
+    opacity: 0.15;
+    pointer-events: none;
+  }
+
+  .visualFrame {
+    width: min(100%, 26rem);
+    margin-inline: auto;
+    opacity: 0.15;
+    transform: translateY(10%);
+  }
+
+  .image {
+    filter: saturate(0.92) contrast(0.94);
+  }
+
+  .visualHotspot {
+    display: none;
+  }
 }

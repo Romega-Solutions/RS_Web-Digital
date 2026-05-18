@@ -178,14 +178,14 @@
   }
 }
 
-@media (min-width: 1120px) {
+@media (min-width: 1024px) {
   .inner {
     grid-template-columns: auto minmax(0, 1fr) auto;
     column-gap: 1.5rem;
   }
 
   .mainRight {
-    grid-template-columns: minmax(12rem, 0.65fr) minmax(11rem, 0.65fr) minmax(18rem, 1.4fr);
+    grid-template-columns: minmax(10rem, 0.62fr) minmax(10rem, 0.62fr) minmax(16rem, 1.3fr);
     column-gap: 1.25rem;
   }
 }
@@ -342,11 +342,11 @@
   }
 
   .navGroups {
-    @apply gap-3;
+    @apply grid grid-cols-2 gap-3;
   }
 
   .navGroup {
-    @apply w-full rounded-2xl border border-brand-secondary/10 bg-brand-secondary/5 px-4 py-3;
+    @apply min-w-0 rounded-2xl border border-brand-secondary/10 bg-brand-secondary/5 px-4 py-3;
   }
 
   .navGroupTitle {

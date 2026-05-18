@@ -7,6 +7,8 @@ type SectionIntroProps = {
   eyebrow?: ReactNode;
   align?: "start" | "center";
   className?: string;
+  titleClassName?: string;
+  bodyClassName?: string;
 };
 
 export function SectionIntro({
@@ -15,16 +17,20 @@ export function SectionIntro({
   eyebrow,
   align = "start",
   className = "",
+  titleClassName = "",
+  bodyClassName = "",
 }: SectionIntroProps) {
   const classes = [styles.root, align === "center" ? styles.alignCenter : "", className]
     .filter(Boolean)
     .join(" ");
+  const titleClasses = [styles.title, titleClassName].filter(Boolean).join(" ");
+  const bodyClasses = [styles.body, bodyClassName].filter(Boolean).join(" ");
 
   return (
     <div className={classes}>
       {eyebrow ? <p className={styles.eyebrow}>{eyebrow}</p> : null}
-      <h2 className={styles.title}>{title}</h2>
-      {body ? <p className={styles.body}>{body}</p> : null}
+      <h2 className={titleClasses}>{title}</h2>
+      {body ? <p className={bodyClasses}>{body}</p> : null}
     </div>
   );
 }
