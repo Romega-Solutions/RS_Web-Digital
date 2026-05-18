@@ -195,20 +195,32 @@
 @media (max-width: 767px) {
   .inner {
     @apply gap-7;
+    justify-items: center;
   }
 
   .copy {
     @apply pt-0;
+    margin-inline: auto;
+    width: 100%;
+    max-width: min(100%, 33.5rem);
+    text-align: center;
+  }
+
+  .copy::before {
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .title {
     font-size: clamp(2.45rem, 11vw, 3rem);
     line-height: 0.96;
+    margin-inline: auto;
   }
 
   .text {
     @apply mt-5 text-lg;
     line-height: 1.45;
+    margin-inline: auto;
     max-width: min(100%, var(--measure-readable-mobile));
   }
 
@@ -218,6 +230,7 @@
 
   .visual {
     @apply max-w-sm;
+    margin-inline: auto;
   }
 }
 

@@ -181,16 +181,20 @@
   }
 
   .viewport {
+    overflow-x: hidden;
+    overflow-y: visible;
     padding: 0.55rem 0 0.75rem;
     mask-image: none;
     -webkit-mask-image: none;
   }
 
   .group {
-    @apply w-full justify-center px-3;
-    flex-wrap: wrap;
-    row-gap: 0.45rem;
-    white-space: normal;
+    @apply px-3;
+    width: max-content;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    row-gap: 0;
+    white-space: nowrap;
   }
 
   .iconWrapper {
@@ -224,22 +228,23 @@
   }
 
   .separator {
-    display: none;
+    @apply mx-3 inline-flex;
   }
 
   .track {
-    animation: none;
-    width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
+    animation: marquee 78s linear infinite;
+    width: max-content;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
   }
 
   .item {
     justify-content: center;
+    flex: 0 0 auto;
   }
 
   .groupDuplicate {
-    display: none;
+    display: flex;
   }
 }
 

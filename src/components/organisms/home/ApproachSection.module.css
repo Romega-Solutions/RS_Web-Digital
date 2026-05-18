@@ -240,6 +240,22 @@
     padding-inline: clamp(1.25rem, 5vw, 1.75rem);
   }
 
+  .left,
+  .right,
+  .panel {
+    margin-inline: auto;
+  }
+
+  .left,
+  .panel {
+    width: 100%;
+    max-width: min(100%, 34rem);
+  }
+
+  .right {
+    justify-self: center;
+  }
+
   .glow {
     @apply -right-32 top-24 h-64 w-64;
   }
