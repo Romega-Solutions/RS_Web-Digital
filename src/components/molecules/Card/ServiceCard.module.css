@@ -4,8 +4,29 @@
   @apply relative flex cursor-pointer flex-col items-center overflow-hidden rounded-2xl transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.02];
 }
 
+.root::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgb(3 17 33 / 0.34), rgb(3 17 33 / 0.58)),
+    radial-gradient(circle at 50% 48%, rgb(3 17 33 / 0.38), transparent 62%);
+}
+
 .image {
   @apply h-112 w-full rounded-2xl object-cover shadow-[0_20px_50px_rgba(28,95,165,0.12)] transition-shadow duration-300 md:h-136;
+}
+
+.title {
+  @apply absolute left-1/2 top-1/2 z-10 m-0 w-[88%] -translate-x-1/2 -translate-y-1/2 text-center text-[3.2rem] font-black leading-[0.95] tracking-tight text-white md:text-[3.4rem] lg:text-[4rem];
+  font-family: var(--font-ui);
+  text-shadow:
+    0 3px 18px rgb(0 0 0 / 0.72),
+    0 1px 2px rgb(0 0 0 / 0.84);
+  text-wrap: balance;
 }
 
 .root:hover .image {
@@ -13,7 +34,7 @@
 }
 
 .overlay {
-  @apply pointer-events-none absolute inset-x-0 bottom-0 flex min-h-32 translate-y-3 items-end px-5 pb-5 pt-16 opacity-0 transition-all duration-300 ease-out;
+  @apply pointer-events-none absolute inset-x-0 bottom-0 z-20 flex min-h-32 translate-y-3 items-end px-5 pb-5 pt-16 opacity-0 transition-all duration-300 ease-out;
   background: linear-gradient(
     180deg,
     rgb(5 32 61 / 0) 0%,
@@ -42,7 +63,20 @@
     @apply h-80;
   }
 
+  .title {
+    font-size: clamp(3rem, 13vw, 3.8rem);
+    line-height: 0.92;
+  }
+
   .overlay {
     @apply min-h-28 px-4 pb-4 pt-12;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .title {
+    width: 92%;
+    font-size: clamp(2.45rem, 4.3vw, 2.85rem);
+    line-height: 0.95;
   }
 }

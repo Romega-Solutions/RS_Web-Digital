@@ -58,7 +58,7 @@ export function ServicesSpotlight() {
           </ScrollReveal>
         </div>
 
-        <ScrollReveal variant="slideUp" delay={0.4} distance={20}>
+        <ScrollReveal variant="slideUp" delay={0.4} distance={20} className={styles.buttonWrap}>
           <AppButton className={styles.button} href="/services" variant="primary" size="lg">
             See How We Can Help
           </AppButton>

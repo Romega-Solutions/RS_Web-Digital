@@ -244,7 +244,6 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
                     target="_blank"
                     rel="noopener noreferrer"
                     title={social.title}
-                    aria-label={`Open Romega Solutions ${social.label}`}
                   >
                     {social.text}
                   </a>
@@ -325,7 +324,7 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
               </div>
 
               {/* Honeypot */}
-              <div className="sr-only">
+              <div className={styles.honeypot} aria-hidden="true">
                 <label htmlFor="contact-botfield">Leave this field empty</label>
                 <input
                   id="contact-botfield"

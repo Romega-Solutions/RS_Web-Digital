@@ -11,7 +11,7 @@
 }
 
 .root {
-  @apply relative bg-brand-tertiary;
+  @apply relative bg-brand-secondary;
   overflow: visible;
   font-family: var(--font-body);
   isolation: isolate;
@@ -33,12 +33,12 @@
 
 .root::before {
   left: 0;
-  background: linear-gradient(90deg, rgb(168 159 248), rgb(168 159 248 / 0));
+  background: linear-gradient(90deg, rgb(21 78 138), rgb(21 78 138 / 0));
 }
 
 .root::after {
   right: 0;
-  background: linear-gradient(270deg, rgb(168 159 248), rgb(168 159 248 / 0));
+  background: linear-gradient(270deg, rgb(21 78 138), rgb(21 78 138 / 0));
 }
 
 .viewport {
@@ -98,6 +98,7 @@
 
 .groupDuplicate {
   display: flex;
+  pointer-events: none;
 }
 
 .item {
@@ -141,34 +142,36 @@
 
 .tooltip {
   position: absolute;
-  min-width: 12rem;
-  max-width: min(18rem, calc(100vw - 2rem));
-  transform: translateX(-50%);
-  background-color: rgb(13 20 36 / 0.96);
-  color: white;
+  z-index: 20;
+  width: min(18rem, calc(100% - 2rem));
   padding: 0.7rem 0.85rem;
-  border-radius: 0.7rem;
-  font-size: 0.78rem;
-  white-space: normal;
-  text-transform: none;
-  font-weight: 400;
-  line-height: 1.4;
-  letter-spacing: normal;
-  pointer-events: none;
-  z-index: 80;
+  border: 1px solid rgb(255 255 255 / 0.18);
+  border-radius: 0.85rem;
+  color: #ffffff;
+  background:
+    linear-gradient(180deg, rgb(10 20 36 / 0.96), rgb(17 28 48 / 0.92));
+  box-shadow:
+    0 16px 34px rgb(4 12 22 / 0.28),
+    inset 0 1px 0 rgb(255 255 255 / 0.12);
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.35;
   text-align: center;
-  box-shadow: 0 14px 30px rgb(4 12 22 / 0.22);
-  opacity: 1;
+  pointer-events: none;
+  transform: translateX(-50%);
 }
 
-.tooltip::before {
+.tooltip::after {
   content: "";
   position: absolute;
-  top: 100%;
   left: 50%;
-  transform: translateX(-50%);
-  border: 0.42rem solid transparent;
-  border-top-color: rgb(13 20 36 / 0.96);
+  bottom: -0.35rem;
+  width: 0.7rem;
+  height: 0.7rem;
+  background: rgb(17 28 48 / 0.92);
+  border-right: 1px solid rgb(255 255 255 / 0.14);
+  border-bottom: 1px solid rgb(255 255 255 / 0.14);
+  transform: translateX(-50%) rotate(45deg);
 }
 
 .root:hover .track,
@@ -184,45 +187,51 @@
   }
 
   .viewport {
-    overflow: visible;
+    overflow-x: hidden;
+    overflow-y: visible;
   }
 
   .track {
-    animation: none;
-    width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
+    animation: marquee 78s linear infinite;
+    width: max-content;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
   }
 
   .group {
-    @apply w-full justify-center;
-    flex-wrap: wrap;
-    row-gap: 0.45rem;
-    white-space: normal;
+    width: max-content;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    row-gap: 0;
+    white-space: nowrap;
   }
 
   .groupDuplicate {
-    display: none;
+    display: flex;
   }
 }
 
 @media (max-width: 767px) {
   .root {
     padding-top: 1.35rem;
-    overflow-x: hidden;
+    overflow: visible;
   }
 
   .viewport {
+    overflow-x: hidden;
+    overflow-y: visible;
     padding: 0.55rem 0 0.75rem;
     mask-image: none;
     -webkit-mask-image: none;
   }
 
   .group {
-    @apply w-full justify-center px-3;
-    flex-wrap: wrap;
-    row-gap: 0.45rem;
-    white-space: normal;
+    @apply px-3;
+    width: max-content;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    row-gap: 0;
+    white-space: nowrap;
   }
 
   .iconWrapper {
@@ -237,18 +246,20 @@
   }
 
   .featuredWrap {
-    position: static;
-    transform: none;
-    width: 100%;
-    max-width: none;
-    margin-bottom: 0.55rem;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: max-content;
+    max-width: calc(100% - 2rem);
+    margin-bottom: 0;
     padding-inline: 0.75rem;
+    transform: translate(-50%, -52%);
   }
 
   .featuredLink {
     /* keep link inline on small screens instead of full-width button */
     width: auto;
-    min-height: auto;
+    min-height: 2.75rem;
     padding-inline: 0.75rem;
     padding-block: 0.45rem;
     font-size: 0.72rem;
@@ -256,28 +267,44 @@
   }
 
   .separator {
-    display: none;
-  }
-
-  .tooltip {
-    max-width: min(15rem, calc(100vw - 1.5rem));
-    font-size: 0.72rem;
-    padding: 0.6rem 0.75rem;
+    @apply mx-3 inline-flex;
   }
 
   .track {
-    animation: none;
-    width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
+    animation: marquee 78s linear infinite;
+    width: max-content;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
   }
 
   .item {
     justify-content: center;
+    flex: 0 0 auto;
   }
 
   .groupDuplicate {
-    display: none;
+    display: flex;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 767px) {
+  .viewport {
+    padding: 0.75rem 0 0.85rem;
+  }
+
+  .link {
+    @apply px-4 py-2 text-lg;
+    letter-spacing: 0.015em;
+  }
+
+  .iconWrapper {
+    @apply mr-1.5;
+    width: 1.08em;
+    height: 1.08em;
+  }
+
+  .separator {
+    @apply mx-4;
   }
 }
 

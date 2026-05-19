@@ -49,7 +49,13 @@ export function HomeHero({
           </p>
         </ScrollReveal>
 
-        <ScrollReveal variant="slideUp" distance={10} delay={0.6} duration={0.8}>
+        <ScrollReveal
+          variant="slideUp"
+          distance={10}
+          delay={0.6}
+          duration={0.8}
+          className={styles.actionWrap}
+        >
           <AppButton href={buttonHref} variant="primary" size="lg" className={styles.action}>
             Book your Call today!
           </AppButton>

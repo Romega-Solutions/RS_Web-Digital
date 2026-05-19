@@ -108,7 +108,9 @@ export function TeamCarousel({ onMemberClick }: TeamCarouselProps) {
         <SectionIntro
           align="center"
           className={styles.header}
-          title={<span id="team-heading" className={styles.headingTitle}>Meet the People Behind Romega</span>}
+          titleClassName={styles.teamTitle}
+          bodyClassName={styles.teamBody}
+          title={<span id="team-heading">Meet the People Behind Romega</span>}
           body="A team shaped by practical experience in talent, brand support, and steady business growth."
         />
 
@@ -136,7 +138,6 @@ export function TeamCarousel({ onMemberClick }: TeamCarouselProps) {
                     className={`${styles.card} ${
                       member.id === "rich-salvador" ? styles["card--white-bg"] : ""
                     }`}
-                    aria-label={`${member.name}, ${member.title}`}
                     disabled={!isCenter}
                     onClick={() => isCenter && onMemberClick?.(member)}
                   >

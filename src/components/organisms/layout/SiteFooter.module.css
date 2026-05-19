@@ -47,19 +47,21 @@
 }
 
 .tagline {
-  @apply w-full max-w-[18rem] text-center text-[0.84rem] leading-[1.6] text-brand-secondary/88;
+  @apply w-full max-w-[18rem] text-center text-[0.84rem] leading-[1.6];
   @apply md:text-left md:text-[0.9rem];
+  color: var(--color-brand-secondary);
 }
 
 .links {
-  @apply flex flex-col items-center gap-3 text-center text-brand-secondary;
+  @apply flex flex-col items-center gap-3 text-center;
   @apply md:items-start md:text-left;
   @apply lg:border-r lg:border-brand-secondary/12 lg:pr-5;
+  color: var(--color-brand-secondary);
 }
 
 .links a {
-  @apply text-base font-medium transition-all duration-200;
-  color: rgb(28 95 165 / 0.75);
+  @apply inline-flex min-h-11 min-w-11 items-center justify-center text-base font-medium transition-all duration-200;
+  color: var(--color-brand-secondary);
 }
 
 .navGroups {
@@ -73,7 +75,8 @@
 }
 
 .navGroupTitle {
-  @apply text-[0.68rem] font-bold uppercase tracking-[0.2em] text-brand-secondary/62;
+  @apply text-[0.68rem] font-bold uppercase tracking-[0.2em];
+  color: var(--color-brand-secondary);
 }
 
 .navList {
@@ -81,7 +84,7 @@
 }
 
 .navList li a {
-  @apply text-[0.98rem] font-medium leading-none;
+  @apply inline-flex min-h-11 min-w-11 items-center justify-center text-[0.98rem] font-medium leading-none;
 }
 
 .links a:hover {
@@ -95,7 +98,8 @@
 }
 
 .connect h3 {
-  @apply text-[0.72rem] font-bold uppercase tracking-[0.2em] text-brand-secondary/62;
+  @apply text-[0.72rem] font-bold uppercase tracking-[0.2em];
+  color: var(--color-brand-secondary);
 }
 
 .socials {
@@ -103,7 +107,8 @@
 }
 
 .socialLink {
-  @apply inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-secondary/25 bg-white text-brand-secondary transition-all duration-200;
+  @apply inline-flex h-11 w-11 items-center justify-center rounded-full border border-brand-secondary/25 bg-white transition-all duration-200;
+  color: var(--color-brand-secondary);
   will-change: transform, box-shadow;
 }
 
@@ -180,7 +185,7 @@
   }
 
   .mainRight {
-    grid-template-columns: minmax(12rem, 0.65fr) minmax(11rem, 0.65fr) minmax(18rem, 1.4fr);
+    grid-template-columns: minmax(10rem, 0.62fr) minmax(10rem, 0.62fr) minmax(16rem, 1.3fr);
     column-gap: 1.25rem;
   }
 }
@@ -199,20 +204,24 @@
 }
 
 .mapLabel {
-  @apply text-[0.68rem] font-bold uppercase tracking-[0.18em] text-brand-secondary/70;
+  @apply text-[0.68rem] font-bold uppercase tracking-[0.18em];
+  color: var(--color-brand-secondary);
 }
 
 .mapMeta a {
-  @apply text-[0.82rem] leading-snug text-brand-secondary underline-offset-2 hover:underline;
+  @apply inline-flex min-h-11 min-w-11 items-center justify-center text-[0.82rem] leading-snug underline-offset-2 hover:underline;
+  color: var(--color-brand-secondary);
 }
 
 .contactBlock {
-  @apply mt-4 flex items-start justify-center gap-3 text-center text-[0.82rem] text-brand-secondary;
+  @apply mt-4 flex items-start justify-center gap-3 text-center text-[0.82rem];
   @apply md:justify-start md:text-left md:text-[0.9rem];
+  color: var(--color-brand-secondary);
 }
 
 .contactIcon {
-  @apply h-[1.05rem] w-[1.05rem] shrink-0 text-brand-secondary;
+  @apply h-[1.05rem] w-[1.05rem] shrink-0;
+  color: var(--color-brand-secondary);
 }
 
 .contactCopy {
@@ -220,11 +229,13 @@
 }
 
 .contactLabel {
-  @apply text-[0.68rem] font-bold uppercase tracking-[0.18em] text-brand-secondary/70;
+  @apply text-[0.68rem] font-bold uppercase tracking-[0.18em];
+  color: var(--color-brand-secondary);
 }
 
 .contactText {
-  @apply text-brand-secondary underline-offset-2;
+  @apply underline-offset-2;
+  color: var(--color-brand-secondary);
 }
 
 .contactBlock:focus-visible {
@@ -245,7 +256,7 @@
 }
 
 .contactCopy a {
-  @apply flex flex-col;
+  @apply flex min-h-11 min-w-11 flex-col justify-center;
 }
 
 .contactCopy a:hover {
@@ -253,19 +264,21 @@
 }
 
 .backtop {
-  @apply hidden items-center justify-center text-brand-secondary;
-  @apply lg:flex;
+  @apply flex items-center justify-center;
+  color: var(--color-brand-secondary);
   position: fixed;
-  right: 1.25rem;
-  bottom: 4.25rem;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
   z-index: 60;
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 3rem;
+  height: 3rem;
   border-radius: 999px;
   border: 1px solid rgb(28 95 165 / 0.18);
   background: rgb(255 255 255 / 0.92);
   box-shadow: 0 12px 30px rgb(16 24 40 / 0.14);
   backdrop-filter: blur(10px);
+  transition: background-color 180ms ease, color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  touch-action: manipulation;
 }
 
 .backtopArrow {
@@ -282,6 +295,10 @@
   box-shadow: 0 16px 36px rgb(16 24 40 / 0.2);
 }
 
+.backtop:active {
+  transform: translateY(1px);
+}
+
 .legal {
   @apply bg-brand-secondary px-4 py-3 text-center text-xs text-white;
   @apply md:text-sm;
@@ -293,11 +310,15 @@
 }
 
 .legal a {
-  @apply underline-offset-2 hover:underline text-white;
+  @apply inline-flex min-h-11 min-w-11 items-center justify-center text-white underline-offset-2 hover:underline;
 }
 
 .legalSeparator {
   @apply px-1 text-white/90;
+}
+
+.legalCopyright {
+  @apply inline-flex items-center justify-center;
 }
 
 @media (max-width: 767px) {
@@ -330,11 +351,11 @@
   }
 
   .navGroups {
-    @apply gap-3;
+    @apply grid grid-cols-2 gap-3;
   }
 
   .navGroup {
-    @apply w-full rounded-2xl border border-brand-secondary/10 bg-brand-secondary/5 px-4 py-3;
+    @apply min-w-0 rounded-2xl border border-brand-secondary/10 bg-brand-secondary/5 px-4 py-3;
   }
 
   .navGroupTitle {
@@ -346,15 +367,23 @@
   }
 
   .contactBlock {
-    @apply mt-3 w-full flex-col items-center justify-center rounded-2xl border border-brand-secondary/10 bg-white px-4 py-3 text-center text-xs shadow-sm;
+    @apply mt-3 w-full flex-col items-center justify-center rounded-2xl border border-brand-secondary/10 bg-white px-4 py-4 text-center text-base shadow-sm;
   }
 
   .contactCopy {
     @apply items-center text-center;
   }
 
+  .contactLabel {
+    @apply text-[0.82rem];
+  }
+
+  .contactText {
+    @apply text-[1.05rem] leading-snug;
+  }
+
   .contactCopy a {
-    @apply text-center;
+    @apply text-center text-[1.05rem];
   }
 
   .tagline {
@@ -371,6 +400,57 @@
 
   .mapFrame {
     min-height: 13rem;
+  }
+
+  .legal p {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-content: center;
+    row-gap: 0.1rem;
+  }
+
+  .legalCopyright {
+    grid-column: auto;
+  }
+
+  .legalSeparator {
+    display: none;
+  }
+}
+
+@media (min-width: 390px) and (max-width: 767px) {
+  .connect {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 0.75rem;
+    row-gap: 1rem;
+    align-items: stretch;
+  }
+
+  .connect h3,
+  .socials {
+    grid-column: 1 / -1;
+    justify-self: center;
+  }
+
+  .contactBlock {
+    @apply mt-0 h-full px-3 py-4;
+    min-width: 0;
+  }
+
+  .contactIcon {
+    @apply size-4;
+  }
+
+  .contactLabel {
+    @apply text-[0.74rem] tracking-[0.22em];
+  }
+
+  .contactText,
+  .contactCopy a {
+    @apply text-[0.9rem] leading-snug;
+    overflow-wrap: anywhere;
   }
 }
 
@@ -400,17 +480,29 @@
   }
 
   .links {
+    @apply rounded-2xl border border-brand-secondary/10 bg-brand-secondary/5 px-5 py-4;
     grid-column: 1;
     grid-row: 2;
     align-self: start;
   }
 
   .navGroups {
-    @apply flex-row flex-wrap justify-start;
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
   }
 
   .navGroup {
-    @apply min-w-40 flex-1 rounded-2xl border border-brand-secondary/10 bg-brand-secondary/5 px-4 py-3;
+    @apply min-w-0 items-start gap-2 p-0 text-left;
+  }
+
+  .navList {
+    @apply gap-0.5 text-left;
+  }
+
+  .navList li a {
+    @apply justify-start text-[0.95rem];
   }
 
   .connect {

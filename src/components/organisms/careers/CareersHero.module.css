@@ -102,3 +102,7 @@
 .bulletList img {
   @apply mt-1 h-7 w-7 shrink-0;
 }
+
+.bulletList strong {
+  margin-right: 0.25em;
+}

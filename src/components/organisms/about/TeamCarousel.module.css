@@ -29,25 +29,22 @@
   font-family: var(--font-body);
 }
 
-.header :global(.title) {
+.teamTitle {
   @apply text-brand-secondary;
   font-family: var(--font-display);
-  font-size: clamp(2.75rem, 5.2vw, 4.65rem);
-  line-height: 0.92;
+  font-size: clamp(3rem, 5vw, 4.35rem);
+  font-weight: 500;
+  line-height: 0.96;
   letter-spacing: -0.035em;
+  text-wrap: balance;
+  max-width: 12ch;
 }
 
-.header :global(.body) {
+.teamBody {
   @apply mx-auto mt-2 text-[1.05rem] text-slate-700 md:text-[1.18rem];
   font-family: var(--font-body);
   line-height: 1.55;
   max-width: 38rem;
-}
-
-.headingTitle {
-  @apply block;
-  max-width: 13ch;
-  text-wrap: balance;
 }
 
 .title {
@@ -165,7 +162,7 @@
 }
 
 .controls {
-  @apply mt-5 flex items-center justify-center gap-3 px-4;
+  @apply mt-5 flex flex-wrap items-center justify-center gap-3 px-4;
 }
 
 .button {
@@ -187,19 +184,24 @@
 }
 
 .dots {
-  @apply flex gap-2.5;
+  @apply flex max-w-full flex-wrap justify-center gap-2.5;
 }
 
 .dot {
-  @apply h-3 w-3 min-h-6 min-w-6 cursor-pointer rounded-full border-none bg-brand-secondary/45 p-0 transition-all duration-300;
+  @apply relative h-11 w-11 cursor-pointer rounded-full border-none bg-transparent p-0 transition-all duration-300;
   transition-timing-function: ease;
 }
 
-.dot:hover {
+.dot::after {
+  content: "";
+  @apply absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-secondary/45 transition-all duration-300;
+}
+
+.dot:hover::after {
   @apply bg-brand-secondary/75;
 }
 
-.dot--active {
+.dot--active::after {
   @apply h-4 w-4 bg-brand-primary;
 }
 
@@ -243,6 +245,18 @@
 
   .cta {
     @apply min-w-40 px-5 py-2.5 text-sm;
+  }
+
+  .controls {
+    @apply gap-2 px-2;
+  }
+
+  .button {
+    @apply h-11 w-11;
+  }
+
+  .dots {
+    @apply gap-1.5;
   }
 }
 
@@ -313,17 +327,10 @@
 @media (min-width: 768px) and (max-width: 1023px) {
 
   .item--position-0,
+  .item--position-1,
+  .item--position-5,
   .item--position-6 {
     @apply hidden;
-  }
-
-  .item--position-1 {
-    @apply -mr-6.25 z-1 opacity-60;
-  }
-
-  .item--position-1 .card {
-    width: 140px;
-    height: 160px;
   }
 
   .item--position-2 {
@@ -353,14 +360,6 @@
     height: 230px;
   }
 
-  .item--position-5 {
-    @apply mr-0 z-1 opacity-60;
-  }
-
-  .item--position-5 .card {
-    width: 140px;
-    height: 160px;
-  }
 }
 
 @media (min-width: 1024px) {
@@ -452,17 +451,25 @@
   }
 }
 
+@media (min-width: 1024px) and (max-width: 1339px) {
+
+  .item--position-0,
+  .item--position-6 {
+    @apply hidden;
+  }
+}
+
 @media (max-width: 767px) {
   .header {
     @apply mb-10;
   }
 
-  .header :global(.title) {
+  .teamTitle {
     font-size: clamp(2.35rem, 11vw, 3.2rem);
     line-height: 0.98;
   }
 
-  .header :global(.body) {
+  .teamBody {
     max-width: 20rem;
   }
 }

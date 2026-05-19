@@ -1,11 +1,23 @@
 @reference "../../../app/globals.css";
 
 .quote {
-  @apply max-w-4xl text-[2.5rem] leading-[0.92] font-semibold tracking-tight text-white md:text-[4rem];
+  @apply max-w-[21rem] text-[2.125rem] leading-[1.08] font-semibold tracking-tight text-white sm:max-w-2xl sm:text-[2.5rem] md:max-w-4xl md:text-[4rem] md:leading-[0.92];
   font-family: var(--font-ui);
 }
 
 .author {
   @apply mt-8 text-lg font-medium text-white/90 md:text-[1.7rem];
   font-family: var(--font-ui);
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .quote {
+    max-width: 42rem;
+    font-size: clamp(3rem, 5.6vw, 3.45rem);
+    line-height: 1;
+  }
+
+  .author {
+    @apply mt-6 text-[1.35rem];
+  }
 }

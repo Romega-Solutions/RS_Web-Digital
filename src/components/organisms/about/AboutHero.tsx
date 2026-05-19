@@ -36,6 +36,7 @@ export function AboutHero() {
             <p>
               Romega Solutions was founded on one simple belief:
               <strong> growth should feel clear, connected, and sustainable.</strong>
+              {" "}
               Many businesses face the same challenge at once: finding the
               right people, clarifying their message, and keeping operations
               aligned. We built Romega to bring those moving parts together in

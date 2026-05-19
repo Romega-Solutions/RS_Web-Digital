@@ -6,6 +6,11 @@
   min-height: var(--page-hero-min-height);
 }
 
+.image {
+  object-fit: cover;
+  object-position: center;
+}
+
 .overlay {
   @apply absolute inset-0;
   background:
@@ -24,12 +29,14 @@
 .headline {
   @apply text-center text-white;
   max-width: min(100%, 82rem);
+  margin-inline: auto;
   font-family: var(--font-display);
   font-size: var(--type-display-xl);
   font-weight: 400;
   line-height: var(--leading-display);
   letter-spacing: var(--tracking-display);
   text-shadow: 0 3px 24px rgb(0 0 0 / 0.32);
+  text-wrap: balance;
 }
 
 .line {
@@ -67,12 +74,14 @@
 
 .subtitle {
   @apply mt-5 max-w-5xl text-center text-white;
+  margin-inline: auto;
   font-family: var(--font-heading);
   font-size: var(--type-display-lg);
   font-weight: 400;
   line-height: var(--leading-display);
   text-shadow: 0 3px 22px rgb(0 0 0 / 0.32);
   white-space: nowrap;
+  text-wrap: balance;
 }
 
 .accent {
@@ -110,7 +119,14 @@
   @apply mt-8;
 }
 
+.actionWrap {
+  @apply flex justify-center;
+}
+
 @media (max-width: 980px) {
+  .content {
+    min-height: var(--page-hero-min-height);
+  }
 
   .headline,
   .subtitle {
@@ -123,15 +139,25 @@
 }
 
 @media (max-width: 767px) {
+  .image {
+    object-position: 50% 50%;
+  }
+
   .content {
-    @apply pt-12 pb-25;
-    min-height: var(--page-hero-content-min-height);
+    @apply py-12;
+    min-height: var(--page-hero-min-height);
   }
 
   .headline,
   .subtitle {
-    font-size: clamp(2.55rem, 12vw, 3rem);
+    font-size: clamp(2.35rem, 10.4vw, 3rem);
     line-height: 1.06;
+    max-width: min(100%, 22rem);
+    white-space: normal;
+  }
+
+  .lineFirst {
+    white-space: normal;
   }
 
   .copy {
@@ -145,5 +171,30 @@
 
   .growingWord::after {
     @apply hidden;
+  }
+}
+
+@media (min-width: 500px) and (max-width: 767px) {
+  .headline,
+  .subtitle {
+    max-width: min(100%, 48rem);
+    font-size: clamp(2rem, 6.2vw, 3rem);
+  }
+
+  .lineFirst,
+  .subtitle {
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .actionWrap {
+    width: 100%;
+    max-width: 20rem;
+  }
+
+  .action {
+    display: flex;
+    width: 100%;
   }
 }

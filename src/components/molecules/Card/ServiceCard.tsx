@@ -31,7 +31,7 @@ export function ServiceCard({
         sizes="(max-width: 767px) 100vw, 33vw"
         className={[styles.image, imageClassName].filter(Boolean).join(" ")}
       />
-      <h3 className="sr-only">{title}</h3>
+      <h3 className={styles.title}>{title}</h3>
       {description ? (
         <div className={styles.overlay} aria-hidden="true">
           <p>{description}</p>

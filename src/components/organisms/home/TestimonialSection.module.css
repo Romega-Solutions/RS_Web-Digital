@@ -24,7 +24,7 @@
 }
 
 .arrow {
-  @apply absolute top-1/2 z-20 -translate-y-1/2 border-none bg-transparent text-5xl font-medium leading-none text-white/95 cursor-pointer transition-all hover:scale-110 md:text-6xl;
+  @apply absolute top-1/2 z-20 flex min-h-11 min-w-11 -translate-y-1/2 items-center justify-center border-none bg-transparent text-5xl font-medium leading-none text-white/95 cursor-pointer transition-all hover:scale-110 md:text-6xl;
   font-family: var(--font-ui);
 }
 
@@ -41,20 +41,59 @@
 }
 
 .dot {
-  @apply h-2.5 w-2.5 rounded-full bg-white border-0 p-0 cursor-pointer transition-all;
+  @apply relative h-11 w-11 rounded-full border-0 bg-transparent p-0 cursor-pointer transition-all;
 }
 
-.dotActive {
-  @apply bg-brand-primary scale-125;
+.dot::after {
+  content: "";
+  @apply absolute left-1/2 top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white transition-all;
+}
+
+.dotActive::after {
+  @apply h-3.5 w-3.5 bg-brand-primary;
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .root {
+    min-height: 31rem;
+  }
+
+  .content {
+    min-height: 31rem;
+    padding-block: 4rem 3.5rem;
+  }
+
+  .dots {
+    @apply mt-7;
+  }
 }
 
 @media (max-width: 767px) {
   .root,
   .content {
-    min-height: 32rem;
+    min-height: 35rem;
+  }
+
+  .content {
+    transform: translateY(1.75rem);
   }
 
   .arrow {
     @apply text-4xl;
+    min-width: 4.75rem;
+    min-height: 6rem;
+    border-radius: 999px;
+  }
+
+  .arrowLeft {
+    left: 0.5rem;
+    justify-content: flex-start;
+    padding-left: 1.25rem;
+  }
+
+  .arrowRight {
+    right: 0.5rem;
+    justify-content: flex-end;
+    padding-right: 1.25rem;
   }
 }
