@@ -119,6 +119,10 @@
   @apply mt-8;
 }
 
+.actionWrap {
+  @apply flex justify-center;
+}
+
 @media (max-width: 980px) {
   .content {
     min-height: var(--page-hero-min-height);
@@ -167,5 +171,30 @@
 
   .growingWord::after {
     @apply hidden;
+  }
+}
+
+@media (min-width: 500px) and (max-width: 767px) {
+  .headline,
+  .subtitle {
+    max-width: min(100%, 48rem);
+    font-size: clamp(2rem, 6.2vw, 3rem);
+  }
+
+  .lineFirst,
+  .subtitle {
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .actionWrap {
+    width: 100%;
+    max-width: 20rem;
+  }
+
+  .action {
+    display: flex;
+    width: 100%;
   }
 }

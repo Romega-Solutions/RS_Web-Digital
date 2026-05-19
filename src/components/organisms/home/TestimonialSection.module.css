@@ -53,13 +53,47 @@
   @apply h-3.5 w-3.5 bg-brand-primary;
 }
 
+@media (min-width: 768px) and (max-width: 1023px) {
+  .root {
+    min-height: 31rem;
+  }
+
+  .content {
+    min-height: 31rem;
+    padding-block: 4rem 3.5rem;
+  }
+
+  .dots {
+    @apply mt-7;
+  }
+}
+
 @media (max-width: 767px) {
   .root,
   .content {
-    min-height: 32rem;
+    min-height: 35rem;
+  }
+
+  .content {
+    transform: translateY(1.75rem);
   }
 
   .arrow {
     @apply text-4xl;
+    min-width: 4.75rem;
+    min-height: 6rem;
+    border-radius: 999px;
+  }
+
+  .arrowLeft {
+    left: 0.5rem;
+    justify-content: flex-start;
+    padding-left: 1.25rem;
+  }
+
+  .arrowRight {
+    right: 0.5rem;
+    justify-content: flex-end;
+    padding-right: 1.25rem;
   }
 }

@@ -247,7 +247,9 @@ export function SiteFooter() {
 
       <div className={styles.legal}>
         <p>
-          © 2026 Romega Solutions. All rights reserved.
+          <span className={styles.legalCopyright}>
+            © 2026 Romega Solutions. All rights reserved.
+          </span>
           <span className={styles.legalSeparator}>|</span>
           <Link href="/privacy">Privacy Policy</Link>
           <span className={styles.legalSeparator}>|</span>

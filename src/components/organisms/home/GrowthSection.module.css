@@ -148,7 +148,9 @@
 
 .bannerOverlay {
   @apply absolute inset-0;
-  background: linear-gradient(90deg, rgb(184 199 255 / 0.5), rgb(154 177 243 / 0.5));
+  background:
+    linear-gradient(90deg, rgb(7 24 48 / 0.54), rgb(23 75 132 / 0.42)),
+    linear-gradient(180deg, rgb(7 24 48 / 0.18), rgb(7 24 48 / 0.42));
 }
 
 .bannerContent {
@@ -158,11 +160,18 @@
 .bannerTitle {
   @apply text-5xl leading-[0.96] font-medium tracking-tight text-white md:text-[4.6rem];
   font-family: var(--font-display);
+  text-shadow:
+    0 2px 18px rgb(0 0 0 / 0.44),
+    0 1px 2px rgb(0 0 0 / 0.42);
   text-wrap: balance;
 }
 
 .bannerActions {
   @apply mt-8;
+}
+
+.bannerActions a {
+  @apply justify-center;
 }
 
 @media (max-width: 1023px) {
@@ -211,6 +220,19 @@
     padding-block: var(--section-space-compact);
   }
 
+  .bannerTitle {
+    padding: 0.35rem 0.75rem 0.45rem;
+    border-radius: 1.25rem;
+    background: linear-gradient(135deg, rgb(5 18 36 / 0.58), rgb(5 18 36 / 0.32));
+    box-shadow:
+      0 14px 32px rgb(0 0 0 / 0.2),
+      inset 0 1px 0 rgb(255 255 255 / 0.12);
+    text-shadow:
+      0 3px 18px rgb(0 0 0 / 0.72),
+      0 1px 2px rgb(0 0 0 / 0.76);
+    backdrop-filter: blur(2px);
+  }
+
   .growingWord::after {
     @apply hidden;
   }
@@ -221,5 +243,17 @@
 
   .focusItem {
     @apply text-sm;
+  }
+}
+
+@media (max-width: 480px) {
+  .bannerActions {
+    width: 100%;
+    max-width: 20rem;
+  }
+
+  .bannerActions a {
+    display: flex;
+    width: 100%;
   }
 }
