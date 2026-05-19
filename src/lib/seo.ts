@@ -1,6 +1,22 @@
 import type { Metadata } from "next";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.romega-solutions.com";
+const FALLBACK_SITE_URL = "https://www.romega-solutions.com";
+
+function normalizeSiteUrl(raw: string | undefined): string {
+  const value = raw?.trim();
+  if (!value) return FALLBACK_SITE_URL;
+  // Vercel env vars (e.g. NEXT_PUBLIC_SITE_URL) are often set without a
+  // scheme (e.g. "romega-digital.vercel.app"), which makes `new URL()` throw
+  // ERR_INVALID_URL during the build. Prepend https:// when missing.
+  const withScheme = /^https?:\/\//i.test(value) ? value : `https://${value}`;
+  try {
+    return new URL(withScheme).toString();
+  } catch {
+    return FALLBACK_SITE_URL;
+  }
+}
+
+const siteUrl = normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL);
 
 export const siteConfig = {
   name: "Romega Solutions",
