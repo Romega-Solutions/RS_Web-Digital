@@ -93,7 +93,7 @@ const careersMenuItems = [
   },
   {
     label: "Send Your Profile",
-    href: "mailto:careers@romega-solutions.com",
+    href: "mailto:info@romega-solutions.com",
     description: "Open your mail app and send your profile directly.",
     isChild: true,
     icon: (
