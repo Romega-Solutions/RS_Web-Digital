@@ -26,7 +26,7 @@ For the current branch review package, use `docs/submission-checklist.md`. For c
 | 6 | 🟡 Medium | `JOBS_API_URL` missing from `.env.example` | ✅ Fixed |
 | 7 | 🔵 Low | Stale zip files in `public/` | ✅ Fixed |
 | 8 | 🔵 Low | `sw.js` service worker — orphaned | ✅ Fixed |
-| 9 | 🔵 Low | Node.js version mismatch (CI=20, Vercel default=24) | ✅ Fixed |
+| 9 | 🔵 Low | Node.js version mismatch (CI/runtime drift) | ✅ Fixed |
 | 10 | 🔵 Low | `experimental.viewTransition` enabled | ⚠️ Monitor |
 | 11 | 🟠 High | Production custom domain attached to stale app | ❌ External action required |
 | 12 | 🟡 Medium | Duplicate Vercel projects connected to same repo | ❌ External action required |
@@ -135,7 +135,7 @@ Results:
 
 Local caveat:
 
-- The local Codex shell was running Node.js `v25.2.1`; the repo, CI, Dockerfile, and intended Vercel runtime are pinned to Node.js `20.x`. Re-run the same gates on Node 20 before treating local evidence as a final release artifact.
+- The local Codex shell was running Node.js `v25.2.1`; the repo, CI, Dockerfile, and intended Vercel runtime are now pinned to Node.js `24.x`. Re-run the same gates on Node 24 before treating local evidence as a final release artifact.
 
 Deployment-status caveat:
 
@@ -328,25 +328,23 @@ An unregistered service worker is harmless, but a stale one cached in a visitor'
 
 | Environment | Node.js Version |
 |-------------|-----------------|
-| CI (`.github/workflows/ci.yml`) | 20 |
-| Dockerfile | 20 (`node:20-alpine`) |
-| Vercel default | **24** (LTS as of 2026) |
+| CI (`.github/workflows/ci.yml`) | 24 |
+| Dockerfile | 24 (`node:24-alpine`) |
+| Vercel default | **24** |
 
-Vercel runs Node.js 24 by default. The CI and Docker environments run Node.js 20. This mismatch can cause subtle behavior differences (crypto, URL parsing, stream handling).
+Vercel runs Node.js 24 by default. CI, Docker, package engines, and local version-manager hints now target the same major version to avoid runtime drift.
 
-**Status:** Fixed in repo. `package.json` now pins Node.js to `20.x`, matching CI and the Docker base image.
+**Status:** Fixed in repo. `package.json` now pins Node.js to `24.x`, matching CI, Docker, and Vercel's supported LTS default.
 
 **Fix:** Pin the Node.js version in `package.json` so Vercel uses the same version as CI:
 
 ```json
 {
   "engines": {
-    "node": "20.x"
+    "node": "24.x"
   }
 }
 ```
-
-Or upgrade CI and Dockerfile to Node.js 24 to match Vercel.
 
 ---
 
