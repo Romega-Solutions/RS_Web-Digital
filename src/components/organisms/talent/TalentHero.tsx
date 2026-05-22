@@ -16,7 +16,27 @@ const features = [
   },
 ];
 
-export function TalentHero() {
+type TalentHeroProps = {
+  totalTalents?: number;
+  totalCategories?: number;
+  totalLocations?: number;
+};
+
+export function TalentHero({ totalTalents, totalCategories, totalLocations }: TalentHeroProps = {}) {
+  const hasPool =
+    typeof totalTalents === "number" &&
+    totalTalents > 0 &&
+    typeof totalCategories === "number" &&
+    typeof totalLocations === "number";
+
+  const stats = hasPool
+    ? [
+        { label: "Talent profiles", value: totalTalents!.toString() },
+        { label: "Specializations", value: totalCategories!.toString() },
+        { label: "Locations", value: totalLocations!.toString() },
+      ]
+    : null;
+
   return (
     <section className={styles.root} aria-labelledby="talent-hero-heading">
       <div className={styles.container}>
@@ -30,21 +50,37 @@ export function TalentHero() {
             </p>
 
             <h1 id="talent-hero-heading" className={styles.title}>
-              Talent Ready To
-              <br />
-              Move Your Business Forward
+              {hasPool ? (
+                <>
+                  Explore Talent Ready To
+                  <br />
+                  Move Your Business Forward
+                </>
+              ) : (
+                <>
+                  Talent Ready To
+                  <br />
+                  Move Your Business Forward
+                </>
+              )}
             </h1>
 
             <p className={styles.description}>
-              We work with a curated network of professionals across operations, brand, sales,
-              product, and technical delivery — matched to the needs of growing businesses.
-              Profiles are shared privately on request to protect candidate confidentiality.
+              {hasPool
+                ? "Browse a curated pool of professionals across operations, brand, sales, product, and technical delivery — matched to the needs of growing businesses. Profile details and contact are shared on request to protect candidate confidentiality."
+                : "We work with a curated network of professionals across operations, brand, sales, product, and technical delivery — matched to the needs of growing businesses. Profiles are shared privately on request to protect candidate confidentiality."}
             </p>
 
             <div className={styles.actions}>
-              <AppButton href="/contact" className={styles.primaryAction}>
-                Talk to a talent specialist
-              </AppButton>
+              {hasPool ? (
+                <AppButton href="#talent-pool" className={styles.primaryAction}>
+                  Browse talent pool
+                </AppButton>
+              ) : (
+                <AppButton href="/contact" className={styles.primaryAction}>
+                  Talk to a talent specialist
+                </AppButton>
+              )}
               <AppButton
                 href="mailto:info@romega-solutions.com"
                 variant="outline"
@@ -55,7 +91,18 @@ export function TalentHero() {
             </div>
           </div>
 
-          <div className={styles.proofPanel} aria-label="How we work with talent">
+          <div className={styles.proofPanel} aria-label="Talent pool highlights">
+            {stats ? (
+              <dl className={styles.stats}>
+                {stats.map((stat) => (
+                  <div key={stat.label} className={styles.statItem}>
+                    <dt className={styles.statLabel}>{stat.label}</dt>
+                    <dd className={styles.statValue}>{stat.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            ) : null}
+
             <div className={styles.features}>
               {features.map((feature) => (
                 <article key={feature.title} className={styles.featureCard}>

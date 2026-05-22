@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { FormCheckbox, FormInput, FormSelect, FormTextarea } from "@/components/atoms/Form";
 import { AppButton } from "@/components/atoms/Button";
 import { siteConfig } from "@/lib/seo";
@@ -73,6 +74,7 @@ type ContactPageClientProps = {
 };
 
 export default function ContactPageClient({ contactFormAvailable }: ContactPageClientProps) {
+  const searchParams = useSearchParams();
   const [form, setForm] = useState<FormState>(initialFormState);
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -81,6 +83,33 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
     message: "",
   });
   const statusRef = useRef<HTMLParagraphElement | null>(null);
+  const didPrefillRef = useRef(false);
+
+  // Prefill from /talent → "Inquire" deep-link. URL shape:
+  //   /contact?inquiry=talent&talentId=TL-128&role=Brand+Strategist
+  // Sets the subject to "Business Partnership" and seeds the message
+  // body with a starter line referencing the candidate code.
+  useEffect(() => {
+    if (didPrefillRef.current) return;
+    const inquiry = searchParams.get("inquiry");
+    const talentId = searchParams.get("talentId");
+    const role = searchParams.get("role");
+    if (inquiry !== "talent" || !talentId) return;
+
+    didPrefillRef.current = true;
+    // One-shot URL→form prefill on mount; guarded by didPrefillRef so it
+    // runs once even under StrictMode. The rule disallows setState in
+    // effects, but this is the documented Next.js pattern for reading
+    // useSearchParams() into local state.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setForm((current) => ({
+      ...current,
+      subject: current.subject || "business",
+      message:
+        current.message ||
+        `I'd like to learn more about candidate ${talentId}${role ? ` (${role})` : ""}.`,
+    }));
+  }, [searchParams]);
 
   useEffect(() => {
     if (status.type !== "idle") {
