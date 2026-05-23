@@ -104,7 +104,7 @@ const routes = [
     name: "talent",
     path: "/talent",
     title: /Talent Pool/i,
-    heading: /Explore Talent Ready To Move Your Business Forward/i,
+    heading: /(?:Explore )?Talent Ready To Move Your Business Forward/i,
     text: /Curated Talent/i,
   },
   {
