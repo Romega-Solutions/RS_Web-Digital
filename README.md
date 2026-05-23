@@ -4,10 +4,10 @@ Romega Solutions public website built with Next.js 16 App Router, React 19, CSS 
 
 ## Requirements
 
-- Node.js `20.x`
+- Node.js `24.x`
 - pnpm `9.15.9`
 
-The repo pins both in `package.json` so CI, Vercel, and local installs use the same runtime family.
+The repo pins both in `package.json` so CI, Vercel, Docker, and local installs use the same runtime family. Use `.nvmrc` or `.node-version` with your preferred version manager before installing dependencies.
 
 ## Local Development
 

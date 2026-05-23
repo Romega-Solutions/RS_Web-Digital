@@ -34,9 +34,13 @@ function getSeniorityLabel(level: TalentCardData["experienceLevel"]) {
 }
 
 export function TalentCard({ talent }: TalentCardProps) {
-  const contactHref = `/contact?role=${encodeURIComponent(talent.role)}&talentId=${encodeURIComponent(
+  // Prefill the contact form with the candidate's code + role so the
+  // recruiter knows which talent the visitor is asking about. We do NOT
+  // expose email/phone/LinkedIn on the card — every inquiry routes
+  // through info@romega-solutions.com.
+  const contactHref = `/contact?inquiry=talent&talentId=${encodeURIComponent(
     talent.id,
-  )}`;
+  )}&role=${encodeURIComponent(talent.role)}`;
 
   return (
     <article className={styles.root}>
@@ -68,7 +72,7 @@ export function TalentCard({ talent }: TalentCardProps) {
       <div className={styles.footer}>
         <span className={styles.category}>{talent.category}</span>
         <AppButton href={contactHref} variant="outline" className={styles.cta}>
-          REQUEST INTRO
+          INQUIRE
         </AppButton>
       </div>
     </article>

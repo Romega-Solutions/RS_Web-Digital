@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { MainTemplate } from "@/components/templates/MainTemplate";
 import { ServicesHero } from "@/components/organisms/services/ServicesHero";
 import { ServicesDetailSection } from "@/components/organisms/services/ServicesDetailSection";
+import { ServicesFaqSection } from "@/components/organisms/services/ServicesFaqSection";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ServiceStrip } from "@/components/organisms/home/ServiceStrip";
 import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
@@ -40,6 +41,7 @@ const detailedServices = [
     ],
     imageSrc: "/2.0%20Website%20Assets/Image%201%20_%20Talent%20Solutions.webp",
     imageAlt: "Talent Solutions",
+    serviceType: "Talent Acquisition and Executive Search",
   },
   {
     id: "brand-growth-support",
@@ -57,6 +59,7 @@ const detailedServices = [
     ],
     imageSrc: "/2.0%20Website%20Assets/Image%202%20_%20Brand%20%26%20Growth%20Support.webp",
     imageAlt: "Brand and Growth Support",
+    serviceType: "Brand Strategy and Growth Consulting",
   },
   {
     id: "strategic-operations",
@@ -74,6 +77,45 @@ const detailedServices = [
     ],
     imageSrc: "/2.0%20Website%20Assets/Image%203%20_%20Strategic%20Operations.webp",
     imageAlt: "Strategic Operations",
+    serviceType: "Operations Strategy and Consulting",
+  },
+] as const;
+
+const faqs = [
+  {
+    question: "What services does Romega Solutions offer?",
+    answer:
+      "We focus on three connected areas: Talent Solutions (executive search, remote and global sourcing, workforce planning, retention), Brand & Growth Support (positioning, messaging, brand strategy, market presence), and Strategic Operations (process optimization, workflow documentation, scalable systems). Most engagements combine elements of these so growth is supported on people, brand, and operations together.",
+  },
+  {
+    question: "Where is Romega Solutions based, and which regions do you serve?",
+    answer:
+      "We are headquartered in El Segundo, California, and partner with clients across the United States and the Asia-Pacific region. Engagements are run remotely with onsite collaboration arranged as needed.",
+  },
+  {
+    question: "Do you support remote and global hiring?",
+    answer:
+      "Yes. Remote and global talent sourcing is a core part of our Talent Solutions work, including frameworks for building and structuring distributed teams.",
+  },
+  {
+    question: "What types of roles do you typically place?",
+    answer:
+      "Our curated talent spans operations, sales, design, software, AI, and executive support — from individual contributors to leadership search. We focus on long-term fit, performance, and cultural alignment rather than volume.",
+  },
+  {
+    question: "How does an engagement usually start?",
+    answer:
+      "Most projects begin with a free consultation where we listen to your goals, current challenges, and growth plans. From there we propose a scope tailored to your situation — there is no single template.",
+  },
+  {
+    question: "Are conversations confidential?",
+    answer:
+      "Yes. Discretion is built into how we work, especially around executive search and candidate conversations. We do not share profiles or details without explicit approval from the people involved.",
+  },
+  {
+    question: "How do I get in touch?",
+    answer:
+      "Email info@romega-solutions.com or use the contact form on our website. For active candidates, applications are submitted directly through any open role on our careers page.",
   },
 ] as const;
 
@@ -94,20 +136,49 @@ export default function ServicesPage() {
         name: "Romega Solutions Services",
         description:
           "Explore Romega Solutions services across talent acquisition, brand and growth support, and strategic operations for scaling businesses.",
-        isPartOf: {
-          "@id": absoluteUrl("/#website"),
-        },
+        isPartOf: { "@id": absoluteUrl("/#website") },
+        about: { "@id": absoluteUrl("/#organization") },
       },
       {
         "@type": "OfferCatalog",
+        "@id": absoluteUrl("/services#catalog"),
         name: "Romega Solutions Service Catalog",
         itemListElement: detailedServices.map((service) => ({
           "@type": "Offer",
           itemOffered: {
             "@type": "Service",
+            "@id": absoluteUrl(`/services#${service.id}`),
             name: service.title,
             description: service.copy,
+            serviceType: service.serviceType,
+            url: absoluteUrl(`/services#${service.id}`),
+            provider: { "@id": absoluteUrl("/#organization") },
+            areaServed: [
+              { "@type": "Country", name: "United States" },
+              { "@type": "Place", name: "Asia-Pacific" },
+            ],
+            audience: {
+              "@type": "BusinessAudience",
+              audienceType: "Growth-stage and established businesses",
+            },
+            hasOfferCatalog: {
+              "@type": "OfferCatalog",
+              name: `${service.title} — Offerings`,
+              itemListElement: service.bullets.map((bullet) => ({
+                "@type": "Offer",
+                itemOffered: { "@type": "Service", name: bullet },
+              })),
+            },
           },
+        })),
+      },
+      {
+        "@type": "FAQPage",
+        "@id": absoluteUrl("/services#faq"),
+        mainEntity: faqs.map((item) => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: { "@type": "Answer", text: item.answer },
         })),
       },
     ],
@@ -127,6 +198,8 @@ export default function ServicesPage() {
       </div>
 
       <ServicesDetailSection services={detailedServices} />
+
+      <ServicesFaqSection faqs={faqs} />
 
       <div id="consultation">
         <ConsultationBanner />

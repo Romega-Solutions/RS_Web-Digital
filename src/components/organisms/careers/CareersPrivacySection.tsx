@@ -10,10 +10,9 @@ interface PrivacyFeature {
 
 interface CareersPrivacySectionProps {
   privacyFeatures: readonly PrivacyFeature[];
-  onOpenJobs: () => void;
 }
 
-export function CareersPrivacySection({ privacyFeatures, onOpenJobs }: CareersPrivacySectionProps) {
+export function CareersPrivacySection({ privacyFeatures }: CareersPrivacySectionProps) {
   return (
     <section className={styles.root}>
       <div className={styles.inner}>
@@ -46,11 +45,7 @@ export function CareersPrivacySection({ privacyFeatures, onOpenJobs }: CareersPr
 
         <ScrollReveal variant="slideUp" delay={0.4} distance={20}>
           <div className={styles.bottom}>
-            <AppButton
-              onClick={onOpenJobs}
-              variant="primary"
-              size="lg"
-            >
+            <AppButton href="#open-roles" variant="primary" size="lg">
               Explore Current Opportunities
             </AppButton>
           </div>

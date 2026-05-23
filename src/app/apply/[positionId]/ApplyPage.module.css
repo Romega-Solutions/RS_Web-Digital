@@ -1,0 +1,110 @@
+@reference "../../globals.css";
+
+.page {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: var(--section-space-compact) var(--layout-gutter) var(--section-space);
+}
+
+.page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at top left, rgb(53 141 240 / 0.10), transparent 30%),
+    radial-gradient(circle at bottom right, rgb(168 159 248 / 0.09), transparent 28%),
+    linear-gradient(180deg, #f7f9fd, #eef3fb);
+}
+
+.inner {
+  @apply mx-auto flex w-full max-w-3xl flex-col gap-6;
+  position: relative;
+}
+
+.header {
+  @apply flex flex-col items-center text-center;
+  gap: 0.75rem;
+  padding-top: 1.5rem;
+}
+
+.eyebrow {
+  @apply text-[11px] font-bold uppercase tracking-[0.18em] text-brand-secondary;
+}
+
+.title {
+  @apply text-brand-secondary;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+
+.metaRow {
+  @apply mt-1 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-sm;
+  color: var(--color-text-main);
+}
+
+.metaItem {
+  @apply inline-flex items-center;
+}
+
+.metaItem + .metaItem::before,
+.metaRow > .statusOpen::before,
+.metaRow > .statusClosed::before {
+  content: "·";
+  margin-right: 0.75rem;
+  opacity: 0.5;
+}
+
+.statusOpen {
+  @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold;
+  background: rgb(34 197 94 / 0.12);
+  color: #15803d;
+}
+
+.statusClosed {
+  @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold;
+  background: rgb(100 116 139 / 0.12);
+  color: #475569;
+}
+
+.card {
+  @apply rounded-[1.5rem] border border-brand-secondary/15 bg-white p-6 shadow-[0_18px_50px_rgb(16_54_110/0.10)] md:p-8;
+}
+
+.cardEyebrow {
+  @apply text-[10px] font-bold uppercase tracking-[0.18em];
+  color: var(--color-muted);
+  margin: 0 0 0.5rem;
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  @apply text-xl text-brand-secondary md:text-2xl;
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+}
+
+.cardLead {
+  color: var(--color-muted);
+  @apply mb-5 text-sm;
+}
+
+.cardBody {
+  color: var(--color-text-main);
+  @apply text-sm leading-relaxed;
+}
+
+.description {
+  color: var(--color-text-main);
+  white-space: pre-wrap;
+  @apply text-sm leading-relaxed;
+}
+
+.link {
+  @apply text-brand-secondary underline underline-offset-2 hover:opacity-80;
+}

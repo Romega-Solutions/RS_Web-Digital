@@ -81,11 +81,11 @@ Route smoke checks returned `200` locally for:
 ## Current Release Gates
 
 - Package manager: pnpm `9.15.9`
-- Runtime target: Node.js `20.x`
+- Runtime target: Node.js `24.x`
 - Framework: Next.js `16.2.6`
 - React: `19.2.5`
 - Lint includes architecture validation through `scripts/validate-architecture.mjs`
-- Responsive audit covers the main public routes from ultra-small 280px mobile through 1920px wide desktop against the built app, enforces 44px mobile/tablet touch targets, and CI runs that audit on the redesign branch under Node.js 20
+- Responsive audit covers the main public routes from ultra-small 280px mobile through 1920px wide desktop against the built app, enforces 44px mobile/tablet touch targets, and CI runs that audit on the redesign branch under Node.js 24
 - Accessibility audit blocks critical and serious axe violations on the main public routes
 - Keyboard audit covers skip-link behavior, desktop dropdown focus/escape handling, and mobile menu focus containment
 - Product-flow audit covers the careers API response contract and contact API validation/error behavior without requiring production email-provider secrets
@@ -135,4 +135,4 @@ These items require dashboard, account, or live-service access:
 
 ## Known Local Caveat
 
-The 2026-05-17 full local `pnpm run qa:local` verification was run from a shell using Node.js `v25.2.1`, while the project pins Node.js `20.x`. The changed QA/report scripts, TypeScript project, and Next production build were also rerun locally with temporary Node.js `20.20.2`, and GitHub Actions CI for pushed head `d3138b3a73379af714910f6ae8d3c6ef07530ba2` runs on Node.js 20. Final release verification still requires owner-scope Vercel production env, domain, protected-deployment, and contact-delivery checks.
+The 2026-05-17 full local `pnpm run qa:local` verification was run from a shell using Node.js `v25.2.1`, while the project now pins Node.js `24.x`. Re-run release gates on Node 24 before treating local evidence as final release evidence. Final release verification still requires owner-scope Vercel production env, domain, protected-deployment, and contact-delivery checks.

@@ -1,15 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { CareersHero } from "@/components/organisms/careers/CareersHero";
 import { CareersValuesSection } from "@/components/organisms/careers/CareersValuesSection";
 import { CareersPrivacySection } from "@/components/organisms/careers/CareersPrivacySection";
-import { CareersJobSidebar } from "@/components/organisms/careers/CareersJobSidebar";
-import type { CareerJob } from "@/types/careers";
-
-type JobsResponse = {
-  jobs?: CareerJob[];
-};
 
 const cultureValues = [
   {
@@ -65,11 +59,6 @@ const privacyFeatures = [
 ] as const;
 
 export default function CareersPageClient() {
-  const [isJobsOpen, setIsJobsOpen] = useState(false);
-  const [jobs, setJobs] = useState<CareerJob[]>([]);
-  const [jobsState, setJobsState] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [jobsError, setJobsError] = useState("");
-
   const updatedDate = useMemo(
     () =>
       new Date().toLocaleDateString("en-US", {
@@ -80,68 +69,11 @@ export default function CareersPageClient() {
     [],
   );
 
-  const loadJobs = useCallback(async () => {
-    setJobsState("loading");
-    setJobsError("");
-
-    try {
-      const response = await fetch("/api/careers/jobs", {
-        cache: "no-store",
-      });
-
-      if (!response.ok) {
-        throw new Error("Unable to load current opportunities.");
-      }
-
-      const payload = (await response.json()) as JobsResponse;
-      const nextJobs = Array.isArray(payload.jobs) ? payload.jobs : [];
-      setJobs(nextJobs);
-      setJobsState("success");
-    } catch (error) {
-      setJobsState("error");
-      setJobsError(error instanceof Error ? error.message : "An unexpected error occurred.");
-    }
-  }, []);
-
-  const openJobs = useCallback(() => {
-    setIsJobsOpen(true);
-    if (jobsState === "idle") {
-      loadJobs();
-    }
-  }, [jobsState, loadJobs]);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const triggerFromHash = () => {
-      if (window.location.hash === "#open-opportunities") {
-        window.setTimeout(() => {
-          openJobs();
-        }, 120);
-      }
-    };
-
-    triggerFromHash();
-    window.addEventListener("hashchange", triggerFromHash);
-    return () => window.removeEventListener("hashchange", triggerFromHash);
-  }, [openJobs]);
-
   return (
     <>
-      <CareersHero updatedDate={updatedDate} onOpenJobs={openJobs} />
-
+      <CareersHero updatedDate={updatedDate} />
       <CareersValuesSection cultureValues={cultureValues} benefits={benefits} />
-
-      <CareersPrivacySection privacyFeatures={privacyFeatures} onOpenJobs={openJobs} />
-
-      <CareersJobSidebar
-        isOpen={isJobsOpen}
-        onClose={() => setIsJobsOpen(false)}
-        jobs={jobs}
-        state={jobsState}
-        error={jobsError}
-        onRetry={loadJobs}
-      />
+      <CareersPrivacySection privacyFeatures={privacyFeatures} />
     </>
   );
 }

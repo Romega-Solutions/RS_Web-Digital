@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { MainTemplate } from "@/components/templates/MainTemplate";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
@@ -69,7 +70,9 @@ export default function ContactPage() {
       header={<SiteHeader />}
       footer={<SiteFooter />}
     >
-      <ContactPageClient contactFormAvailable={contactFormAvailable} />
+      <Suspense fallback={null}>
+        <ContactPageClient contactFormAvailable={contactFormAvailable} />
+      </Suspense>
     </MainTemplate>
   );
 }

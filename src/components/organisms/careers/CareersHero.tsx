@@ -5,10 +5,9 @@ import styles from "./CareersHero.module.css";
 
 interface CareersHeroProps {
   updatedDate: string;
-  onOpenJobs: () => void;
 }
 
-export function CareersHero({ updatedDate, onOpenJobs }: CareersHeroProps) {
+export function CareersHero({ updatedDate }: CareersHeroProps) {
   return (
     <section className={styles.root}>
       <div className={styles.background}>
@@ -40,7 +39,7 @@ export function CareersHero({ updatedDate, onOpenJobs }: CareersHeroProps) {
             <ScrollReveal variant="slideUp" delay={0.2} duration={0.8} distance={20}>
               <div className={styles.actions}>
                 <AppButton
-                  onClick={onOpenJobs}
+                  href="#open-roles"
                   variant="primary"
                   size="lg"
                   className="w-full md:w-auto"
@@ -55,7 +54,7 @@ export function CareersHero({ updatedDate, onOpenJobs }: CareersHeroProps) {
                   View Open Opportunities
                 </AppButton>
                 <AppButton
-                  href="mailto:careers@romega-solutions.com"
+                  href="mailto:info@romega-solutions.com"
                   variant="outline"
                   size="lg"
                   className="w-full md:w-auto"
