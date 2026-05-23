@@ -167,7 +167,7 @@
 }
 
 .emptyCta {
-  @apply text-brand-secondary underline underline-offset-2 hover:opacity-80;
+  @apply inline-flex min-h-11 items-center justify-center rounded-full border border-brand-secondary/30 px-4 text-brand-secondary no-underline transition-colors hover:bg-brand-secondary hover:text-white;
   font-weight: 600;
   font-size: 0.875rem;
 }
