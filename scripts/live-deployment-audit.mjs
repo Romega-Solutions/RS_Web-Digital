@@ -17,7 +17,7 @@ const routes = [
   },
   { path: "/about", title: /About Us/i, body: /Built on[\s\S]*Purpose/i },
   { path: "/services", title: /Our Services/i, body: /Built for[\s\S]*Connection/i },
-  { path: "/talent", title: /Talent Pool/i, body: /Explore Talent Ready/i },
+  { path: "/talent", title: /Talent Pool/i, body: /Talent Ready To/i },
   { path: "/careers", title: /Careers/i, body: /Build Your Career with Purpose/i },
   { path: "/contact", title: /Contact Romega Solutions/i, body: /Contact Us/i },
   { path: "/privacy", title: /Privacy Policy/i, body: /Romega Solutions Privacy Office/i },
