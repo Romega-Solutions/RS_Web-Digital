@@ -1,6 +1,19 @@
 # RS Web Digital
 
+> Canonical production website repository for Romega Solutions.
+
 Romega Solutions public website built with Next.js 16 App Router, React 19, CSS Modules, Tailwind v4, and pnpm.
+
+## Repository Status
+
+This repository is the active v3.2 production source for the public Romega Solutions website.
+
+Legacy website repositories are retained only for historical reference:
+
+- v2.0 static site: https://github.com/Romega-Solutions/RS_Web
+- v3.1 digital site: https://github.com/Romega-Solutions/RS_Web-Digital-Old
+
+Production work, deployment fixes, content updates, and release tags should be made from this repository.
 
 ## Requirements
 
