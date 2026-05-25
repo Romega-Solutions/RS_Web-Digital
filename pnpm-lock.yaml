@@ -69,7 +69,7 @@ importers:
         version: 1.99.0
       tailwindcss:
         specifier: ^4
-        version: 4.2.2
+        version: 4.3.0
       typescript:
         specifier: ^6
         version: 6.0.3
@@ -2049,9 +2049,6 @@ packages:
 
   svix@1.92.2:
     resolution: {integrity: sha512-ZmuA3UVvlnF9EgxlzmPtF7CKjQb64Z6OFlyfdDfU0sdcC7dJa+3aOYX5B9mA+RS6ch1AxBa4UP/l6KmqfGtWBQ==}
-
-  tailwindcss@4.2.2:
-    resolution: {integrity: sha512-KWBIxs1Xb6NoLdMVqhbhgwZf2PGBpPEiwOqgI4pFIYbNTfBXiKYyWoTsXgBQ9WFg/OlhnvHaY+AEpW7wSmFo2Q==}
 
   tailwindcss@4.3.0:
     resolution: {integrity: sha512-y6nxMGB1nMW9R6k96e5gdIFzcfL/gTJRNaqGes1YvkLnPVXzWgbqFF2yLC0T8G774n24cx3Pe8XrKoniCOAH+Q==}
@@ -4294,8 +4291,6 @@ snapshots:
   svix@1.92.2:
     dependencies:
       standardwebhooks: 1.0.0
-
-  tailwindcss@4.2.2: {}
 
   tailwindcss@4.3.0: {}
 
