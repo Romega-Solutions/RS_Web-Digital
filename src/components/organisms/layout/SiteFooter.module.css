@@ -267,8 +267,8 @@
   @apply flex items-center justify-center;
   color: var(--color-brand-secondary);
   position: fixed;
-  right: max(1rem, env(safe-area-inset-right));
-  bottom: max(1rem, env(safe-area-inset-bottom));
+  right: max(clamp(1rem, 3vw, 2rem), env(safe-area-inset-right));
+  bottom: calc(max(clamp(1rem, 3vw, 2rem), env(safe-area-inset-bottom)) + 3.5rem + 0.75rem);
   z-index: 60;
   width: 3rem;
   height: 3rem;
@@ -297,6 +297,12 @@
 
 .backtop:active {
   transform: translateY(1px);
+}
+
+@media (min-width: 768px) {
+  .backtop {
+    bottom: calc(max(clamp(1rem, 3vw, 2rem), env(safe-area-inset-bottom)) + 4rem + 0.75rem);
+  }
 }
 
 .legal {

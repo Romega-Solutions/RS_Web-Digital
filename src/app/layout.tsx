@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { RouteAnnouncer } from "@/components/accessibility/RouteAnnouncer";
+import { ChatLauncher } from "@/components/organisms/shared/ChatLauncher";
 import localFont from "next/font/local";
 import { Poppins } from "next/font/google";
 import { absoluteUrl, siteConfig } from "@/lib/seo";
@@ -108,6 +109,7 @@ export default function RootLayout({
         </a>
         <RouteAnnouncer />
         {children}
+        <ChatLauncher />
       </body>
     </html>
   );
