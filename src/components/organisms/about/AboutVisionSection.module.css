@@ -37,7 +37,7 @@
 
 .photo {
   @apply object-cover;
-  object-position: right bottom;
+  object-position: center;
 }
 
 @media (min-width: 1024px) {

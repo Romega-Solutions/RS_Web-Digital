@@ -22,8 +22,8 @@ export function AboutVisionSection() {
 
         <div className={styles.photoFrame}>
           <Image
-            src="/vision-1.webp"
-            alt="A professional working from a laptop"
+            src="/vision-team.webp"
+            alt="A team collaborating around a laptop in a modern workspace"
             fill
             sizes="(max-width: 767px) 100vw, 42vw"
             className={styles.photo}
