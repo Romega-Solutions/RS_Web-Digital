@@ -85,22 +85,39 @@ type WordRevealProps = {
 
 function WordReveal({ text, animate, onTick, onDone }: WordRevealProps) {
   const tokens = useMemo(() => text.split(/(\s+)/), [text]);
+  const { lastWordIdx, orderByIndex } = useMemo(() => {
+    const order = new Map<number, number>();
+    let last = -1;
+    let count = 0;
+    tokens.forEach((tok, i) => {
+      if (tok.trim().length > 0) {
+        order.set(i, count++);
+        last = i;
+      }
+    });
+    return { lastWordIdx: last, orderByIndex: order };
+  }, [tokens]);
+
+  // Throttle onTick to one call per animation frame across all word animations
+  const tickPendingRef = useRef(false);
+  const handleTick = useCallback(() => {
+    if (!onTick || tickPendingRef.current) return;
+    tickPendingRef.current = true;
+    requestAnimationFrame(() => {
+      tickPendingRef.current = false;
+      onTick();
+    });
+  }, [onTick]);
 
   if (!animate) {
     return <>{text}</>;
   }
 
-  const wordIndices: number[] = [];
-  tokens.forEach((tok, i) => {
-    if (tok.trim().length > 0) wordIndices.push(i);
-  });
-  const lastWordIdx = wordIndices[wordIndices.length - 1];
-
   return (
     <>
       {tokens.map((token, i) => {
         if (!token.trim()) return <Fragment key={i}>{token}</Fragment>;
-        const order = wordIndices.indexOf(i);
+        const order = orderByIndex.get(i) ?? 0;
         return (
           <motion.span
             key={i}
@@ -112,7 +129,7 @@ function WordReveal({ text, animate, onTick, onDone }: WordRevealProps) {
               delay: order * WORD_STAGGER_S,
               ease: "easeOut",
             }}
-            onUpdate={onTick}
+            onUpdate={handleTick}
             onAnimationComplete={() => {
               if (i === lastWordIdx) onDone?.();
             }}
@@ -156,7 +173,20 @@ export function ChatLauncher() {
   const titleId = useId();
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const panelRef = useRef<HTMLDivElement | null>(null);
+  const launcherRef = useRef<HTMLButtonElement | null>(null);
   const reduceMotion = useReducedMotion();
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Track viewport size so aria-modal reflects the modal-on-mobile UX
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
 
   const pinScrollToBottom = useCallback(() => {
     const el = scrollRef.current;
@@ -169,18 +199,50 @@ export function ChatLauncher() {
     pinScrollToBottom();
   }, [messages, isSending, pinScrollToBottom]);
 
-  // Focus input when opening; close on Esc
+  // Focus input when opening; restore focus to launcher when closing
+  const wasOpenRef = useRef(false);
   useEffect(() => {
     if (open) {
+      wasOpenRef.current = true;
       const t = setTimeout(() => inputRef.current?.focus(), 60);
       return () => clearTimeout(t);
     }
+    // Only return focus to the launcher if we're actually closing (not on mount)
+    if (wasOpenRef.current) {
+      wasOpenRef.current = false;
+      launcherRef.current?.focus();
+    }
   }, [open]);
 
+  // Esc to close + Tab focus trap inside the panel
   useEffect(() => {
     if (!open) return;
     const onKey = (e: globalThis.KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const panel = panelRef.current;
+      if (!panel) return;
+      const focusables = panel.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0]!;
+      const last = focusables[focusables.length - 1]!;
+      const active = document.activeElement as HTMLElement | null;
+      if (e.shiftKey) {
+        if (active === first || !panel.contains(active)) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (active === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -206,7 +268,21 @@ export function ChatLauncher() {
         });
 
         if (!res.ok) {
-          throw new Error(`HTTP ${res.status}`);
+          const errMsg =
+            res.status === 429
+              ? "You're sending messages a bit quickly — please wait a moment."
+              : res.status >= 500
+                ? "Our assistant is briefly unavailable. Please try again."
+                : "I couldn't process that message. Please try again.";
+          setError(errMsg);
+          const botId = makeId();
+          setMessages((prev) => [
+            ...prev,
+            { id: botId, role: "bot", text: errMsg },
+          ]);
+          setAnimatingBotId(reduceMotion ? null : botId);
+          setSuggestions(INITIAL_SUGGESTIONS);
+          return;
         }
 
         const data = (await res.json()) as {
@@ -235,6 +311,7 @@ export function ChatLauncher() {
           },
         ]);
         setAnimatingBotId(reduceMotion ? null : botId);
+        setSuggestions(INITIAL_SUGGESTIONS);
       } finally {
         setIsSending(false);
       }
@@ -276,9 +353,10 @@ export function ChatLauncher() {
             />
             <motion.div
               key="panel"
+              ref={panelRef}
               id={panelId}
               role="dialog"
-              aria-modal="false"
+              aria-modal={isMobile ? "true" : "false"}
               aria-labelledby={titleId}
               className={styles.panel}
               initial={{ opacity: 0, y: 18, scale: 0.98 }}
@@ -405,6 +483,7 @@ export function ChatLauncher() {
       </AnimatePresence>
 
       <motion.button
+        ref={launcherRef}
         type="button"
         className={styles.launcherButton}
         onClick={() => setOpen((v) => !v)}
