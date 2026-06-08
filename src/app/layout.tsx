@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { RouteAnnouncer } from "@/components/accessibility/RouteAnnouncer";
 import { ChatLauncher } from "@/components/organisms/shared/ChatLauncher";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import localFont from "next/font/local";
 import { Poppins } from "next/font/google";
 import { absoluteUrl, siteConfig } from "@/lib/seo";
@@ -111,6 +112,7 @@ export default function RootLayout({
         <RouteAnnouncer />
         {children}
         <ChatLauncher />
+        <Analytics />
         <SpeedInsights />
       </body>
     </html>
