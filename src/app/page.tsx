@@ -7,7 +7,8 @@ import { ServicesSpotlight } from "@/components/organisms/home/ServicesSpotlight
 import { JsonLd } from "@/components/seo/JsonLd";
 import { HomeHero } from "@/components/organisms/home/HomeHero";
 import { ServiceStrip } from "@/components/organisms/home/ServiceStrip";
-import { TestimonialSection } from "@/components/organisms/home/TestimonialSection";
+// Temporarily hidden — placeholder testimonials. Restore when real ones are ready.
+// import { TestimonialSection } from "@/components/organisms/home/TestimonialSection";
 import { SocialConnect } from "@/components/organisms/home/SocialConnect";
 import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
 import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
@@ -89,7 +90,7 @@ export default function Home() {
       <TrustSection />
       <ApproachSection />
       <ServicesSpotlight />
-      <TestimonialSection />
+      {/* <TestimonialSection /> temporarily hidden */}
       <SocialConnect />
     </MainTemplate>
   );

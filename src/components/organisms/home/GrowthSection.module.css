@@ -185,10 +185,11 @@
 }
 
 @media (min-width: 1024px) {
-  .contentGrid {
+  /* Single column while the video is hidden — restore the 2-col rule below when the video returns. */
+  /* .contentGrid {
     grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
     gap: 2.75rem;
-  }
+  } */
 
   .media {
     aspect-ratio: 16 / 10.6;
@@ -196,10 +197,11 @@
 }
 
 @media (min-width: 1280px) {
-  .contentGrid {
+  /* Single column while the video is hidden — restore the 2-col rule below when the video returns. */
+  /* .contentGrid {
     grid-template-columns: minmax(0, 1.34fr) minmax(24rem, 0.66fr);
     gap: clamp(3.25rem, 4vw, 5rem);
-  }
+  } */
 
   .title {
     max-width: 17ch;

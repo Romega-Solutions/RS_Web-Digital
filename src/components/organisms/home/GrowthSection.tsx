@@ -45,6 +45,7 @@ export function GrowthSection() {
             {/* focus list removed per user request */}
           </div>
 
+          {/* Video temporarily hidden per request — restore this block to bring it back.
           <ScrollReveal variant="slideUp" delay={0.2} className={styles.side}>
             <div className={styles.media}>
               <video
@@ -64,6 +65,7 @@ export function GrowthSection() {
               A steadier way to scale, across talent, operations, and brand.
             </p>
           </ScrollReveal>
+          */}
         </div>
       </div>
 
