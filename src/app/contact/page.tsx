@@ -12,7 +12,7 @@ const contactFaqs = [
   {
     question: "What services does Romega Solutions offer?",
     answer:
-      "We provide HR, IT, administrative support, staffing solutions, and social media management services designed to help businesses operate more efficiently and grow with confidence.",
+      "We support businesses through talent acquisition, brand and growth support, and strategic operations. That includes executive search, remote and global talent sourcing, brand positioning, messaging clarity, workflow optimization, and scalable operating systems.",
   },
   {
     question: "How do you find the right people for my business?",
@@ -20,9 +20,9 @@ const contactFaqs = [
       "We take the time to understand your needs, then carefully source, screen, and evaluate candidates to find the best fit for your team.",
   },
   {
-    question: "How much do your services cost?",
+    question: "How much does an engagement cost?",
     answer:
-      "Our pricing depends on the type of service and level of support you need. Get in touch with us, and we'll provide a customized quote based on your requirements.",
+      "Pricing depends on the service mix, urgency, and level of support required. After an initial consultation, we recommend a tailored scope and quote based on your growth goals.",
   },
   {
     question: "How soon can we get started?",
@@ -30,9 +30,9 @@ const contactFaqs = [
       "Once we understand your goals and requirements, we'll recommend the best solution and guide you through the next steps to get started as quickly as possible.",
   },
   {
-    question: "Do you offer social media management services?",
+    question: "Do you support brand and growth strategy?",
     answer:
-      "Yes! We're expanding our services to include social media management, helping businesses build their online presence, connect with their audience, and create consistent, engaging content.",
+      "Yes. Our brand and growth support focuses on positioning, messaging clarity, content direction, market presence alignment, and insights that help teams communicate with more confidence.",
   },
   {
     question: "Can I choose only the services I need?",
@@ -42,7 +42,7 @@ const contactFaqs = [
   {
     question: "Why work with Romega Solutions?",
     answer:
-      "We focus on providing reliable support, quality talent, and personalized solutions that help businesses save time, improve efficiency, and focus on what matters most—growth.",
+      "We connect people, brand, and operations so growth is supported from several angles at once. Our work is practical, discreet, and tailored to the realities of scaling teams.",
   },
 ] as const;
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 const FALLBACK_SITE_URL = "https://www.romega-solutions.com";
+const PREVIEW_HOST_SUFFIXES = [".vercel.app"];
 
 function normalizeSiteUrl(raw: string | undefined): string {
   const value = raw?.trim();
@@ -10,7 +11,13 @@ function normalizeSiteUrl(raw: string | undefined): string {
   // ERR_INVALID_URL during the build. Prepend https:// when missing.
   const withScheme = /^https?:\/\//i.test(value) ? value : `https://${value}`;
   try {
-    return new URL(withScheme).toString();
+    const url = new URL(withScheme);
+    if (PREVIEW_HOST_SUFFIXES.some((suffix) => url.hostname.endsWith(suffix))) {
+      return FALLBACK_SITE_URL;
+    }
+    url.hash = "";
+    url.search = "";
+    return url.toString();
   } catch {
     return FALLBACK_SITE_URL;
   }
@@ -59,6 +66,7 @@ type BuildMetadataInput = {
   path?: string;
   keywords?: string[];
   image?: string;
+  robots?: Metadata["robots"];
 };
 
 export function absoluteUrl(path = "/") {
@@ -71,22 +79,34 @@ export function createMetadata({
   path = "/",
   keywords = [],
   image = siteConfig.ogImage,
+  robots = {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
 }: BuildMetadataInput): Metadata {
   const url = absoluteUrl(path);
   const imageUrl = absoluteUrl(image);
   const fullTitle = `${title} | ${siteConfig.name}`;
 
   return {
-    title: fullTitle,
+    title: path === "/" ? { absolute: fullTitle } : title,
     description,
     keywords: [...siteConfig.defaultKeywords, ...keywords],
+    robots,
     icons: {
       icon: siteConfig.favicon,
       shortcut: siteConfig.favicon,
       apple: "/apple-touch-icon.png",
     },
     alternates: {
-      canonical: path,
+      canonical: url,
     },
     openGraph: {
       title: fullTitle,
@@ -134,9 +154,10 @@ export function createOrganizationSchema() {
     contactPoint: {
       "@type": "ContactPoint",
       email: siteConfig.email,
+      telephone: siteConfig.phone,
       contactType: "sales",
       availableLanguage: ["English"],
-      areaServed: ["US", "APAC"],
+      areaServed: ["United States", "Asia-Pacific"],
     },
   };
 }
@@ -150,6 +171,8 @@ export function createLocalBusinessSchema() {
     image: absoluteUrl(siteConfig.ogImage),
     url: absoluteUrl("/"),
     telephone: siteConfig.phone,
+    email: siteConfig.email,
+    priceRange: "$$",
     address: {
       "@type": "PostalAddress",
       ...siteConfig.address,

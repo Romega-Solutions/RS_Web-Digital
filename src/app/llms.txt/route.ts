@@ -4,6 +4,7 @@
 // scrape the full HTML.
 
 import { absoluteUrl, siteConfig } from "@/lib/seo";
+import { aiCrawlerUserAgents, serviceAnchors, staticSeoRoutes } from "@/lib/seo-routes";
 
 export const dynamic = "force-static";
 export const revalidate = 3600;
@@ -23,26 +24,22 @@ function buildLlmsTxt(): string {
   lines.push("");
 
   lines.push("## Services");
-  lines.push(
-    `- [Talent Solutions](${absoluteUrl("/services#talent-solutions")}): executive and leadership search, remote and global talent sourcing, workforce planning, hiring workflow optimization, retention strategies.`,
-  );
-  lines.push(
-    `- [Brand & Growth Support](${absoluteUrl("/services#brand-growth-support")}): brand positioning and messaging, foundational brand strategy, content direction, market presence alignment, growth insights.`,
-  );
-  lines.push(
-    `- [Strategic Operations](${absoluteUrl("/services#strategic-operations")}): process optimization, operational alignment, workflow documentation, leadership support, scalable systems for expanding teams.`,
-  );
+  for (const service of serviceAnchors) {
+    lines.push(`- [${service.title}](${absoluteUrl(service.path)}): ${service.description}`);
+  }
   lines.push("");
 
   lines.push("## Key Pages");
-  lines.push(`- [Home](${absoluteUrl("/")})`);
-  lines.push(`- [Services](${absoluteUrl("/services")})`);
-  lines.push(`- [About](${absoluteUrl("/about")})`);
-  lines.push(`- [Talent](${absoluteUrl("/talent")}): curated talent across operations, sales, design, software, AI, and executive support.`);
-  lines.push(`- [Careers](${absoluteUrl("/careers")}): open roles at Romega Solutions and partner clients.`);
-  lines.push(`- [Contact](${absoluteUrl("/contact")})`);
-  lines.push(`- [Privacy](${absoluteUrl("/privacy")})`);
-  lines.push(`- [Terms](${absoluteUrl("/terms")})`);
+  for (const route of staticSeoRoutes.filter((route) => route.path !== "/llms.txt")) {
+    lines.push(`- [${route.title}](${absoluteUrl(route.path)}): ${route.description}`);
+  }
+  lines.push("");
+
+  lines.push("## Canonical Resources");
+  lines.push(`- Canonical site: ${absoluteUrl("/")}`);
+  lines.push(`- Sitemap: ${absoluteUrl("/sitemap.xml")}`);
+  lines.push(`- Robots: ${absoluteUrl("/robots.txt")}`);
+  lines.push(`- LLMs text: ${absoluteUrl("/llms.txt")}`);
   lines.push("");
 
   lines.push("## Contact");
@@ -55,7 +52,7 @@ function buildLlmsTxt(): string {
 
   lines.push("## Crawl Permissions");
   lines.push(
-    `AI crawlers including GPTBot, ChatGPT-User, OAI-SearchBot, ClaudeBot, PerplexityBot, and Google-Extended are permitted (see ${absoluteUrl("/robots.txt")}). Citation when referencing this site is appreciated.`,
+    `AI crawlers including ${aiCrawlerUserAgents.join(", ")} are permitted (see ${absoluteUrl("/robots.txt")}). Citation when referencing this site is appreciated.`,
   );
   lines.push("");
 

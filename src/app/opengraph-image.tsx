@@ -18,8 +18,6 @@ export default async function OpenGraphImage() {
   const logo = await readFile(join(process.cwd(), "public", logoPath), "base64");
   const logoSrc = `data:image/png;base64,${logo}`;
 
-  // next/og renders standard img tags inside ImageResponse.
-  /* eslint-disable @next/next/no-img-element */
   return new ImageResponse(
     (
       <div
@@ -196,5 +194,4 @@ export default async function OpenGraphImage() {
     ),
     size,
   );
-  /* eslint-enable @next/next/no-img-element */
 }

@@ -5,7 +5,8 @@ import { MainTemplate } from "@/components/templates/MainTemplate";
 import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
 import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
 import { getTicketingSupabase } from "@/lib/supabase";
-import { createMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { absoluteUrl, createBreadcrumbSchema, createMetadata, siteConfig } from "@/lib/seo";
 import { ApplyForm } from "./ApplyForm";
 import styles from "./ApplyPage.module.css";
 
@@ -16,6 +17,15 @@ type Position = {
   location: string | null;
   job_description: string | null;
   is_open: boolean;
+};
+
+const noindexRobots: Metadata["robots"] = {
+  index: false,
+  follow: false,
+  googleBot: {
+    index: false,
+    follow: false,
+  },
 };
 
 async function fetchPosition(id: number): Promise<Position | null | "not_configured"> {
@@ -51,12 +61,40 @@ export async function generateMetadata({
     "Submit your application to Romega Solutions. Our recruitment team will be in touch within 5–7 business days.";
   const id = Number.parseInt(positionId, 10);
   if (!Number.isFinite(id) || id <= 0) {
-    return createMetadata({ title: "Apply", description, path: `/apply/${positionId}` });
+    return createMetadata({
+      title: "Apply",
+      description,
+      path: `/apply/${positionId}`,
+      robots: noindexRobots,
+    });
   }
   const result = await fetchPosition(id);
-  const title =
-    result && result !== "not_configured" ? `Apply for ${result.job_title}` : "Apply";
-  return createMetadata({ title, description, path: `/apply/${id}` });
+  if (!result || result === "not_configured") {
+    return createMetadata({
+      title: "Apply",
+      description,
+      path: `/apply/${id}`,
+      robots: noindexRobots,
+    });
+  }
+
+  const roleDescription = [
+    `Apply for ${result.job_title} with Romega Solutions.`,
+    result.location ? `Location: ${result.location}.` : "",
+    result.client ? `Client or team: ${result.client}.` : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  return createMetadata({
+    title: `Apply for ${result.job_title}`,
+    description: roleDescription,
+    path: `/apply/${id}`,
+    keywords: [result.job_title, result.location, "romega solutions application"].filter(
+      (keyword): keyword is string => Boolean(keyword),
+    ),
+    robots: result.is_open ? undefined : noindexRobots,
+  });
 }
 
 export default async function ApplyPage({
@@ -69,9 +107,71 @@ export default async function ApplyPage({
   if (!Number.isInteger(id) || id <= 0) notFound();
 
   const result = await fetchPosition(id);
+  const structuredData =
+    result && result !== "not_configured"
+      ? {
+          "@context": "https://schema.org",
+          "@graph": [
+            createBreadcrumbSchema([
+              { name: "Home", path: "/" },
+              { name: "Careers", path: "/careers" },
+              { name: result.job_title, path: `/apply/${id}` },
+            ]),
+            {
+              "@type": "WebPage",
+              "@id": absoluteUrl(`/apply/${id}#webpage`),
+              url: absoluteUrl(`/apply/${id}`),
+              name: `Apply for ${result.job_title}`,
+              description:
+                result.job_description ||
+                `Application page for ${result.job_title} with Romega Solutions.`,
+              isPartOf: { "@id": absoluteUrl("/#website") },
+              about: { "@id": absoluteUrl("/#organization") },
+              inLanguage: "en-US",
+            },
+            ...(result.is_open
+              ? [
+                  {
+                    "@type": "JobPosting",
+                    "@id": absoluteUrl(`/apply/${id}#jobposting`),
+                    title: result.job_title,
+                    description:
+                      result.job_description || `Open role through ${siteConfig.name}.`,
+                    datePosted: new Date().toISOString().slice(0, 10),
+                    hiringOrganization: {
+                      "@type": "Organization",
+                      name: siteConfig.name,
+                      sameAs: absoluteUrl("/"),
+                      logo: absoluteUrl(siteConfig.logo),
+                    },
+                    jobLocation: {
+                      "@type": "Place",
+                      name: result.location || "Remote or client-dependent",
+                      address: {
+                        "@type": "PostalAddress",
+                        addressLocality: result.location || "Remote",
+                        addressCountry: "US",
+                      },
+                    },
+                    directApply: true,
+                    url: absoluteUrl(`/apply/${id}`),
+                  },
+                ]
+              : []),
+          ],
+        }
+      : undefined;
 
   return (
-    <MainTemplate header={<SiteHeader />} footer={<SiteFooter />}>
+    <MainTemplate
+      jsonLd={
+        structuredData ? (
+          <JsonLd id="apply-position-structured-data" data={structuredData} />
+        ) : undefined
+      }
+      header={<SiteHeader />}
+      footer={<SiteFooter />}
+    >
       <div className={styles.page}>
         <div className={styles.inner}>
           {result === "not_configured" ? (

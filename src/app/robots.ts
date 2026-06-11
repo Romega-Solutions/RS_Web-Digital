@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { absoluteUrl, siteConfig } from "@/lib/seo";
+import { aiCrawlerUserAgents, searchCrawlerUserAgents } from "@/lib/seo-routes";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -10,23 +11,11 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/", "/_next/"],
       },
       {
-        userAgent: ["Googlebot", "Bingbot"],
+        userAgent: [...searchCrawlerUserAgents],
         allow: "/",
       },
       {
-        userAgent: "OAI-SearchBot",
-        allow: "/",
-      },
-      {
-        userAgent: "GPTBot",
-        allow: "/",
-      },
-      {
-        userAgent: "ChatGPT-User",
-        allow: "/",
-      },
-      {
-        userAgent: ["ClaudeBot", "PerplexityBot", "Google-Extended"],
+        userAgent: [...aiCrawlerUserAgents],
         allow: "/",
       },
     ],
