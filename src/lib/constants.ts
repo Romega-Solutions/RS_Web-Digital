@@ -58,8 +58,8 @@ export const TEAM_MEMBERS: TeamMember[] = [
   {
     id: "ken-patrick-garcia",
     name: "Ken Patrick Garcia",
-    title: "Full Stack AI Engineer",
-    role: "Full Stack AI Engineer",
+    title: "Former Full Stack AI Engineer",
+    role: "Former Full Stack AI Engineer",
     image: "/images/about/IC/IC_Web_Developer_Ken.jpg",
     bio: "Full-stack developer specializing in modern web and mobile applications with AI and cloud integration.",
     expertise: [
@@ -84,8 +84,8 @@ export const TEAM_MEMBERS: TeamMember[] = [
   {
     id: "mark-siazon",
     name: "Mark Siazon",
-    title: "Product Designer",
-    role: "Product Designer",
+    title: "Former UI/UX Product Designer",
+    role: "Former UI/UX Product Designer",
     image: "/images/about/IC/IC_UI_UX_Designer_Mark.png",
     bio: [
       "Shaping ideas into digital experiences",
