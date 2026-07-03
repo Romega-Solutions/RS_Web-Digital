@@ -67,6 +67,16 @@ export const TEAM_MEMBERS: TeamMember[] = [
     linkedin: "https://www.linkedin.com/",
   },
   {
+    id: "princess-ramada-usman",
+    name: "Princess Ramada Usman",
+    title: "Executive Assistant",
+    role: "Executive Assistant",
+    image: "/images/about/IC/IC_Executive_Assistant_Princess_Usman.webp",
+    bio: "Executive assistant supporting leadership coordination, calendar management, and organized day-to-day operations.",
+    expertise: ["Executive support", "Calendar coordination", "Administrative operations"],
+    achievements: ["Leadership support", "Schedule management", "Team communication"],
+  },
+  {
     id: "aaron-garcia",
     name: "Aaron Garcia",
     title: "Social Media Coordinator",
