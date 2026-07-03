@@ -161,29 +161,43 @@ export function TeamCarousel({ onMemberClick }: TeamCarouselProps) {
                   key={`${member.id}-${position}`}
                   className={`${styles.item} ${positionClass} ${centerClass}`}
                 >
-                  <button
-                    type="button"
+                  <div
                     className={`${styles.card} ${
                       member.id === "rich-salvador" ? styles["card--white-bg"] : ""
                     }`}
-                    disabled={!isCenter}
-                    onClick={() => isCenter && onMemberClick?.(member)}
                   >
-                    <Image
-                      src={member.image}
-                      alt={member.name}
-                      fill
-                      className={styles.image}
-                      sizes="(max-width: 768px) 200px, 400px"
-                    />
+                    <a
+                      href={member.image}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.imageLink}
+                      aria-label={`Open ${member.name}'s image in a new tab`}
+                    >
+                      <Image
+                        src={member.image}
+                        alt={member.name}
+                        fill
+                        className={styles.image}
+                        sizes="(max-width: 768px) 200px, 400px"
+                      />
+                    </a>
 
                     <div className={styles.overlay}>
                       <h3 className={styles.name}>{member.name}</h3>
                       <p className={styles.role}>{member.title}</p>
                     </div>
 
-                    {isCenter ? <div className={styles.cta}>View Profile</div> : null}
-                  </button>
+                    {isCenter ? (
+                      <button
+                        type="button"
+                        className={styles.cta}
+                        onClick={() => onMemberClick?.(member)}
+                        aria-label={`Open ${member.name} profile`}
+                      >
+                        View Profile
+                      </button>
+                    ) : null}
+                  </div>
                 </div>
               );
             })}
