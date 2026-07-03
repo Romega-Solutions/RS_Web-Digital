@@ -223,4 +223,26 @@ export const TESTIMONIALS: Testimonial[] = [
       "My time at Romega Solutions gave me meaningful, hands-on experience in technical recruitment and market research while sharpening both my analytical thinking and attention to detail.",
     linkedin: "https://www.linkedin.com/",
   },
+  {
+    id: "mark-siazon-former-product-designer",
+    name: "Mark Siazon",
+    title: "Former Product Designer",
+    school: "Romega Solutions",
+    image: "/images/about/IC/IC_UI_UX_Designer_Mark.png",
+    rating: 5,
+    quote:
+      "Grateful to Romega Solutions for the opportunity to grow from a UI/UX Design Intern to a UI/UX Designer, and ultimately a Product Designer. Thank you for the trust, mentorship, and unforgettable experience. Wishing the team continued success.",
+    linkedin: "https://www.linkedin.com/in/mark-siazon/",
+  },
+  {
+    id: "ken-patrick-garcia-former-full-stack-ai-engineer",
+    name: "Ken Patrick Garcia",
+    title: "Former Full Stack AI Engineer",
+    school: "Romega Solutions",
+    image: "/images/about/IC/IC_Web_Developer_Ken.jpg",
+    rating: 5,
+    quote:
+      "Romega Solutions gave me valuable insight into how technology and business come together. I'm thankful for the experience and the opportunity to grow as a Full Stack AI Engineer",
+    linkedin: "https://www.linkedin.com/",
+  },
 ];
