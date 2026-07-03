@@ -3,7 +3,14 @@
 import { TEAM_MEMBERS, type TeamMember } from "@/lib/constants";
 import { SectionIntro } from "@/components/molecules/content/SectionIntro";
 import Image from "next/image";
-import { useCallback, useRef, useState, type KeyboardEvent, type TouchEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type TouchEvent,
+} from "react";
 import styles from "./TeamCarousel.module.css";
 
 type TeamCarouselProps = {
@@ -22,6 +29,21 @@ export function TeamCarousel({ onMemberClick }: TeamCarouselProps) {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const [maxDotDistance, setMaxDotDistance] = useState(2);
+
+  useEffect(() => {
+    const updateDotRange = () => {
+      const isMobile = window.matchMedia("(max-width: 639px)").matches;
+      setMaxDotDistance(isMobile ? 1 : 2);
+    };
+
+    updateDotRange();
+    window.addEventListener("resize", updateDotRange);
+
+    return () => {
+      window.removeEventListener("resize", updateDotRange);
+    };
+  }, []);
 
   const handleScroll = useCallback(
     (direction: 1 | -1) => {
@@ -185,14 +207,15 @@ export function TeamCarousel({ onMemberClick }: TeamCarouselProps) {
             {TEAM_MEMBERS.map((member, index) => {
               const isActive = index === currentIndex;
               const isMobileHidden =
-                getCircularDistance(index, currentIndex, TEAM_MEMBERS.length) > 2;
+                getCircularDistance(index, currentIndex, TEAM_MEMBERS.length) >
+                maxDotDistance;
 
               return (
                 <button
                   key={member.id}
                   type="button"
                   className={`${styles.dot} ${isActive ? styles["dot--active"] : ""} ${
-                    isMobileHidden ? styles["dot--mobile-hidden"] : ""
+                    isMobileHidden ? styles["dot--hidden"] : ""
                   }`}
                   onClick={() => goToSlide(index)}
                   aria-label={`Go to ${member.name}`}

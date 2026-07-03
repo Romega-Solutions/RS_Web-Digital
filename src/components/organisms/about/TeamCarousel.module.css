@@ -162,7 +162,9 @@
 }
 
 .controls {
-  @apply mt-5 flex flex-wrap items-center justify-center gap-3 px-4;
+  @apply mt-5 flex w-full items-center justify-center gap-2 px-3;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
 }
 
 .button {
@@ -190,6 +192,10 @@
 .dot {
   @apply relative h-11 w-11 cursor-pointer rounded-full border-none bg-transparent p-0 transition-all duration-300;
   transition-timing-function: ease;
+}
+
+.dot--hidden {
+  @apply hidden;
 }
 
 .dot::after {
@@ -276,9 +282,6 @@
     @apply h-3.5 w-3.5;
   }
 
-  .dot--mobile-hidden {
-    @apply hidden;
-  }
 }
 
 @media (min-width: 640px) and (max-width: 767px) {
