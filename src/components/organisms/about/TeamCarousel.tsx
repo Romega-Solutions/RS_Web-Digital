@@ -10,6 +10,12 @@ type TeamCarouselProps = {
   onMemberClick?: (member: TeamMember) => void;
 };
 
+function getCircularDistance(index: number, currentIndex: number, length: number) {
+  const directDistance = Math.abs(index - currentIndex);
+
+  return Math.min(directDistance, length - directDistance);
+}
+
 export function TeamCarousel({ onMemberClick }: TeamCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(2);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -176,18 +182,24 @@ export function TeamCarousel({ onMemberClick }: TeamCarouselProps) {
           </button>
 
           <div className={styles.dots}>
-            {TEAM_MEMBERS.map((member, index) => (
-              <button
-                key={member.id}
-                type="button"
-                className={`${styles.dot} ${
-                  index === currentIndex ? styles["dot--active"] : ""
-                }`}
-                onClick={() => goToSlide(index)}
-                aria-label={`Go to ${member.name}`}
-                aria-current={index === currentIndex ? "true" : "false"}
-              />
-            ))}
+            {TEAM_MEMBERS.map((member, index) => {
+              const isActive = index === currentIndex;
+              const isMobileHidden =
+                getCircularDistance(index, currentIndex, TEAM_MEMBERS.length) > 2;
+
+              return (
+                <button
+                  key={member.id}
+                  type="button"
+                  className={`${styles.dot} ${isActive ? styles["dot--active"] : ""} ${
+                    isMobileHidden ? styles["dot--mobile-hidden"] : ""
+                  }`}
+                  onClick={() => goToSlide(index)}
+                  aria-label={`Go to ${member.name}`}
+                  aria-current={isActive ? "true" : "false"}
+                />
+              );
+            })}
           </div>
 
           <button
