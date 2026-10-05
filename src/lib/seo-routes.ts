@@ -51,6 +51,13 @@ export const staticSeoRoutes = [
     image: "/prompt-images/romega-talent.png",
   },
   {
+    path: "/market-research",
+    title: "Market Research",
+    description: "Research and analysis from the Romega team on the markets and technologies shaping business growth.",
+    priority: 0.7,
+    changeFrequency: "weekly",
+  },
+  {
     path: "/contact",
     title: "Contact",
     description: "Contact Romega Solutions for talent, brand, and operations support.",

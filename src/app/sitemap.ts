@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { absoluteUrl } from "@/lib/seo";
 import { fetchOpenPositions } from "@/lib/careers-data";
+import { getAllPosts } from "@/lib/market-research";
 import { staticSeoRoutes } from "@/lib/seo-routes";
 
 // Regenerate the sitemap every 5 minutes so newly-opened roles surface
@@ -42,5 +43,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     );
   }
 
-  return [...base, ...applyRoutes];
+  // One entry per Market Research post, dated by its publish date. Same
+  // non-fatal handling as above: a content problem must not take down the
+  // whole sitemap.
+  let researchRoutes: MetadataRoute.Sitemap = [];
+  try {
+    const posts = await getAllPosts();
+    researchRoutes = posts.map((post) => ({
+      url: absoluteUrl(`/market-research/${post.slug}`),
+      lastModified: new Date(`${post.date}T12:00:00Z`),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+      images: [absoluteUrl(post.cover.src)],
+    }));
+  } catch (err) {
+    console.error(
+      "[sitemap] couldn't load market research posts:",
+      err instanceof Error ? err.message : err,
+    );
+  }
+
+  return [...base, ...researchRoutes, ...applyRoutes];
 }
