@@ -23,6 +23,8 @@ RUN addgroup -S nodejs && adduser -S nextjs -G nodejs
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder /app/public ./public
+# Market Research posts are read from disk by the sitemap at runtime.
+COPY --from=builder /app/src/content ./src/content
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 
 USER nextjs
