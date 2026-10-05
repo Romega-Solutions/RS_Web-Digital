@@ -312,6 +312,13 @@ export function SiteNavbar({
             </Link>
           ))}
 
+          <Link
+            href="/market-research"
+            className={`${styles.navLink} ${activeItem === "Market Research" ? styles.navLinkActive : ""}`}
+          >
+            <span className="site-nav__link-text">Market Research</span>
+          </Link>
+
           <div
             className={`${styles.dropdown} ${styles.dropdownServices} ${isServicesDropdownOpen ? styles.dropdownOpen : ""}`}
             onMouseEnter={openServicesDropdown}
@@ -403,13 +410,6 @@ export function SiteNavbar({
               </div>
             ) : null}
           </div>
-
-          <Link
-            href="/market-research"
-            className={`${styles.navLink} ${styles.navLinkLast} ${activeItem === "Market Research" ? styles.navLinkActive : ""}`}
-          >
-            <span className="site-nav__link-text">Market Research</span>
-          </Link>
         </nav>
 
         <div className={styles.ctaWrap}>
