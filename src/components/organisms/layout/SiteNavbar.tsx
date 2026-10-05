@@ -12,7 +12,8 @@ export type SiteHeaderActiveItem =
   | "Services"
   | "Careers & Talents"
   | "Careers"
-  | "Talent";
+  | "Talent"
+  | "Market Research";
 
 type SiteNavbarProps = {
   activeItem?: SiteHeaderActiveItem;
@@ -402,6 +403,13 @@ export function SiteNavbar({
               </div>
             ) : null}
           </div>
+
+          <Link
+            href="/market-research"
+            className={`${styles.navLink} ${activeItem === "Market Research" ? styles.navLinkActive : ""}`}
+          >
+            <span className="site-nav__link-text">Market Research</span>
+          </Link>
         </nav>
 
         <div className={styles.ctaWrap}>
@@ -491,6 +499,13 @@ export function SiteNavbar({
             ))}
           </div>
         </div>
+        <Link
+          href="/market-research"
+          className={`${styles.navLink} ${styles.mobileLink} ${activeItem === "Market Research" ? styles.navLinkActive : ""}`}
+          onClick={handleCloseMobileMenu}
+        >
+          Market Research
+        </Link>
         <Link href="/contact" className={`${styles.cta} ${styles.mobileCta}`} onClick={handleCloseMobileMenu}>
           Contact Us
         </Link>

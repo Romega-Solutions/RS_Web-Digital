@@ -259,3 +259,11 @@
     @apply px-3;
   }
 }
+
+/* The Market Research link made the desktop row too wide just above the lg
+   breakpoint, squeezing the brand name; tighten the type a little there. */
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .brandText {
+    font-size: 1.25rem;
+  }
+}

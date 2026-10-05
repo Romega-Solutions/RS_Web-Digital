@@ -97,6 +97,9 @@ export function SiteFooter() {
                     <Link href="/about">About</Link>
                   </li>
                   <li>
+                    <Link href="/market-research">Market Research</Link>
+                  </li>
+                  <li>
                     <Link href="/careers">Careers</Link>
                   </li>
                   <li>
