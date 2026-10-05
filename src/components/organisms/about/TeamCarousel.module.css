@@ -262,7 +262,7 @@
   }
 
   .button {
-    @apply h-10 w-10;
+    @apply h-11 w-11;
     box-shadow: 0 5px 14px rgba(20, 28, 38, 0.14);
   }
 
@@ -275,7 +275,7 @@
   }
 
   .dot {
-    @apply h-8 w-8;
+    @apply h-11 w-11;
   }
 
   .dot::after {
@@ -286,6 +286,22 @@
     @apply h-3.5 w-3.5;
   }
 
+}
+
+/* At 280px the controls row is ~232px wide; 44px arrows plus three 44px dots
+   only fit when the gaps collapse. */
+@media (max-width: 359px) {
+  .controls {
+    @apply gap-1;
+  }
+
+  .dots {
+    @apply gap-0;
+  }
+
+  .dot {
+    @apply shrink-0;
+  }
 }
 
 @media (min-width: 640px) and (max-width: 767px) {
