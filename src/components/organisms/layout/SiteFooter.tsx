@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { siteConfig } from "@/lib/seo";
 import styles from "./SiteFooter.module.css";
 
@@ -62,7 +63,19 @@ function InstagramIcon() {
   );
 }
 
+// How far down the page before the back-to-top button appears.
+const BACK_TO_TOP_THRESHOLD_PX = 600;
+
 export function SiteFooter() {
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  useEffect(() => {
+    const update = () => setShowBackToTop(window.scrollY > BACK_TO_TOP_THRESHOLD_PX);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
+
   return (
     <footer id="site-footer" className={styles.root}>
       <div className={styles.inner}>
@@ -242,7 +255,10 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <a href="#top" className={styles.backtop}>
+        <a
+          href="#top"
+          className={`${styles.backtop} ${showBackToTop ? styles.backtopVisible : ""}`}
+        >
           <span className={styles.backtopArrow}>↑</span>
           <span>back to top</span>
         </a>
