@@ -1,0 +1,107 @@
+@reference "../../../app/globals.css";
+
+.root {
+  @apply relative flex h-full flex-col overflow-hidden rounded-[1.25rem] border border-brand-secondary/12 bg-white transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)];
+  box-shadow: 0 4px 20px rgb(16 54 110 / 0.06);
+}
+
+.root:hover,
+.root:focus-within {
+  @apply -translate-y-1;
+  box-shadow: 0 18px 44px rgb(16 54 110 / 0.14);
+}
+
+.media {
+  @apply relative w-full overflow-hidden bg-brand-secondary/10;
+  aspect-ratio: 1200 / 630;
+}
+
+.image {
+  @apply object-cover transition-transform duration-500 ease-out;
+}
+
+.root:hover .image {
+  @apply scale-[1.03];
+}
+
+.body {
+  @apply flex flex-1 flex-col gap-2.5 p-5 md:p-6;
+}
+
+.meta {
+  @apply m-0 flex flex-col gap-0.5 text-[11px] font-semibold uppercase tracking-[0.12em];
+  color: var(--color-muted);
+  font-family: var(--font-body);
+}
+
+.authors {
+  @apply normal-case tracking-normal;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.title {
+  @apply m-0 text-xl leading-tight text-brand-secondary md:text-[1.4rem];
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+/* The whole card is clickable: the title link stretches over it. */
+.link {
+  @apply text-inherit no-underline;
+}
+
+.link::after {
+  content: "";
+  @apply absolute inset-0 z-10 rounded-[1.25rem];
+}
+
+.link:focus-visible {
+  @apply outline-none;
+}
+
+.link:focus-visible::after {
+  @apply ring-4 ring-brand-primary ring-offset-2;
+}
+
+.summary {
+  @apply m-0 text-sm leading-relaxed;
+  color: var(--color-text-main);
+  font-family: var(--font-body);
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cta {
+  @apply mt-auto inline-flex items-center gap-1.5 pt-2 text-sm font-semibold text-brand-secondary;
+  font-family: var(--font-body);
+}
+
+.arrow {
+  @apply inline-block transition-transform duration-300;
+}
+
+.root:hover .arrow {
+  @apply translate-x-1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root,
+  .image,
+  .arrow {
+    @apply transition-none;
+  }
+
+  .root:hover,
+  .root:focus-within {
+    @apply translate-y-0;
+  }
+
+  .root:hover .image,
+  .root:hover .arrow {
+    @apply transform-none;
+  }
+}
