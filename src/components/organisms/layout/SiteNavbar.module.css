@@ -133,7 +133,8 @@
   @apply relative flex items-center;
 }
 
-.dropdownCareers {
+/* Breathing room before the Contact button belongs to the last link in the row. */
+.navLinkLast {
   @apply mr-3 xl:mr-5;
 }
 

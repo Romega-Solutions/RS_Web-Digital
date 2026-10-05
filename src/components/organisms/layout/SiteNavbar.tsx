@@ -406,7 +406,7 @@ export function SiteNavbar({
 
           <Link
             href="/market-research"
-            className={`${styles.navLink} ${activeItem === "Market Research" ? styles.navLinkActive : ""}`}
+            className={`${styles.navLink} ${styles.navLinkLast} ${activeItem === "Market Research" ? styles.navLinkActive : ""}`}
           >
             <span className="site-nav__link-text">Market Research</span>
           </Link>
