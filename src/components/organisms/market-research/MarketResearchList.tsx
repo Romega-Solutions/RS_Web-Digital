@@ -12,6 +12,7 @@ export function MarketResearchList({ posts }: MarketResearchListProps) {
       <div className={styles.inner}>
         <header className={styles.header}>
           <p className={styles.eyebrow}>Market Research</p>
+          <p className={styles.eyebrow}>Robbie Galoso — Founder & Industry Analyst</p>
           <h1 id="market-research-title" className={styles.title}>
             Research and insights from the Romega team
           </h1>
