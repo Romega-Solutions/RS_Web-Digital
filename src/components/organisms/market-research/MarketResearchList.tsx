@@ -11,7 +11,11 @@ export function MarketResearchList({ posts }: MarketResearchListProps) {
     <section className={styles.root} aria-labelledby="market-research-title">
       <div className={styles.inner}>
         <header className={styles.header}>
-          <p className={styles.eyebrow}>Market Research</p>
+          <p className={styles.eyebrow}>Market Researchers</p>
+          <div className={styles.byline}>
+            <p>Robbie Galoso | Founder & Industry Analyst</p>
+            <p>Sarah Busto | Market Analyst</p>
+          </div>
           <h1 id="market-research-title" className={styles.title}>
             Research and insights from the Romega team
           </h1>
