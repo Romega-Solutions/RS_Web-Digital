@@ -11,9 +11,8 @@ export function MarketResearchList({ posts }: MarketResearchListProps) {
     <section className={styles.root} aria-labelledby="market-research-title">
       <div className={styles.inner}>
         <header className={styles.header}>
-          <p className={styles.eyebrow}>Market Research</p>
+          <p className={styles.eyebrow}>Market Researchers</p>
           <div className={styles.byline}>
-            <p>Market Researchers</p>
             <p>Robbie Galoso | Founder & Industry Analyst</p>
             <p>Sarah Busto | Market Analyst</p>
           </div>
