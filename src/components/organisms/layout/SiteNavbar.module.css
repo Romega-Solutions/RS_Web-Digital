@@ -356,3 +356,19 @@
     max-height: calc(100svh - var(--site-header-height, 5rem) - 1.25rem);
   }
 }
+
+/* Room for the Market Research link between 1024px and 1199px. */
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .menu {
+    gap: 0.25rem;
+  }
+
+  .navLink {
+    padding-inline: 0.5rem;
+  }
+
+  .cta {
+    padding-inline: 1rem;
+    font-size: 0.875rem;
+  }
+}

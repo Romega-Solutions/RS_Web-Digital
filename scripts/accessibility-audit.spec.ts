@@ -13,6 +13,8 @@ const routes = [
   { name: "services", path: "/services" },
   { name: "talent", path: "/talent" },
   { name: "careers", path: "/careers" },
+  { name: "market-research", path: "/market-research" },
+  { name: "market-research-article", path: "/market-research/where-the-watts-go" },
   { name: "contact", path: "/contact" },
   { name: "privacy", path: "/privacy" },
   { name: "terms", path: "/terms" },

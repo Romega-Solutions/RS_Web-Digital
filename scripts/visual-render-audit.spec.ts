@@ -115,6 +115,20 @@ const routes = [
     text: /Current Opportunities/i,
   },
   {
+    name: "market-research",
+    path: "/market-research",
+    title: /Market Research/i,
+    heading: /Research and insights from the Romega team/i,
+    text: /Where the Watts Go/i,
+  },
+  {
+    name: "market-research-article",
+    path: "/market-research/where-the-watts-go",
+    title: /Where the Watts Go/i,
+    heading: /Where the Watts Go/i,
+    text: /Originally published on/i,
+  },
+  {
     name: "contact",
     path: "/contact",
     title: /Contact Romega Solutions/i,

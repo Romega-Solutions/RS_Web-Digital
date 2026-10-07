@@ -12,7 +12,8 @@ export type SiteHeaderActiveItem =
   | "Services"
   | "Careers & Talents"
   | "Careers"
-  | "Talent";
+  | "Talent"
+  | "Market Research";
 
 type SiteNavbarProps = {
   activeItem?: SiteHeaderActiveItem;
@@ -311,6 +312,13 @@ export function SiteNavbar({
             </Link>
           ))}
 
+          <Link
+            href="/market-research"
+            className={`${styles.navLink} ${activeItem === "Market Research" ? styles.navLinkActive : ""}`}
+          >
+            <span className="site-nav__link-text">Market Research</span>
+          </Link>
+
           <div
             className={`${styles.dropdown} ${styles.dropdownServices} ${isServicesDropdownOpen ? styles.dropdownOpen : ""}`}
             onMouseEnter={openServicesDropdown}
@@ -441,6 +449,13 @@ export function SiteNavbar({
             {item.label}
           </Link>
         ))}
+        <Link
+          href="/market-research"
+          className={`${styles.navLink} ${styles.mobileLink} ${activeItem === "Market Research" ? styles.navLinkActive : ""}`}
+          onClick={handleCloseMobileMenu}
+        >
+          Market Research
+        </Link>
         <div className={styles.mobileGroup}>
           <button
             type="button"

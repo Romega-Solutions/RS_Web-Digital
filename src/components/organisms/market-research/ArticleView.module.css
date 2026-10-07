@@ -1,0 +1,202 @@
+@reference "../../../app/globals.css";
+
+.root {
+  padding: var(--section-space-compact) var(--layout-gutter) var(--section-space);
+  background: linear-gradient(180deg, #f7f9fd, #ffffff 24rem);
+  font-family: var(--font-body);
+}
+
+.inner {
+  @apply mx-auto flex w-full flex-col;
+  max-width: 52rem;
+}
+
+.back {
+  @apply mb-6 inline-flex min-h-11 items-center gap-2 self-start text-sm font-semibold text-brand-secondary no-underline;
+}
+
+.back:hover {
+  @apply underline underline-offset-4;
+}
+
+.header {
+  @apply flex flex-col gap-4;
+}
+
+.title {
+  @apply m-0 text-brand-secondary;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.6vw, 3.4rem);
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.meta {
+  @apply m-0 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm;
+  color: var(--color-muted);
+}
+
+.dot {
+  opacity: 0.45;
+}
+
+/* These links sit in UI chrome, so give them a 44px touch target. The negative
+   margin cancels the padding so the text lines up exactly as before. */
+.authorLink {
+  @apply inline-block font-semibold text-brand-secondary underline underline-offset-4;
+  padding-block: 0.8rem;
+  margin-block: -0.8rem;
+}
+
+.cover {
+  @apply mx-0 mb-10 mt-8 overflow-hidden rounded-[1.25rem];
+  box-shadow: 0 18px 50px rgb(16 54 110 / 0.14);
+}
+
+.coverImage {
+  @apply block h-auto w-full;
+}
+
+/* Article body. The MDX output is plain elements, so style by tag. */
+.body {
+  color: var(--color-text-main);
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  overflow-wrap: break-word;
+}
+
+.body > :first-child {
+  margin-top: 0;
+}
+
+.body p {
+  margin: 0 0 1.25rem;
+}
+
+.body h2 {
+  @apply text-brand-secondary;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  line-height: 1.15;
+  font-weight: 700;
+  margin: 2.75rem 0 1rem;
+}
+
+.body h3 {
+  @apply text-brand-secondary;
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  line-height: 1.25;
+  font-weight: 700;
+  margin: 2rem 0 0.75rem;
+}
+
+.body ul,
+.body ol {
+  margin: 0 0 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.body ul {
+  list-style: disc;
+}
+
+.body ol {
+  list-style: decimal;
+}
+
+.body li {
+  margin-bottom: 0.4rem;
+}
+
+.body a {
+  color: var(--color-action);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+
+.body a:hover {
+  color: var(--color-action-hover);
+}
+
+.body strong {
+  @apply font-semibold;
+  color: var(--color-neutral);
+}
+
+.body blockquote {
+  margin: 1.5rem 0;
+  padding: 0.25rem 0 0.25rem 1.25rem;
+  border-left: 4px solid var(--color-primary);
+  font-style: italic;
+}
+
+.body hr {
+  margin: 2.5rem 0;
+  border: 0;
+  border-top: 1px solid rgb(53 141 240 / 0.2);
+}
+
+.body img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 2rem auto 0.75rem;
+  border-radius: 0.75rem;
+}
+
+/* A paragraph that only holds an image (optionally linked), and the italic-only
+   paragraph after it, which is how captions are written in the markdown. */
+.body p:has(> img, > a > img) {
+  margin-bottom: 0.5rem;
+}
+
+.body p:has(> img, > a > img) + p > em:only-child {
+  display: block;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--color-muted);
+}
+
+.body table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 0 0 1.25rem;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.body th,
+.body td {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid rgb(53 141 240 / 0.2);
+  text-align: left;
+}
+
+.footer {
+  @apply mt-12 flex flex-col gap-5 border-t border-brand-secondary/15 pt-8;
+}
+
+.original {
+  @apply m-0 text-sm;
+  color: var(--color-muted);
+}
+
+.original a {
+  @apply inline-block font-semibold text-brand-secondary underline underline-offset-4;
+  padding-block: 0.8rem;
+  margin-block: -0.8rem;
+}
+
+.backButton {
+  @apply inline-flex min-h-11 items-center gap-2 self-start rounded-full border border-brand-secondary/30 px-5 text-sm font-semibold text-brand-secondary no-underline transition-colors;
+}
+
+.backButton:hover {
+  @apply bg-brand-secondary text-white;
+}

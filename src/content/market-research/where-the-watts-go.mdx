@@ -1,0 +1,81 @@
+---
+title: "Where the Watts Go"
+date: "2026-09-18"
+summary: "The journey from grid connection to useful AI output, and why an AI data center's power overhead builds up at every step."
+cover: "/images/market-research/where-the-watts-go.webp"
+coverWidth: 1600
+coverHeight: 900
+coverAlt: "Power transmission towers at sunset blend into rows of data center server racks, joined by glowing network lines"
+authors:
+  - name: "Sarah Busto"
+    url: "https://sarahbusto.substack.com"
+  - name: "Robbie Galoso"
+    teamId: "robbie-galoso"
+originalUrl: "https://sarahbusto.substack.com/p/where-the-watts-go"
+---
+
+It’s easy to say AI data centers are resource-intensive, especially since they use an enormous amount of power to run their essential infrastructure. However, knowing that an AI data center consumes a lot of power, and understanding why, matters. This article follows electricity from generation to computation to better understand the underlying overhead costs and constraints of maintaining a data center.
+
+## The Journey of a Data Center’s Electrical Power
+
+### Generation
+
+Every watt begins at a generation source. Much electricity production begins by spinning a turbine to drive a generator and converting that motion into electricity, while solar PV converts sunlight directly into electricity. In power plants that use turbines, these are spun by steam produced using heat from fossil fuels, nuclear energy, geothermal sources, or other thermal processes (Reeves, 2026).
+
+For AI data centers, that source is typically from pre-existing electrical grids and renewables. According to the International Energy Agency, global electricity generation to supply data centers is set to increase from 460 TWh in 2024 to 1000 TWh in 2030 and 1300 TWh in 2035, with renewables meeting nearly half of the additional demand over the next five years. Currently, coal is the largest source of electricity at 30%, followed by renewables (like wind, solar PV, and hydro) at 27% and natural gas at 26%. When taken together, renewables remain the fastest-growing source of electricity for data centers (International Energy Agency, 2025).
+
+### Transmission
+
+Electricity generated is transmitted at high voltages through circuit breakers and into a transformer before a switch routes and meters the power out safely into buildings and equipment (Reeves, 2026).
+
+However, power constraints exist, especially in AI data centers. Despite how power-intensive AI data centers are, data centers typically take 18 to 24 months to be built, but it takes 7 to 10 years for new transmission lines and 3 to 5 years for new substations (T&D World, 2026). As such, this causes a strain in local power grids—presenting a clear bottleneck.
+
+### Distribution
+
+Distribution happens closer to home, with electricity carried at a lower voltage from a substation to homes and businesses (Reeves, 2026). A data center typically receives utility power through dedicated medium- or high-voltage service and transformers. At very large loads, it may require higher-voltage or transmission-level interconnection rather than ordinary distribution service. Large loads may require a utility interconnection study and approval process.
+
+However, the interconnection queue was built prior to the emergence of commercial AI use and so is used to a smaller and more predictable load growth. As such, it leads to another area of strain for those looking to open new data centers (Verse, 2026).
+
+### Conversion
+
+The alternating current (AC) distributed from the local grid is converted to direct current (DC) required by hardware, occurring multiple times between facility walls and the GPU. However, this causes some power to be lost in the process, the loss compounding as the data center continuously converts power from AC to DC to AC, as needed (Borgini, 2026). This process worked well when racks drew 10 kW, but now future AI rack architectures are approaching the megawatt scale, ensuring that each conversion causes significant energy loss, cost, and heat that operators struggle to manage. Furthermore, multiple conversion stages can add losses, heat, equipment, and cost—compounding on the already present issues.
+
+### Cooling
+
+Due to the continuous operation of high-performance IT equipment, effective cooling is strategically crucial to data centers. Maintaining a safe temperature for critical components prevents operational disruptions, protects IT data, and protects from significant potential financial loss. These cooling technologies range from air conditioning to liquid cooling, the use of which is dependent on the different needs of every data center (Shen, 2026).
+
+However, rapid advancements in AI have shown an unprecedented rise in data processing and computing demands, making it increasingly difficult for current cooling systems to keep up with the current workload. As such, cooling in AI data centers is evolving, becoming more precise and powerful (like direct-to-chip, increasingly important for dense AI workloads, and immersion liquid cooling) (Shen, 2024).
+
+### Networking
+
+AI data center networking fabric enables AI as it supports rigorous network scalability, performance, and low latency requirements of AI and machine learning (ML) workloads. Typically, when training AI, extensive data and compute resources are required for the AI model to learn continuously and refine its parameters. However, multiple GPU servers must be connected to train large models at a time; as such, this is critical (Hewlett Packard Enterprise, 2025).
+
+A high-performing network enables maximum GPU utilization, making generative AI and other large deep-learning models possible. However, an underperforming network can leave expensive GPUs waiting instead of computing, leading to inefficient power consumption relative to GPU utilization.
+
+## Why Does This Matter?
+
+Understanding how electrical power flows from generation to a data center helps explain why a data center has so much overhead. Looking at the picture as a whole, it is harder to assign blame to one specific aspect of an AI data center. Instead, the challenge is not simply that AI requires enormous amounts of electricity. AI is scaling compute density faster than much of the existing electrical infrastructure—from transmission and substations to facility-level power distribution—was designed to accommodate.
+
+One measure of why this matters is a data center’s Power Usage Effectiveness (PUE), which is the total facility energy divided by IT equipment energy. A PUE of 1.54 means that for every 1 watt used by IT, about 0.54 additional watts are used for cooling, power delivery, and other facility overhead. For instance, Google’s average annual PUE is reportedly 1.09, compared to the weighted industry average of 1.54, showing a considerable difference (Uptime Institute, 2025).
+
+If the grid-to-GPU journey is where so many constraints accumulate, the next question is obvious: why keep using the same power architecture? In the next article, I’ll examine the industry’s move toward higher-voltage DC architectures—including 800 VDC—and why reducing conversion stages could become one of the most consequential changes inside the AI factory.
+
+---
+
+## References
+
+Borgini, J. (2026, June 24). *AC to DC power conversion: A challenge for AI data centers*. TechTarget. https://www.techtarget.com/it-infrastructure/tip/AC-to-DC-power-conversion-A-challenge-for-AI-data-centers
+
+Hewlett Packard Enterprise. (2025, October 16). *AI data center networking*. https://www.hpe.com/uk/en/what-is/ai-data-center-networking.html
+
+International Energy Agency. (2025). *Energy and AI: Energy supply for AI*. https://www.iea.org/reports/energy-and-ai/energy-supply-for-ai
+
+Reeves, B. (2026, March 30). *How power reaches an AI data center*. American Compute. https://www.amcompute.com/blog/how-power-reaches-an-ai-data-center
+
+Shen, W. (2024, August 16). *AI-driven data center cooling systems and technologies*. Omdia. https://omdia.tech.informa.com/blogs/2024/aug/ai-driven-data-center-cooling-systems-and-technologies
+
+T&D World. (2026, September 1). *How AI data centers are changing power demand on the grid*. https://www.tdworld.com/sponsored/article/55400084/how-ai-data-centers-are-changing-power-demand-on-the-grid
+
+Uptime Institute. (2025, July 29). *Uptime Institute global data center survey 2025*. https://intelligence.uptimeinstitute.com/resource/uptime-institute-global-data-center-survey-2025
+
+Verse. (2026, July 22). *The data center power queue crisis: Why getting grid connection takes years and what’s actually changing*. https://verse.inc/blog/the-data-center-power-queue-crisis
