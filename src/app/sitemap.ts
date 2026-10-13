@@ -23,7 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     };
   });
 
-  // Pull live open positions and surface each /apply/:id as its own
+  // Pull live open positions and surface each /apply/:slug as its own
   // crawlable URL. Closed positions auto-drop on the next regeneration
   // because fetchOpenPositions filters by is_open. Failure is non-fatal
   // — we still return the static routes.

@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { AppButton } from "@/components/atoms/Button";
+import { applicationSubmitPath } from "@/lib/position-slug";
 import styles from "./ApplyForm.module.css";
 
 type Status = "idle" | "submitting" | "success" | "error";
@@ -78,7 +79,7 @@ export function ApplyForm({ positionId, jobTitle }: { positionId: number; jobTit
     setErrorMsg("");
 
     try {
-      const response = await fetch(`/api/apply/${positionId}`, {
+      const response = await fetch(applicationSubmitPath(positionId), {
         method: "POST",
         body: data,
       });

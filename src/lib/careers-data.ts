@@ -2,23 +2,14 @@
 // endpoint (/api/careers/jobs) and the server-rendered Careers page use
 // this so the source-of-truth Supabase query stays in one place.
 
+import { positionApplyPath } from "@/lib/position-slug";
+import { fetchOpenPositionRecords, type PublicPosition } from "@/lib/positions";
 import { jobDescriptionContent } from "@/lib/sanitize";
-import { getTicketingSupabase } from "@/lib/supabase";
 import type { CareerJob } from "@/types/careers";
 
 export type OpenPosition = CareerJob & {
   /** Sanitized HTML for JobPosting structured data. Empty when there is no description. */
   descriptionHtml: string;
-};
-
-type PositionRow = {
-  id: number;
-  job_title: string;
-  client: string | null;
-  location: string | null;
-  job_description: string | null;
-  is_open: boolean;
-  created_at: string;
 };
 
 function summaryExcerpt(title: string, excerpt: string): string {
@@ -29,7 +20,7 @@ function summaryExcerpt(title: string, excerpt: string): string {
   return remainder || excerpt;
 }
 
-function mapPosition(row: PositionRow): OpenPosition {
+function mapPosition(row: PublicPosition): OpenPosition {
   const description = jobDescriptionContent(row.job_description);
   return {
     id: String(row.id),
@@ -40,10 +31,8 @@ function mapPosition(row: PositionRow): OpenPosition {
     summary: summaryExcerpt(row.job_title, description.excerpt),
     descriptionHtml: description.html,
     skills: [],
-    // Same-domain apply page; src/app/apply/[positionId] renders the
-    // position from Supabase and posts the application to the
-    // ticketing system via /api/apply/[positionId].
-    applyUrl: `/apply/${row.id}`,
+    // Public URL is the stored slug. The form still posts to /api/apply/{numeric id}.
+    applyUrl: positionApplyPath(row.resolvedSlug),
   };
 }
 
@@ -61,15 +50,6 @@ export function toPublicCareerJob(position: OpenPosition): CareerJob {
 }
 
 export async function fetchOpenPositions(): Promise<OpenPosition[]> {
-  const supabase = getTicketingSupabase();
-  const { data, error } = await supabase
-    .from("positions")
-    .select("id, job_title, client, location, job_description, is_open, created_at")
-    .eq("is_open", true)
-    .order("created_at", { ascending: false })
-    .limit(200);
-
-  if (error) throw new Error(error.message);
-
-  return (data as PositionRow[] | null)?.map(mapPosition) ?? [];
+  const rows = await fetchOpenPositionRecords();
+  return rows.map(mapPosition);
 }

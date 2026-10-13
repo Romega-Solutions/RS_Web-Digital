@@ -1,25 +1,19 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { MainTemplate } from "@/components/templates/MainTemplate";
 import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
 import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
-import { getTicketingSupabase } from "@/lib/supabase";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RichText } from "@/components/molecules/content/RichText";
 import { isRichTextEmpty, jobDescriptionContent } from "@/lib/sanitize";
 import { absoluteUrl, createBreadcrumbSchema, createMetadata, siteConfig } from "@/lib/seo";
+import { positionApplyPath } from "@/lib/position-slug";
+import { resolveApplyPosition, type PublicPosition } from "@/lib/positions";
 import { ApplyForm } from "./ApplyForm";
 import styles from "./ApplyPage.module.css";
 
-type Position = {
-  id: number;
-  job_title: string;
-  client: string | null;
-  location: string | null;
-  job_description: string | null;
-  is_open: boolean;
-};
+type Position = PublicPosition;
 
 const noindexRobots: Metadata["robots"] = {
   index: false,
@@ -30,28 +24,8 @@ const noindexRobots: Metadata["robots"] = {
   },
 };
 
-async function fetchPosition(id: number): Promise<Position | null | "not_configured"> {
-  try {
-    const supabase = getTicketingSupabase();
-    const { data, error } = await supabase
-      .from("positions")
-      .select("id, job_title, client, location, job_description, is_open")
-      .eq("id", id)
-      .maybeSingle();
-
-    if (error?.message?.toLowerCase().includes("does not exist")) {
-      return "not_configured";
-    }
-    if (error) {
-      console.error("[apply] supabase error:", error.message);
-      return null;
-    }
-    return (data as Position | null) ?? null;
-  } catch (err) {
-    console.error("[apply] fetchPosition failed:", err instanceof Error ? err.message : err);
-    return "not_configured";
-  }
-}
+const fallbackDescription =
+  "Submit your application to Romega Solutions. Our recruitment team will be in touch within 5–7 business days.";
 
 export async function generateMetadata({
   params,
@@ -59,44 +33,35 @@ export async function generateMetadata({
   params: Promise<{ positionId: string }>;
 }): Promise<Metadata> {
   const { positionId } = await params;
-  const description =
-    "Submit your application to Romega Solutions. Our recruitment team will be in touch within 5–7 business days.";
-  const id = Number.parseInt(positionId, 10);
-  if (!Number.isFinite(id) || id <= 0) {
+  const resolved = await resolveApplyPosition(positionId);
+  if (resolved.status !== "ok" && resolved.status !== "redirect") {
     return createMetadata({
       title: "Apply",
-      description,
+      description: fallbackDescription,
       path: `/apply/${positionId}`,
       robots: noindexRobots,
     });
   }
-  const result = await fetchPosition(id);
-  if (!result || result === "not_configured") {
-    return createMetadata({
-      title: "Apply",
-      description,
-      path: `/apply/${id}`,
-      robots: noindexRobots,
-    });
-  }
 
+  const position = resolved.position;
+  const path = positionApplyPath(position.resolvedSlug);
   const roleDescription = [
-    `Apply for ${result.job_title} with Romega Solutions.`,
-    result.location ? `Location: ${result.location}.` : "",
-    result.client ? `Client or team: ${result.client}.` : "",
+    `Apply for ${position.job_title} with Romega Solutions.`,
+    position.location ? `Location: ${position.location}.` : "",
+    position.client ? `Client or team: ${position.client}.` : "",
   ]
     .filter(Boolean)
     .join(" ");
-  const pageDescription = jobDescriptionContent(result.job_description).meta || roleDescription;
+  const pageDescription = jobDescriptionContent(position.job_description).meta || roleDescription;
 
   return createMetadata({
-    title: `Apply for ${result.job_title}`,
+    title: `Apply for ${position.job_title}`,
     description: pageDescription,
-    path: `/apply/${id}`,
-    keywords: [result.job_title, result.location, "romega solutions application"].filter(
+    path,
+    keywords: [position.job_title, position.location, "romega solutions application"].filter(
       (keyword): keyword is string => Boolean(keyword),
     ),
-    robots: result.is_open ? undefined : noindexRobots,
+    robots: position.is_open ? undefined : noindexRobots,
   });
 }
 
@@ -106,41 +71,43 @@ export default async function ApplyPage({
   params: Promise<{ positionId: string }>;
 }) {
   const { positionId } = await params;
-  const id = Number.parseInt(positionId, 10);
-  if (!Number.isInteger(id) || id <= 0) notFound();
+  const resolved = await resolveApplyPosition(positionId);
+  if (resolved.status === "redirect") permanentRedirect(resolved.path);
+  if (resolved.status === "not_found") notFound();
 
-  const result = await fetchPosition(id);
-  const descriptionContent =
-    result && result !== "not_configured" ? jobDescriptionContent(result.job_description) : null;
+  const position = resolved.status === "ok" ? resolved.position : null;
+  const path = position ? positionApplyPath(position.resolvedSlug) : "";
+  const descriptionContent = position ? jobDescriptionContent(position.job_description) : null;
   const structuredData =
-    result && result !== "not_configured" && descriptionContent
+    position && descriptionContent
       ? {
           "@context": "https://schema.org",
           "@graph": [
             createBreadcrumbSchema([
               { name: "Home", path: "/" },
               { name: "Careers", path: "/careers" },
-              { name: result.job_title, path: `/apply/${id}` },
+              { name: position.job_title, path },
             ]),
             {
               "@type": "WebPage",
-              "@id": absoluteUrl(`/apply/${id}#webpage`),
-              url: absoluteUrl(`/apply/${id}`),
-              name: `Apply for ${result.job_title}`,
+              "@id": absoluteUrl(`${path}#webpage`),
+              url: absoluteUrl(path),
+              name: `Apply for ${position.job_title}`,
               description:
                 descriptionContent.plain ||
-                `Application page for ${result.job_title} with Romega Solutions.`,
+                `Application page for ${position.job_title} with Romega Solutions.`,
               isPartOf: { "@id": absoluteUrl("/#website") },
               about: { "@id": absoluteUrl("/#organization") },
               inLanguage: "en-US",
             },
-            ...(result.is_open
+            ...(position.is_open
               ? [
                   {
                     "@type": "JobPosting",
-                    "@id": absoluteUrl(`/apply/${id}#jobposting`),
-                    title: result.job_title,
-                    description: descriptionContent.html || `Open role through ${siteConfig.name}.`,
+                    "@id": absoluteUrl(`${path}#jobposting`),
+                    title: position.job_title,
+                    description:
+                      descriptionContent.html || `Open role through ${siteConfig.name}.`,
                     datePosted: new Date().toISOString().slice(0, 10),
                     hiringOrganization: {
                       "@type": "Organization",
@@ -150,15 +117,15 @@ export default async function ApplyPage({
                     },
                     jobLocation: {
                       "@type": "Place",
-                      name: result.location || "Remote or client-dependent",
+                      name: position.location || "Remote or client-dependent",
                       address: {
                         "@type": "PostalAddress",
-                        addressLocality: result.location || "Remote",
+                        addressLocality: position.location || "Remote",
                         addressCountry: "US",
                       },
                     },
                     directApply: true,
-                    url: absoluteUrl(`/apply/${id}`),
+                    url: absoluteUrl(path),
                   },
                 ]
               : []),
@@ -178,13 +145,7 @@ export default async function ApplyPage({
     >
       <div className={styles.page}>
         <div className={styles.inner}>
-          {result === "not_configured" ? (
-            <NotConfigured />
-          ) : !result ? (
-            <NotFound />
-          ) : (
-            <PositionView position={result} />
-          )}
+          {position ? <PositionView position={position} /> : <NotConfigured />}
         </div>
       </div>
     </MainTemplate>
@@ -248,21 +209,6 @@ function NotConfigured() {
         <a href="mailto:careers@romega-solutions.com" className={styles.link}>
           careers@romega-solutions.com
         </a>
-        .
-      </p>
-    </section>
-  );
-}
-
-function NotFound() {
-  return (
-    <section className={styles.card}>
-      <h1 className={styles.cardTitle}>Position not found</h1>
-      <p className={styles.cardBody}>
-        This role may have been removed or filled. See{" "}
-        <Link href="/careers" className={styles.link}>
-          all open opportunities
-        </Link>
         .
       </p>
     </section>
