@@ -5,8 +5,7 @@ import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
 import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
 import { CareersOpenRolesSection } from "@/components/organisms/careers/CareersOpenRolesSection";
 import { absoluteUrl, createMetadata, createBreadcrumbSchema, siteConfig } from "@/lib/seo";
-import { fetchOpenPositions } from "@/lib/careers-data";
-import type { CareerJob } from "@/types/careers";
+import { fetchOpenPositions, toPublicCareerJob, type OpenPosition } from "@/lib/careers-data";
 import CareersPageClient from "./CareersPageClient";
 
 // Refresh the careers page every 5 minutes so newly-opened positions
@@ -27,7 +26,7 @@ export const metadata: Metadata = createMetadata({
   ],
 });
 
-function buildJobPostingSchema(jobs: CareerJob[]) {
+function buildJobPostingSchema(jobs: OpenPosition[]) {
   const postedDate = new Date().toISOString().slice(0, 10);
   return {
     "@type": "ItemList",
@@ -40,7 +39,7 @@ function buildJobPostingSchema(jobs: CareerJob[]) {
         "@type": "JobPosting",
         "@id": absoluteUrl(job.applyUrl),
         title: job.title,
-        description: job.summary || `Open role at ${job.department}.`,
+        description: job.descriptionHtml || job.summary || `Open role at ${job.department}.`,
         datePosted: postedDate,
         employmentType: job.type.toUpperCase().replace(/[\s-]/g, "_"),
         hiringOrganization: {
@@ -64,7 +63,7 @@ function buildJobPostingSchema(jobs: CareerJob[]) {
 }
 
 export default async function CareersPage() {
-  let jobs: CareerJob[] = [];
+  let jobs: OpenPosition[] = [];
   try {
     jobs = await fetchOpenPositions();
   } catch (err) {
@@ -110,7 +109,7 @@ export default async function CareersPage() {
       shellVariant="hero"
     >
       <CareersPageClient />
-      <CareersOpenRolesSection jobs={jobs} />
+      <CareersOpenRolesSection jobs={jobs.map(toPublicCareerJob)} />
     </MainTemplate>
   );
 }

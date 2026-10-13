@@ -52,6 +52,45 @@ test("punctuation-only title differences still collide", () => {
   assert.equal(byId.get(2), "full-stack-2");
 });
 
+test("stored production slugs are kept even when a title would derive a different value", () => {
+  const assigned = assignPositionSlugs([
+    {
+      id: 8,
+      job_title: "Human Resources Intern",
+      slug: "human-resources-intern-2",
+    },
+    {
+      id: 9,
+      job_title: "Full-stack Developer Intern — Mobile Dating App (In Development)",
+      slug: "full-stack-developer-intern-mobile-dating-app-in-development",
+    },
+    {
+      id: 10,
+      job_title: "Full-stack Developer Intern — Mobile Dating App (In Development)",
+      slug: "full-stack-developer-intern-mobile-dating-app-in-development-2",
+    },
+  ]);
+  const byId = new Map(assigned.map((row) => [row.id, row.resolvedSlug]));
+  assert.equal(byId.get(9), EXAMPLE_SLUG + "-in-development");
+  assert.equal(byId.get(10), EXAMPLE_SLUG + "-in-development-2");
+  assert.equal(byId.get(8), "human-resources-intern-2");
+  assert.deepEqual(decideApplyRoute("9", { id: 9, resolvedSlug: byId.get(9)! }), {
+    kind: "redirect",
+    path: `/apply/${EXAMPLE_SLUG}-in-development`,
+  });
+});
+
+test("a null slug still falls back to the title", () => {
+  const assigned = assignPositionSlugs([
+    {
+      id: 9,
+      job_title: "Full-stack Developer Intern — Mobile Dating App (In Development)",
+      slug: null,
+    },
+  ]);
+  assert.equal(assigned[0]?.resolvedSlug, `${EXAMPLE_SLUG}-in-development`);
+});
+
 test("a stored slug wins, and null rows avoid that value", () => {
   const assigned = assignPositionSlugs([
     { id: 1, job_title: "Engineer", slug: "engineer" },

@@ -5,6 +5,8 @@ import { MainTemplate } from "@/components/templates/MainTemplate";
 import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
 import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { RichText } from "@/components/molecules/content/RichText";
+import { isRichTextEmpty, jobDescriptionContent } from "@/lib/sanitize";
 import { absoluteUrl, createBreadcrumbSchema, createMetadata, siteConfig } from "@/lib/seo";
 import { positionApplyPath } from "@/lib/position-slug";
 import { resolveApplyPosition, type PublicPosition } from "@/lib/positions";
@@ -50,10 +52,11 @@ export async function generateMetadata({
   ]
     .filter(Boolean)
     .join(" ");
+  const pageDescription = jobDescriptionContent(position.job_description).meta || roleDescription;
 
   return createMetadata({
     title: `Apply for ${position.job_title}`,
-    description: roleDescription,
+    description: pageDescription,
     path,
     keywords: [position.job_title, position.location, "romega solutions application"].filter(
       (keyword): keyword is string => Boolean(keyword),
@@ -74,58 +77,61 @@ export default async function ApplyPage({
 
   const position = resolved.status === "ok" ? resolved.position : null;
   const path = position ? positionApplyPath(position.resolvedSlug) : "";
-  const structuredData = position
-    ? {
-        "@context": "https://schema.org",
-        "@graph": [
-          createBreadcrumbSchema([
-            { name: "Home", path: "/" },
-            { name: "Careers", path: "/careers" },
-            { name: position.job_title, path },
-          ]),
-          {
-            "@type": "WebPage",
-            "@id": absoluteUrl(`${path}#webpage`),
-            url: absoluteUrl(path),
-            name: `Apply for ${position.job_title}`,
-            description:
-              position.job_description ||
-              `Application page for ${position.job_title} with Romega Solutions.`,
-            isPartOf: { "@id": absoluteUrl("/#website") },
-            about: { "@id": absoluteUrl("/#organization") },
-            inLanguage: "en-US",
-          },
-          ...(position.is_open
-            ? [
-                {
-                  "@type": "JobPosting",
-                  "@id": absoluteUrl(`${path}#jobposting`),
-                  title: position.job_title,
-                  description: position.job_description || `Open role through ${siteConfig.name}.`,
-                  datePosted: new Date().toISOString().slice(0, 10),
-                  hiringOrganization: {
-                    "@type": "Organization",
-                    name: siteConfig.name,
-                    sameAs: absoluteUrl("/"),
-                    logo: absoluteUrl(siteConfig.logo),
-                  },
-                  jobLocation: {
-                    "@type": "Place",
-                    name: position.location || "Remote or client-dependent",
-                    address: {
-                      "@type": "PostalAddress",
-                      addressLocality: position.location || "Remote",
-                      addressCountry: "US",
+  const descriptionContent = position ? jobDescriptionContent(position.job_description) : null;
+  const structuredData =
+    position && descriptionContent
+      ? {
+          "@context": "https://schema.org",
+          "@graph": [
+            createBreadcrumbSchema([
+              { name: "Home", path: "/" },
+              { name: "Careers", path: "/careers" },
+              { name: position.job_title, path },
+            ]),
+            {
+              "@type": "WebPage",
+              "@id": absoluteUrl(`${path}#webpage`),
+              url: absoluteUrl(path),
+              name: `Apply for ${position.job_title}`,
+              description:
+                descriptionContent.plain ||
+                `Application page for ${position.job_title} with Romega Solutions.`,
+              isPartOf: { "@id": absoluteUrl("/#website") },
+              about: { "@id": absoluteUrl("/#organization") },
+              inLanguage: "en-US",
+            },
+            ...(position.is_open
+              ? [
+                  {
+                    "@type": "JobPosting",
+                    "@id": absoluteUrl(`${path}#jobposting`),
+                    title: position.job_title,
+                    description:
+                      descriptionContent.html || `Open role through ${siteConfig.name}.`,
+                    datePosted: new Date().toISOString().slice(0, 10),
+                    hiringOrganization: {
+                      "@type": "Organization",
+                      name: siteConfig.name,
+                      sameAs: absoluteUrl("/"),
+                      logo: absoluteUrl(siteConfig.logo),
                     },
+                    jobLocation: {
+                      "@type": "Place",
+                      name: position.location || "Remote or client-dependent",
+                      address: {
+                        "@type": "PostalAddress",
+                        addressLocality: position.location || "Remote",
+                        addressCountry: "US",
+                      },
+                    },
+                    directApply: true,
+                    url: absoluteUrl(path),
                   },
-                  directApply: true,
-                  url: absoluteUrl(path),
-                },
-              ]
-            : []),
-        ],
-      }
-    : undefined;
+                ]
+              : []),
+          ],
+        }
+      : undefined;
 
   return (
     <MainTemplate
@@ -174,12 +180,12 @@ function PositionView({ position }: { position: Position }) {
         </section>
       ) : (
         <>
-          {position.job_description && (
-            <section className={styles.card}>
+          {!isRichTextEmpty(position.job_description) ? (
+            <section className={styles.card} id="job-description">
               <h2 className={styles.cardEyebrow}>About the role</h2>
-              <p className={styles.description}>{position.job_description}</p>
+              <RichText html={position.job_description ?? ""} />
             </section>
-          )}
+          ) : null}
 
           <section className={styles.card}>
             <h2 className={styles.cardTitle}>Apply</h2>
