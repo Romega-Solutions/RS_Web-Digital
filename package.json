@@ -25,6 +25,7 @@
     "report:readiness": "node scripts/release-readiness-report.mjs",
     "vercel:ignore-build": "node scripts/vercel-ignore-build.mjs",
     "validate:architecture": "node scripts/validate-architecture.mjs",
+    "test": "node --experimental-strip-types --disable-warning=ExperimentalWarning --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/position-slug.test.ts",
     "typecheck": "tsc --noEmit",
     "lint": "node scripts/validate-architecture.mjs && eslint"
   },
