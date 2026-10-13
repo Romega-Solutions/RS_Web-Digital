@@ -6,6 +6,8 @@ import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
 import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
 import { getTicketingSupabase } from "@/lib/supabase";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { RichText } from "@/components/molecules/content/RichText";
+import { isRichTextEmpty, jobDescriptionContent } from "@/lib/sanitize";
 import { absoluteUrl, createBreadcrumbSchema, createMetadata, siteConfig } from "@/lib/seo";
 import { ApplyForm } from "./ApplyForm";
 import styles from "./ApplyPage.module.css";
@@ -85,10 +87,11 @@ export async function generateMetadata({
   ]
     .filter(Boolean)
     .join(" ");
+  const pageDescription = jobDescriptionContent(result.job_description).meta || roleDescription;
 
   return createMetadata({
     title: `Apply for ${result.job_title}`,
-    description: roleDescription,
+    description: pageDescription,
     path: `/apply/${id}`,
     keywords: [result.job_title, result.location, "romega solutions application"].filter(
       (keyword): keyword is string => Boolean(keyword),
@@ -107,8 +110,10 @@ export default async function ApplyPage({
   if (!Number.isInteger(id) || id <= 0) notFound();
 
   const result = await fetchPosition(id);
+  const descriptionContent =
+    result && result !== "not_configured" ? jobDescriptionContent(result.job_description) : null;
   const structuredData =
-    result && result !== "not_configured"
+    result && result !== "not_configured" && descriptionContent
       ? {
           "@context": "https://schema.org",
           "@graph": [
@@ -123,7 +128,7 @@ export default async function ApplyPage({
               url: absoluteUrl(`/apply/${id}`),
               name: `Apply for ${result.job_title}`,
               description:
-                result.job_description ||
+                descriptionContent.plain ||
                 `Application page for ${result.job_title} with Romega Solutions.`,
               isPartOf: { "@id": absoluteUrl("/#website") },
               about: { "@id": absoluteUrl("/#organization") },
@@ -135,8 +140,7 @@ export default async function ApplyPage({
                     "@type": "JobPosting",
                     "@id": absoluteUrl(`/apply/${id}#jobposting`),
                     title: result.job_title,
-                    description:
-                      result.job_description || `Open role through ${siteConfig.name}.`,
+                    description: descriptionContent.html || `Open role through ${siteConfig.name}.`,
                     datePosted: new Date().toISOString().slice(0, 10),
                     hiringOrganization: {
                       "@type": "Organization",
@@ -215,12 +219,12 @@ function PositionView({ position }: { position: Position }) {
         </section>
       ) : (
         <>
-          {position.job_description && (
-            <section className={styles.card}>
+          {!isRichTextEmpty(position.job_description) ? (
+            <section className={styles.card} id="job-description">
               <h2 className={styles.cardEyebrow}>About the role</h2>
-              <p className={styles.description}>{position.job_description}</p>
+              <RichText html={position.job_description ?? ""} />
             </section>
-          )}
+          ) : null}
 
           <section className={styles.card}>
             <h2 className={styles.cardTitle}>Apply</h2>
