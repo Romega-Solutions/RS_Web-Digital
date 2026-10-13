@@ -99,12 +99,6 @@
   @apply text-sm leading-relaxed;
 }
 
-.description {
-  color: var(--color-text-main);
-  white-space: pre-wrap;
-  @apply text-sm leading-relaxed;
-}
-
 .link {
   @apply text-brand-secondary underline underline-offset-2 hover:opacity-80;
 }

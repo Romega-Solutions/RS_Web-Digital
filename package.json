@@ -25,6 +25,7 @@
     "report:readiness": "node scripts/release-readiness-report.mjs",
     "vercel:ignore-build": "node scripts/vercel-ignore-build.mjs",
     "validate:architecture": "node scripts/validate-architecture.mjs",
+    "test": "node --experimental-strip-types --test src/lib/sanitize.test.ts",
     "typecheck": "tsc --noEmit",
     "lint": "node scripts/validate-architecture.mjs && eslint"
   },
@@ -45,6 +46,7 @@
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.1",
     "resend": "^6.12.4",
+    "sanitize-html": "^2.17.5",
     "yaml": "^2.9.1"
   },
   "devDependencies": {
@@ -55,6 +57,7 @@
     "@types/node": "^25",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/sanitize-html": "^2.16.1",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
     "sass": "^1.101.0",
