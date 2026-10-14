@@ -114,14 +114,19 @@ function readPost(fileName: string): ResearchPost {
     fail(fileName, `"summary" is ${summary.length} characters; keep it under ${MAX_SUMMARY_LENGTH}`);
   }
 
+  const date = parseDate(fileName, data.date);
+
   return {
     slug,
     title: requireString(fileName, data, "title"),
-    date: parseDate(fileName, data.date),
+    date,
+    // Only the day is known for these posts; noon UTC keeps the order stable.
+    publishedAt: `${date}T12:00:00.000Z`,
     summary,
     cover: parseCover(fileName, data),
     authors: parseAuthors(fileName, data.authors),
     originalUrl: optionalHttpsUrl(fileName, data.originalUrl, "originalUrl"),
+    origin: "mdx",
   };
 }
 

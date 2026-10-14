@@ -7,6 +7,9 @@ import { MarketResearchList } from "@/components/organisms/market-research/Marke
 import { getAllPosts } from "@/lib/market-research";
 import { absoluteUrl, createBreadcrumbSchema, createMetadata } from "@/lib/seo";
 
+// New posts from the portal appear within 5 minutes without a redeploy.
+export const revalidate = 300;
+
 export const metadata: Metadata = createMetadata({
   title: "Market Research",
   description:
