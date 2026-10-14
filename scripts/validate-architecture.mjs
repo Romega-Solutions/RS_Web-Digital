@@ -120,6 +120,36 @@ for (const filePath of codeFiles) {
   }
 }
 
+// Client components ship to the browser, so they must never import code that
+// holds the Supabase service-role key or reads the database. ("server-only" in
+// those modules also fails the build; this catches it earlier, in lint.)
+const serverOnlyImports = [
+  /^@\/lib\/supabase$/,
+  /^@\/lib\/careers-data$/,
+  /^@\/lib\/market-research$/,
+  /^@\/lib\/market-research\/(?:portal-source|portal-query|mdx-source)$/,
+];
+const sourceFiles = walk(srcRoot, (filePath) => [".ts", ".tsx"].includes(path.extname(filePath)));
+
+for (const filePath of sourceFiles) {
+  const content = fs.readFileSync(filePath, "utf8");
+  // "use client" must be the first statement, so look at the first code line
+  // after any leading comments.
+  const firstStatement = content
+    .replace(/^﻿/, "")
+    .replace(/^(?:\s*(?:\/\/.*|\/\*[\s\S]*?\*\/))*\s*/, "");
+  const isClientFile = /^["']use client["']/.test(firstStatement);
+  if (!isClientFile) continue;
+
+  for (const match of content.matchAll(importRegex)) {
+    if (serverOnlyImports.some((pattern) => pattern.test(match[1]))) {
+      errors.push(
+        `Client component imports server-only code: ${toPosix(path.relative(repoRoot, filePath))} -> ${match[1]}`,
+      );
+    }
+  }
+}
+
 const globalsCss = fs.readFileSync(globalsCssPath, "utf8");
 const forbiddenGlobals = [
   /\.site-shell\b/,
