@@ -47,7 +47,7 @@ export function AboutGrowthSection() {
         <p>
           Growth at Romega extends beyond client work. Our interns are given
           real responsibility, practical mentorship, and space to build
-          confidence through meaningful work.
+          confidence, and our leaders see that growth firsthand.
         </p>
       </div>
 
