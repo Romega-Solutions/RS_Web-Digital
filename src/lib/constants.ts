@@ -158,6 +158,15 @@ export const TEAM_MEMBERS: TeamMember[] = [
 
 export const TESTIMONIALS: Testimonial[] = [
   {
+    id: "cherry-reyes",
+    name: "Cherry Reyes",
+    title: "Chief of Staff",
+    school: "Romega Solutions",
+    rating: 5,
+    quote:
+      "Serving as Chief of Staff at Romega has been one of the most meaningful chapters of my professional journey. Romega is more than an organization, it is a place where people are encouraged to bring their best selves to work, where ideas are heard and where meaningful contributions are recognized.",
+  },
+  {
     id: "rob-belarmino",
     name: "Rob Belarmino",
     title: "Former Intern",
