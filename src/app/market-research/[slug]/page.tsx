@@ -5,16 +5,19 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
 import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
 import { ArticleView } from "@/components/organisms/market-research/ArticleView";
-import { getAllPosts, getAuthorHref, getPostBySlug } from "@/lib/market-research";
+import { getAllPosts, getArticle, getAuthorHref } from "@/lib/market-research";
 import { absoluteUrl, createBreadcrumbSchema, createMetadata, siteConfig } from "@/lib/seo";
 
 type ArticlePageProps = {
   params: Promise<{ slug: string }>;
 };
 
-// Only posts that exist at build time are routable; anything else is a 404.
-export const dynamicParams = false;
+// New posts from the portal appear within 5 minutes without a redeploy, and a
+// post that is unpublished there disappears just as quickly. Same as Careers.
+export const revalidate = 300;
 
+// Slugs the build knows about are prerendered; a slug published later is
+// rendered on first visit. A slug that is not a published post returns 404.
 export async function generateStaticParams() {
   const posts = await getAllPosts();
   return posts.map((post) => ({ slug: post.slug }));
@@ -22,8 +25,9 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = await getPostBySlug(slug);
-  if (!post) return {};
+  const article = await getArticle(slug);
+  if (!article) return { title: "Not found", robots: { index: false, follow: false } };
+  const { post } = article;
 
   const base = createMetadata({
     title: post.title,
@@ -38,14 +42,17 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
     openGraph: {
       ...base.openGraph,
       type: "article",
-      publishedTime: post.date,
+      publishedTime: post.publishedAt,
+      ...(post.updatedAt ? { modifiedTime: post.updatedAt } : {}),
       authors: post.authors.map((author) => author.name),
       images: [
         {
           url: absoluteUrl(post.cover.src),
-          width: post.cover.width,
-          height: post.cover.height,
-          alt: post.cover.alt,
+          // Portal covers do not store a size, so only declare one when known.
+          ...(post.cover.width && post.cover.height
+            ? { width: post.cover.width, height: post.cover.height }
+            : {}),
+          ...(post.cover.alt ? { alt: post.cover.alt } : {}),
         },
       ],
     },
@@ -54,10 +61,9 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const { slug } = await params;
-  const post = await getPostBySlug(slug);
-  if (!post) notFound();
-
-  const { default: Body } = await import(`@/content/market-research/${slug}.mdx`);
+  const article = await getArticle(slug);
+  if (!article) notFound(); // missing, unpublished or deleted
+  const { post, body } = article;
 
   const authors = post.authors.map((author) => ({
     name: author.name,
@@ -78,7 +84,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         mainEntityOfPage: absoluteUrl(`/market-research/${post.slug}`),
         headline: post.title,
         description: post.summary,
-        datePublished: post.date,
+        datePublished: post.publishedAt,
+        ...(post.updatedAt ? { dateModified: post.updatedAt } : {}),
         image: absoluteUrl(post.cover.src),
         author: authors.map((author) => ({
           "@type": "Person",
@@ -95,6 +102,16 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     ],
   };
 
+  let content: React.ReactNode;
+  if (body.kind === "html") {
+    // body.html was sanitized in getArticle (sanitize-html allowlist), so it
+    // is safe to render.
+    content = <div dangerouslySetInnerHTML={{ __html: body.html }} />;
+  } else {
+    const { default: MdxBody } = await import(`@/content/market-research/${slug}.mdx`);
+    content = <MdxBody />;
+  }
+
   return (
     <MainTemplate
       jsonLd={<JsonLd id="market-research-article-structured-data" data={structuredData} />}
@@ -102,7 +119,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       footer={<SiteFooter />}
     >
       <ArticleView post={post} authors={authors}>
-        <Body />
+        {content}
       </ArticleView>
     </MainTemplate>
   );

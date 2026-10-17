@@ -59,15 +59,29 @@ export function ArticleView({ post, authors, children }: ArticleViewProps) {
         </header>
 
         <figure className={styles.cover}>
-          <Image
-            src={post.cover.src}
-            alt={post.cover.alt}
-            width={post.cover.width}
-            height={post.cover.height}
-            priority
-            sizes="(min-width: 1024px) 64rem, 100vw"
-            className={styles.coverImage}
-          />
+          {post.cover.width && post.cover.height ? (
+            <Image
+              src={post.cover.src}
+              alt={post.cover.alt}
+              width={post.cover.width}
+              height={post.cover.height}
+              priority
+              sizes="(min-width: 1024px) 64rem, 100vw"
+              className={styles.coverImage}
+            />
+          ) : (
+            // Portal covers store no size, so crop them into a fixed frame.
+            <div className={styles.coverFrame}>
+              <Image
+                src={post.cover.src}
+                alt={post.cover.alt}
+                fill
+                priority
+                sizes="(min-width: 1024px) 64rem, 100vw"
+                className={styles.coverFrameImage}
+              />
+            </div>
+          )}
         </figure>
 
         <div className={styles.body}>{children}</div>

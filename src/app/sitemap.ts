@@ -51,7 +51,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const posts = await getAllPosts();
     researchRoutes = posts.map((post) => ({
       url: absoluteUrl(`/market-research/${post.slug}`),
-      lastModified: new Date(`${post.date}T12:00:00Z`),
+      lastModified: new Date(post.updatedAt ?? post.publishedAt),
       changeFrequency: "monthly" as const,
       priority: 0.6,
       images: [absoluteUrl(post.cover.src)],
