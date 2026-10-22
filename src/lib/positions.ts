@@ -15,7 +15,7 @@ import {
   type SlugSource,
 } from "@/lib/position-slug";
 
-const BASE_COLUMNS = "id, job_title, client, location, job_description, is_open";
+const BASE_COLUMNS = "id, job_title, client, location, job_description, employment_type, is_open";
 const LIST_COLUMNS = `${BASE_COLUMNS}, created_at`;
 const PAGE_SIZE = 1000;
 const MAX_ROWS = 5000;
@@ -27,6 +27,7 @@ export type PublicPosition = {
   client: string | null;
   location: string | null;
   job_description: string | null;
+  employment_type: string | null;
   is_open: boolean;
   resolvedSlug: string;
 };
@@ -41,6 +42,7 @@ type RawPosition = SlugSource & {
   client: string | null;
   location: string | null;
   job_description: string | null;
+  employment_type?: string | null;
   is_open: boolean;
   created_at?: string;
 };
@@ -83,6 +85,7 @@ function toPublic(row: RawPosition & { resolvedSlug: string }): PublicPosition {
     client: row.client,
     location: row.location,
     job_description: row.job_description,
+    employment_type: row.employment_type ?? null,
     is_open: row.is_open,
     resolvedSlug: row.resolvedSlug,
   };
