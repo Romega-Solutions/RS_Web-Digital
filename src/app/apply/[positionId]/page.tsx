@@ -79,6 +79,7 @@ export default async function ApplyPage({
   const position = resolved.status === "ok" ? resolved.position : null;
   const path = position ? positionApplyPath(position.resolvedSlug) : "";
   const descriptionContent = position ? jobDescriptionContent(position.job_description) : null;
+  const jobEmploymentType = position ? googleEmploymentType(position.employment_type) : null;
   const structuredData =
     position && descriptionContent
       ? {
@@ -110,9 +111,7 @@ export default async function ApplyPage({
                     description:
                       descriptionContent.html || `Open role through ${siteConfig.name}.`,
                     datePosted: new Date().toISOString().slice(0, 10),
-                    ...(googleEmploymentType(position.employment_type)
-                      ? { employmentType: googleEmploymentType(position.employment_type) }
-                      : {}),
+                    ...(jobEmploymentType ? { employmentType: jobEmploymentType } : {}),
                     hiringOrganization: {
                       "@type": "Organization",
                       name: siteConfig.name,
