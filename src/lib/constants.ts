@@ -162,6 +162,7 @@ export const TESTIMONIALS: Testimonial[] = [
     name: "Cherry Reyes",
     title: "Chief of Staff",
     school: "Romega Solutions",
+    image: "/images/about/Cherry.jpg",
     rating: 5,
     quote:
       "Serving as Chief of Staff at Romega has been one of the most meaningful chapters of my professional journey. Romega is more than an organization, it is a place where people are encouraged to bring their best selves to work, where ideas are heard and where meaningful contributions are recognized.",
