@@ -41,7 +41,7 @@ function buildJobPostingSchema(jobs: OpenPosition[]) {
         title: job.title,
         description: job.descriptionHtml || job.summary || `Open role at ${job.department}.`,
         datePosted: postedDate,
-        employmentType: job.type.toUpperCase().replace(/[\s-]/g, "_"),
+        ...(job.employmentType ? { employmentType: job.employmentType } : {}),
         hiringOrganization: {
           "@type": "Organization",
           name: siteConfig.name,

@@ -8,6 +8,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { RichText } from "@/components/molecules/content/RichText";
 import { isRichTextEmpty, jobDescriptionContent } from "@/lib/sanitize";
 import { absoluteUrl, createBreadcrumbSchema, createMetadata, siteConfig } from "@/lib/seo";
+import { googleEmploymentType } from "@/lib/employment-type";
 import { positionApplyPath } from "@/lib/position-slug";
 import { resolveApplyPosition, type PublicPosition } from "@/lib/positions";
 import { ApplyForm } from "./ApplyForm";
@@ -78,6 +79,7 @@ export default async function ApplyPage({
   const position = resolved.status === "ok" ? resolved.position : null;
   const path = position ? positionApplyPath(position.resolvedSlug) : "";
   const descriptionContent = position ? jobDescriptionContent(position.job_description) : null;
+  const jobEmploymentType = position ? googleEmploymentType(position.employment_type) : null;
   const structuredData =
     position && descriptionContent
       ? {
@@ -109,6 +111,7 @@ export default async function ApplyPage({
                     description:
                       descriptionContent.html || `Open role through ${siteConfig.name}.`,
                     datePosted: new Date().toISOString().slice(0, 10),
+                    ...(jobEmploymentType ? { employmentType: jobEmploymentType } : {}),
                     hiringOrganization: {
                       "@type": "Organization",
                       name: siteConfig.name,

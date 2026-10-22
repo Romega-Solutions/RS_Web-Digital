@@ -4,6 +4,7 @@
 
 import { positionApplyPath } from "@/lib/position-slug";
 import { fetchOpenPositionRecords, type PublicPosition } from "@/lib/positions";
+import { employmentTypeLabel, googleEmploymentType } from "@/lib/employment-type";
 import { jobDescriptionContent } from "@/lib/sanitize";
 import type { CareerJob } from "@/types/careers";
 
@@ -27,7 +28,8 @@ function mapPosition(row: PublicPosition): OpenPosition {
     title: row.job_title,
     department: row.client?.trim() || "Romega Solutions",
     location: row.location?.trim() || "Remote",
-    type: "Full-time",
+    type: employmentTypeLabel(row.employment_type),
+    employmentType: googleEmploymentType(row.employment_type),
     summary: summaryExcerpt(row.job_title, description.excerpt),
     descriptionHtml: description.html,
     skills: [],

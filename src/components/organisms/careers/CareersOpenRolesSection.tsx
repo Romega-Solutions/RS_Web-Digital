@@ -131,10 +131,14 @@ export function CareersOpenRolesSection({ jobs }: CareersOpenRolesSectionProps) 
                         •
                       </span>
                       <span>{job.location}</span>
-                      <span aria-hidden="true" className={styles.dot}>
-                        •
-                      </span>
-                      <span>{job.type}</span>
+                      {job.type && (
+                        <>
+                          <span aria-hidden="true" className={styles.dot}>
+                            •
+                          </span>
+                          <span>{job.type}</span>
+                        </>
+                      )}
                     </div>
                     <h3 className={styles.cardTitle}>{job.title}</h3>
                   </div>
