@@ -4,6 +4,11 @@
 // ever talks to its own origin.
 
 import { NextResponse, type NextRequest } from "next/server";
+import {
+  RESUME_TOO_LARGE_MESSAGE,
+  isResumeTooLarge,
+  isUnusableUpstreamReply,
+} from "@/lib/apply-upload";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -43,6 +48,14 @@ export async function POST(
     );
   }
 
+  const resume = formData.get("resume");
+  if (resume instanceof File && isResumeTooLarge(resume.size)) {
+    return NextResponse.json(
+      { ok: false, code: "FILE_TOO_LARGE", error: RESUME_TOO_LARGE_MESSAGE },
+      { status: 413 },
+    );
+  }
+
   try {
     const upstream = await fetch(
       `${TICKETING_APP_URL}/api/public/applications/${positionId}`,
@@ -55,12 +68,26 @@ export async function POST(
       },
     );
 
+    const contentType = upstream.headers.get("content-type");
+    if (isUnusableUpstreamReply(upstream.status, contentType)) {
+      // Status and Vercel's error code only: never the body, headers with secrets, or applicant data.
+      console.error(
+        "[RS_Web-Digital /api/apply] unusable upstream reply:",
+        `status=${upstream.status}`,
+        `x-vercel-error=${upstream.headers.get("x-vercel-error") ?? "none"}`,
+      );
+      return NextResponse.json(
+        { ok: false, code: "UPSTREAM_ERROR", error: "Couldn't reach the application service. Please try again in a moment." },
+        { status: 502 },
+      );
+    }
+
     const text = await upstream.text();
     // Pass through whatever the upstream returned, preserving status.
     return new NextResponse(text, {
       status: upstream.status,
       headers: {
-        "Content-Type": upstream.headers.get("content-type") ?? "application/json",
+        "Content-Type": contentType ?? "application/json",
         "Cache-Control": "no-store",
       },
     });
