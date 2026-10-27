@@ -1,20 +1,10 @@
 "use client";
 
-import {
-  useId,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  type ChangeEvent,
-  type ReactNode,
-} from "react";
-import {
-  countryOptions,
-  toCountryOption,
-  type CountryCode,
-} from "@/lib/form/countries";
+import { useId, useLayoutEffect, useRef, type ChangeEvent, type ReactNode } from "react";
+import type { CountryCode } from "@/lib/form/countries";
 import { formatPhoneInput, validatePhone } from "@/lib/form/phone";
 import { caretAfterDigits, digitsBefore, resolvePhoneEdit } from "@/lib/form/phone-caret";
+import { CountryPicker } from "./CountryPicker";
 import styles from "./PhoneField.module.css";
 
 export type PhoneFieldChange = { country: CountryCode; value: string };
@@ -35,8 +25,6 @@ type PhoneFieldProps = {
   disabled?: boolean;
   variant?: "apply" | "contact";
 };
-
-const DIVIDER = "──────────";
 
 export function PhoneField({
   label,
@@ -59,13 +47,7 @@ export function PhoneField({
   const pendingCaret = useRef<{ digits: number } | { position: number } | null>(null);
   const isContact = variant === "contact";
 
-  const selected = useMemo(() => toCountryOption(country), [country]);
-  const first = useMemo(() => toCountryOption(defaultCountry), [defaultCountry]);
-  // The default country is listed once, at the top.
-  const rest = useMemo(
-    () => countryOptions().filter((option) => option.code !== defaultCountry),
-    [defaultCountry],
-  );
+  const boxRef = useRef<HTMLDivElement | null>(null);
 
   const check = validatePhone(value, country);
   const e164 = check.ok ? check.e164 : "";
@@ -108,8 +90,7 @@ export function PhoneField({
     requestAnimationFrame(placeCaret);
   }
 
-  function handleCountry(event: ChangeEvent<HTMLSelectElement>) {
-    const nextCountry = event.target.value as CountryCode;
+  function handleCountry(nextCountry: CountryCode) {
     // Re-read the digits already typed under the new country.
     onChange({ country: nextCountry, value: formatPhoneInput(value, nextCountry).value });
   }
@@ -127,35 +108,14 @@ export function PhoneField({
       <label htmlFor={inputId} className={isContact ? styles.labelContact : styles.labelApply}>
         {label}
       </label>
-      <div className={boxClass}>
-        <span className={`${styles.country} ${styles.countryFocus}`}>
-          <span className={styles.flag} aria-hidden="true" suppressHydrationWarning>
-            {selected.flag}
-          </span>
-          <span aria-hidden="true">(+{selected.callingCode})</span>
-          <svg className={styles.chevron} viewBox="0 0 10 6" aria-hidden="true">
-            <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" />
-          </svg>
-          <select
-            className={styles.select}
-            aria-label="Country calling code"
-            value={country}
-            onChange={handleCountry}
-            disabled={disabled}
-          >
-            <option value={first.code} suppressHydrationWarning>
-              {first.label}
-            </option>
-            <option disabled value="">
-              {DIVIDER}
-            </option>
-            {rest.map((option) => (
-              <option key={option.code} value={option.code} suppressHydrationWarning>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </span>
+      <div className={boxClass} ref={boxRef}>
+        <CountryPicker
+          country={country}
+          defaultCountry={defaultCountry}
+          onSelect={handleCountry}
+          anchorRef={boxRef}
+          disabled={disabled}
+        />
         <input
           ref={inputRef}
           id={inputId}

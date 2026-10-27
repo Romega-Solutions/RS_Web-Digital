@@ -18,10 +18,13 @@ import {
 } from "@/lib/form/email";
 import type { CountryCode } from "@/lib/form/countries";
 import { FIELD_ERRORS_MESSAGE, isFieldSummary, shouldShowBanner } from "@/lib/form/field-errors";
+import { fieldError } from "@/lib/form/field-state";
 import { smartName } from "@/lib/form/name";
 import { phoneErrorMessage, validatePhone } from "@/lib/form/phone";
 import { applicationSubmitPath } from "@/lib/position-slug";
 import styles from "./ApplyForm.module.css";
+
+const RESUME_MISSING_MESSAGE = "Please attach your resume.";
 
 type Status = "idle" | "submitting" | "success" | "error";
 type FieldErrors = Partial<Record<"fullName" | "email" | "phone", string>>;
@@ -40,6 +43,8 @@ function phoneError(value: string, country: CountryCode): string | undefined {
   const check = validatePhone(value, country);
   return check.ok ? undefined : phoneErrorMessage(check.reason, country);
 }
+
+// Red only while a field's current value is wrong: see lib/form/field-state.
 
 export function ApplyForm({
   positionId,
@@ -69,6 +74,11 @@ export function ApplyForm({
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
+    // A resume message from an earlier submit no longer applies once the file changes.
+    if (errorMsg === RESUME_MISSING_MESSAGE || (fileError && errorMsg === fileError)) {
+      setErrorMsg("");
+      setStatus("idle");
+    }
     if (!file) {
       setFileName("");
       setFileError("");
@@ -98,31 +108,35 @@ export function ApplyForm({
   function handleNameBlur(event: React.FocusEvent<HTMLInputElement>) {
     const input = event.currentTarget;
     input.value = smartName(input.value);
-    setFieldError("fullName", nameError(input.value));
+    setFieldError("fullName", fieldError("blur", input.value, nameError, fieldErrors.fullName));
   }
 
   function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
-    if (fieldErrors.fullName && !nameError(event.target.value)) setFieldError("fullName", undefined);
+    if (fieldErrors.fullName) setFieldError("fullName", fieldError("edit", event.target.value, nameError));
   }
 
   function handleEmailBlur(event: React.FocusEvent<HTMLInputElement>) {
-    setFieldError("email", emailError(event.currentTarget.value));
+    setFieldError("email", fieldError("blur", event.currentTarget.value, emailError, fieldErrors.email));
   }
 
   function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
-    if (fieldErrors.email && !emailError(event.target.value)) setFieldError("email", undefined);
+    if (fieldErrors.email) setFieldError("email", fieldError("edit", event.target.value, emailError));
   }
 
   function handlePhoneChange(next: { country: CountryCode; value: string }) {
     setPhoneCountry(next.country);
     setPhoneValue(next.value);
     const check = validatePhone(next.value, next.country);
-    if (check.ok) {
-      setFieldError("phone", undefined);
-    } else if (check.reason === "chars" || fieldErrors.phone) {
-      // Letters or symbols turn red straight away; a short number waits for blur or submit.
-      setFieldError("phone", phoneErrorMessage(check.reason, next.country));
-    }
+    // Letters or symbols that got in (a paste) are wrong content, so they are red straight away.
+    // Anything else clears the red; a short number is judged again on blur or submit.
+    setFieldError(
+      "phone",
+      !check.ok && check.reason === "chars" ? phoneErrorMessage(check.reason, next.country) : undefined,
+    );
+  }
+
+  function handlePhoneBlur() {
+    setFieldError("phone", fieldError("blur", phoneValue, (value) => phoneError(value, phoneCountry), fieldErrors.phone));
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -134,9 +148,9 @@ export function ApplyForm({
     const fullName = smartName(String(data.get("fullName") ?? ""));
     const email = String(data.get("email") ?? "").trim();
     const nextErrors: FieldErrors = {
-      fullName: nameError(fullName),
-      email: emailError(email),
-      phone: phoneError(phoneValue, phoneCountry),
+      fullName: fieldError("submit", fullName, nameError),
+      email: fieldError("submit", email, emailError),
+      phone: fieldError("submit", phoneValue, (value) => phoneError(value, phoneCountry)),
     };
     if (nextErrors.fullName || nextErrors.email || nextErrors.phone) {
       setFieldErrors(nextErrors);
@@ -157,8 +171,8 @@ export function ApplyForm({
 
     const resume = data.get("resume");
     if (!(resume instanceof File) || resume.size === 0) {
-      setFileError("Please attach your resume.");
-      setErrorMsg("Please attach your resume.");
+      setFileError(RESUME_MISSING_MESSAGE);
+      setErrorMsg(RESUME_MISSING_MESSAGE);
       setStatus("error");
       return;
     }
@@ -299,7 +313,7 @@ export function ApplyForm({
           value={phoneValue}
           defaultCountry={defaultCountry}
           onChange={handlePhoneChange}
-          onBlur={() => setFieldError("phone", phoneError(phoneValue, phoneCountry))}
+          onBlur={handlePhoneBlur}
           error={fieldErrors.phone}
           required
         />

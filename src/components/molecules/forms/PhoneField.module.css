@@ -62,37 +62,6 @@
   box-shadow: 0 0 0 4px rgb(220 38 38 / 0.14);
 }
 
-/* The visible flag + code sits under a transparent native select, so the
-   native picker (and its keyboard and mobile behaviour) does the work. */
-.country {
-  @apply relative flex shrink-0 items-center gap-1 whitespace-nowrap rounded-l-lg text-sm;
-  padding-inline: 0.75rem 0.5rem;
-  border-right: 1px solid rgb(9 75 143 / 0.14);
-  background: rgb(241 246 255 / 0.6);
-  color: var(--color-text-main);
-}
-
-.flag {
-  font-size: 1.125rem;
-  line-height: 1;
-}
-
-.chevron {
-  width: 0.625rem;
-  height: 0.625rem;
-  opacity: 0.55;
-}
-
-.select {
-  @apply absolute inset-0 h-full w-full opacity-0;
-  font-size: 16px;
-}
-
-.countryFocus:focus-within {
-  outline: 2px solid rgb(53 141 240 / 0.6);
-  outline-offset: -2px;
-}
-
 .input {
   @apply min-w-0 flex-1 rounded-r-lg bg-white text-black;
   outline: none;

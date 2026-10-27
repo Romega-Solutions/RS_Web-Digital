@@ -13,6 +13,7 @@ import {
   isValidEmail,
 } from "@/lib/form/email";
 import { FIELD_ERRORS_MESSAGE, isFieldSummary, shouldShowBanner } from "@/lib/form/field-errors";
+import { fieldError } from "@/lib/form/field-state";
 import { smartName } from "@/lib/form/name";
 import { phoneErrorMessage, validatePhone } from "@/lib/form/phone";
 import {
@@ -255,16 +256,18 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
     }
   }
 
+  // Red only while a field's current value is wrong: see lib/form/field-state.
+  // An empty name is not red on blur; it turns red only on a submit attempt.
   function handleNameBlur(field: "firstName" | "lastName", label: string) {
     const value = smartName(form[field]);
     setForm((current) => ({ ...current, [field]: value }));
-    setErrors((current) => ({ ...current, [field]: value ? undefined : label }));
+    setErrors((current) => ({ ...current, [field]: fieldError("blur", value, (text) => (text.trim() ? undefined : label), current[field]) }));
   }
 
   function handleEmailBlur() {
     const trimmed = form.email.trim();
     if (trimmed !== form.email) setForm((current) => ({ ...current, email: trimmed }));
-    setErrors((current) => ({ ...current, email: emailError(trimmed) }));
+    setErrors((current) => ({ ...current, email: fieldError("blur", trimmed, emailError, current.email) }));
   }
 
   function handlePhoneChange(next: { country: CountryCode; value: string }) {
@@ -272,20 +275,20 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
     setPhoneCountry(next.country);
     updateField("phone", next.value);
     const check = validatePhone(next.value, next.country);
-    if (check.ok) {
-      setErrors((current) => ({ ...current, phone: undefined }));
-    } else if (check.reason === "chars" || errors.phone) {
-      // Letters or symbols turn red straight away; a short number waits for blur or submit.
-      setErrors((current) => ({ ...current, phone: phoneErrorMessage(check.reason, next.country) }));
-    }
+    // Letters or symbols that got in (a paste) are wrong content, so they are red straight away.
+    // Anything else clears the red; a short number is judged again on blur or submit.
+    setErrors((current) => ({
+      ...current,
+      phone: !check.ok && check.reason === "chars" ? phoneErrorMessage(check.reason, next.country) : undefined,
+    }));
   }
 
   function handlePhoneBlur() {
-    const check = validatePhone(form.phone, phoneCountry);
-    setErrors((current) => ({
-      ...current,
-      phone: check.ok ? undefined : phoneErrorMessage(check.reason, phoneCountry),
-    }));
+    const rule = (value: string) => {
+      const check = validatePhone(value, phoneCountry);
+      return check.ok ? undefined : phoneErrorMessage(check.reason, phoneCountry);
+    };
+    setErrors((current) => ({ ...current, phone: fieldError("blur", form.phone, rule, current.phone) }));
   }
 
   function handleMessageChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
@@ -307,9 +310,7 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
     }
 
     if (field === "email") {
-      if (errors.email && !emailError(String(value))) {
-        setErrors((current) => ({ ...current, email: undefined }));
-      }
+      setErrors((current) => ({ ...current, email: undefined }));
     }
     if (field === "firstName") {
       setErrors((current) => ({ ...current, firstName: undefined }));

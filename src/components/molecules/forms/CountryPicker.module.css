@@ -1,0 +1,101 @@
+@reference "../../../app/globals.css";
+
+.root {
+  @apply flex;
+}
+
+/* The closed control: flag + (+code) + chevron, as before. */
+.button {
+  @apply relative flex shrink-0 items-center gap-1 whitespace-nowrap rounded-l-lg text-sm;
+  padding-inline: 0.75rem 0.5rem;
+  border: 0;
+  border-right: 1px solid rgb(9 75 143 / 0.14);
+  background: rgb(241 246 255 / 0.6);
+  color: var(--color-text-main);
+  font: inherit;
+  font-size: 0.875rem;
+}
+
+.button:focus-visible {
+  outline: 2px solid rgb(53 141 240 / 0.6);
+  outline-offset: -2px;
+}
+
+.button:disabled {
+  opacity: 0.6;
+}
+
+.flag {
+  font-size: 1.125rem;
+  line-height: 1;
+}
+
+.chevron {
+  width: 0.625rem;
+  height: 0.625rem;
+  opacity: 0.55;
+}
+
+/* A small scrolling box that hangs under the phone box. Its height and width
+   are set from the space on screen when it opens. */
+.list {
+  position: absolute;
+  z-index: 50;
+  margin: 0;
+  padding: 0.25rem;
+  list-style: none;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  background: #fff;
+  border: 1px solid rgb(9 75 143 / 0.2);
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 24px rgb(16 24 40 / 0.14), 0 2px 6px rgb(16 24 40 / 0.08);
+  max-width: calc(100vw - 1rem);
+  font-size: 0.875rem;
+  color: var(--color-text-main);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  /* 40px tap target */
+  min-height: 2.5rem;
+  padding: 0.375rem 0.625rem;
+  border-radius: 0.375rem;
+  user-select: none;
+}
+
+.optionActive {
+  background: rgb(241 246 255);
+}
+
+.optionSelected {
+  font-weight: 600;
+}
+
+.optionFlag {
+  font-size: 1.125rem;
+  line-height: 1;
+}
+
+.optionText {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.check {
+  width: 1rem;
+  text-align: center;
+  color: rgb(9 75 143);
+}
+
+.divider {
+  height: 1px;
+  margin: 0.25rem 0.5rem;
+  background: rgb(9 75 143 / 0.14);
+}
