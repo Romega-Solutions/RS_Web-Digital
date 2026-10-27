@@ -39,7 +39,7 @@ function capitalizeParts(word: string): string {
   return word
     .toLowerCase()
     .replace(/(^|['’-])(\p{L})/gu, (_match, separator: string, letter: string) => {
-      return separator + letter.toLocaleUpperCase();
+      return separator + letter.toUpperCase();
     });
 }
 
@@ -48,7 +48,7 @@ function isMixedCase(word: string): boolean {
 }
 
 function raiseFirstLetter(word: string): string {
-  return word.replace(/^\p{Ll}/u, (letter) => letter.toLocaleUpperCase());
+  return word.replace(/^\p{Ll}/u, (letter) => letter.toUpperCase());
 }
 
 export function smartName(value: string): string {

@@ -1,6 +1,7 @@
 // Phone rules shared by the PhoneField component, /api/contact and the
 // /api/apply pre-check. Uses libphonenumber-js with its "min" metadata.
 
+import { toCountryOption } from "./countries.ts";
 import {
   AsYouType,
   getCountryCallingCode,
@@ -43,8 +44,14 @@ function callingCode(country: CountryCode): string {
   return getCountryCallingCode(country);
 }
 
+// +44 is shared with Guernsey, Jersey and the Isle of Man, and some ordinary UK
+// mobile ranges are detected as one of them. Visitors expect GB.
+const ALWAYS_PREFERRED_FOR_CALLING_CODE = new Set(["44"]);
+
 function countryForCallingCode(code: string, detected: CountryCode | undefined): CountryCode | null {
-  if (detected && callingCode(detected) === code) return detected;
+  if (!ALWAYS_PREFERRED_FOR_CALLING_CODE.has(code) && detected && callingCode(detected) === code) {
+    return detected;
+  }
   const preferred = PREFERRED_FOR_CALLING_CODE[code];
   if (preferred && callingCode(preferred) === code) return preferred;
   return null;
@@ -110,8 +117,8 @@ export function validatePhone(value: string, country: CountryCode): PhoneCheck {
 export function phoneErrorMessage(reason: PhoneReason, country: CountryCode): string {
   if (reason === "empty") return PHONE_REQUIRED_MESSAGE;
   if (reason === "chars") return PHONE_CHARS_MESSAGE;
-  if (country === "PH") return "Enter a valid PH number (10 digits after +63).";
-  return `Enter a valid ${country} phone number.`;
+  if (country === "PH") return "Enter a valid Philippine number, e.g. 917 555 1234.";
+  return `Enter a valid phone number for ${toCountryOption(country).name}.`;
 }
 
 /**

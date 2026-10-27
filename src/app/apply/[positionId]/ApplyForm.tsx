@@ -17,6 +17,7 @@ import {
   isValidEmail,
 } from "@/lib/form/email";
 import type { CountryCode } from "@/lib/form/countries";
+import { FIELD_ERRORS_MESSAGE, isFieldSummary, shouldShowBanner } from "@/lib/form/field-errors";
 import { smartName } from "@/lib/form/name";
 import { phoneErrorMessage, validatePhone } from "@/lib/form/phone";
 import { applicationSubmitPath } from "@/lib/position-slug";
@@ -25,7 +26,6 @@ import styles from "./ApplyForm.module.css";
 type Status = "idle" | "submitting" | "success" | "error";
 type FieldErrors = Partial<Record<"fullName" | "email" | "phone", string>>;
 
-const FIELD_ERRORS_MESSAGE = "Please correct the highlighted fields and try again.";
 
 function nameError(value: string): string | undefined {
   return value.trim() ? undefined : "Enter your full name.";
@@ -224,6 +224,9 @@ export function ApplyForm({
     );
   }
 
+  const summary = isFieldSummary(errorMsg);
+  const showBanner = status === "error" && shouldShowBanner(errorMsg, fieldErrors);
+
   return (
     <form ref={formRef} onSubmit={handleSubmit} className={styles.form} noValidate>
       {/* Honeypot — hidden from humans; bots tend to fill every field. */}
@@ -247,7 +250,7 @@ export function ApplyForm({
           name="fullName"
           required
           autoComplete="name"
-          placeholder="Juan Dela Cruz"
+          placeholder="Juan dela Cruz"
           onBlur={handleNameBlur}
           onChange={handleNameChange}
           aria-invalid={Boolean(fieldErrors.fullName)}
@@ -255,7 +258,7 @@ export function ApplyForm({
           className={`${styles.control} ${fieldErrors.fullName ? styles.controlInvalid : ""}`}
         />
         {fieldErrors.fullName && (
-          <span id="fullName-error" className={styles.error} aria-live="polite">
+          <span id="fullName-error" className={styles.error} role="alert">
             {fieldErrors.fullName}
           </span>
         )}
@@ -281,7 +284,7 @@ export function ApplyForm({
             className={`${styles.control} ${fieldErrors.email ? styles.controlInvalid : ""}`}
           />
           {fieldErrors.email && (
-            <span id="email-error" className={styles.error} aria-live="polite">
+            <span id="email-error" className={styles.error} role="alert">
               {fieldErrors.email}
             </span>
           )}
@@ -359,8 +362,9 @@ export function ApplyForm({
         />
       </div>
 
-      {status === "error" && errorMsg && (
-        <div className={styles.alert} role="alert">
+      {showBanner && (
+        // The field-summary line is polite: each field error already announces itself.
+        <div className={styles.alert} role={summary ? "status" : "alert"}>
           {errorMsg}
         </div>
       )}

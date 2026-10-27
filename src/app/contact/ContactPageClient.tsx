@@ -12,6 +12,7 @@ import {
   EMAIL_REQUIRED_MESSAGE,
   isValidEmail,
 } from "@/lib/form/email";
+import { FIELD_ERRORS_MESSAGE, isFieldSummary, shouldShowBanner } from "@/lib/form/field-errors";
 import { smartName } from "@/lib/form/name";
 import { phoneErrorMessage, validatePhone } from "@/lib/form/phone";
 import {
@@ -199,7 +200,7 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
     const nextErrors = validateForm();
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
-      setStatus({ type: "error", message: "Please correct the highlighted fields and try again." });
+      setStatus({ type: "error", message: FIELD_ERRORS_MESSAGE });
       return;
     }
     const phoneCheck = validatePhone(form.phone, phoneCountry);
@@ -327,6 +328,10 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
     }
     setForm((current) => ({ ...current, [field]: value }));
   }
+
+  // The field-summary line goes away once every field is valid.
+  const showStatus =
+    status.type !== "idle" && (status.type !== "error" || shouldShowBanner(status.message, errors));
 
   return (
       <section className={styles.page}>
@@ -492,11 +497,12 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
                 </p>
               ) : null}
 
-              {status.type !== "idle" ? (
+              {showStatus ? (
                 <p
                   ref={statusRef}
                   tabIndex={-1}
-                  role={status.type === "error" ? "alert" : "status"}
+                  // The field-summary line is polite: each field error already announces itself.
+                  role={status.type === "error" && !isFieldSummary(status.message) ? "alert" : "status"}
                   className={`${styles.status} ${
                     status.type === "success" ? styles.statusSuccess : styles.statusError
                   }`}

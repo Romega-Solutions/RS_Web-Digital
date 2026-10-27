@@ -35,6 +35,14 @@ test("a pasted international number switches the country", () => {
   assert.deepEqual(formatPhoneInput("0063 917 555 1234", "PH"), { country: "PH", value: "917 555 1234" });
 });
 
+test("shared calling codes open on the best-known country", () => {
+  assert.equal(formatPhoneInput("+44 7911 123456", "PH").country, "GB");
+  assert.equal(formatPhoneInput("+447911123456", "US").country, "GB");
+  assert.equal(formatPhoneInput("+1 415 555 2671", "PH").country, "US");
+  assert.equal(formatPhoneInput("+1 876 555 1234", "PH").country, "JM");
+  assert.equal(formatPhoneInput("+44 7911 123456", "GG").country, "GG");
+});
+
 test("a lone + or an unknown prefix is kept as typed", () => {
   assert.deepEqual(formatPhoneInput("+", "PH"), { country: "PH", value: "+" });
   assert.deepEqual(formatPhoneInput("+6", "PH"), { country: "PH", value: "+6" });
@@ -64,9 +72,9 @@ test("input is capped at 15 digits", () => {
   assert.equal(out.value.replace(/\D/g, "").length <= 15, true);
 });
 
-test("error text names the country; PH spells out the length", () => {
-  assert.equal(phoneErrorMessage("invalid", "PH"), "Enter a valid PH number (10 digits after +63).");
-  assert.equal(phoneErrorMessage("invalid", "US"), "Enter a valid US phone number.");
+test("error text names the country and PH gives an example", () => {
+  assert.equal(phoneErrorMessage("invalid", "PH"), "Enter a valid Philippine number, e.g. 917 555 1234.");
+  assert.equal(phoneErrorMessage("invalid", "US"), "Enter a valid phone number for United States.");
   assert.equal(phoneErrorMessage("empty", "PH"), "Enter your phone number.");
   assert.match(phoneErrorMessage("chars", "PH"), /numbers only/i);
 });

@@ -23,7 +23,7 @@ export function FormInput({ label, error, className = "", ...props }: FormInputP
         {...props}
       />
       {error && (
-        <span id={errorId} className={styles.error} aria-live="polite">
+        <span id={errorId} className={styles.error} role="alert">
           {error}
         </span>
       )}
@@ -53,7 +53,7 @@ export function FormSelect({ label, error, className = "", ...props }: FormSelec
         {...props}
       />
       {error ? (
-        <span id={errorId} className={styles.error} aria-live="polite">
+        <span id={errorId} className={styles.error} role="alert">
           {error}
         </span>
       ) : null}
@@ -119,7 +119,7 @@ export function FormTextarea({
         </span>
       ) : null}
       {error ? (
-        <span id={errorId} className={styles.error} aria-live="polite">
+        <span id={errorId} className={styles.error} role="alert">
           {error}
         </span>
       ) : null}
@@ -152,7 +152,7 @@ export function FormCheckbox({ label, error, className = "", ...props }: FormChe
       </label>
       </div>
       {error ? (
-        <span id={errorId} className={styles.error} aria-live="polite">
+        <span id={errorId} className={styles.error} role="alert">
           {error}
         </span>
       ) : null}

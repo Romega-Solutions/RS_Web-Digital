@@ -4,7 +4,7 @@ import { randomUUID } from "node:crypto";
 import { isValidEmail } from "@/lib/form/email";
 import { smartName } from "@/lib/form/name";
 import { isValidPhoneValue } from "@/lib/form/phone";
-import { isPlainText } from "@/lib/form/text";
+import { MESSAGE_REJECTED, isPlainText } from "@/lib/form/text";
 
 type ContactBody = {
   firstName?: string;
@@ -461,7 +461,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          message: "Message can only contain plain text. Please remove emoji and special symbols.",
+          message: MESSAGE_REJECTED,
           code: "invalid_message",
         },
         { status: 400 },

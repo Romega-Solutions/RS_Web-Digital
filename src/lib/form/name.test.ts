@@ -45,3 +45,17 @@ test("is stable when run twice", () => {
     assert.equal(smartName(smartName(input)), smartName(input));
   }
 });
+
+test("upper-casing gives the same result in every browser language", () => {
+  assert.equal(smartName("isabel"), "Isabel");
+  assert.equal(smartName("ilona i\u0307ris"), "Ilona I\u0307ris");
+});
+
+test("the Filipino and Spanish particles stay lower-case mid-name", () => {
+  assert.equal(smartName("juan del rosario"), "Juan del Rosario");
+  assert.equal(smartName("juan delos santos"), "Juan delos Santos");
+  assert.equal(smartName("juan dela cruz"), "Juan dela Cruz");
+  assert.equal(smartName("maria clara de la cruz"), "Maria Clara de la Cruz");
+  assert.equal(smartName("pedro de leon"), "Pedro de Leon");
+  assert.equal(smartName("JUAN DEL ROSARIO"), "Juan Del Rosario");
+});

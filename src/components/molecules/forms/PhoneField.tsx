@@ -14,6 +14,7 @@ import {
   type CountryCode,
 } from "@/lib/form/countries";
 import { formatPhoneInput, validatePhone } from "@/lib/form/phone";
+import { caretAfterDigits, digitsBefore, resolvePhoneEdit } from "@/lib/form/phone-caret";
 import styles from "./PhoneField.module.css";
 
 export type PhoneFieldChange = { country: CountryCode; value: string };
@@ -37,20 +38,6 @@ type PhoneFieldProps = {
 
 const DIVIDER = "──────────";
 
-function digitsBefore(text: string, caret: number): number {
-  return text.slice(0, caret).replace(/\D/g, "").length;
-}
-
-function caretAfterDigits(text: string, digitCount: number): number {
-  if (digitCount <= 0) return 0;
-  let seen = 0;
-  for (let index = 0; index < text.length; index += 1) {
-    if (/\d/.test(text[index])) seen += 1;
-    if (seen === digitCount) return index + 1;
-  }
-  return text.length;
-}
-
 export function PhoneField({
   label,
   name,
@@ -68,32 +55,57 @@ export function PhoneField({
   const inputId = `${id}-phone`;
   const errorId = `${id}-error`;
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const pendingCaretDigits = useRef<number | null>(null);
+  // Where the caret goes after the next render: after N digits, or at a fixed position.
+  const pendingCaret = useRef<{ digits: number } | { position: number } | null>(null);
   const isContact = variant === "contact";
 
   const selected = useMemo(() => toCountryOption(country), [country]);
   const first = useMemo(() => toCountryOption(defaultCountry), [defaultCountry]);
-  const all = useMemo(() => countryOptions(), []);
+  // The default country is listed once, at the top.
+  const rest = useMemo(
+    () => countryOptions().filter((option) => option.code !== defaultCountry),
+    [defaultCountry],
+  );
 
   const check = validatePhone(value, country);
   const e164 = check.ok ? check.e164 : "";
 
-  // Put the caret back after the formatter adds spaces, counted in digits.
-  useLayoutEffect(() => {
+  function placeCaret() {
     const input = inputRef.current;
-    const digits = pendingCaretDigits.current;
-    pendingCaretDigits.current = null;
-    if (!input || digits === null || document.activeElement !== input) return;
-    const position = caretAfterDigits(input.value, digits);
+    const pending = pendingCaret.current;
+    pendingCaret.current = null;
+    if (!input || !pending || document.activeElement !== input) return;
+    const position = "digits" in pending ? caretAfterDigits(input.value, pending.digits) : pending.position;
     input.setSelectionRange(position, position);
-  }, [value]);
+  }
+
+  // When the text changed, put the caret back right after the formatter ran.
+  useLayoutEffect(placeCaret, [value]);
 
   function handleInput(event: ChangeEvent<HTMLInputElement>) {
-    const raw = event.target.value;
-    const caret = event.target.selectionStart ?? raw.length;
-    const next = formatPhoneInput(raw, country);
-    pendingCaretDigits.current = digitsBefore(raw, caret);
+    const native = event.nativeEvent as InputEvent;
+    const edit = resolvePhoneEdit({
+      previous: value,
+      raw: event.target.value,
+      caret: event.target.selectionStart ?? event.target.value.length,
+      inputType: native.inputType,
+      data: native.data,
+    });
+
+    if (edit.rejected) {
+      // Nothing changes, so React has no new render to hook into: set the caret next frame.
+      pendingCaret.current = { position: edit.caret };
+      requestAnimationFrame(placeCaret);
+      return;
+    }
+
+    const next = formatPhoneInput(edit.raw, country);
+    // Text with letters or symbols is kept as typed, so the raw caret is still right.
+    pendingCaret.current =
+      next.value === edit.raw ? { position: edit.caret } : { digits: digitsBefore(edit.raw, edit.caret) };
     onChange(next);
+    // The text may come out the same as before (e.g. a space deleted and put back): still place the caret.
+    requestAnimationFrame(placeCaret);
   }
 
   function handleCountry(event: ChangeEvent<HTMLSelectElement>) {
@@ -137,7 +149,7 @@ export function PhoneField({
             <option disabled value="">
               {DIVIDER}
             </option>
-            {all.map((option) => (
+            {rest.map((option) => (
               <option key={option.code} value={option.code} suppressHydrationWarning>
                 {option.label}
               </option>
@@ -166,7 +178,7 @@ export function PhoneField({
         <span
           id={errorId}
           className={isContact ? styles.errorContact : styles.error}
-          aria-live="polite"
+          role="alert"
         >
           {error}
         </span>
