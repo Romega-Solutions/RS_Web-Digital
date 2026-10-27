@@ -23,6 +23,10 @@
 
 .box {
   @apply relative flex w-full items-stretch rounded-lg border bg-white;
+  /* One frame for the country button and the number box: whatever is painted
+     inside (button fill, focus rings) is cut at the rounded border, so nothing
+     can spill over it. The glow below is the box's own shadow and is not cut. */
+  overflow: hidden;
   transition: border-color 120ms ease, box-shadow 120ms ease;
 }
 
@@ -53,6 +57,22 @@
     0 0 0 3px rgb(53 141 240 / 0.16);
 }
 
+/* Typing in the number box: one dark blue frame around the whole control
+   (button and number box together), instead of a ring on the input alone. */
+.boxApply:not(.boxInvalid):has(.input:focus) {
+  border-color: rgb(9 75 143);
+  box-shadow:
+    0 0 0 1px rgb(9 75 143),
+    0 0 0 4px rgb(53 141 240 / 0.14);
+}
+
+.boxContact:not(.boxInvalid):has(.input:focus) {
+  border-color: rgb(9 75 143);
+  box-shadow:
+    0 0 0 1px rgb(9 75 143),
+    0 0 0 3px rgb(53 141 240 / 0.16);
+}
+
 /* Same red glow as the oversize resume box: solid border, soft glow, no size change. */
 .boxInvalid,
 .boxInvalid:hover,
@@ -63,9 +83,19 @@
 }
 
 .input {
-  @apply min-w-0 flex-1 rounded-r-lg bg-white text-black;
+  @apply min-w-0 flex-1 bg-white text-black;
+  /* Inner corner radius = the frame's radius minus its 1px border. */
+  border-radius: 0 calc(0.5rem - 1px) calc(0.5rem - 1px) 0;
   outline: none;
   color: var(--color-text-main);
+}
+
+/* The page-wide focus ring (a box-shadow with a white offset) would stick out
+   over the frame; the frame itself shows the focus instead. */
+.input:focus,
+.input:focus-visible {
+  outline: none;
+  box-shadow: none;
 }
 
 .inputApply {

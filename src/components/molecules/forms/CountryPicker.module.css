@@ -6,11 +6,14 @@
 
 /* The closed control: flag + (+code) + chevron, as before. */
 .button {
-  @apply relative flex shrink-0 items-center gap-1 whitespace-nowrap rounded-l-lg text-sm;
+  @apply relative flex shrink-0 items-center gap-1 whitespace-nowrap text-sm;
   padding-inline: 0.75rem 0.5rem;
   border: 0;
   border-right: 1px solid rgb(9 75 143 / 0.14);
-  background: rgb(241 246 255 / 0.6);
+  /* Inner corner radius = the phone frame's radius minus its 1px border. */
+  border-radius: calc(0.5rem - 1px) 0 0 calc(0.5rem - 1px);
+  /* Solid (the old 60% blue over white), so nothing shows through at the edge. */
+  background: rgb(247 250 255);
   color: var(--color-text-main);
   font: inherit;
   font-size: 0.875rem;
@@ -18,8 +21,11 @@
 }
 
 .button:focus-visible {
-  outline: 2px solid rgb(53 141 240 / 0.6);
-  outline-offset: -2px;
+  /* Drawn inside the button: dark and 2px, so it is clear and never reaches the frame.
+     The page-wide ring (box-shadow with a white offset) is switched off here. */
+  outline: 2px solid rgb(9 75 143);
+  outline-offset: -3px;
+  box-shadow: none;
 }
 
 .button:disabled {

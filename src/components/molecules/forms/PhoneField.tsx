@@ -3,6 +3,7 @@
 import { useId, useLayoutEffect, useRef, type ChangeEvent, type ReactNode } from "react";
 import type { CountryCode } from "@/lib/form/countries";
 import { formatPhoneInput, validatePhone } from "@/lib/form/phone";
+import { phonePlaceholder } from "@/lib/form/phone-example";
 import { caretAfterDigits, digitsBefore, resolvePhoneEdit } from "@/lib/form/phone-caret";
 import { CountryPicker } from "./CountryPicker";
 import styles from "./PhoneField.module.css";
@@ -130,7 +131,7 @@ export function PhoneField({
           disabled={disabled}
           aria-invalid={Boolean(error)}
           aria-describedby={error ? errorId : undefined}
-          placeholder={country === "PH" ? "917 555 1234" : undefined}
+          placeholder={phonePlaceholder(country) || undefined}
         />
       </div>
       {name ? <input type="hidden" name={name} value={e164} /> : null}

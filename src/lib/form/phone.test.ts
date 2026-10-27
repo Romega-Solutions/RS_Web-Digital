@@ -94,3 +94,20 @@ test("server check accepts E.164 and a PH national number, rejects junk", () => 
   assert.equal(isValidPhoneValue(""), false);
   assert.equal(isValidPhoneValue("+".padEnd(60, "1")), false);
 });
+
+test("short local numbers do not get an area code added while typing (AS, TT, GG)", () => {
+  // libphonenumber turns a 7-digit American Samoa or 6-digit Guernsey number into a full one;
+  // the box must keep exactly the digits typed.
+  const typeAll = (digits: string, country: "AS" | "TT" | "GG" | "JE" | "IM") => {
+    let text = "";
+    for (const d of digits) text = formatPhoneInput(text + d, country).value;
+    return text;
+  };
+  assert.equal(typeAll("6847331234", "AS"), "684 733 1234");
+  assert.equal(typeAll("8682911234", "TT"), "868 291 1234");
+  assert.equal(typeAll("7781123456", "GG"), "7781 123456");
+  assert.equal(typeAll("7797712345", "JE"), "7797 712345");
+  assert.equal(typeAll("7924123456", "IM"), "7924 123456");
+  assert.equal(formatPhoneInput("6847331", "AS").value, "684 733 1");
+  assert.equal(formatPhoneInput("778112", "GG").value, "7781 12");
+});

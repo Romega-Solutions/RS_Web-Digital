@@ -58,10 +58,24 @@ function countryForCallingCode(code: string, detected: CountryCode | undefined):
 }
 
 // "917555" -> "917 555" for PH, without the country code or national 0.
-function formatNational(country: CountryCode, nationalNumber: string): string {
+// The grouping is the country's own (the same as after "+CC " in its international
+// form, e.g. "6 12 34 56 78" for FR), so what is shown next to the "(+CC)" button
+// reads like the number written with that code.
+export function formatNational(country: CountryCode, nationalNumber: string): string {
   const prefix = `+${callingCode(country)}`;
   const formatted = new AsYouType().input(`${prefix}${nationalNumber}`);
   return formatted.startsWith(prefix) ? formatted.slice(prefix.length).trim() : nationalNumber;
+}
+
+// The national number for what was typed: the digits minus the trunk prefix (0, 8,
+// 1...). libphonenumber also turns a short local number into a full one by adding
+// an area code (American Samoa "733 1234" -> "684 733 1234", Guernsey "7781 12" ->
+// "1481 7781 12"). That would put digits in the box the visitor never typed and
+// shift every later key, so a result longer than what was typed is not used.
+function nationalDigits(typed: AsYouType, digits: string): string {
+  const national = typed.getNationalNumber();
+  if (!national) return "";
+  return national.length > digits.length ? digits : national;
 }
 
 /**
@@ -100,7 +114,7 @@ export function formatPhoneInput(
     // e.g. the visitor typed an international dialling prefix such as 0063...
     return formatPhoneInput(`+${typedCode}${typed.getNationalNumber()}`, country);
   }
-  const national = typed.getNationalNumber();
+  const national = nationalDigits(typed, digits);
   // A lone "0" has no national number yet; show it until the next digit arrives.
   return { country, value: national ? formatNational(country, national) : digits };
 }
