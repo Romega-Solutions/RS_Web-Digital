@@ -57,8 +57,9 @@
 
 .dropzoneInvalid,
 .dropzoneInvalid:hover {
-  border-color: #dc2626;
-  box-shadow: 0 0 0 4px rgb(220 38 38 / 0.18);
+  border-style: solid;
+  border-color: rgb(220 38 38 / 0.6);
+  box-shadow: 0 0 0 4px rgb(220 38 38 / 0.14);
 }
 
 .fileTooLarge {
