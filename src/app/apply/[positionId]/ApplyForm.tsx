@@ -2,16 +2,17 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { AppButton } from "@/components/atoms/Button";
+import {
+  APPLY_GENERIC_ERROR,
+  MAX_RESUME_MB,
+  RESUME_TOO_LARGE_MESSAGE,
+  isResumeTooLarge,
+  readApplyReply,
+} from "@/lib/apply-upload";
 import { applicationSubmitPath } from "@/lib/position-slug";
 import styles from "./ApplyForm.module.css";
 
 type Status = "idle" | "submitting" | "success" | "error";
-
-type ApiResponse =
-  | { ok: true; candidateId: number; applicationCode: string | null }
-  | { ok: false; code: string; error: string };
-
-const MAX_FILE_MB = 10;
 
 export function ApplyForm({ positionId, jobTitle }: { positionId: number; jobTitle: string }) {
   const [status, setStatus] = useState<Status>("idle");
@@ -20,6 +21,7 @@ export function ApplyForm({ positionId, jobTitle }: { positionId: number; jobTit
   const [submittedName, setSubmittedName] = useState("");
   const [fileName, setFileName] = useState("");
   const [fileError, setFileError] = useState("");
+  const [fileTooLarge, setFileTooLarge] = useState(false);
   const loadedAtRef = useRef(0);
   const formRef = useRef<HTMLFormElement | null>(null);
 
@@ -32,15 +34,18 @@ export function ApplyForm({ positionId, jobTitle }: { positionId: number; jobTit
     if (!file) {
       setFileName("");
       setFileError("");
+      setFileTooLarge(false);
       return;
     }
+    setFileTooLarge(false);
     if (file.type !== "application/pdf") {
       setFileError("Resume must be a PDF file.");
       setFileName(file.name);
       return;
     }
-    if (file.size > MAX_FILE_MB * 1024 * 1024) {
-      setFileError(`Resume must be under ${MAX_FILE_MB} MB.`);
+    if (isResumeTooLarge(file.size)) {
+      setFileError("");
+      setFileTooLarge(true);
       setFileName(file.name);
       return;
     }
@@ -67,6 +72,12 @@ export function ApplyForm({ positionId, jobTitle }: { positionId: number; jobTit
       setStatus("error");
       return;
     }
+    if (fileTooLarge || isResumeTooLarge(resume.size)) {
+      // The red drop box and the note below it already explain this; nothing is sent.
+      setFileTooLarge(true);
+      setFileName(resume.name);
+      return;
+    }
     if (fileError) {
       setErrorMsg(fileError);
       setStatus("error");
@@ -83,22 +94,18 @@ export function ApplyForm({ positionId, jobTitle }: { positionId: number; jobTit
         method: "POST",
         body: data,
       });
-      const payload = (await response.json()) as ApiResponse;
-      if (payload.ok) {
-        setAppCode(payload.applicationCode);
+      const result = await readApplyReply(response);
+      if (result.ok) {
+        setAppCode(result.applicationCode);
         setStatus("success");
         form.reset();
         setFileName("");
       } else {
-        setErrorMsg(payload.error || "Submission failed. Please try again.");
+        setErrorMsg(result.message);
         setStatus("error");
       }
-    } catch (err) {
-      setErrorMsg(
-        err instanceof Error
-          ? err.message
-          : "Couldn't submit your application. Please try again.",
-      );
+    } catch {
+      setErrorMsg(APPLY_GENERIC_ERROR);
       setStatus("error");
     }
   }
@@ -198,9 +205,12 @@ export function ApplyForm({ positionId, jobTitle }: { positionId: number; jobTit
 
       <div className={styles.field}>
         <label htmlFor="resume" className={styles.label}>
-          Resume (PDF, max {MAX_FILE_MB} MB) <span className={styles.required}>*</span>
+          Resume (PDF, max {MAX_RESUME_MB} MB) <span className={styles.required}>*</span>
         </label>
-        <label htmlFor="resume" className={styles.dropzone}>
+        <label
+          htmlFor="resume"
+          className={`${styles.dropzone} ${fileTooLarge ? styles.dropzoneInvalid : ""}`}
+        >
           <span aria-hidden="true">📄</span>
           {fileName ? <span className={styles.fileName}>{fileName}</span> : "Click to upload PDF"}
         </label>
@@ -211,8 +221,15 @@ export function ApplyForm({ positionId, jobTitle }: { positionId: number; jobTit
           accept="application/pdf,.pdf"
           required
           onChange={handleFileChange}
+          aria-invalid={fileTooLarge || Boolean(fileError)}
+          aria-describedby={fileTooLarge ? "resume-too-large" : undefined}
           className={styles.fileInput}
         />
+        {fileTooLarge && (
+          <span id="resume-too-large" className={styles.fileTooLarge} role="alert">
+            {RESUME_TOO_LARGE_MESSAGE}
+          </span>
+        )}
         {fileError && <span className={styles.error}>{fileError}</span>}
       </div>
 

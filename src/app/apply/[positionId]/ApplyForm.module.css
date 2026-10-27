@@ -55,6 +55,18 @@
   border-color: rgb(53 141 240 / 0.55);
 }
 
+.dropzoneInvalid,
+.dropzoneInvalid:hover {
+  border-style: solid;
+  border-color: rgb(220 38 38 / 0.6);
+  box-shadow: 0 0 0 4px rgb(220 38 38 / 0.14);
+}
+
+.fileTooLarge {
+  @apply self-end text-right text-xs italic;
+  color: #b91c1c;
+}
+
 .fileName {
   font-weight: 600;
   color: var(--color-text-main);
