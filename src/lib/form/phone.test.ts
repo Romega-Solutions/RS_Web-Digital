@@ -74,7 +74,11 @@ test("input is capped at 15 digits", () => {
 
 test("error text names the country and PH gives an example", () => {
   assert.equal(phoneErrorMessage("invalid", "PH"), "Enter a valid Philippine number, e.g. 917 555 1234.");
-  assert.equal(phoneErrorMessage("invalid", "US"), "Enter a valid phone number for United States.");
+  assert.equal(phoneErrorMessage("invalid", "US"), "Enter a valid phone number for the United States.");
+  assert.equal(phoneErrorMessage("invalid", "GB"), "Enter a valid phone number for the United Kingdom.");
+  assert.equal(phoneErrorMessage("invalid", "NL"), "Enter a valid phone number for the Netherlands.");
+  assert.equal(phoneErrorMessage("invalid", "AE"), "Enter a valid phone number for the United Arab Emirates.");
+  assert.equal(phoneErrorMessage("invalid", "JP"), "Enter a valid phone number for Japan.");
   assert.equal(phoneErrorMessage("empty", "PH"), "Enter your phone number.");
   assert.match(phoneErrorMessage("chars", "PH"), /numbers only/i);
 });

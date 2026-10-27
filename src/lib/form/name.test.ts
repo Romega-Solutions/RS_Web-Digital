@@ -24,9 +24,14 @@ test("keeps particles as typed when they sit mid-name", () => {
   assert.equal(smartName("maria de la cruz"), "Maria de la Cruz");
   assert.equal(smartName("ludwig van beethoven"), "Ludwig van Beethoven");
   assert.equal(smartName("Maria De La Cruz"), "Maria De La Cruz");
+  assert.equal(smartName("juan de los reyes"), "Juan de los Reyes");
+  assert.equal(smartName("pedro de las alas"), "Pedro de las Alas");
+  assert.equal(smartName("JUAN DE LOS SANTOS"), "Juan De Los Santos");
+  assert.equal(smartName("maria clara de los santos"), "Maria Clara de los Santos");
   // a particle at the start or the end is still a name
   assert.equal(smartName("de la"), "De La");
   assert.equal(smartName("juan dela"), "Juan Dela");
+  assert.equal(smartName("juan de los"), "Juan de Los");
 });
 
 test("upper-cases a trailing generation numeral", () => {

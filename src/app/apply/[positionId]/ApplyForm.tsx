@@ -26,7 +26,6 @@ import styles from "./ApplyForm.module.css";
 type Status = "idle" | "submitting" | "success" | "error";
 type FieldErrors = Partial<Record<"fullName" | "email" | "phone", string>>;
 
-
 function nameError(value: string): string | undefined {
   return value.trim() ? undefined : "Enter your full name.";
 }

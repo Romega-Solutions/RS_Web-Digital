@@ -45,9 +45,54 @@ test("removes joined, flag and keycap emoji in one piece", () => {
 });
 
 test("removes zero-width and other invisible or control characters", () => {
-  assert.deepEqual(filterPlainText("a\u200Bb\u200C\u200D\u2060\uFEFFc"), { text: "abc", removed: true });
+  assert.deepEqual(filterPlainText("a\u200Bb\u2060\uFEFFc"), { text: "abc", removed: true });
+  // joiners with nothing to join are stray: after a space, at the start, doubled after a space
+  assert.deepEqual(filterPlainText("a \u200C\u200D b"), { text: "a  b", removed: true });
+  assert.deepEqual(filterPlainText("\u200Dabc"), { text: "abc", removed: true });
   assert.deepEqual(filterPlainText("a\u0000b\u0007c\u007Fd\u0085e\u202Ef"), { text: "abcdef", removed: true });
   assert.deepEqual(filterPlainText("a\uE000b"), { text: "ab", removed: true });
+});
+
+test("keeps the joiner and non-joiner inside words of other scripts", () => {
+  for (const input of [
+    "\u0645\u06CC\u200C\u062E\u0648\u0627\u0647\u0645", // Persian, ZWNJ
+    "\u0DC1\u0DCA\u200D\u0DBB\u0DD3", // Sinhala, ZWJ
+    "\u09B0\u200D\u09CD\u09AF\u09BE\u09AC", // Bengali, ZWJ
+    "\u0D15\u0D4D\u200C \u0D28\u0D4D\u200D", // Malayalam, ZWNJ and ZWJ after a virama
+    "\u0C95\u0CCD\u200D", // Kannada
+    "\u0915\u094D\u200D\u0937 \u0928\u092E\u0938\u094D\u0924\u0947", // Hindi half form
+  ]) {
+    assert.deepEqual(filterPlainText(input), { text: input, removed: false }, input);
+    assert.equal(isPlainText(input), true, input);
+  }
+});
+
+test("still removes a joiner before an emoji or after an emoji selector", () => {
+  assert.deepEqual(filterPlainText("a\u200D\u{1F600}b"), { text: "ab", removed: true });
+  assert.deepEqual(filterPlainText("a\u200C\u{1F600}b"), { text: "ab", removed: true });
+  assert.deepEqual(filterPlainText("\u2764\uFE0F\u200D\u{1F525}"), { text: "", removed: true });
+  assert.deepEqual(filterPlainText("\u{1F469}\u200D\u2695\uFE0F"), { text: "", removed: true });
+  assert.equal(isPlainText("\u{1F468}\u200D\u{1F469}\u200D\u{1F467}"), false);
+  assert.equal(isPlainText("a\u200D\u{1F600}"), false);
+});
+
+test("keeps direction marks, the soft hyphen and CJK variants", () => {
+  for (const input of [
+    "\u0645\u0631\u062D\u0628\u0627\u200F (hello)\u200E",
+    "co\u00ADoperate",
+    "\u845B\uFE00 \u8FFB\uFE01",
+    "\u845B\u{E0100} \u8FFB\u{E0101}",
+  ]) {
+    assert.deepEqual(filterPlainText(input), { text: input, removed: false }, input);
+    assert.equal(isPlainText(input), true, input);
+  }
+});
+
+test("removes a variation selector that follows an emoji or nothing", () => {
+  assert.deepEqual(filterPlainText("\u2764\uFE0E ok"), { text: " ok", removed: true });
+  assert.deepEqual(filterPlainText("a \uFE00b"), { text: "a b", removed: true });
+  assert.deepEqual(filterPlainText("I \u2764\uFE0F you"), { text: "I  you", removed: true });
+  assert.equal(isPlainText("a\uFE0F"), false);
 });
 
 test("the removal notice says emoji", () => {
@@ -81,6 +126,7 @@ test("isPlainText matches the filter", () => {
   assert.equal(isPlainText("emoji \u{1F600}"), false);
   assert.equal(isPlainText("caf\u00e9 \u20b150 \u65e5\u672c"), true);
   assert.equal(isPlainText("zero\u200Bwidth"), false);
+  assert.equal(isPlainText("\u0645\u06CC\u200C\u062E\u0648\u0627\u0647\u0645"), true);
   assert.equal(isPlainText("flag \u{1F1F5}\u{1F1ED}"), false);
   assert.equal(isPlainText("heart \u2764\uFE0F"), false);
   // calling it twice gives the same answer (no state is kept between calls)

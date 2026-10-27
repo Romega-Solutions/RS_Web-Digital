@@ -114,11 +114,22 @@ export function validatePhone(value: string, country: CountryCode): PhoneCheck {
   return { ok: true, e164: parsed.number };
 }
 
+// Country names that read with "the": "for the United States".
+const NAMES_WITH_THE = new Set<string>([
+  "AE", "AX", "BQ", "BS", "CC", "CF", "CK", "DO", "FK", "FO", "GB", "GM", "KM", "KY", "MH", "MP",
+  "MV", "NL", "PN", "PS", "SB", "SC", "TC", "US", "VG", "VI",
+]);
+
+function countryNameForSentence(country: CountryCode): string {
+  const name = toCountryOption(country).name;
+  return NAMES_WITH_THE.has(country) ? `the ${name}` : name;
+}
+
 export function phoneErrorMessage(reason: PhoneReason, country: CountryCode): string {
   if (reason === "empty") return PHONE_REQUIRED_MESSAGE;
   if (reason === "chars") return PHONE_CHARS_MESSAGE;
   if (country === "PH") return "Enter a valid Philippine number, e.g. 917 555 1234.";
-  return `Enter a valid phone number for ${toCountryOption(country).name}.`;
+  return `Enter a valid phone number for ${countryNameForSentence(country)}.`;
 }
 
 /**
