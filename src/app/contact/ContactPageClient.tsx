@@ -4,6 +4,22 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { FormCheckbox, FormInput, FormSelect, FormTextarea } from "@/components/atoms/Form";
 import { AppButton } from "@/components/atoms/Button";
+import { PhoneField } from "@/components/molecules/forms/PhoneField";
+import { DEFAULT_COUNTRY, normalizeCountry, type CountryCode } from "@/lib/form/countries";
+import {
+  EMAIL_INVALID_MESSAGE,
+  EMAIL_PLACEHOLDER,
+  EMAIL_REQUIRED_MESSAGE,
+  isValidEmail,
+} from "@/lib/form/email";
+import { smartName } from "@/lib/form/name";
+import { phoneErrorMessage, validatePhone } from "@/lib/form/phone";
+import {
+  MESSAGE_FILTER_NOTICE,
+  MESSAGE_MAX_LENGTH,
+  filterPlainText,
+  formatCounter,
+} from "@/lib/form/text";
 import { siteConfig } from "@/lib/seo";
 import styles from "./ContactPageClient.module.css";
 
@@ -45,9 +61,6 @@ const subjectOptions = [
   { value: "careers", label: "Career Opportunities" },
 ] as const;
 
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const phonePattern = /^\+?[0-9()\s.-]{7,}$/;
-
 const socialLinks: { href: string; label: string; text: string; title: string }[] = [
   {
     href: siteConfig.linkedIn,
@@ -69,6 +82,12 @@ const socialLinks: { href: string; label: string; text: string; title: string }[
   },
 ];
 
+function emailError(value: string): string | undefined {
+  const email = value.trim();
+  if (!email) return EMAIL_REQUIRED_MESSAGE;
+  return isValidEmail(email) ? undefined : EMAIL_INVALID_MESSAGE;
+}
+
 type ContactPageClientProps = {
   contactFormAvailable: boolean;
 };
@@ -82,8 +101,30 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
     type: "idle",
     message: "",
   });
+  const [phoneCountry, setPhoneCountry] = useState<CountryCode>(DEFAULT_COUNTRY);
+  const [geoCountry, setGeoCountry] = useState<CountryCode>(DEFAULT_COUNTRY);
+  const [messageFiltered, setMessageFiltered] = useState(false);
   const statusRef = useRef<HTMLParagraphElement | null>(null);
   const didPrefillRef = useRef(false);
+  const phoneTouchedRef = useRef(false);
+
+  // The page stays static, so the visitor's country comes from a tiny route that
+  // reads the edge header. Until it answers (or if it fails) the form opens on PH.
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/geo", { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((payload: { country?: string } | null) => {
+        if (cancelled || !payload) return;
+        const country = normalizeCountry(payload.country);
+        setGeoCountry(country);
+        if (!phoneTouchedRef.current) setPhoneCountry(country);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Prefill from /talent → "Inquire" deep-link. URL shape:
   //   /contact?inquiry=talent&talentId=TL-128&role=Brand+Strategist
@@ -128,20 +169,18 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
       nextErrors.lastName = "Enter your last name.";
     }
 
-    if (!form.email.trim()) {
-      nextErrors.email = "Enter your email address.";
-    } else if (!emailPattern.test(form.email.trim())) {
-      nextErrors.email = "Enter a valid email address.";
+    const emailMessage = emailError(form.email);
+    if (emailMessage) {
+      nextErrors.email = emailMessage;
     }
 
     if (!form.subject) {
       nextErrors.subject = "Select a subject.";
     }
 
-    if (!form.phone.trim()) {
-      nextErrors.phone = "Enter your contact number.";
-    } else if (!phonePattern.test(form.phone.trim())) {
-      nextErrors.phone = "Enter a valid contact number.";
+    const phoneCheck = validatePhone(form.phone, phoneCountry);
+    if (!phoneCheck.ok) {
+      nextErrors.phone = phoneErrorMessage(phoneCheck.reason, phoneCountry);
     }
 
     if (!form.message.trim()) {
@@ -163,6 +202,7 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
       setStatus({ type: "error", message: "Please correct the highlighted fields and try again." });
       return;
     }
+    const phoneCheck = validatePhone(form.phone, phoneCountry);
 
     setIsSubmitting(true);
     setErrors({});
@@ -176,8 +216,10 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
         },
         body: JSON.stringify({
           ...form,
-          firstName: form.firstName.trim(),
-          lastName: form.lastName.trim(),
+          firstName: smartName(form.firstName),
+          lastName: smartName(form.lastName),
+          email: form.email.trim(),
+          phone: phoneCheck.ok ? phoneCheck.e164 : form.phone,
         }),
       });
 
@@ -201,6 +243,7 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
         message: payload.message || "Thank you. Your message has been sent.",
       });
       setForm(initialFormState);
+      setMessageFiltered(false);
     } catch (error) {
       setStatus({
         type: "error",
@@ -211,13 +254,61 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
     }
   }
 
+  function handleNameBlur(field: "firstName" | "lastName", label: string) {
+    const value = smartName(form[field]);
+    setForm((current) => ({ ...current, [field]: value }));
+    setErrors((current) => ({ ...current, [field]: value ? undefined : label }));
+  }
+
+  function handleEmailBlur() {
+    const trimmed = form.email.trim();
+    if (trimmed !== form.email) setForm((current) => ({ ...current, email: trimmed }));
+    setErrors((current) => ({ ...current, email: emailError(trimmed) }));
+  }
+
+  function handlePhoneChange(next: { country: CountryCode; value: string }) {
+    phoneTouchedRef.current = true;
+    setPhoneCountry(next.country);
+    updateField("phone", next.value);
+    const check = validatePhone(next.value, next.country);
+    if (check.ok) {
+      setErrors((current) => ({ ...current, phone: undefined }));
+    } else if (check.reason === "chars" || errors.phone) {
+      // Letters or symbols turn red straight away; a short number waits for blur or submit.
+      setErrors((current) => ({ ...current, phone: phoneErrorMessage(check.reason, next.country) }));
+    }
+  }
+
+  function handlePhoneBlur() {
+    const check = validatePhone(form.phone, phoneCountry);
+    setErrors((current) => ({
+      ...current,
+      phone: check.ok ? undefined : phoneErrorMessage(check.reason, phoneCountry),
+    }));
+  }
+
+  function handleMessageChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+    const textarea = event.target;
+    const raw = textarea.value;
+    const { text, removed } = filterPlainText(raw);
+    if (removed) setMessageFiltered(true);
+    updateField("message", text);
+    if (text !== raw) {
+      // Keep the caret where the visitor was typing instead of jumping to the end.
+      const caret = filterPlainText(raw.slice(0, textarea.selectionStart ?? raw.length)).text.length;
+      requestAnimationFrame(() => textarea.setSelectionRange(caret, caret));
+    }
+  }
+
   function updateField<K extends keyof FormState>(field: K, value: FormState[K]) {
     if (status.type !== "idle") {
       setStatus({ type: "idle", message: "" });
     }
 
     if (field === "email") {
-      setErrors((current) => ({ ...current, email: undefined }));
+      if (errors.email && !emailError(String(value))) {
+        setErrors((current) => ({ ...current, email: undefined }));
+      }
     }
     if (field === "firstName") {
       setErrors((current) => ({ ...current, firstName: undefined }));
@@ -227,9 +318,6 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
     }
     if (field === "subject") {
       setErrors((current) => ({ ...current, subject: undefined }));
-    }
-    if (field === "phone") {
-      setErrors((current) => ({ ...current, phone: undefined }));
     }
     if (field === "message") {
       setErrors((current) => ({ ...current, message: undefined }));
@@ -289,6 +377,7 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
                   type="text"
                   value={form.firstName}
                   onChange={(event) => updateField("firstName", event.target.value)}
+                  onBlur={() => handleNameBlur("firstName", "Enter your first name.")}
                   error={errors.firstName}
                   required
                   autoComplete="given-name"
@@ -299,6 +388,7 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
                   type="text"
                   value={form.lastName}
                   onChange={(event) => updateField("lastName", event.target.value)}
+                  onBlur={() => handleNameBlur("lastName", "Enter your last name.")}
                   error={errors.lastName}
                   required
                   autoComplete="family-name"
@@ -311,6 +401,9 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
                   type="email"
                   value={form.email}
                   onChange={(event) => updateField("email", event.target.value)}
+                  onBlur={handleEmailBlur}
+                  placeholder={EMAIL_PLACEHOLDER}
+                  inputMode="email"
                   error={errors.email}
                   required
                   autoComplete="email"
@@ -341,14 +434,16 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
                   autoComplete="organization"
                 />
 
-                <FormInput
+                <PhoneField
+                  variant="contact"
                   label="Contact Number*"
-                  type="tel"
+                  country={phoneCountry}
                   value={form.phone}
-                  onChange={(event) => updateField("phone", event.target.value)}
+                  defaultCountry={geoCountry}
+                  onChange={handlePhoneChange}
+                  onBlur={handlePhoneBlur}
                   error={errors.phone}
                   required
-                  autoComplete="tel"
                 />
               </div>
 
@@ -368,8 +463,12 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
               <FormTextarea
                 label="Message*"
                 value={form.message}
-                onChange={(event) => updateField("message", event.target.value)}
+                onChange={handleMessageChange}
+                onBlur={() => setMessageFiltered(false)}
                 error={errors.message}
+                counter={formatCounter(form.message.length)}
+                notice={messageFiltered ? MESSAGE_FILTER_NOTICE : undefined}
+                maxLength={MESSAGE_MAX_LENGTH}
                 required
                 rows={4}
               />

@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { AppButton } from "@/components/atoms/Button";
+import { PhoneField } from "@/components/molecules/forms/PhoneField";
 import {
   APPLY_GENERIC_ERROR,
   MAX_RESUME_MB,
@@ -9,12 +10,47 @@ import {
   isResumeTooLarge,
   readApplyReply,
 } from "@/lib/apply-upload";
+import {
+  EMAIL_INVALID_MESSAGE,
+  EMAIL_PLACEHOLDER,
+  EMAIL_REQUIRED_MESSAGE,
+  isValidEmail,
+} from "@/lib/form/email";
+import type { CountryCode } from "@/lib/form/countries";
+import { smartName } from "@/lib/form/name";
+import { phoneErrorMessage, validatePhone } from "@/lib/form/phone";
 import { applicationSubmitPath } from "@/lib/position-slug";
 import styles from "./ApplyForm.module.css";
 
 type Status = "idle" | "submitting" | "success" | "error";
+type FieldErrors = Partial<Record<"fullName" | "email" | "phone", string>>;
 
-export function ApplyForm({ positionId, jobTitle }: { positionId: number; jobTitle: string }) {
+const FIELD_ERRORS_MESSAGE = "Please correct the highlighted fields and try again.";
+
+function nameError(value: string): string | undefined {
+  return value.trim() ? undefined : "Enter your full name.";
+}
+
+function emailError(value: string): string | undefined {
+  const email = value.trim();
+  if (!email) return EMAIL_REQUIRED_MESSAGE;
+  return isValidEmail(email) ? undefined : EMAIL_INVALID_MESSAGE;
+}
+
+function phoneError(value: string, country: CountryCode): string | undefined {
+  const check = validatePhone(value, country);
+  return check.ok ? undefined : phoneErrorMessage(check.reason, country);
+}
+
+export function ApplyForm({
+  positionId,
+  jobTitle,
+  defaultCountry,
+}: {
+  positionId: number;
+  jobTitle: string;
+  defaultCountry: CountryCode;
+}) {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [appCode, setAppCode] = useState<string | null>(null);
@@ -22,6 +58,9 @@ export function ApplyForm({ positionId, jobTitle }: { positionId: number; jobTit
   const [fileName, setFileName] = useState("");
   const [fileError, setFileError] = useState("");
   const [fileTooLarge, setFileTooLarge] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [phoneCountry, setPhoneCountry] = useState<CountryCode>(defaultCountry);
+  const [phoneValue, setPhoneValue] = useState("");
   const loadedAtRef = useRef(0);
   const formRef = useRef<HTMLFormElement | null>(null);
 
@@ -53,18 +92,70 @@ export function ApplyForm({ positionId, jobTitle }: { positionId: number; jobTit
     setFileName(file.name);
   }
 
+  function setFieldError(field: keyof FieldErrors, message: string | undefined) {
+    setFieldErrors((current) => ({ ...current, [field]: message }));
+  }
+
+  function handleNameBlur(event: React.FocusEvent<HTMLInputElement>) {
+    const input = event.currentTarget;
+    input.value = smartName(input.value);
+    setFieldError("fullName", nameError(input.value));
+  }
+
+  function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
+    if (fieldErrors.fullName && !nameError(event.target.value)) setFieldError("fullName", undefined);
+  }
+
+  function handleEmailBlur(event: React.FocusEvent<HTMLInputElement>) {
+    setFieldError("email", emailError(event.currentTarget.value));
+  }
+
+  function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
+    if (fieldErrors.email && !emailError(event.target.value)) setFieldError("email", undefined);
+  }
+
+  function handlePhoneChange(next: { country: CountryCode; value: string }) {
+    setPhoneCountry(next.country);
+    setPhoneValue(next.value);
+    const check = validatePhone(next.value, next.country);
+    if (check.ok) {
+      setFieldError("phone", undefined);
+    } else if (check.reason === "chars" || fieldErrors.phone) {
+      // Letters or symbols turn red straight away; a short number waits for blur or submit.
+      setFieldError("phone", phoneErrorMessage(check.reason, next.country));
+    }
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (status === "submitting") return;
 
     const form = event.currentTarget;
     const data = new FormData(form);
-    const fullName = String(data.get("fullName") ?? "").trim();
-    if (!fullName) {
-      setErrorMsg("Please enter your full name.");
+    const fullName = smartName(String(data.get("fullName") ?? ""));
+    const email = String(data.get("email") ?? "").trim();
+    const nextErrors: FieldErrors = {
+      fullName: nameError(fullName),
+      email: emailError(email),
+      phone: phoneError(phoneValue, phoneCountry),
+    };
+    if (nextErrors.fullName || nextErrors.email || nextErrors.phone) {
+      setFieldErrors(nextErrors);
+      setErrorMsg(FIELD_ERRORS_MESSAGE);
       setStatus("error");
+      requestAnimationFrame(() => {
+        form
+          .querySelector<HTMLElement>('input:not([type="file"]):not([type="hidden"])[aria-invalid="true"]')
+          ?.focus();
+      });
       return;
     }
+    setFieldErrors({});
+    const phone = validatePhone(phoneValue, phoneCountry);
+    data.set("fullName", fullName);
+    data.set("email", email);
+    if (phone.ok) data.set("phone", phone.e164);
+
     const resume = data.get("resume");
     if (!(resume instanceof File) || resume.size === 0) {
       setFileError("Please attach your resume.");
@@ -100,6 +191,7 @@ export function ApplyForm({ positionId, jobTitle }: { positionId: number; jobTit
         setStatus("success");
         form.reset();
         setFileName("");
+        setPhoneValue("");
       } else {
         setErrorMsg(result.message);
         setStatus("error");
@@ -156,8 +248,17 @@ export function ApplyForm({ positionId, jobTitle }: { positionId: number; jobTit
           required
           autoComplete="name"
           placeholder="Juan Dela Cruz"
-          className={styles.control}
+          onBlur={handleNameBlur}
+          onChange={handleNameChange}
+          aria-invalid={Boolean(fieldErrors.fullName)}
+          aria-describedby={fieldErrors.fullName ? "fullName-error" : undefined}
+          className={`${styles.control} ${fieldErrors.fullName ? styles.controlInvalid : ""}`}
         />
+        {fieldErrors.fullName && (
+          <span id="fullName-error" className={styles.error} aria-live="polite">
+            {fieldErrors.fullName}
+          </span>
+        )}
       </div>
 
       <div className={styles.row}>
@@ -171,23 +272,35 @@ export function ApplyForm({ positionId, jobTitle }: { positionId: number; jobTit
             type="email"
             required
             autoComplete="email"
-            placeholder="you@example.com"
-            className={styles.control}
+            inputMode="email"
+            placeholder={EMAIL_PLACEHOLDER}
+            onBlur={handleEmailBlur}
+            onChange={handleEmailChange}
+            aria-invalid={Boolean(fieldErrors.email)}
+            aria-describedby={fieldErrors.email ? "email-error" : undefined}
+            className={`${styles.control} ${fieldErrors.email ? styles.controlInvalid : ""}`}
           />
+          {fieldErrors.email && (
+            <span id="email-error" className={styles.error} aria-live="polite">
+              {fieldErrors.email}
+            </span>
+          )}
         </div>
-        <div className={styles.field}>
-          <label htmlFor="phone" className={styles.label}>
-            Phone <span className={styles.required}>*</span>
-          </label>
-          <input
-            id="phone"
-            name="phone"
-            required
-            autoComplete="tel"
-            placeholder="0917 555 1234"
-            className={styles.control}
-          />
-        </div>
+        <PhoneField
+          label={
+            <>
+              Phone <span className={styles.required}>*</span>
+            </>
+          }
+          name="phone"
+          country={phoneCountry}
+          value={phoneValue}
+          defaultCountry={defaultCountry}
+          onChange={handlePhoneChange}
+          onBlur={() => setFieldError("phone", phoneError(phoneValue, phoneCountry))}
+          error={fieldErrors.phone}
+          required
+        />
       </div>
 
       <div className={styles.field}>

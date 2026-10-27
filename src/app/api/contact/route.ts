@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { randomUUID } from "node:crypto";
+import { isValidEmail } from "@/lib/form/email";
+import { smartName } from "@/lib/form/name";
+import { isValidPhoneValue } from "@/lib/form/phone";
+import { isPlainText } from "@/lib/form/text";
 
 type ContactBody = {
   firstName?: string;
@@ -149,13 +153,9 @@ function sanitizeText(value: string, maxLength = 500) {
   return value.replace(/[<>"']/g, "").trim().slice(0, maxLength);
 }
 
-function isValidEmail(email: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) && email.length <= 254;
-}
-
-function isValidPhone(phone: string) {
-  const normalized = phone.replace(/[\s().-]/g, "");
-  return /^\+?[0-9]{7,15}$/.test(normalized);
+// Names keep apostrophes (O'Neil); the other free-text fields still lose them.
+function sanitizeName(value: string, maxLength = 100) {
+  return value.replace(/[<>"]/g, "").trim().slice(0, maxLength);
 }
 
 function hasMaliciousPattern(value: string) {
@@ -453,8 +453,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, message: "Invalid email address.", code: "invalid_email" }, { status: 400 });
     }
 
-    if (!isValidPhone(body.phone!)) {
+    if (!isValidPhoneValue(body.phone!)) {
       return NextResponse.json({ success: false, message: "Invalid phone number.", code: "invalid_phone" }, { status: 400 });
+    }
+
+    if (!isPlainText(body.message!)) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Message can only contain plain text. Please remove emoji and special symbols.",
+          code: "invalid_message",
+        },
+        { status: 400 },
+      );
     }
 
     if (body.privacyConsent !== true) {
@@ -490,8 +501,8 @@ export async function POST(request: NextRequest) {
     }
 
     const trimmedBody = {
-      firstName: trimAndNormalize(body.firstName, FIELD_LIMITS.firstName),
-      lastName: trimAndNormalize(body.lastName, FIELD_LIMITS.lastName),
+      firstName: smartName(trimAndNormalize(body.firstName, FIELD_LIMITS.firstName)),
+      lastName: smartName(trimAndNormalize(body.lastName, FIELD_LIMITS.lastName)),
       email: trimAndNormalize(body.email, FIELD_LIMITS.email),
       phone: trimAndNormalize(body.phone, FIELD_LIMITS.phone),
       company: trimAndNormalize(body.company, FIELD_LIMITS.company),
@@ -528,8 +539,8 @@ export async function POST(request: NextRequest) {
     }
 
     const sanitizedBody = {
-      firstName: sanitizeText(trimmedBody.firstName, 100),
-      lastName: sanitizeText(trimmedBody.lastName, 100),
+      firstName: sanitizeName(trimmedBody.firstName),
+      lastName: sanitizeName(trimmedBody.lastName),
       email: trimmedBody.email.toLowerCase(),
       phone: sanitizeText(trimmedBody.phone, 40),
       company: sanitizeText(trimmedBody.company, 120),

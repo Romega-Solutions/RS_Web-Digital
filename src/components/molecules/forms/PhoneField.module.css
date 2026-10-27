@@ -1,0 +1,122 @@
+@reference "../../../app/globals.css";
+
+.field {
+  @apply flex flex-col;
+}
+
+.fieldApply {
+  @apply gap-1.5;
+}
+
+.fieldContact {
+  @apply gap-2;
+}
+
+.labelApply {
+  @apply text-xs font-semibold;
+  color: var(--color-text-main);
+}
+
+.labelContact {
+  @apply text-sm font-semibold text-brand-secondary;
+}
+
+.box {
+  @apply relative flex w-full items-stretch rounded-lg border bg-white;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.boxApply {
+  border-color: rgb(9 75 143 / 0.2);
+}
+
+.boxContact {
+  border-color: rgb(9 75 143 / 0.28);
+  box-shadow:
+    inset 0 0 0 1px rgb(9 75 143 / 0.05),
+    0 1px 2px rgb(16 24 40 / 0.04);
+}
+
+.boxContact:hover {
+  border-color: rgb(9 75 143 / 0.42);
+}
+
+.boxApply:focus-within {
+  border-color: rgb(53 141 240 / 0.6);
+  box-shadow: 0 0 0 4px rgb(53 141 240 / 0.14);
+}
+
+.boxContact:focus-within {
+  border-color: rgb(9 75 143 / 0.72);
+  box-shadow:
+    inset 0 0 0 1px rgb(9 75 143 / 0.08),
+    0 0 0 3px rgb(53 141 240 / 0.16);
+}
+
+/* Same red glow as the oversize resume box: solid border, soft glow, no size change. */
+.boxInvalid,
+.boxInvalid:hover,
+.boxInvalid:focus-within {
+  border-style: solid;
+  border-color: rgb(220 38 38 / 0.6);
+  box-shadow: 0 0 0 4px rgb(220 38 38 / 0.14);
+}
+
+/* The visible flag + code sits under a transparent native select, so the
+   native picker (and its keyboard and mobile behaviour) does the work. */
+.country {
+  @apply relative flex shrink-0 items-center gap-1 whitespace-nowrap rounded-l-lg text-sm;
+  padding-inline: 0.75rem 0.5rem;
+  border-right: 1px solid rgb(9 75 143 / 0.14);
+  background: rgb(241 246 255 / 0.6);
+  color: var(--color-text-main);
+}
+
+.flag {
+  font-size: 1.125rem;
+  line-height: 1;
+}
+
+.chevron {
+  width: 0.625rem;
+  height: 0.625rem;
+  opacity: 0.55;
+}
+
+.select {
+  @apply absolute inset-0 h-full w-full opacity-0;
+  font-size: 16px;
+}
+
+.countryFocus:focus-within {
+  outline: 2px solid rgb(53 141 240 / 0.6);
+  outline-offset: -2px;
+}
+
+.input {
+  @apply min-w-0 flex-1 rounded-r-lg bg-white text-black;
+  outline: none;
+  color: var(--color-text-main);
+}
+
+.inputApply {
+  @apply px-3 py-2.5 text-sm;
+}
+
+.inputContact {
+  @apply px-4 py-3 text-base;
+}
+
+.input::placeholder {
+  color: var(--color-muted);
+  opacity: 0.7;
+}
+
+.error {
+  @apply text-xs;
+  color: #b91c1c;
+}
+
+.errorContact {
+  @apply text-sm font-medium text-red-600;
+}
