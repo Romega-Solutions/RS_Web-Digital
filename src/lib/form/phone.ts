@@ -83,7 +83,8 @@ function nationalDigits(typed: AsYouType, digits: string): string {
  * - Letters or symbols are kept as typed (and flagged by validatePhone) so the
  *   field can turn red instead of silently deleting them.
  * - A leading 0 (national prefix) is dropped: "09175551234" -> "917 555 1234".
- * - Pasted "+63 917 555 1234" switches the country and shows the national part.
+ * - Pasted "+63 917 555 1234" switches the country and shows the national part,
+ *   without a trunk 0 written after the code ("+44 (0)7400 123456" -> "7400 123456").
  */
 export function formatPhoneInput(
   raw: string,
@@ -104,7 +105,16 @@ export function formatPhoneInput(
         ? country
         : countryForCallingCode(code, international.getCountry());
     if (!nextCountry) return { country, value: `+${digits}` };
-    return { country: nextCountry, value: formatNational(nextCountry, digits.slice(code.length)) };
+    // "+44 (0)7400 123456" and "+44 07400 123456" carry the trunk 0 inside the
+    // international form. The library drops it where the country has a national
+    // prefix and keeps a leading 0 that is part of the number (Italy "+39 06...").
+    const afterCode = digits.slice(code.length);
+    // A complete number is read by the parser (it also catches a few countries the
+    // as-you-type reader leaves alone, e.g. Uruguay "+598 094 231 234").
+    const national =
+      parsePhoneNumberFromString(`+${digits}`)?.nationalNumber ?? international.getNationalNumber();
+    const shown = national && national.length <= afterCode.length ? national : afterCode;
+    return { country: nextCountry, value: formatNational(nextCountry, shown) };
   }
 
   const typed = new AsYouType(country);
@@ -125,6 +135,13 @@ export function validatePhone(value: string, country: CountryCode): PhoneCheck {
   if (hasPhoneBadChars(text)) return { ok: false, reason: "chars" };
   const parsed = parsePhoneNumberFromString(text, country);
   if (!parsed || !parsed.isValid()) return { ok: false, reason: "invalid" };
+  // For +1 area-code territories and Guernsey, Jersey and the Isle of Man the library
+  // completes a short local number with an area code. The visitor never typed those
+  // digits, so a result longer than what is in the box is not accepted (enter the
+  // full number, area code included).
+  if (parsed.nationalNumber.length > text.replace(/\D/g, "").length) {
+    return { ok: false, reason: "invalid" };
+  }
   return { ok: true, e164: parsed.number };
 }
 

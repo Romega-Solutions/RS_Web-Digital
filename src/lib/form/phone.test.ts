@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { getCountries, getCountryCallingCode, parsePhoneNumberFromString } from "libphonenumber-js";
+import { exampleDigits } from "./phone-example.ts";
 import {
   formatPhoneInput,
   hasPhoneBadChars,
@@ -110,4 +112,102 @@ test("short local numbers do not get an area code added while typing (AS, TT, GG
   assert.equal(typeAll("7924123456", "IM"), "7924 123456");
   assert.equal(formatPhoneInput("6847331", "AS").value, "684 733 1");
   assert.equal(formatPhoneInput("778112", "GG").value, "7781 12");
+});
+
+test("a trunk 0 written after +CC is dropped: GB, PH, AU, DE, JP", () => {
+  const show = (raw: string, from: "PH" | "GB" | "US" | "AU" = "PH") => formatPhoneInput(raw, from);
+  assert.deepEqual(show("+44 (0)7400 123456"), { country: "GB", value: "7400 123456" });
+  assert.deepEqual(show("+44 07400 123456"), { country: "GB", value: "7400 123456" });
+  assert.deepEqual(show("+44 (0)7400 123456", "GB"), { country: "GB", value: "7400 123456" });
+  assert.deepEqual(show("+44 7400 123456"), { country: "GB", value: "7400 123456" });
+  assert.deepEqual(show("+63 (0)917 555 1234", "US"), { country: "PH", value: "917 555 1234" });
+  assert.deepEqual(show("+63 0917 555 1234"), { country: "PH", value: "917 555 1234" });
+  assert.deepEqual(show("+61 (0)412 345 678"), { country: "AU", value: "412 345 678" });
+  assert.deepEqual(show("+61 0412 345 678", "AU"), { country: "AU", value: "412 345 678" });
+  assert.deepEqual(show("+49 (0)151 23456789"), { country: "DE", value: "1512 3456789" });
+  assert.deepEqual(show("+81 (0)90 1234 5678"), { country: "JP", value: "90 1234 5678" });
+  // Guernsey keeps its own trunk handling and the Guernsey mobile still shows as UK
+  assert.deepEqual(show("+44 (0)7781 123456"), { country: "GB", value: "7781 123456" });
+  // the submitted value is E.164 either way
+  assert.deepEqual(validatePhone("7400 123456", "GB"), { ok: true, e164: "+447400123456" });
+  assert.deepEqual(validatePhone("917 555 1234", "PH"), { ok: true, e164: "+639175551234" });
+  assert.deepEqual(validatePhone("412 345 678", "AU"), { ok: true, e164: "+61412345678" });
+});
+
+test("a leading 0 that is part of the number is kept after +CC (Italy)", () => {
+  assert.deepEqual(formatPhoneInput("+39 06 1234 5678", "PH"), { country: "IT", value: "06 1234 5678" });
+  assert.deepEqual(formatPhoneInput("+39 06", "IT"), { country: "IT", value: "06" });
+  assert.deepEqual(formatPhoneInput("+39 0", "PH"), { country: "IT", value: "0" });
+  assert.deepEqual(validatePhone("06 1234 5678", "IT"), { ok: true, e164: "+390612345678" });
+  // a lone 0 after +44 stays visible until the next digit, as for a plain "0"
+  assert.deepEqual(formatPhoneInput("+44 0", "PH"), { country: "GB", value: "0" });
+  assert.deepEqual(formatPhoneInput("+44", "PH"), { country: "GB", value: "" });
+});
+
+test("+CC 0... and +CC (0)... show the same text as +CC ... in every country where the library drops the 0", () => {
+  let checked = 0;
+  for (const country of getCountries()) {
+    const code = getCountryCallingCode(country);
+    const digits = exampleDigits(country);
+    const clean = parsePhoneNumberFromString(`+${code}${digits}`);
+    const withZero = parsePhoneNumberFromString(`+${code}0${digits}`);
+    // only countries where the library itself reads the 0 as a trunk prefix
+    if (!clean || !withZero || withZero.number !== clean.number) continue;
+    const expected = formatPhoneInput(`+${code}${digits}`, country);
+    for (const raw of [`+${code} 0${digits}`, `+${code} (0)${digits}`, `+${code}0${digits}`]) {
+      assert.deepEqual(formatPhoneInput(raw, country), expected, `${country} ${raw}`);
+    }
+    checked += 1;
+  }
+  assert.ok(checked > 80, `only ${checked} countries had a trunk 0`);
+});
+
+test("+1 territories and Guernsey, Jersey, Isle of Man: a short local number is not accepted", () => {
+  // the box shows what was typed, so the submitted number must not gain digits
+  for (const [text, country] of [
+    ["684 733 1", "AS"],
+    ["733 1234", "AS"],
+    ["291 1234", "TT"],
+    ["7781 12", "GG"],
+    ["+1 684 733 1", "US"],
+  ] as const) {
+    assert.deepEqual(validatePhone(text, country), { ok: false, reason: "invalid" }, `${country} ${text}`);
+  }
+  assert.equal(phoneErrorMessage("invalid", "AS"), "Enter a valid phone number for American Samoa.");
+});
+
+test("full numbers still give the same E.164 (US, CA, PR, GU, JM, AS, TT, GG, JE, IM)", () => {
+  for (const [text, country, e164] of [
+    ["201 555 0123", "US", "+12015550123"],
+    ["(201) 555-0123", "US", "+12015550123"],
+    ["1 201 555 0123", "US", "+12015550123"],
+    ["506 234 5678", "CA", "+15062345678"],
+    ["787 234 5678", "PR", "+17872345678"],
+    ["671 300 1234", "GU", "+16713001234"],
+    ["876 210 1234", "JM", "+18762101234"],
+    ["684 733 1234", "AS", "+16847331234"],
+    ["868 291 1234", "TT", "+18682911234"],
+    ["7781 123456", "GG", "+447781123456"],
+    ["07781 123456", "GG", "+447781123456"],
+    ["7797 712345", "JE", "+447797712345"],
+    ["7924 123456", "IM", "+447924123456"],
+    ["07400 123456", "GB", "+447400123456"],
+    ["+44 7400 123456", "PH", "+447400123456"],
+    ["09175551234", "PH", "+639175551234"],
+  ] as const) {
+    assert.deepEqual(validatePhone(text, country), { ok: true, e164 }, `${country} ${text}`);
+  }
+});
+
+test("every country's example number is accepted as shown and gives its E.164", () => {
+  for (const country of getCountries()) {
+    const digits = exampleDigits(country);
+    const shown = formatPhoneInput(digits, country);
+    assert.equal(shown.country, country, country);
+    assert.deepEqual(
+      validatePhone(shown.value, shown.country),
+      { ok: true, e164: `+${getCountryCallingCode(country)}${digits}` },
+      country,
+    );
+  }
 });
