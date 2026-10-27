@@ -14,6 +14,7 @@
   color: var(--color-text-main);
   font: inherit;
   font-size: 0.875rem;
+  cursor: pointer;
 }
 
 .button:focus-visible {
@@ -23,6 +24,7 @@
 
 .button:disabled {
   opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .flag {
@@ -36,11 +38,13 @@
   opacity: 0.55;
 }
 
-/* A small scrolling box that hangs under the phone box. Its height and width
-   are set from the space on screen when it opens. */
+/* A small scrolling box that hangs under the phone box. It is drawn in the page
+   body with a fixed position (see CountryPicker.tsx); its place, height and
+   width are set from the space on screen. z-index sits above the chat launcher
+   (1000) and the back-to-top button (60) so neither can cover its rows. */
 .list {
-  position: absolute;
-  z-index: 50;
+  position: fixed;
+  z-index: 1100;
   margin: 0;
   padding: 0.25rem;
   list-style: none;
@@ -65,10 +69,15 @@
   padding: 0.375rem 0.625rem;
   border-radius: 0.375rem;
   user-select: none;
+  cursor: pointer;
 }
 
+/* The highlighted row: solid light blue, dark navy text (about 13:1) and a
+   left bar, so it reads clearly in bright light, not only as a faint tint. */
 .optionActive {
-  background: rgb(241 246 255);
+  background: rgb(207 226 252);
+  color: rgb(8 32 70);
+  box-shadow: inset 3px 0 0 rgb(9 75 143);
 }
 
 .optionSelected {

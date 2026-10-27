@@ -12,7 +12,7 @@ import {
   EMAIL_REQUIRED_MESSAGE,
   isValidEmail,
 } from "@/lib/form/email";
-import { FIELD_ERRORS_MESSAGE, isFieldSummary, shouldShowBanner } from "@/lib/form/field-errors";
+import { FIELD_ERRORS_MESSAGE, editClearsStatus, isFieldSummary, shouldShowBanner } from "@/lib/form/field-errors";
 import { fieldError } from "@/lib/form/field-state";
 import { smartName } from "@/lib/form/name";
 import { phoneErrorMessage, validatePhone } from "@/lib/form/phone";
@@ -305,7 +305,9 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
   }
 
   function updateField<K extends keyof FormState>(field: K, value: FormState[K]) {
-    if (status.type !== "idle") {
+    // A success or server message goes on the first edit; the field summary stays and
+    // follows the red fields (see showStatus below).
+    if (editClearsStatus(status.type, status.message)) {
       setStatus({ type: "idle", message: "" });
     }
 

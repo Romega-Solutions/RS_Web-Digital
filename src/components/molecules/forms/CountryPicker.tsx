@@ -11,6 +11,7 @@ import {
   type KeyboardEvent,
   type RefObject,
 } from "react";
+import { createPortal } from "react-dom";
 import { countryOptions, toCountryOption, type CountryCode } from "@/lib/form/countries";
 import {
   TYPEAHEAD_START,
@@ -31,43 +32,29 @@ const EDGE = 8;
 const GAP = 4;
 const PAGE_STEP = 8;
 
-type Placement = { flip: boolean; maxHeight: number; width: number; left: number };
+// The open list is drawn in the page body (a portal) with a fixed position, so no
+// card, clipped box or stacking layer around the form can cut it off or hide it,
+// and it sits above the chat launcher and the back-to-top button (see the CSS).
+// Because it is fixed, it is re-measured when the window resizes, the phone
+// rotates, or the page scrolls underneath it.
 
-/** The visible area for the list: the window, narrowed by any ancestor that clips its content (a card with rounded, hidden edges). */
-function visibleBounds(anchor: HTMLElement) {
-  const bounds = {
-    top: 0,
-    left: 0,
-    right: document.documentElement.clientWidth,
-    bottom: window.innerHeight,
-  };
-  for (let el = anchor.parentElement; el && el !== document.body; el = el.parentElement) {
-    const style = getComputedStyle(el);
-    if (/(hidden|clip|auto|scroll)/.test(`${style.overflowX} ${style.overflowY}`)) {
-      const rect = el.getBoundingClientRect();
-      bounds.top = Math.max(bounds.top, rect.top);
-      bounds.left = Math.max(bounds.left, rect.left);
-      bounds.right = Math.min(bounds.right, rect.right);
-      bounds.bottom = Math.min(bounds.bottom, rect.bottom);
-    }
-  }
-  return bounds;
-}
+type Placement = { maxHeight: number; width: number; left: number; top: number };
 
-/** Where the list goes: under the control, or above it when there is no room below. */
+/** Where the list goes, in window coordinates: under the control, or above it when there is no room below. */
 function measure(anchor: HTMLElement): Placement {
   const rect = anchor.getBoundingClientRect();
-  const view = visibleBounds(anchor);
-  const width = Math.min(MAX_LIST_WIDTH, view.right - view.left - EDGE * 2);
-  const below = view.bottom - rect.bottom - GAP - EDGE;
-  const above = rect.top - view.top - GAP - EDGE;
+  const viewWidth = document.documentElement.clientWidth;
+  const viewHeight = window.innerHeight;
+  const width = Math.min(MAX_LIST_WIDTH, viewWidth - EDGE * 2);
+  const below = viewHeight - rect.bottom - GAP - EDGE;
+  const above = rect.top - GAP - EDGE;
   const flip = below < 200 && above > below;
   const room = flip ? above : below;
   const maxHeight = Math.max(MIN_LIST_HEIGHT, Math.min(MAX_LIST_HEIGHT, room));
-  let left = 0;
-  if (rect.left + width > view.right - EDGE) left = view.right - EDGE - width - rect.left;
-  if (rect.left + left < view.left + EDGE) left = view.left + EDGE - rect.left;
-  return { flip, maxHeight, width, left };
+  const left = Math.max(EDGE, Math.min(rect.left, viewWidth - EDGE - width));
+  // The list is always taller than its cap (about 245 rows), so its height is maxHeight.
+  const top = flip ? Math.max(EDGE, rect.top - GAP - maxHeight) : rect.bottom + GAP;
+  return { maxHeight, width, left, top };
 }
 
 type CountryPickerProps = {
@@ -157,12 +144,46 @@ export function CountryPicker({ country, defaultCountry, onSelect, anchorRef, di
   useEffect(() => {
     if (!open) return;
     function onPointerDown(event: PointerEvent) {
-      const root = rootRef.current;
-      if (root && event.target instanceof Node && !root.contains(event.target)) closeList();
+      const { target } = event;
+      if (!(target instanceof Node)) return;
+      if (rootRef.current?.contains(target) || listRef.current?.contains(target)) return;
+      closeList();
     }
     document.addEventListener("pointerdown", onPointerDown);
     return () => document.removeEventListener("pointerdown", onPointerDown);
   }, [open]);
+
+  // Keep the fixed list under (or over) the control when the window changes size,
+  // the phone rotates, or the page scrolls. If the control has scrolled out of
+  // sight the list closes. Scrolling inside the list itself is left alone.
+  useEffect(() => {
+    if (!open) return;
+    let frame = 0;
+    function reposition() {
+      frame = 0;
+      const anchor = anchorRef.current;
+      if (!anchor) return;
+      const rect = anchor.getBoundingClientRect();
+      if (rect.bottom < 0 || rect.top > window.innerHeight) {
+        closeList();
+        return;
+      }
+      setPlacement(measure(anchor));
+    }
+    function schedule(event?: Event) {
+      if (event?.target instanceof Node && listRef.current?.contains(event.target)) return;
+      if (!frame) frame = requestAnimationFrame(reposition);
+    }
+    window.addEventListener("resize", schedule);
+    window.addEventListener("orientationchange", schedule);
+    window.addEventListener("scroll", schedule, { capture: true, passive: true });
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      window.removeEventListener("resize", schedule);
+      window.removeEventListener("orientationchange", schedule);
+      window.removeEventListener("scroll", schedule, { capture: true });
+    };
+  }, [open, anchorRef]);
 
   function typeAhead(key: string): boolean {
     const now = Date.now();
@@ -241,12 +262,7 @@ export function CountryPicker({ country, defaultCountry, onSelect, anchorRef, di
   }
 
   const listStyle: CSSProperties | undefined = placement
-    ? {
-        maxHeight: placement.maxHeight,
-        width: placement.width,
-        left: placement.left,
-        ...(placement.flip ? { bottom: `calc(100% + ${GAP}px)` } : { top: `calc(100% + ${GAP}px)` }),
-      }
+    ? { maxHeight: placement.maxHeight, width: placement.width, left: placement.left, top: placement.top }
     : undefined;
 
   return (
@@ -280,32 +296,35 @@ export function CountryPicker({ country, defaultCountry, onSelect, anchorRef, di
           <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" />
         </svg>
       </button>
-      {open ? (
-        <ul
-          ref={listRef}
-          id={listId}
-          role="listbox"
-          aria-label="Countries"
-          className={styles.list}
-          style={listStyle}
-          // Keep the focus on the button while the list is used with the mouse or a finger.
-          onMouseDown={(event) => event.preventDefault()}
-        >
-          {shown.map((option, index) => (
-            <Row
-              key={option.code}
-              id={optionId(option.code)}
-              flag={option.flag}
-              text={`${option.name} (+${option.callingCode})`}
-              selected={option.code === country}
-              active={option.code === active}
-              onHover={() => setActive(option.code)}
-              onPick={() => choose(option.code)}
-              dividerAfter={index === 0}
-            />
-          ))}
-        </ul>
-      ) : null}
+      {open && typeof document !== "undefined"
+        ? createPortal(
+            <ul
+              ref={listRef}
+              id={listId}
+              role="listbox"
+              aria-label="Countries"
+              className={styles.list}
+              style={listStyle}
+              // Keep the focus on the button while the list is used with the mouse or a finger.
+              onMouseDown={(event) => event.preventDefault()}
+            >
+              {shown.map((option, index) => (
+                <Row
+                  key={option.code}
+                  id={optionId(option.code)}
+                  flag={option.flag}
+                  text={`${option.name} (+${option.callingCode})`}
+                  selected={option.code === country}
+                  active={option.code === active}
+                  onHover={() => setActive(option.code)}
+                  onPick={() => choose(option.code)}
+                  dividerAfter={index === 0}
+                />
+              ))}
+            </ul>,
+            document.body,
+          )
+        : null}
     </span>
   );
 }

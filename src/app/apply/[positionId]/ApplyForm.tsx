@@ -7,15 +7,18 @@ import {
   APPLY_GENERIC_ERROR,
   MAX_RESUME_MB,
   RESUME_TOO_LARGE_MESSAGE,
-  isResumeTooLarge,
   readApplyReply,
 } from "@/lib/apply-upload";
+import { EMAIL_PLACEHOLDER } from "@/lib/form/email";
 import {
-  EMAIL_INVALID_MESSAGE,
-  EMAIL_PLACEHOLDER,
-  EMAIL_REQUIRED_MESSAGE,
-  isValidEmail,
-} from "@/lib/form/email";
+  applySubmitErrors,
+  emailError,
+  hasApplyErrors,
+  nameError,
+  phoneError,
+  resumeMessage,
+  resumeProblem,
+} from "@/lib/form/apply-submit";
 import type { CountryCode } from "@/lib/form/countries";
 import { FIELD_ERRORS_MESSAGE, isFieldSummary, shouldShowBanner } from "@/lib/form/field-errors";
 import { fieldError } from "@/lib/form/field-state";
@@ -24,25 +27,8 @@ import { phoneErrorMessage, validatePhone } from "@/lib/form/phone";
 import { applicationSubmitPath } from "@/lib/position-slug";
 import styles from "./ApplyForm.module.css";
 
-const RESUME_MISSING_MESSAGE = "Please attach your resume.";
-
 type Status = "idle" | "submitting" | "success" | "error";
 type FieldErrors = Partial<Record<"fullName" | "email" | "phone", string>>;
-
-function nameError(value: string): string | undefined {
-  return value.trim() ? undefined : "Enter your full name.";
-}
-
-function emailError(value: string): string | undefined {
-  const email = value.trim();
-  if (!email) return EMAIL_REQUIRED_MESSAGE;
-  return isValidEmail(email) ? undefined : EMAIL_INVALID_MESSAGE;
-}
-
-function phoneError(value: string, country: CountryCode): string | undefined {
-  const check = validatePhone(value, country);
-  return check.ok ? undefined : phoneErrorMessage(check.reason, country);
-}
 
 // Red only while a field's current value is wrong: see lib/form/field-state.
 
@@ -74,30 +60,17 @@ export function ApplyForm({
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
-    // A resume message from an earlier submit no longer applies once the file changes.
-    if (errorMsg === RESUME_MISSING_MESSAGE || (fileError && errorMsg === fileError)) {
-      setErrorMsg("");
-      setStatus("idle");
-    }
+    // A red resume (missing, wrong type, too large) is re-judged on every change; the
+    // summary line follows the red fields (shouldShowBanner), so nothing stale is left over.
     if (!file) {
       setFileName("");
       setFileError("");
       setFileTooLarge(false);
       return;
     }
-    setFileTooLarge(false);
-    if (file.type !== "application/pdf") {
-      setFileError("Resume must be a PDF file.");
-      setFileName(file.name);
-      return;
-    }
-    if (isResumeTooLarge(file.size)) {
-      setFileError("");
-      setFileTooLarge(true);
-      setFileName(file.name);
-      return;
-    }
-    setFileError("");
+    const problem = resumeProblem(file);
+    setFileTooLarge(problem === "too-large");
+    setFileError(resumeMessage(problem));
     setFileName(file.name);
   }
 
@@ -147,46 +120,35 @@ export function ApplyForm({
     const data = new FormData(form);
     const fullName = smartName(String(data.get("fullName") ?? ""));
     const email = String(data.get("email") ?? "").trim();
-    const nextErrors: FieldErrors = {
-      fullName: fieldError("submit", fullName, nameError),
-      email: fieldError("submit", email, emailError),
-      phone: fieldError("submit", phoneValue, (value) => phoneError(value, phoneCountry)),
-    };
-    if (nextErrors.fullName || nextErrors.email || nextErrors.phone) {
-      setFieldErrors(nextErrors);
+    const resume = data.get("resume");
+    const resumeFile = resume instanceof File ? resume : null;
+    // One pass over every field, the resume included, so all that is wrong turns red together.
+    const result = applySubmitErrors({
+      fullName,
+      email,
+      phone: phoneValue,
+      phoneCountry,
+      resume: resumeFile,
+    });
+    setFieldErrors({ fullName: result.fullName, email: result.email, phone: result.phone });
+    setFileTooLarge(result.resume === "too-large");
+    setFileError(resumeMessage(result.resume));
+    if (resumeFile && resumeFile.size > 0) setFileName(resumeFile.name);
+    if (hasApplyErrors(result)) {
       setErrorMsg(FIELD_ERRORS_MESSAGE);
       setStatus("error");
       requestAnimationFrame(() => {
-        form
-          .querySelector<HTMLElement>('input:not([type="file"]):not([type="hidden"])[aria-invalid="true"]')
-          ?.focus();
+        (
+          form.querySelector<HTMLElement>('input:not([type="file"]):not([type="hidden"])[aria-invalid="true"]') ??
+          form.querySelector<HTMLElement>('input[type="file"][aria-invalid="true"]')
+        )?.focus();
       });
       return;
     }
-    setFieldErrors({});
     const phone = validatePhone(phoneValue, phoneCountry);
     data.set("fullName", fullName);
     data.set("email", email);
     if (phone.ok) data.set("phone", phone.e164);
-
-    const resume = data.get("resume");
-    if (!(resume instanceof File) || resume.size === 0) {
-      setFileError(RESUME_MISSING_MESSAGE);
-      setErrorMsg(RESUME_MISSING_MESSAGE);
-      setStatus("error");
-      return;
-    }
-    if (fileTooLarge || isResumeTooLarge(resume.size)) {
-      // The red drop box and the note below it already explain this; nothing is sent.
-      setFileTooLarge(true);
-      setFileName(resume.name);
-      return;
-    }
-    if (fileError) {
-      setErrorMsg(fileError);
-      setStatus("error");
-      return;
-    }
 
     data.set("loadedAt", String(loadedAtRef.current));
     setSubmittedName(fullName);
@@ -238,7 +200,11 @@ export function ApplyForm({
   }
 
   const summary = isFieldSummary(errorMsg);
-  const showBanner = status === "error" && shouldShowBanner(errorMsg, fieldErrors);
+  // The resume is one of the fields the summary follows.
+  const resumeRed = fileTooLarge || Boolean(fileError);
+  const showBanner =
+    status === "error" &&
+    shouldShowBanner(errorMsg, { ...fieldErrors, resume: resumeRed ? "x" : undefined });
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} className={styles.form} noValidate>
@@ -338,7 +304,7 @@ export function ApplyForm({
         </label>
         <label
           htmlFor="resume"
-          className={`${styles.dropzone} ${fileTooLarge ? styles.dropzoneInvalid : ""}`}
+          className={`${styles.dropzone} ${resumeRed ? styles.dropzoneInvalid : ""}`}
         >
           <span aria-hidden="true">📄</span>
           {fileName ? <span className={styles.fileName}>{fileName}</span> : "Click to upload PDF"}
@@ -350,8 +316,8 @@ export function ApplyForm({
           accept="application/pdf,.pdf"
           required
           onChange={handleFileChange}
-          aria-invalid={fileTooLarge || Boolean(fileError)}
-          aria-describedby={fileTooLarge ? "resume-too-large" : undefined}
+          aria-invalid={resumeRed}
+          aria-describedby={fileTooLarge ? "resume-too-large" : fileError ? "resume-error" : undefined}
           className={styles.fileInput}
         />
         {fileTooLarge && (
@@ -359,7 +325,11 @@ export function ApplyForm({
             {RESUME_TOO_LARGE_MESSAGE}
           </span>
         )}
-        {fileError && <span className={styles.error}>{fileError}</span>}
+        {fileError && (
+          <span id="resume-error" className={styles.error} role="alert">
+            {fileError}
+          </span>
+        )}
       </div>
 
       <div className={styles.field}>

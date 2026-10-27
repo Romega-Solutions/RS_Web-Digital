@@ -6,8 +6,9 @@
 //   Philippines; P, U finds Puerto Rico; P alone stays on Pakistan.
 // - After the idle window the search starts over, so "PH", a pause, then "I"
 //   finds Iceland, not "PHI".
-// - Accents and case are ignored ("Aland" finds Åland Islands). The list stays
-//   in its normal A to Z order.
+// - Accents and case are ignored ("Aland" finds Åland Islands), and a straight
+//   or curly apostrophe is the same ("cote d'i" finds Côte d’Ivoire). The list
+//   stays in its normal A to Z order.
 // - A search that starts with a digit matches the calling code instead
 //   ("63" finds Philippines).
 // - Backspace shortens the search by one character.
@@ -20,9 +21,17 @@ export type TypeaheadState = { buffer: string; at: number };
 
 export const TYPEAHEAD_START: TypeaheadState = { buffer: "", at: 0 };
 
-/** Lower-case, without accents: "Åland Islands" -> "aland islands". */
+/**
+ * Lower-case, without accents, with curly apostrophes made straight:
+ * "Åland Islands" -> "aland islands", "Côte d’Ivoire" -> "cote d'ivoire".
+ * Both the typed text and the country names go through it.
+ */
 export function foldText(value: string): string {
-  return value.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
+  return value
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "")
+    .replace(/[\u2018\u2019\u02bc\u2032]/g, "'")
+    .toLowerCase();
 }
 
 const NAME_CHAR = /^[\p{L}\p{N} '’.\-]$/u;

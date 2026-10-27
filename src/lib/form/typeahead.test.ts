@@ -121,3 +121,15 @@ test("the first P country really is Pakistan in the real list, and Ascension is 
   const p = typeaheadStep(TYPEAHEAD_START, "P", 1000, countries);
   assert.notEqual(p.match?.callingCode, "247");
 });
+
+test("a straight or a curly apostrophe finds Côte d’Ivoire", () => {
+  const keys = (apostrophe: string): [string, number][] =>
+    [..."cote d"].concat(apostrophe, "i").map((key) => [key, 100] as [string, number]);
+  assert.equal(typeKeys(countries, keys("'")).last?.name, "Côte d’Ivoire");
+  assert.equal(typeKeys(countries, keys("’")).last?.name, "Côte d’Ivoire");
+  assert.equal(typeKeys(countries, keys("‘")).last?.name, "Côte d’Ivoire");
+  // the accent is still optional
+  assert.equal(typeKeys(countries, [..."côte d'i"].map((key) => [key, 100] as [string, number])).last?.name, "Côte d’Ivoire");
+  assert.equal(foldText("Côte d’Ivoire"), "cote d'ivoire");
+  assert.equal(foldText("Côte d'Ivoire"), "cote d'ivoire");
+});

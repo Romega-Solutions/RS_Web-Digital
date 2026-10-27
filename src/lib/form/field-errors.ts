@@ -16,3 +16,11 @@ export function isFieldSummary(message: string): boolean {
 export function shouldShowBanner(message: string, errors: Record<string, string | undefined>): boolean {
   return Boolean(message) && (!isFieldSummary(message) || hasFieldErrors(errors));
 }
+
+/**
+ * Contact keeps one status line. An edit clears a success or a server error,
+ * but the field summary is left to follow the red fields (shouldShowBanner).
+ */
+export function editClearsStatus(type: "idle" | "success" | "error", message: string): boolean {
+  return type !== "idle" && !(type === "error" && isFieldSummary(message));
+}
