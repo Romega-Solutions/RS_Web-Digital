@@ -14,6 +14,12 @@ import {
 import { createPortal } from "react-dom";
 import { countryOptions, toCountryOption, type CountryCode } from "@/lib/form/countries";
 import {
+  headerBottomFrom,
+  samePlacement,
+  shouldCloseList,
+  type Placement,
+} from "@/lib/form/picker-placement";
+import {
   TYPEAHEAD_START,
   isTypeaheadActive,
   typeaheadStep,
@@ -37,8 +43,6 @@ const PAGE_STEP = 8;
 // and it sits above the chat launcher and the back-to-top button (see the CSS).
 // Because it is fixed, it is re-measured when the window resizes, the phone
 // rotates, or the page scrolls underneath it.
-
-type Placement = { maxHeight: number; width: number; left: number; top: number };
 
 /** Where the list goes, in window coordinates: under the control, or above it when there is no room below. */
 function measure(anchor: HTMLElement): Placement {
@@ -155,7 +159,8 @@ export function CountryPicker({ country, defaultCountry, onSelect, anchorRef, di
 
   // Keep the fixed list under (or over) the control when the window changes size,
   // the phone rotates, or the page scrolls. If the control has scrolled out of
-  // sight the list closes. Scrolling inside the list itself is left alone.
+  // sight, or up behind the sticky header, the list closes. Scrolling inside the
+  // list itself is left alone.
   useEffect(() => {
     if (!open) return;
     let frame = 0;
@@ -164,11 +169,17 @@ export function CountryPicker({ country, defaultCountry, onSelect, anchorRef, di
       const anchor = anchorRef.current;
       if (!anchor) return;
       const rect = anchor.getBoundingClientRect();
-      if (rect.bottom < 0 || rect.top > window.innerHeight) {
+      // The sticky header's real bottom edge (the page keeps it in a CSS variable).
+      const headerBottom = headerBottomFrom(
+        getComputedStyle(document.documentElement).getPropertyValue("--site-header-height"),
+      );
+      if (shouldCloseList(rect, window.innerHeight, headerBottom)) {
         closeList();
         return;
       }
-      setPlacement(measure(anchor));
+      // Same box as before: no state change, so the rows are not rendered again.
+      const next = measure(anchor);
+      setPlacement((current) => (samePlacement(current, next) ? current : next));
     }
     function schedule(event?: Event) {
       if (event?.target instanceof Node && listRef.current?.contains(event.target)) return;
