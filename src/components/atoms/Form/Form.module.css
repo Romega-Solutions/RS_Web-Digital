@@ -31,9 +31,14 @@
   color: rgb(66 72 97 / 0.58);
 }
 
-.controlError {
-  border-color: rgb(220 38 38 / 0.45);
-  box-shadow: 0 0 0 1px rgb(220 38 38 / 0.12);
+/* Same red glow as the oversize resume box on /apply: solid border, soft glow,
+   same border width so the field does not change size. */
+.controlError,
+.controlError:hover,
+.controlError:focus {
+  border-style: solid;
+  border-color: rgb(220 38 38 / 0.6);
+  box-shadow: 0 0 0 4px rgb(220 38 38 / 0.14);
 }
 
 .textarea {
@@ -43,6 +48,27 @@
 
 .error {
   @apply text-sm font-medium text-red-600;
+}
+
+.textareaWrap {
+  @apply relative;
+}
+
+/* Sits in the bottom-right corner, left of the textarea's resize grip. */
+.counter {
+  @apply pointer-events-none absolute text-xs tabular-nums;
+  right: 1.75rem;
+  bottom: 0.5rem;
+  color: rgb(66 72 97 / 0.7);
+}
+
+.textareaWithCounter {
+  padding-bottom: 1.75rem;
+}
+
+.notice {
+  @apply text-xs;
+  color: rgb(66 72 97 / 0.85);
 }
 
 .checkboxField {

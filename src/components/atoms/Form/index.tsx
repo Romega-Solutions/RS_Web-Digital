@@ -23,7 +23,7 @@ export function FormInput({ label, error, className = "", ...props }: FormInputP
         {...props}
       />
       {error && (
-        <span id={errorId} className={styles.error} aria-live="polite">
+        <span id={errorId} className={styles.error} role="alert">
           {error}
         </span>
       )}
@@ -53,7 +53,7 @@ export function FormSelect({ label, error, className = "", ...props }: FormSelec
         {...props}
       />
       {error ? (
-        <span id={errorId} className={styles.error} aria-live="polite">
+        <span id={errorId} className={styles.error} role="alert">
           {error}
         </span>
       ) : null}
@@ -64,28 +64,62 @@ export function FormSelect({ label, error, className = "", ...props }: FormSelec
 interface FormTextareaProps extends ComponentPropsWithoutRef<"textarea"> {
   label: string;
   error?: string;
+  /** Short text shown in the bottom-right corner, e.g. "12 / 2000". */
+  counter?: string;
+  /** A polite status line under the box, e.g. "Emoji and special symbols were removed." */
+  notice?: string;
 }
 
-export function FormTextarea({ label, error, className = "", ...props }: FormTextareaProps) {
+export function FormTextarea({
+  label,
+  error,
+  counter,
+  notice,
+  className = "",
+  ...props
+}: FormTextareaProps) {
   const id = useId();
   const errorId = `${id}-error`;
+  const counterId = `${id}-counter`;
+  const noticeId = `${id}-notice`;
+  const describedBy =
+    [error ? errorId : "", counter ? counterId : "", notice ? noticeId : ""]
+      .filter(Boolean)
+      .join(" ") || undefined;
 
   return (
     <div className={[styles.field, className].filter(Boolean).join(" ")}>
       <label htmlFor={id} className={styles.label}>
         {label}
       </label>
-      <textarea
-        id={id}
-        className={[styles.control, styles.textarea, error ? styles.controlError : ""]
-          .filter(Boolean)
-          .join(" ")}
-        aria-invalid={!!error}
-        aria-describedby={error ? errorId : undefined}
-        {...props}
-      />
+      <div className={styles.textareaWrap}>
+        <textarea
+          id={id}
+          className={[
+            styles.control,
+            styles.textarea,
+            counter ? styles.textareaWithCounter : "",
+            error ? styles.controlError : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+          aria-invalid={!!error}
+          aria-describedby={describedBy}
+          {...props}
+        />
+        {counter ? (
+          <span id={counterId} className={styles.counter}>
+            {counter}
+          </span>
+        ) : null}
+      </div>
+      {notice ? (
+        <span id={noticeId} className={styles.notice} role="status">
+          {notice}
+        </span>
+      ) : null}
       {error ? (
-        <span id={errorId} className={styles.error} aria-live="polite">
+        <span id={errorId} className={styles.error} role="alert">
           {error}
         </span>
       ) : null}
@@ -118,7 +152,7 @@ export function FormCheckbox({ label, error, className = "", ...props }: FormChe
       </label>
       </div>
       {error ? (
-        <span id={errorId} className={styles.error} aria-live="polite">
+        <span id={errorId} className={styles.error} role="alert">
           {error}
         </span>
       ) : null}

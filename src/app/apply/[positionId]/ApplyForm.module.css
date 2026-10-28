@@ -38,6 +38,15 @@
   box-shadow: 0 0 0 4px rgb(53 141 240 / 0.14);
 }
 
+/* Same red glow as the oversize resume box: solid border, soft glow, no size change. */
+.controlInvalid,
+.controlInvalid:hover,
+.controlInvalid:focus {
+  border-style: solid;
+  border-color: rgb(220 38 38 / 0.6);
+  box-shadow: 0 0 0 4px rgb(220 38 38 / 0.14);
+}
+
 .textarea {
   min-height: 6rem;
   resize: vertical;

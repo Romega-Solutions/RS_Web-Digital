@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import { notFound, permanentRedirect } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -8,7 +9,8 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { RichText } from "@/components/molecules/content/RichText";
 import { isRichTextEmpty, jobDescriptionContent } from "@/lib/sanitize";
 import { absoluteUrl, createBreadcrumbSchema, createMetadata, siteConfig } from "@/lib/seo";
-import { googleEmploymentType } from "@/lib/employment-type";
+import { employmentTypeLabel, googleEmploymentType } from "@/lib/employment-type";
+import { normalizeCountry, type CountryCode } from "@/lib/form/countries";
 import { positionApplyPath } from "@/lib/position-slug";
 import { resolveApplyPosition, type PublicPosition } from "@/lib/positions";
 import { ApplyForm } from "./ApplyForm";
@@ -77,6 +79,8 @@ export default async function ApplyPage({
   if (resolved.status === "not_found") notFound();
 
   const position = resolved.status === "ok" ? resolved.position : null;
+  // Vercel's edge sets this header; locally it is absent and the form opens on PH.
+  const defaultCountry = normalizeCountry((await headers()).get("x-vercel-ip-country"));
   const path = position ? positionApplyPath(position.resolvedSlug) : "";
   const descriptionContent = position ? jobDescriptionContent(position.job_description) : null;
   const jobEmploymentType = position ? googleEmploymentType(position.employment_type) : null;
@@ -148,22 +152,33 @@ export default async function ApplyPage({
     >
       <div className={styles.page}>
         <div className={styles.inner}>
-          {position ? <PositionView position={position} /> : <NotConfigured />}
+          {position ? (
+            <PositionView position={position} defaultCountry={defaultCountry} />
+          ) : (
+            <NotConfigured />
+          )}
         </div>
       </div>
     </MainTemplate>
   );
 }
 
-function PositionView({ position }: { position: Position }) {
+function PositionView({
+  position,
+  defaultCountry,
+}: {
+  position: Position;
+  defaultCountry: CountryCode;
+}) {
+  const jobType = employmentTypeLabel(position.employment_type);
   return (
     <>
       <header className={styles.header}>
         <p className={styles.eyebrow}>Romega Solutions · Careers</p>
         <h1 className={styles.title}>{position.job_title}</h1>
         <div className={styles.metaRow}>
-          {position.client && <span className={styles.metaItem}>{position.client}</span>}
           {position.location && <span className={styles.metaItem}>{position.location}</span>}
+          {jobType && <span className={styles.metaItem}>{jobType}</span>}
           <span className={position.is_open ? styles.statusOpen : styles.statusClosed}>
             {position.is_open ? "Open" : "Closed"}
           </span>
@@ -195,7 +210,11 @@ function PositionView({ position }: { position: Position }) {
             <p className={styles.cardLead}>
               Submit your details and resume below. We&apos;ll send you a confirmation email.
             </p>
-            <ApplyForm positionId={position.id} jobTitle={position.job_title} />
+            <ApplyForm
+              positionId={position.id}
+              jobTitle={position.job_title}
+              defaultCountry={defaultCountry}
+            />
           </section>
         </>
       )}

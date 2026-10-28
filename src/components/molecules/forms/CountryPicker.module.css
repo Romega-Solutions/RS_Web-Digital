@@ -1,0 +1,116 @@
+@reference "../../../app/globals.css";
+
+.root {
+  @apply flex;
+}
+
+/* The closed control: flag + (+code) + chevron, as before. */
+.button {
+  @apply relative flex shrink-0 items-center gap-1 whitespace-nowrap text-sm;
+  padding-inline: 0.75rem 0.5rem;
+  border: 0;
+  border-right: 1px solid rgb(9 75 143 / 0.14);
+  /* Inner corner radius = the phone frame's radius minus its 1px border. */
+  border-radius: calc(0.5rem - 1px) 0 0 calc(0.5rem - 1px);
+  /* Solid (the old 60% blue over white), so nothing shows through at the edge. */
+  background: rgb(247 250 255);
+  color: var(--color-text-main);
+  font: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.button:focus-visible {
+  /* Drawn inside the button: dark and 2px, so it is clear and never reaches the frame.
+     The page-wide ring (box-shadow with a white offset) is switched off here. */
+  outline: 2px solid rgb(9 75 143);
+  outline-offset: -3px;
+  box-shadow: none;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.flag {
+  font-size: 1.125rem;
+  line-height: 1;
+}
+
+.chevron {
+  width: 0.625rem;
+  height: 0.625rem;
+  opacity: 0.55;
+}
+
+/* A small scrolling box that hangs under the phone box. It is drawn in the page
+   body with a fixed position (see CountryPicker.tsx); its place, height and
+   width are set from the space on screen. z-index sits above the chat launcher
+   (1000) and the back-to-top button (60) so neither can cover its rows. */
+.list {
+  position: fixed;
+  z-index: 1100;
+  margin: 0;
+  padding: 0.25rem;
+  list-style: none;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  background: #fff;
+  border: 1px solid rgb(9 75 143 / 0.2);
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 24px rgb(16 24 40 / 0.14), 0 2px 6px rgb(16 24 40 / 0.08);
+  max-width: calc(100vw - 1rem);
+  font-size: 0.875rem;
+  color: var(--color-text-main);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  /* 40px tap target */
+  min-height: 2.5rem;
+  padding: 0.375rem 0.625rem;
+  border-radius: 0.375rem;
+  user-select: none;
+  cursor: pointer;
+}
+
+/* The highlighted row: solid light blue, dark navy text (about 13:1) and a
+   left bar, so it reads clearly in bright light, not only as a faint tint. */
+.optionActive {
+  background: rgb(207 226 252);
+  color: rgb(8 32 70);
+  box-shadow: inset 3px 0 0 rgb(9 75 143);
+}
+
+.optionSelected {
+  font-weight: 600;
+}
+
+.optionFlag {
+  font-size: 1.125rem;
+  line-height: 1;
+}
+
+.optionText {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.check {
+  width: 1rem;
+  text-align: center;
+  color: rgb(9 75 143);
+}
+
+.divider {
+  height: 1px;
+  margin: 0.25rem 0.5rem;
+  background: rgb(9 75 143 / 0.14);
+}

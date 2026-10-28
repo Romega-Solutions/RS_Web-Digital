@@ -201,6 +201,12 @@
   @apply grid gap-5 md:grid-cols-2;
 }
 
+/* Let a grid cell shrink below its content (the phone and company rows), so the
+   page never scrolls sideways on a narrow phone. */
+.formGrid > * {
+  min-width: 0;
+}
+
 .status {
   @apply rounded-lg px-4 py-3 text-sm font-semibold outline-none;
   font-family: var(--font-body);

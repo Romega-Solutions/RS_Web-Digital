@@ -162,7 +162,10 @@ test("the apply page canonicalizes to the slug and still mounts the form by id",
   assert.match(source, /positionApplyPath\(position\.resolvedSlug\)/);
   assert.match(source, /permanentRedirect\(resolved\.path\)/);
   assert.match(source, /notFound\(\)/);
-  assert.match(source, /<ApplyForm positionId=\{position\.id\} jobTitle=\{position\.job_title\} \/>/);
+  assert.match(
+    source,
+    /<ApplyForm\s+positionId=\{position\.id\}\s+jobTitle=\{position\.job_title\}[\s\S]*?\/>/,
+  );
   assert.doesNotMatch(source, /\/apply\/\$\{id\}/);
   assert.doesNotMatch(source, /\/apply\/\$\{position\.id\}/);
 });

@@ -9,6 +9,7 @@ import {
   isResumeTooLarge,
   isUnusableUpstreamReply,
 } from "@/lib/apply-upload";
+import { precheckApplication } from "@/lib/form/apply-precheck";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -54,6 +55,13 @@ export async function POST(
       { ok: false, code: "FILE_TOO_LARGE", error: RESUME_TOO_LARGE_MESSAGE },
       { status: 413 },
     );
+  }
+
+  // Light pre-check: an obviously bad email or phone fails fast, in the same reply
+  // shape. The portal's own validation stays the source of truth.
+  const precheck = precheckApplication(formData);
+  if (precheck) {
+    return NextResponse.json(precheck, { status: 400 });
   }
 
   try {

@@ -2,19 +2,45 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { AppButton } from "@/components/atoms/Button";
+import { PhoneField } from "@/components/molecules/forms/PhoneField";
 import {
   APPLY_GENERIC_ERROR,
   MAX_RESUME_MB,
   RESUME_TOO_LARGE_MESSAGE,
-  isResumeTooLarge,
   readApplyReply,
 } from "@/lib/apply-upload";
+import { EMAIL_PLACEHOLDER } from "@/lib/form/email";
+import {
+  applySubmitErrors,
+  emailError,
+  hasApplyErrors,
+  nameError,
+  phoneError,
+  resumeMessage,
+  resumeProblem,
+} from "@/lib/form/apply-submit";
+import type { CountryCode } from "@/lib/form/countries";
+import { FIELD_ERRORS_MESSAGE, isFieldSummary, shouldShowBanner } from "@/lib/form/field-errors";
+import { fieldError } from "@/lib/form/field-state";
+import { smartName } from "@/lib/form/name";
+import { phoneErrorMessage, validatePhone } from "@/lib/form/phone";
 import { applicationSubmitPath } from "@/lib/position-slug";
 import styles from "./ApplyForm.module.css";
 
 type Status = "idle" | "submitting" | "success" | "error";
+type FieldErrors = Partial<Record<"fullName" | "email" | "phone", string>>;
 
-export function ApplyForm({ positionId, jobTitle }: { positionId: number; jobTitle: string }) {
+// Red only while a field's current value is wrong: see lib/form/field-state.
+
+export function ApplyForm({
+  positionId,
+  jobTitle,
+  defaultCountry,
+}: {
+  positionId: number;
+  jobTitle: string;
+  defaultCountry: CountryCode;
+}) {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [appCode, setAppCode] = useState<string | null>(null);
@@ -22,6 +48,9 @@ export function ApplyForm({ positionId, jobTitle }: { positionId: number; jobTit
   const [fileName, setFileName] = useState("");
   const [fileError, setFileError] = useState("");
   const [fileTooLarge, setFileTooLarge] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [phoneCountry, setPhoneCountry] = useState<CountryCode>(defaultCountry);
+  const [phoneValue, setPhoneValue] = useState("");
   const loadedAtRef = useRef(0);
   const formRef = useRef<HTMLFormElement | null>(null);
 
@@ -31,26 +60,56 @@ export function ApplyForm({ positionId, jobTitle }: { positionId: number; jobTit
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
+    // A red resume (missing, wrong type, too large) is re-judged on every change; the
+    // summary line follows the red fields (shouldShowBanner), so nothing stale is left over.
     if (!file) {
       setFileName("");
       setFileError("");
       setFileTooLarge(false);
       return;
     }
-    setFileTooLarge(false);
-    if (file.type !== "application/pdf") {
-      setFileError("Resume must be a PDF file.");
-      setFileName(file.name);
-      return;
-    }
-    if (isResumeTooLarge(file.size)) {
-      setFileError("");
-      setFileTooLarge(true);
-      setFileName(file.name);
-      return;
-    }
-    setFileError("");
+    const problem = resumeProblem(file);
+    setFileTooLarge(problem === "too-large");
+    setFileError(resumeMessage(problem));
     setFileName(file.name);
+  }
+
+  function setFieldError(field: keyof FieldErrors, message: string | undefined) {
+    setFieldErrors((current) => ({ ...current, [field]: message }));
+  }
+
+  function handleNameBlur(event: React.FocusEvent<HTMLInputElement>) {
+    const input = event.currentTarget;
+    input.value = smartName(input.value);
+    setFieldError("fullName", fieldError("blur", input.value, nameError, fieldErrors.fullName));
+  }
+
+  function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
+    if (fieldErrors.fullName) setFieldError("fullName", fieldError("edit", event.target.value, nameError));
+  }
+
+  function handleEmailBlur(event: React.FocusEvent<HTMLInputElement>) {
+    setFieldError("email", fieldError("blur", event.currentTarget.value, emailError, fieldErrors.email));
+  }
+
+  function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
+    if (fieldErrors.email) setFieldError("email", fieldError("edit", event.target.value, emailError));
+  }
+
+  function handlePhoneChange(next: { country: CountryCode; value: string }) {
+    setPhoneCountry(next.country);
+    setPhoneValue(next.value);
+    const check = validatePhone(next.value, next.country);
+    // Letters or symbols that got in (a paste) are wrong content, so they are red straight away.
+    // Anything else clears the red; a short number is judged again on blur or submit.
+    setFieldError(
+      "phone",
+      !check.ok && check.reason === "chars" ? phoneErrorMessage(check.reason, next.country) : undefined,
+    );
+  }
+
+  function handlePhoneBlur() {
+    setFieldError("phone", fieldError("blur", phoneValue, (value) => phoneError(value, phoneCountry), fieldErrors.phone));
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -59,30 +118,37 @@ export function ApplyForm({ positionId, jobTitle }: { positionId: number; jobTit
 
     const form = event.currentTarget;
     const data = new FormData(form);
-    const fullName = String(data.get("fullName") ?? "").trim();
-    if (!fullName) {
-      setErrorMsg("Please enter your full name.");
-      setStatus("error");
-      return;
-    }
+    const fullName = smartName(String(data.get("fullName") ?? ""));
+    const email = String(data.get("email") ?? "").trim();
     const resume = data.get("resume");
-    if (!(resume instanceof File) || resume.size === 0) {
-      setFileError("Please attach your resume.");
-      setErrorMsg("Please attach your resume.");
+    const resumeFile = resume instanceof File ? resume : null;
+    // One pass over every field, the resume included, so all that is wrong turns red together.
+    const result = applySubmitErrors({
+      fullName,
+      email,
+      phone: phoneValue,
+      phoneCountry,
+      resume: resumeFile,
+    });
+    setFieldErrors({ fullName: result.fullName, email: result.email, phone: result.phone });
+    setFileTooLarge(result.resume === "too-large");
+    setFileError(resumeMessage(result.resume));
+    if (resumeFile && resumeFile.size > 0) setFileName(resumeFile.name);
+    if (hasApplyErrors(result)) {
+      setErrorMsg(FIELD_ERRORS_MESSAGE);
       setStatus("error");
+      requestAnimationFrame(() => {
+        (
+          form.querySelector<HTMLElement>('input:not([type="file"]):not([type="hidden"])[aria-invalid="true"]') ??
+          form.querySelector<HTMLElement>('input[type="file"][aria-invalid="true"]')
+        )?.focus();
+      });
       return;
     }
-    if (fileTooLarge || isResumeTooLarge(resume.size)) {
-      // The red drop box and the note below it already explain this; nothing is sent.
-      setFileTooLarge(true);
-      setFileName(resume.name);
-      return;
-    }
-    if (fileError) {
-      setErrorMsg(fileError);
-      setStatus("error");
-      return;
-    }
+    const phone = validatePhone(phoneValue, phoneCountry);
+    data.set("fullName", fullName);
+    data.set("email", email);
+    if (phone.ok) data.set("phone", phone.e164);
 
     data.set("loadedAt", String(loadedAtRef.current));
     setSubmittedName(fullName);
@@ -100,6 +166,7 @@ export function ApplyForm({ positionId, jobTitle }: { positionId: number; jobTit
         setStatus("success");
         form.reset();
         setFileName("");
+        setPhoneValue("");
       } else {
         setErrorMsg(result.message);
         setStatus("error");
@@ -132,6 +199,13 @@ export function ApplyForm({ positionId, jobTitle }: { positionId: number; jobTit
     );
   }
 
+  const summary = isFieldSummary(errorMsg);
+  // The resume is one of the fields the summary follows.
+  const resumeRed = fileTooLarge || Boolean(fileError);
+  const showBanner =
+    status === "error" &&
+    shouldShowBanner(errorMsg, { ...fieldErrors, resume: resumeRed ? "x" : undefined });
+
   return (
     <form ref={formRef} onSubmit={handleSubmit} className={styles.form} noValidate>
       {/* Honeypot — hidden from humans; bots tend to fill every field. */}
@@ -155,9 +229,18 @@ export function ApplyForm({ positionId, jobTitle }: { positionId: number; jobTit
           name="fullName"
           required
           autoComplete="name"
-          placeholder="Juan Dela Cruz"
-          className={styles.control}
+          placeholder="Juan dela Cruz"
+          onBlur={handleNameBlur}
+          onChange={handleNameChange}
+          aria-invalid={Boolean(fieldErrors.fullName)}
+          aria-describedby={fieldErrors.fullName ? "fullName-error" : undefined}
+          className={`${styles.control} ${fieldErrors.fullName ? styles.controlInvalid : ""}`}
         />
+        {fieldErrors.fullName && (
+          <span id="fullName-error" className={styles.error} role="alert">
+            {fieldErrors.fullName}
+          </span>
+        )}
       </div>
 
       <div className={styles.row}>
@@ -171,23 +254,35 @@ export function ApplyForm({ positionId, jobTitle }: { positionId: number; jobTit
             type="email"
             required
             autoComplete="email"
-            placeholder="you@example.com"
-            className={styles.control}
+            inputMode="email"
+            placeholder={EMAIL_PLACEHOLDER}
+            onBlur={handleEmailBlur}
+            onChange={handleEmailChange}
+            aria-invalid={Boolean(fieldErrors.email)}
+            aria-describedby={fieldErrors.email ? "email-error" : undefined}
+            className={`${styles.control} ${fieldErrors.email ? styles.controlInvalid : ""}`}
           />
+          {fieldErrors.email && (
+            <span id="email-error" className={styles.error} role="alert">
+              {fieldErrors.email}
+            </span>
+          )}
         </div>
-        <div className={styles.field}>
-          <label htmlFor="phone" className={styles.label}>
-            Phone <span className={styles.required}>*</span>
-          </label>
-          <input
-            id="phone"
-            name="phone"
-            required
-            autoComplete="tel"
-            placeholder="0917 555 1234"
-            className={styles.control}
-          />
-        </div>
+        <PhoneField
+          label={
+            <>
+              Phone <span className={styles.required}>*</span>
+            </>
+          }
+          name="phone"
+          country={phoneCountry}
+          value={phoneValue}
+          defaultCountry={defaultCountry}
+          onChange={handlePhoneChange}
+          onBlur={handlePhoneBlur}
+          error={fieldErrors.phone}
+          required
+        />
       </div>
 
       <div className={styles.field}>
@@ -209,7 +304,7 @@ export function ApplyForm({ positionId, jobTitle }: { positionId: number; jobTit
         </label>
         <label
           htmlFor="resume"
-          className={`${styles.dropzone} ${fileTooLarge ? styles.dropzoneInvalid : ""}`}
+          className={`${styles.dropzone} ${resumeRed ? styles.dropzoneInvalid : ""}`}
         >
           <span aria-hidden="true">📄</span>
           {fileName ? <span className={styles.fileName}>{fileName}</span> : "Click to upload PDF"}
@@ -221,8 +316,8 @@ export function ApplyForm({ positionId, jobTitle }: { positionId: number; jobTit
           accept="application/pdf,.pdf"
           required
           onChange={handleFileChange}
-          aria-invalid={fileTooLarge || Boolean(fileError)}
-          aria-describedby={fileTooLarge ? "resume-too-large" : undefined}
+          aria-invalid={resumeRed}
+          aria-describedby={fileTooLarge ? "resume-too-large" : fileError ? "resume-error" : undefined}
           className={styles.fileInput}
         />
         {fileTooLarge && (
@@ -230,7 +325,11 @@ export function ApplyForm({ positionId, jobTitle }: { positionId: number; jobTit
             {RESUME_TOO_LARGE_MESSAGE}
           </span>
         )}
-        {fileError && <span className={styles.error}>{fileError}</span>}
+        {fileError && (
+          <span id="resume-error" className={styles.error} role="alert">
+            {fileError}
+          </span>
+        )}
       </div>
 
       <div className={styles.field}>
@@ -246,8 +345,9 @@ export function ApplyForm({ positionId, jobTitle }: { positionId: number; jobTit
         />
       </div>
 
-      {status === "error" && errorMsg && (
-        <div className={styles.alert} role="alert">
+      {showBanner && (
+        // The field-summary line is polite: each field error already announces itself.
+        <div className={styles.alert} role={summary ? "status" : "alert"}>
           {errorMsg}
         </div>
       )}
