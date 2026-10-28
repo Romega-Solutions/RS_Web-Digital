@@ -8,6 +8,8 @@ export const HR_EMAIL = "hr@romega-solutions.com";
 
 export const RESUME_TOO_LARGE_MESSAGE = `File is over ${MAX_RESUME_MB} MB. Please upload a smaller PDF, or email it to ${HR_EMAIL}.`;
 
+export const RESUME_NOT_PDF_MESSAGE = `That file doesn't look like a PDF. Please upload your resume as a PDF, or email it to ${HR_EMAIL}.`;
+
 export const APPLY_GENERIC_ERROR = `Something went wrong. Please try again, or email your resume to ${HR_EMAIL}.`;
 
 /** Exactly MAX_RESUME_BYTES is allowed; one byte more is rejected. */

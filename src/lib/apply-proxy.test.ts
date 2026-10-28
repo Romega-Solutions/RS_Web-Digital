@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { handleApplyRequest } from "./apply-proxy.ts";
-import { MAX_RESUME_BYTES } from "./apply-upload.ts";
+import { MAX_RESUME_BYTES, RESUME_NOT_PDF_MESSAGE } from "./apply-upload.ts";
 import type { TurnstileEnv } from "./turnstile/verify.ts";
 
 // Made-up values: the shape of a key, not a real one.
@@ -53,12 +53,19 @@ function fakes(options: { cloudflare?: unknown; portalStatus?: number } = {}) {
   };
 }
 
+// A resume body that starts like a real PDF, padded to the wanted size.
+function pdfBytes(size: number) {
+  const bytes = new Uint8Array(size);
+  bytes.set(new TextEncoder().encode("%PDF-1.4").subarray(0, size));
+  return bytes;
+}
+
 function applicationForm(extra: Record<string, string> = {}, resumeBytes = 12) {
   const form = new FormData();
   form.set("fullName", "Juan dela Cruz");
   form.set("email", "juan@example.com");
   form.set("phone", "+639175551234");
-  form.set("resume", new File([new Uint8Array(resumeBytes)], "cv.pdf", { type: "application/pdf" }));
+  form.set("resume", new File([pdfBytes(resumeBytes)], "cv.pdf", { type: "application/pdf" }));
   for (const [key, value] of Object.entries(extra)) form.set(key, value);
   return form;
 }
@@ -123,6 +130,49 @@ test("an oversize resume and a bad email are refused before Cloudflare is called
   assert.equal(badEmail.response.status, 400);
   assert.equal(badEmail.body.code, "INVALID_EMAIL");
   assert.equal(badEmail.fake.calls.length, 0);
+});
+
+test("a resume that is not a PDF is refused with 415, before Cloudflare, even with a .pdf name", async () => {
+  const headers = { "x-turnstile-token": TOKEN };
+  for (const content of ["GIF89a....", "<html><script>alert(1)</script></html>", "PK\u0003\u0004zip"]) {
+    const form = applicationForm();
+    form.set("resume", new File([content], "cv.pdf", { type: "application/pdf" }));
+    const { response, body, fake } = await run(ON_ENV, applyRequest(form, headers));
+    assert.equal(response.status, 415, content);
+    assert.equal(body.code, "UNSUPPORTED_FILE_TYPE");
+    assert.equal(body.error, RESUME_NOT_PDF_MESSAGE);
+    assert.equal(fake.calls.length, 0);
+  }
+});
+
+test("an empty file part is left for the portal to report as missing, not called a bad PDF", async () => {
+  const form = applicationForm();
+  form.set("resume", new File([], ""));
+  const { response, fake } = await run(BASE_ENV, applyRequest(form));
+  assert.equal(response.status, 200);
+  assert.equal(fake.portalCalls().length, 1);
+});
+
+test("an over-long field is refused before Cloudflare, and nothing is cut silently", async () => {
+  const { response, body, fake } = await run(
+    ON_ENV,
+    applyRequest(applicationForm({ fullName: "a".repeat(201) }), { "x-turnstile-token": TOKEN }),
+  );
+  assert.equal(response.status, 400);
+  assert.equal(body.code, "FIELD_TOO_LONG");
+  assert.equal(fake.calls.length, 0);
+});
+
+test("extra files are dropped, extra text fields are passed on", async () => {
+  const form = applicationForm({ expectedSalary: "100k" });
+  form.set("avatar", new File(["x"], "me.png", { type: "image/png" }));
+  const fake = fakes();
+  const { response } = await run(BASE_ENV, applyRequest(form), fake);
+  assert.equal(response.status, 200);
+  const forwarded = fake.portalCalls()[0].init?.body as FormData;
+  assert.equal(forwarded.get("avatar"), null);
+  assert.equal(forwarded.get("expectedSalary"), "100k");
+  assert.ok(forwarded.get("resume") instanceof File);
 });
 
 test("a good token costs one Cloudflare call, then the application is forwarded without it", async () => {

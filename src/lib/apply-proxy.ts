@@ -8,11 +8,14 @@
 // to Cloudflare for a form that would be refused anyway.
 
 import {
+  RESUME_NOT_PDF_MESSAGE,
   RESUME_TOO_LARGE_MESSAGE,
   isResumeTooLarge,
   isUnusableUpstreamReply,
 } from "./apply-upload.ts";
+import { checkApplyFields, dropUnknownFiles } from "./apply-fields.ts";
 import { precheckApplication } from "./form/apply-precheck.ts";
+import { isPdfFile } from "./pdf-signature.ts";
 import { serverCaptchaMessage } from "./turnstile/messages.ts";
 import {
   TURNSTILE_FAILURE_STATUS,
@@ -77,6 +80,15 @@ export async function handleApplyRequest(
     return json({ ok: false, code: "FILE_TOO_LARGE", error: RESUME_TOO_LARGE_MESSAGE }, 413);
   }
 
+  // The file has to be a PDF by its first bytes, not only by its name. An empty
+  // file part (nothing chosen) is left for the portal's own "required" message.
+  if (resume instanceof File && resume.size > 0 && !(await isPdfFile(resume))) {
+    return json({ ok: false, code: "UNSUPPORTED_FILE_TYPE", error: RESUME_NOT_PDF_MESSAGE }, 415);
+  }
+
+  const tooLong = checkApplyFields(formData);
+  if (tooLong) return json(tooLong, 400);
+
   // Light pre-check: an obviously bad email or phone fails fast, in the same reply
   // shape. The portal's own validation stays the source of truth.
   const precheck = precheckApplication(formData);
@@ -85,6 +97,9 @@ export async function handleApplyRequest(
   // The widget is told not to add its own form field; if one turns up anyway it
   // is not passed on to the portal.
   formData.delete("cf-turnstile-response");
+
+  // Only the resume is passed on as a file; any other file part is dropped.
+  dropUnknownFiles(formData);
 
   // The security check, step two: the one call to Cloudflare.
   if (gate.state === "ready") {

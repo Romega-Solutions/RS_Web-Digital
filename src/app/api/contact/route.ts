@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { randomUUID } from "node:crypto";
+import { buildContactEmailHtml } from "@/lib/contact-email";
 import { isValidEmail } from "@/lib/form/email";
 import { smartName } from "@/lib/form/name";
 import { isValidPhoneValue } from "@/lib/form/phone";
@@ -164,22 +165,6 @@ function sanitizeName(value: string, maxLength = 100) {
   return value.replace(/[<>"]/g, "").trim().slice(0, maxLength);
 }
 
-function hasMaliciousPattern(value: string) {
-  const patterns = [
-    /(\bUNION\b.*\bSELECT\b)/i,
-    /(\bDROP\b.*\bTABLE\b)/i,
-    /(\bINSERT\b.*\bINTO\b)/i,
-    /(\bDELETE\b.*\bFROM\b)/i,
-    /(\bUPDATE\b.*\bSET\b)/i,
-    /(--|#|\/\*|\*\/)/,
-    /<script/gi,
-    /javascript:/gi,
-    /on\w+\s*=/gi,
-  ];
-
-  return patterns.some((pattern) => pattern.test(value));
-}
-
 const subjectLabelMap: Record<string, string> = {
   general: "General Inquiry",
   business: "Business Partnership",
@@ -296,31 +281,7 @@ async function sendEmail(body: ContactEmailPayload): Promise<ContactEmailResult>
       to: adminEmail,
       replyTo: body.email,
       subject: `New Contact: ${body.subject}`,
-      html: `
-        <div style="font-family: Arial, sans-serif; background: #f4f6fb; padding: 32px;">
-          <div style="max-width: 720px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #d7e3f4;">
-            <div style="background: linear-gradient(135deg, #358df0, #a89ff8); color: #ffffff; padding: 28px 32px;">
-              <h1 style="margin: 0; font-size: 28px;">Romega Solutions</h1>
-              <p style="margin: 8px 0 0; font-size: 15px;">New contact form submission</p>
-            </div>
-            <div style="padding: 32px;">
-              <p style="margin-top: 0; color: #424861; font-size: 16px;">A new inquiry was submitted through the RS Web Digital contact page.</p>
-              <table style="width: 100%; border-collapse: collapse; margin: 24px 0;">
-                <tr><td style="padding: 10px 0; font-weight: 700; color: #358df0;">Name</td><td style="padding: 10px 0; color: #424861;">${body.firstName} ${body.lastName}</td></tr>
-                <tr><td style="padding: 10px 0; font-weight: 700; color: #358df0;">Email</td><td style="padding: 10px 0; color: #424861;">${body.email}</td></tr>
-                <tr><td style="padding: 10px 0; font-weight: 700; color: #358df0;">Phone</td><td style="padding: 10px 0; color: #424861;">${body.phone}</td></tr>
-                <tr><td style="padding: 10px 0; font-weight: 700; color: #358df0;">Company</td><td style="padding: 10px 0; color: #424861;">${body.company || "Not provided"}</td></tr>
-                <tr><td style="padding: 10px 0; font-weight: 700; color: #358df0;">Subject</td><td style="padding: 10px 0; color: #424861;">${body.subject}</td></tr>
-                <tr><td style="padding: 10px 0; font-weight: 700; color: #358df0;">Submitted</td><td style="padding: 10px 0; color: #424861;">${submittedAt}</td></tr>
-              </table>
-              <div style="padding: 20px; border-radius: 12px; background: #f7f9fc; border: 1px solid #d7e3f4;">
-                <p style="margin: 0 0 12px; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #358df0; font-weight: 700;">Message</p>
-                <p style="margin: 0; white-space: pre-wrap; color: #424861; line-height: 1.7;">${body.message}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      `,
+      html: buildContactEmailHtml(body, submittedAt),
     });
 
     if (result.error) {
@@ -506,21 +467,6 @@ export async function POST(request: NextRequest) {
           code: "duplicate_submission",
         },
         { status: 409 },
-      );
-    }
-
-    const inspectionFields = [
-      trimmedBody.firstName,
-      trimmedBody.lastName,
-      trimmedBody.company,
-      trimmedBody.subject,
-      trimmedBody.message,
-    ];
-
-    if (inspectionFields.some((value) => hasMaliciousPattern(value))) {
-      return NextResponse.json(
-        { success: false, message: "Invalid input detected.", code: "suspicious_input" },
-        { status: 400 },
       );
     }
 
