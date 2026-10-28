@@ -33,7 +33,7 @@
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",
     "@mdx-js/react": "^3.1.1",
-    "@next/mdx": "16.2.10",
+    "@next/mdx": "16.4.3",
     "@supabase/supabase-js": "^2.108.1",
     "@types/mdx": "^2.0.14",
     "@vercel/analytics": "^2.0.1",
@@ -41,14 +41,14 @@
     "framer-motion": "^12.40.0",
     "leaflet": "^1.9.4",
     "libphonenumber-js": "^1.13.15",
-    "next": "16.2.10",
+    "next": "16.4.3",
     "react": "19.2.7",
     "react-dom": "19.2.6",
     "react-leaflet": "^5.0.0",
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.1",
     "resend": "^6.12.4",
-    "sanitize-html": "^2.18.0",
+    "sanitize-html": "^2.18.1",
     "yaml": "^2.9.1"
   },
   "devDependencies": {
@@ -61,7 +61,7 @@
     "@types/react-dom": "^19",
     "@types/sanitize-html": "^2.16.2",
     "eslint": "^9",
-    "eslint-config-next": "16.2.10",
+    "eslint-config-next": "16.4.3",
     "sass": "^1.101.0",
     "tailwindcss": "^4.3.1",
     "typescript": "^6"
@@ -70,7 +70,7 @@
     "overrides": {
       "brace-expansion@5": "5.0.6",
       "js-yaml": "4.2.0",
-      "postcss": "8.5.14"
+      "postcss": "8.5.23"
     }
   }
 }

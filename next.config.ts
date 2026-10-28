@@ -1,43 +1,15 @@
 import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
-
-function readOrigin(raw: string | undefined): URL | null {
-  try {
-    return raw ? new URL(raw) : null;
-  } catch {
-    return null;
-  }
-}
-
-const supabaseOrigin = readOrigin(process.env.NEXT_PUBLIC_SUPABASE_URL);
+import { buildResearchCoverPatterns } from "./src/lib/market-research/image-hosts.ts";
 
 const nextConfig: NextConfig = {
   images: {
     qualities: [75, 85],
     // Cover images uploaded in the portal live in the public research-covers
-    // bucket of the ticketing Supabase project: the hosted *.supabase.co
-    // domain, plus whatever host NEXT_PUBLIC_SUPABASE_URL points at (a custom
-    // domain, or a local test server).
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "*.supabase.co",
-        pathname: "/storage/v1/object/public/research-covers/**",
-      },
-      ...(supabaseOrigin
-        ? [
-            {
-              protocol: supabaseOrigin.protocol.replace(":", "") as "http" | "https",
-              hostname: supabaseOrigin.hostname,
-              ...(supabaseOrigin.port ? { port: supabaseOrigin.port } : {}),
-              pathname: "/storage/v1/object/public/research-covers/**",
-            },
-          ]
-        : []),
-    ],
-  },
-  experimental: {
-    viewTransition: true,
+    // bucket of the ticketing Supabase project. Only the host that
+    // NEXT_PUBLIC_SUPABASE_URL points at is allowed (the hosted project, a
+    // custom domain, or a local test server); other Supabase projects are not.
+    remotePatterns: buildResearchCoverPatterns(process.env.NEXT_PUBLIC_SUPABASE_URL),
   },
   // The Market Research pages are fully static, but the sitemap regenerates on
   // the server (it also lists live Careers positions) and reads the posts from

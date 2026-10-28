@@ -6,7 +6,9 @@
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
+import { createRequire } from "node:module";
 import { describe, test } from "node:test";
+import { buildResearchCoverPatterns } from "../src/lib/market-research/image-hosts.ts";
 import {
   mapPortalRow,
   mergePosts,
@@ -16,6 +18,11 @@ import {
 import { queryPublishedRowBySlug, queryPublishedRows } from "../src/lib/market-research/portal-query.ts";
 
 const SUPABASE_URL = "https://abcd1234.supabase.co";
+
+// Next's own matcher for remotePatterns, so the test checks what the image
+// optimizer really does with the patterns, not just their shape.
+const { hasRemoteMatch } = createRequire(import.meta.url)("next/dist/shared/lib/match-remote-pattern");
+const coverAllowed = (patterns, url) => hasRemoteMatch([], patterns, new URL(url));
 
 /** A Supabase-shaped client that records every chained call and resolves with `result`. */
 function fakeClient(result) {
@@ -173,6 +180,43 @@ describe("researchCoverUrl", () => {
   test("returns null when there is nothing to build from", () => {
     assert.equal(researchCoverUrl(null, SUPABASE_URL), null);
     assert.equal(researchCoverUrl("covers/x.jpg", undefined), null);
+  });
+});
+
+describe("buildResearchCoverPatterns", () => {
+  const COVER_PATH = "/storage/v1/object/public/research-covers/covers/3f2a.jpg";
+
+  test("allows exactly the host the website's Supabase URL points at", () => {
+    const patterns = buildResearchCoverPatterns(SUPABASE_URL);
+    assert.deepEqual(patterns, [
+      { protocol: "https", hostname: "abcd1234.supabase.co", pathname: "/storage/v1/object/public/research-covers/**" },
+    ]);
+    assert.equal(coverAllowed(patterns, `${SUPABASE_URL}${COVER_PATH}`), true);
+  });
+  test("is the same host researchCoverUrl builds covers for", () => {
+    const patterns = buildResearchCoverPatterns(SUPABASE_URL);
+    assert.equal(coverAllowed(patterns, researchCoverUrl("covers/3f2a.jpg", SUPABASE_URL)), true);
+  });
+  test("does not allow other Supabase projects or other buckets", () => {
+    const patterns = buildResearchCoverPatterns(SUPABASE_URL);
+    assert.equal(coverAllowed(patterns, `https://other-project.supabase.co${COVER_PATH}`), false);
+    assert.equal(coverAllowed(patterns, `https://abcd1234.supabase.co.evil.example${COVER_PATH}`), false);
+    assert.equal(coverAllowed(patterns, `${SUPABASE_URL}/storage/v1/object/public/private-files/x.jpg`), false);
+    assert.equal(coverAllowed(patterns, `http://abcd1234.supabase.co${COVER_PATH}`), false);
+  });
+  test("keeps a custom domain, a port and http for a local test server", () => {
+    assert.equal(buildResearchCoverPatterns("https://files.example.org")[0].hostname, "files.example.org");
+    assert.deepEqual(buildResearchCoverPatterns("http://127.0.0.1:54321")[0], {
+      protocol: "http",
+      hostname: "127.0.0.1",
+      port: "54321",
+      pathname: "/storage/v1/object/public/research-covers/**",
+    });
+  });
+  test("allows nothing when the URL is unset, empty, malformed or unsafe", () => {
+    for (const raw of [undefined, "", "   ", "not a url", "ftp://abcd1234.supabase.co", "https://*.supabase.co"]) {
+      assert.deepEqual(buildResearchCoverPatterns(raw), [], `input: ${JSON.stringify(raw)}`);
+    }
   });
 });
 
