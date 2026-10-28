@@ -90,3 +90,16 @@ Before enforcing: open a Vercel Preview, browse every page with the console open
 Preview deployments also load Vercel's toolbar, which may add its own lines on
 Previews only. To turn the policy off, remove the `headers()` entry from `next.config.ts`
 or use Vercel Instant Rollback.
+
+## Chat endpoint
+
+- The request body is read with a hard 8 KB cap (`413` over it), counted as it
+  arrives, so a missing or false Content-Length no longer gets a large body through.
+- 10 requests per minute per IP (`429` with `Retry-After`), down from 20.
+- A soft budget of about 300 model calls per hour for each server instance. After
+  that, visitors get the built-in replies until the hour ends. It only counts calls
+  made to the model, so it does nothing while `GROQ_API_KEY` is unset.
+- These counters live in one instance's memory. On Vercel several instances can run
+  at once, so treat them as a speed bump. For a hard limit, add a Vercel Firewall
+  rate-limit rule on `POST /api/chat` (key IP, 1 minute, about 10 to 20, start with Log),
+  and set a spending limit on the model provider's account.
