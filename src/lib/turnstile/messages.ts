@@ -24,7 +24,7 @@ export function serverCaptchaMessage(form: TurnstileForm, code: TurnstileFailure
   const { fallback } = COPY[form];
   switch (code) {
     case "CAPTCHA_REQUIRED":
-      return `The security check did not run. Please refresh the page and try again, or ${fallback}.`;
+      return `We've added a security check. Please refresh the page and try again, or ${fallback}.`;
     case "CAPTCHA_FAILED":
       return `We couldn't confirm the security check. Please try again, or ${fallback}.`;
     default:

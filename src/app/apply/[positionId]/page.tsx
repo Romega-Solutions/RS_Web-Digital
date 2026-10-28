@@ -12,6 +12,7 @@ import { absoluteUrl, createBreadcrumbSchema, createMetadata, siteConfig } from 
 import { employmentTypeLabel, googleEmploymentType } from "@/lib/employment-type";
 import { normalizeCountry, type CountryCode } from "@/lib/form/countries";
 import { positionApplyPath } from "@/lib/position-slug";
+import { turnstileSiteKeyForPage } from "@/lib/turnstile/verify";
 import { resolveApplyPosition, type PublicPosition } from "@/lib/positions";
 import { ApplyForm } from "./ApplyForm";
 import styles from "./ApplyPage.module.css";
@@ -81,6 +82,9 @@ export default async function ApplyPage({
   const position = resolved.status === "ok" ? resolved.position : null;
   // Vercel's edge sets this header; locally it is absent and the form opens on PH.
   const defaultCountry = normalizeCountry((await headers()).get("x-vercel-ip-country"));
+  // Read per request (the headers() call above keeps this page dynamic), so the
+  // key can be set or switched off without a rebuild. Empty means the check is off.
+  const turnstileSiteKey = turnstileSiteKeyForPage("apply");
   const path = position ? positionApplyPath(position.resolvedSlug) : "";
   const descriptionContent = position ? jobDescriptionContent(position.job_description) : null;
   const jobEmploymentType = position ? googleEmploymentType(position.employment_type) : null;
@@ -153,7 +157,11 @@ export default async function ApplyPage({
       <div className={styles.page}>
         <div className={styles.inner}>
           {position ? (
-            <PositionView position={position} defaultCountry={defaultCountry} />
+            <PositionView
+              position={position}
+              defaultCountry={defaultCountry}
+              turnstileSiteKey={turnstileSiteKey}
+            />
           ) : (
             <NotConfigured />
           )}
@@ -166,9 +174,11 @@ export default async function ApplyPage({
 function PositionView({
   position,
   defaultCountry,
+  turnstileSiteKey,
 }: {
   position: Position;
   defaultCountry: CountryCode;
+  turnstileSiteKey: string;
 }) {
   const jobType = employmentTypeLabel(position.employment_type);
   return (
@@ -214,6 +224,7 @@ function PositionView({
               positionId={position.id}
               jobTitle={position.job_title}
               defaultCountry={defaultCountry}
+              turnstileSiteKey={turnstileSiteKey}
             />
           </section>
         </>

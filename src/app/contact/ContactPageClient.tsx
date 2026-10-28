@@ -577,7 +577,8 @@ export default function ContactPageClient({ contactFormAvailable, turnstileSiteK
                 <TurnstileSlot
                   containerRef={turnstile.containerRef}
                   interactive={turnstile.interactive}
-                  liveMessage={isChecking ? "Running a quick security check." : ""}
+                  checking={isChecking}
+                  sending={isSubmitting}
                 />
               ) : null}
 

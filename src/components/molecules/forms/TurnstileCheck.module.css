@@ -4,8 +4,17 @@
   @apply flex justify-start;
 }
 
+.slot:focus {
+  outline: none;
+}
+
+.prompt {
+  @apply mt-3 text-sm font-medium;
+  color: var(--color-text-main);
+}
+
 .slotOpen {
-  @apply mt-3;
+  @apply mt-2;
   min-height: 65px;
 }
 

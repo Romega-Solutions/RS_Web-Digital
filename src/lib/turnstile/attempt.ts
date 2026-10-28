@@ -12,8 +12,8 @@ export const TURNSTILE_SCRIPT_URL = "https://challenges.cloudflare.com/turnstile
 
 // How long the automatic check may take before the attempt is given up, and how
 // long a visitor gets once Cloudflare shows a box they have to tick.
-export const AUTO_CHECK_TIMEOUT_MS = 15_000;
-export const INTERACTIVE_TIMEOUT_MS = 180_000;
+export const AUTO_CHECK_TIMEOUT_MS = 10_000;
+export const INTERACTIVE_TIMEOUT_MS = 60_000;
 
 export type TurnstileWidgetApi = {
   render(container: HTMLElement | string, options: Record<string, unknown>): string | undefined;
@@ -27,6 +27,15 @@ export type AttemptFailureReason = "unavailable" | "timeout" | "error" | "expire
 export type AttemptResult =
   | { ok: true; token: string }
   | { ok: false; reason: AttemptFailureReason };
+
+// The normal widget is 300 px wide. On a very narrow screen it would be cut off,
+// so it is drawn in Cloudflare's compact size (150 px wide) instead. An unknown
+// width keeps the normal size.
+export const NARROW_CONTAINER_PX = 300;
+
+export function pickWidgetSize(containerWidth: number | undefined): "normal" | "compact" {
+  return containerWidth && containerWidth < NARROW_CONTAINER_PX ? "compact" : "normal";
+}
 
 export type RunnerOptions = {
   siteKey: string;
@@ -113,7 +122,7 @@ export class TurnstileRunner {
     }
     try {
       if (this.widgetId === undefined) {
-        const id = api.render(container, this.renderOptions());
+        const id = api.render(container, this.renderOptions(container));
         if (!id) {
           this.settle({ ok: false, reason: "unavailable" });
           return;
@@ -127,9 +136,10 @@ export class TurnstileRunner {
     }
   }
 
-  private renderOptions(): Record<string, unknown> {
+  private renderOptions(container: HTMLElement): Record<string, unknown> {
     return {
       sitekey: this.options.siteKey,
+      size: pickWidgetSize(container.clientWidth),
       action: this.options.action,
       execution: "execute",
       appearance: "interaction-only",

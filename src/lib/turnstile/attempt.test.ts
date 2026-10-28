@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { TurnstileRunner, type AttemptResult, type TurnstileWidgetApi } from "./attempt.ts";
+import { TurnstileRunner, pickWidgetSize, type AttemptResult, type TurnstileWidgetApi } from "./attempt.ts";
 
 type Opts = Record<string, (...args: unknown[]) => unknown>;
 
@@ -245,4 +245,13 @@ test("disposing ends a waiting attempt and removes the widget", async () => {
   assert.deepEqual(await result, { ok: false, reason: "unavailable" });
   assert.ok(t.log.includes("remove:w1"));
   assert.deepEqual(await t.runner.run(), { ok: false, reason: "unavailable" });
+});
+
+test("a very narrow container gets the compact widget, anything else the normal one", () => {
+  assert.equal(pickWidgetSize(238), "compact");
+  assert.equal(pickWidgetSize(299), "compact");
+  assert.equal(pickWidgetSize(300), "normal");
+  assert.equal(pickWidgetSize(600), "normal");
+  assert.equal(pickWidgetSize(0), "normal");
+  assert.equal(pickWidgetSize(undefined), "normal");
 });

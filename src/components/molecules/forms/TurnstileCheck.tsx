@@ -8,19 +8,30 @@ import { TURNSTILE_NOTICE, splitAtAddress } from "@/lib/turnstile/messages";
 type SlotProps = {
   containerRef: RefObject<HTMLDivElement | null>;
   interactive: boolean;
-  // The text read out by screen readers while the check runs.
-  liveMessage: string;
+  // True while a check is running, and while the form is sent after it passed.
+  checking: boolean;
+  sending: boolean;
 };
 
 // Where Cloudflare may draw its box. With "interaction-only" it stays empty and
 // takes no room unless a visitor really has to do something.
-export function TurnstileSlot({ containerRef, interactive, liveMessage }: SlotProps) {
+export function TurnstileSlot({ containerRef, interactive, checking, sending }: SlotProps) {
+  // Read out by screen readers as the check moves along.
+  const liveMessage = interactive
+    ? "Please tick the box to continue."
+    : checking
+      ? "Running a quick security check."
+      : sending
+        ? "Check passed, sending."
+        : "";
   return (
     <>
+      {interactive ? <p className={styles.prompt}>Please tick the box to continue.</p> : null}
       <div
         ref={containerRef}
         role="group"
         aria-label="Security check"
+        tabIndex={-1}
         className={`${styles.slot} ${interactive ? styles.slotOpen : ""}`}
       />
       <p role="status" aria-live="polite" className={styles.live}>

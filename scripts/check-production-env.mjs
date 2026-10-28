@@ -53,7 +53,10 @@ const turnstileTestSecretKeys = [
 
 // Each form's security check has its own switch and keys. The mode stays "off"
 // (or unset) until the keys are in place; "on" without both keys is a failure.
-const turnstileForms = [{ label: "Contact", prefix: "CONTACT" }];
+const turnstileForms = [
+  { label: "Contact", prefix: "CONTACT" },
+  { label: "Apply", prefix: "APPLY" },
+];
 
 const disallowedProductionValues = [
   {

@@ -113,6 +113,11 @@
   color: #b91c1c;
 }
 
+.turnstileNotice {
+  @apply text-center;
+  margin-top: -0.5rem;
+}
+
 .terms {
   @apply text-center text-[11px];
   color: var(--color-muted);

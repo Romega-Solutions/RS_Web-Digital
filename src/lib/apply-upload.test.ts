@@ -98,18 +98,28 @@ test("form keeps the server's own message for a JSON error, and falls back other
   });
 });
 
-test("api route returns 413 before forwarding and 502 for unusable upstream replies", () => {
-  const source = readFileSync(
-    new URL("../app/api/apply/[positionId]/route.ts", import.meta.url),
-    "utf8",
-  );
+test("api handler returns 413 before forwarding and 502 for unusable upstream replies", () => {
+  const source = readFileSync(new URL("./apply-proxy.ts", import.meta.url), "utf8");
   const tooLarge = source.indexOf("isResumeTooLarge(resume.size)");
-  const forward = source.indexOf("await fetch(");
+  const forward = source.indexOf("await fetchImpl(");
   assert.ok(tooLarge > -1 && forward > -1 && tooLarge < forward);
-  assert.match(source, /status: 413/);
+  assert.match(source, /413\);/);
   assert.match(source, /isUnusableUpstreamReply\(upstream\.status, contentType\)/);
   assert.match(source, /x-vercel-error/);
-  assert.match(source, /status: 502/);
+  assert.match(source, /502,/);
+});
+
+test("form keeps the code of a security-check refusal, and words a firewall 429", async () => {
+  const body = JSON.stringify({ ok: false, code: "CAPTCHA_FAILED", error: "Try again, or email hr@romega-solutions.com." });
+  assert.deepEqual(await readApplyReply(reply(400, "application/json", body)), {
+    ok: false,
+    message: "Try again, or email hr@romega-solutions.com.",
+    code: "CAPTCHA_FAILED",
+  });
+  const limited = await readApplyReply(reply(429, "text/plain", "Too Many Requests"));
+  assert.equal(limited.ok, false);
+  assert.match(limited.ok ? "" : limited.message, /wait a few minutes/);
+  assert.match(limited.ok ? "" : limited.message, /hr@romega-solutions\.com/);
 });
 
 test("apply form uses the shared cap and has no hard-coded size", () => {

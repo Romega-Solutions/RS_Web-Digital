@@ -153,6 +153,10 @@ Optional:
 - `CONTACT_TURNSTILE_SITE_KEY`: the public Turnstile site key for the contact form. Read when the page is requested.
 - `CONTACT_TURNSTILE_SECRET_KEY`: the Turnstile secret key for the contact form. Server-side only.
 - `CONTACT_TURNSTILE_ALLOWED_HOSTS`: optional comma-separated host names a real token may come from. Defaults to `romega-solutions.com,www.romega-solutions.com`.
+- `APPLY_TURNSTILE_MODE`: `off` (default) or `on`. When `on`, the job application form needs a Cloudflare Turnstile check before it sends. Set the two keys below first, then switch the mode on in a second step.
+- `APPLY_TURNSTILE_SITE_KEY`: the public Turnstile site key for the job application form. Read when the page is requested.
+- `APPLY_TURNSTILE_SECRET_KEY`: the Turnstile secret key for the job application form. Server-side only.
+- `APPLY_TURNSTILE_ALLOWED_HOSTS`: optional comma-separated host names a real token may come from. Defaults to `romega-solutions.com,www.romega-solutions.com`.
 - `JOBS_API_URL`: Google Apps Script endpoint for live job listings. The API route has a fallback.
 - `EMAIL_CONTACT_FALLBACK_ENABLED`: local-only contact capture without Resend. Ignored in production.
 

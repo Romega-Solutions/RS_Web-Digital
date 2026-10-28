@@ -80,7 +80,17 @@ export function useTurnstile({ siteKey, action }: Options) {
       getContainer: () => containerRef.current,
       getApi: () => window.turnstile,
       ensureScript: loadScript,
-      onInteractive: setInteractive,
+      onInteractive: (open) => {
+        setInteractive(open);
+        if (!open) return;
+        // The box is the one thing the visitor has to do now: bring it into view
+        // and move keyboard focus to its labelled group.
+        requestAnimationFrame(() => {
+          const box = containerRef.current;
+          box?.scrollIntoView?.({ block: "center", behavior: "smooth" });
+          box?.focus({ preventScroll: true });
+        });
+      },
     });
     runnerRef.current = runner;
     return () => {
