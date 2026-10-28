@@ -5,6 +5,12 @@ import { useSearchParams } from "next/navigation";
 import { FormCheckbox, FormInput, FormSelect, FormTextarea } from "@/components/atoms/Form";
 import { AppButton } from "@/components/atoms/Button";
 import { PhoneField } from "@/components/molecules/forms/PhoneField";
+import {
+  MailLinkedMessage,
+  TurnstileNotice,
+  TurnstileSlot,
+} from "@/components/molecules/forms/TurnstileCheck";
+import { useTurnstile } from "@/components/molecules/forms/useTurnstile";
 import { DEFAULT_COUNTRY, normalizeCountry, type CountryCode } from "@/lib/form/countries";
 import {
   EMAIL_INVALID_MESSAGE,
@@ -23,6 +29,8 @@ import {
   formatCounter,
 } from "@/lib/form/text";
 import { siteConfig } from "@/lib/seo";
+import { TURNSTILE_ACTIONS, TURNSTILE_TOKEN_HEADER } from "@/lib/turnstile/shared";
+import { CONTACT_EMAIL, browserCaptchaMessage } from "@/lib/turnstile/messages";
 import styles from "./ContactPageClient.module.css";
 
 type FormState = {
@@ -92,17 +100,26 @@ function emailError(value: string): string | undefined {
 
 type ContactPageClientProps = {
   contactFormAvailable: boolean;
+  // Empty unless the Contact security check is switched on.
+  turnstileSiteKey: string;
 };
 
-export default function ContactPageClient({ contactFormAvailable }: ContactPageClientProps) {
+export default function ContactPageClient({ contactFormAvailable, turnstileSiteKey }: ContactPageClientProps) {
   const searchParams = useSearchParams();
   const [form, setForm] = useState<FormState>(initialFormState);
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [status, setStatus] = useState<{ type: "idle" | "success" | "error"; message: string }>({
+  const [isChecking, setIsChecking] = useState(false);
+  const [status, setStatus] = useState<{
+    type: "idle" | "success" | "error";
+    message: string;
+    // The message offers an email address to use instead (a failed security check).
+    mailLink?: boolean;
+  }>({
     type: "idle",
     message: "",
   });
+  const turnstile = useTurnstile({ siteKey: turnstileSiteKey, action: TURNSTILE_ACTIONS.contact });
   const [phoneCountry, setPhoneCountry] = useState<CountryCode>(DEFAULT_COUNTRY);
   const [geoCountry, setGeoCountry] = useState<CountryCode>(DEFAULT_COUNTRY);
   const [messageFiltered, setMessageFiltered] = useState(false);
@@ -198,6 +215,9 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    // The button looks disabled while a check or send is under way, but Enter in a
+    // field still submits the form, so the guard lives here too.
+    if (isSubmitting || isChecking) return;
     const nextErrors = validateForm();
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
@@ -211,10 +231,27 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
     setStatus({ type: "idle", message: "" });
 
     try {
+      let captchaToken = "";
+      if (turnstile.enabled) {
+        setIsChecking(true);
+        const check = await turnstile.check();
+        setIsChecking(false);
+        if (!check.ok) {
+          setStatus({
+            type: "error",
+            message: browserCaptchaMessage("contact", check.reason),
+            mailLink: true,
+          });
+          return;
+        }
+        captchaToken = check.token;
+      }
+
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          ...(captchaToken ? { [TURNSTILE_TOKEN_HEADER]: captchaToken } : {}),
         },
         body: JSON.stringify({
           ...form,
@@ -237,6 +274,14 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
       }
 
       if (!response.ok || !payload.success) {
+        if (typeof payload.code === "string" && payload.code.startsWith("captcha_")) {
+          setStatus({
+            type: "error",
+            message: payload.message || "We couldn't run the security check. Please try again.",
+            mailLink: true,
+          });
+          return;
+        }
         throw new Error(payload.message || "Unable to send your message right now.");
       }
 
@@ -252,6 +297,7 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
         message: error instanceof Error ? error.message : "Unable to send your message right now.",
       });
     } finally {
+      setIsChecking(false);
       setIsSubmitting(false);
     }
   }
@@ -378,7 +424,12 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
           </div>
 
           <div className={styles.formWrap}>
-            <form className={styles.form} onSubmit={handleSubmit} noValidate>
+            <form
+              className={styles.form}
+              onSubmit={handleSubmit}
+              onFocusCapture={turnstile.prepare}
+              noValidate
+            >
               <div className={styles.formGrid}>
                 <FormInput
                   label="First Name*"
@@ -510,19 +561,44 @@ export default function ContactPageClient({ contactFormAvailable }: ContactPageC
                     status.type === "success" ? styles.statusSuccess : styles.statusError
                   }`}
                 >
-                  {status.message}
+                  {status.mailLink ? (
+                    <MailLinkedMessage
+                      message={status.message}
+                      address={CONTACT_EMAIL}
+                      subject="Website contact form"
+                    />
+                  ) : (
+                    status.message
+                  )}
                 </p>
+              ) : null}
+
+              {turnstile.enabled ? (
+                <TurnstileSlot
+                  containerRef={turnstile.containerRef}
+                  interactive={turnstile.interactive}
+                  checking={isChecking}
+                  sending={isSubmitting}
+                />
               ) : null}
 
               <AppButton 
                 type="submit" 
                 variant="primary" 
                 size="lg" 
-                disabled={isSubmitting || !contactFormAvailable}
+                disabled={!contactFormAvailable}
+                aria-disabled={isSubmitting || isChecking || undefined}
                 className={styles.submitButton}
               >
-                {!contactFormAvailable ? "Form Unavailable" : isSubmitting ? "Sending..." : "Submit"}
+                {!contactFormAvailable
+                  ? "Form Unavailable"
+                  : isChecking
+                    ? "Checking..."
+                    : isSubmitting
+                      ? "Sending..."
+                      : "Submit"}
               </AppButton>
+              {turnstile.enabled ? <TurnstileNotice /> : null}
             </form>
           </div>
         </div>

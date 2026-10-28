@@ -101,6 +101,22 @@ export function PrivacyPolicyContent({
         </li>
         <li>Lawful disclosures required by legal or regulatory obligations</li>
       </ul>
+      <p>
+        <strong>Cloudflare, Inc. (Turnstile).</strong> When you submit our
+        contact or job application forms, Cloudflare Turnstile may run a
+        security check to tell people from automated programs. Cloudflare
+        receives technical signals such as your IP address, browser details and
+        the address of our site. Cloudflare uses these signals to protect our
+        forms and also to improve its own bot detection. See{" "}
+        <a
+          href="https://www.cloudflare.com/turnstile-privacy-policy/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Cloudflare&apos;s Turnstile Privacy Addendum
+        </a>
+        .
+      </p>
 
       <h2 id="section-f">F. Data Subject Rights</h2>
       <p>

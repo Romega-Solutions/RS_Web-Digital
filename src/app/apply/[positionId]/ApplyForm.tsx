@@ -4,7 +4,14 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import { AppButton } from "@/components/atoms/Button";
 import { PhoneField } from "@/components/molecules/forms/PhoneField";
 import {
+  MailLinkedMessage,
+  TurnstileNotice,
+  TurnstileSlot,
+} from "@/components/molecules/forms/TurnstileCheck";
+import { useTurnstile } from "@/components/molecules/forms/useTurnstile";
+import {
   APPLY_GENERIC_ERROR,
+  HR_EMAIL,
   MAX_RESUME_MB,
   RESUME_TOO_LARGE_MESSAGE,
   readApplyReply,
@@ -25,6 +32,8 @@ import { fieldError } from "@/lib/form/field-state";
 import { smartName } from "@/lib/form/name";
 import { phoneErrorMessage, validatePhone } from "@/lib/form/phone";
 import { applicationSubmitPath } from "@/lib/position-slug";
+import { browserCaptchaMessage } from "@/lib/turnstile/messages";
+import { TURNSTILE_ACTIONS, TURNSTILE_TOKEN_HEADER } from "@/lib/turnstile/shared";
 import styles from "./ApplyForm.module.css";
 
 type Status = "idle" | "submitting" | "success" | "error";
@@ -36,10 +45,13 @@ export function ApplyForm({
   positionId,
   jobTitle,
   defaultCountry,
+  turnstileSiteKey,
 }: {
   positionId: number;
   jobTitle: string;
   defaultCountry: CountryCode;
+  // Empty while the security check is switched off.
+  turnstileSiteKey: string;
 }) {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
@@ -51,6 +63,10 @@ export function ApplyForm({
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [phoneCountry, setPhoneCountry] = useState<CountryCode>(defaultCountry);
   const [phoneValue, setPhoneValue] = useState("");
+  const [isChecking, setIsChecking] = useState(false);
+  // True when the message is about the security check, so it carries the email-us link.
+  const [mailLink, setMailLink] = useState(false);
+  const turnstile = useTurnstile({ siteKey: turnstileSiteKey, action: TURNSTILE_ACTIONS.apply });
   const loadedAtRef = useRef(0);
   const formRef = useRef<HTMLFormElement | null>(null);
 
@@ -114,7 +130,9 @@ export function ApplyForm({
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (status === "submitting") return;
+    // The button looks disabled while a check or send is under way, but Enter in a
+    // field still submits the form, so the guard lives here too.
+    if (status === "submitting" || isChecking) return;
 
     const form = event.currentTarget;
     const data = new FormData(form);
@@ -130,6 +148,7 @@ export function ApplyForm({
       phoneCountry,
       resume: resumeFile,
     });
+    setMailLink(false);
     setFieldErrors({ fullName: result.fullName, email: result.email, phone: result.phone });
     setFileTooLarge(result.resume === "too-large");
     setFileError(resumeMessage(result.resume));
@@ -156,8 +175,26 @@ export function ApplyForm({
     setErrorMsg("");
 
     try {
+      // The security check runs only now, after every field passed, so a form that
+      // is still red never starts one.
+      let captchaToken = "";
+      if (turnstile.enabled) {
+        setIsChecking(true);
+        const check = await turnstile.check();
+        setIsChecking(false);
+        if (!check.ok) {
+          setErrorMsg(browserCaptchaMessage("apply", check.reason));
+          setMailLink(true);
+          setStatus("error");
+          return;
+        }
+        captchaToken = check.token;
+      }
+
+      // No Content-Type here: the browser adds the multipart boundary itself.
       const response = await fetch(applicationSubmitPath(positionId), {
         method: "POST",
+        headers: captchaToken ? { [TURNSTILE_TOKEN_HEADER]: captchaToken } : undefined,
         body: data,
       });
       const result = await readApplyReply(response);
@@ -169,11 +206,14 @@ export function ApplyForm({
         setPhoneValue("");
       } else {
         setErrorMsg(result.message);
+        setMailLink(result.code !== undefined);
         setStatus("error");
       }
     } catch {
       setErrorMsg(APPLY_GENERIC_ERROR);
       setStatus("error");
+    } finally {
+      setIsChecking(false);
     }
   }
 
@@ -207,7 +247,13 @@ export function ApplyForm({
     shouldShowBanner(errorMsg, { ...fieldErrors, resume: resumeRed ? "x" : undefined });
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} className={styles.form} noValidate>
+    <form
+      ref={formRef}
+      onSubmit={handleSubmit}
+      onFocusCapture={turnstile.prepare}
+      className={styles.form}
+      noValidate
+    >
       {/* Honeypot — hidden from humans; bots tend to fill every field. */}
       <div className={styles.honeypot} aria-hidden="true">
         <label htmlFor="company_website">Company website (leave blank)</label>
@@ -348,13 +394,36 @@ export function ApplyForm({
       {showBanner && (
         // The field-summary line is polite: each field error already announces itself.
         <div className={styles.alert} role={summary ? "status" : "alert"}>
-          {errorMsg}
+          {mailLink ? (
+            <MailLinkedMessage
+              message={errorMsg}
+              address={HR_EMAIL}
+              subject={`Application: ${jobTitle}`}
+            />
+          ) : (
+            errorMsg
+          )}
         </div>
       )}
 
-      <AppButton type="submit" variant="primary" size="lg" disabled={status === "submitting"}>
-        {status === "submitting" ? "Submitting…" : "Submit application"}
+      {turnstile.enabled ? (
+        <TurnstileSlot
+          containerRef={turnstile.containerRef}
+          interactive={turnstile.interactive}
+          checking={isChecking}
+          sending={status === "submitting" && !isChecking}
+        />
+      ) : null}
+
+      <AppButton
+        type="submit"
+        variant="primary"
+        size="lg"
+        aria-disabled={status === "submitting" || isChecking || undefined}
+      >
+        {isChecking ? "Checking…" : status === "submitting" ? "Submitting…" : "Submit application"}
       </AppButton>
+      {turnstile.enabled ? <TurnstileNotice className={styles.turnstileNotice} /> : null}
 
       <p className={styles.terms}>
         By submitting, you agree to be contacted by Romega Solutions about this role.

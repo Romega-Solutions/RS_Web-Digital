@@ -1,0 +1,32 @@
+@reference "../../../app/globals.css";
+
+.slot {
+  @apply flex justify-start;
+}
+
+.slot:focus {
+  outline: none;
+}
+
+.prompt {
+  @apply mt-3 text-sm font-medium;
+  color: var(--color-text-main);
+}
+
+.slotOpen {
+  @apply mt-2;
+  min-height: 65px;
+}
+
+.notice {
+  @apply text-xs;
+  color: var(--color-text-main);
+}
+
+.notice a {
+  @apply underline underline-offset-2;
+}
+
+.live {
+  @apply sr-only;
+}

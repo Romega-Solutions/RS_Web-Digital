@@ -38,6 +38,26 @@ const optionalVariables = [
   },
 ];
 
+// Cloudflare's public Turnstile test keys. They are never valid in production.
+// Keep in step with src/lib/turnstile/verify.ts (a unit test compares the two).
+const turnstileTestSiteKeys = [
+  "1x00000000000000000000AA",
+  "2x00000000000000000000AB",
+  "3x00000000000000000000FF",
+];
+const turnstileTestSecretKeys = [
+  "1x0000000000000000000000000000000AA",
+  "2x0000000000000000000000000000000AA",
+  "3x0000000000000000000000000000000AA",
+];
+
+// Each form's security check has its own switch and keys. The mode stays "off"
+// (or unset) until the keys are in place; "on" without both keys is a failure.
+const turnstileForms = [
+  { label: "Contact", prefix: "CONTACT" },
+  { label: "Apply", prefix: "APPLY" },
+];
+
 const disallowedProductionValues = [
   {
     name: "EMAIL_CONTACT_FALLBACK_ENABLED",
@@ -117,6 +137,40 @@ for (const variable of disallowedProductionValues) {
     failures.push(`${variable.name} ${variable.message}`);
   }
   results.push({ name: variable.name, required: false, status: redactedStatus(value), passed });
+}
+
+for (const form of turnstileForms) {
+  const mode = getEnvValue(fileEnv, `${form.prefix}_TURNSTILE_MODE`).trim().toLowerCase();
+  const siteKey = getEnvValue(fileEnv, `${form.prefix}_TURNSTILE_SITE_KEY`).trim();
+  const secretKey = getEnvValue(fileEnv, `${form.prefix}_TURNSTILE_SECRET_KEY`).trim();
+  const allowedHosts = getEnvValue(fileEnv, `${form.prefix}_TURNSTILE_ALLOWED_HOSTS`).trim();
+  const problems = [];
+
+  if (mode && mode !== "on" && mode !== "off") {
+    problems.push(`${form.prefix}_TURNSTILE_MODE must be "on" or "off"`);
+  }
+  if (mode === "on" && !siteKey) problems.push(`${form.prefix}_TURNSTILE_SITE_KEY is required when the mode is on`);
+  if (mode === "on" && !secretKey) problems.push(`${form.prefix}_TURNSTILE_SECRET_KEY is required when the mode is on`);
+  if (turnstileTestSiteKeys.includes(siteKey)) {
+    problems.push(`${form.prefix}_TURNSTILE_SITE_KEY is a public test key and must not be used in production`);
+  }
+  if (turnstileTestSecretKeys.includes(secretKey)) {
+    problems.push(`${form.prefix}_TURNSTILE_SECRET_KEY is a public test key and must not be used in production`);
+  }
+  if (allowedHosts) {
+    const hosts = allowedHosts.split(",").map((host) => host.trim().toLowerCase());
+    if (hosts.some((host) => !/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/.test(host))) {
+      problems.push(`${form.prefix}_TURNSTILE_ALLOWED_HOSTS must be a comma-separated list of host names`);
+    }
+  }
+
+  failures.push(...problems);
+  results.push({
+    name: `${form.prefix}_TURNSTILE (${form.label} security check)`,
+    required: false,
+    status: mode === "on" ? "on" : "off",
+    passed: problems.length === 0,
+  });
 }
 
 const source = existsSync(envFile)

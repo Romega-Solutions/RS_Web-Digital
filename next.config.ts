@@ -1,8 +1,19 @@
 import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
 import { buildResearchCoverPatterns } from "./src/lib/market-research/image-hosts.ts";
+import { buildSecurityHeaders } from "./src/lib/security-headers.ts";
 
 const nextConfig: NextConfig = {
+  // Do not announce the framework in an X-Powered-By header.
+  poweredByHeader: false,
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: buildSecurityHeaders({ development: process.env.NODE_ENV !== "production" }),
+      },
+    ];
+  },
   images: {
     qualities: [75, 85],
     // Cover images uploaded in the portal live in the public research-covers

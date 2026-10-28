@@ -1,4 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
+// Relative on purpose, so a unit test can load this file without the "@/" alias.
+import {
+  CHAT_MAX_BODY_BYTES,
+  CHAT_MODEL_BUDGET_PER_WINDOW,
+  CHAT_MODEL_BUDGET_WINDOW_MS,
+  CHAT_RATE_MAX_PER_WINDOW,
+  CHAT_RATE_WINDOW_MS,
+  createBudget,
+  createRateLimiter,
+  readJsonWithLimit,
+} from "../../../lib/chat-guards.ts";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -13,10 +24,6 @@ type Reply = {
 };
 
 const MAX_MESSAGE_LENGTH = 1000;
-const MAX_BODY_BYTES = 8 * 1024;
-const RATE_LIMIT_WINDOW_MS = 60_000;
-const RATE_LIMIT_MAX = 20;
-const SWEEP_EVERY = 200;
 
 const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
 const GROQ_DEFAULT_MODEL = "llama-3.3-70b-versatile";
@@ -47,8 +54,10 @@ Rules you MUST follow:
 - Do NOT collect or store PII. If a user shares personal contact info, tell them to use /contact instead.
 - For complex, sensitive, or urgent inquiries, direct them to /contact or info@romega-solutions.com.`;
 
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-let writeCounter = 0;
+const rateLimiter = createRateLimiter(CHAT_RATE_WINDOW_MS, CHAT_RATE_MAX_PER_WINDOW);
+// Once this instance has made its share of model calls for the hour, visitors
+// get the built-in replies until the hour is over.
+const modelBudget = createBudget(CHAT_MODEL_BUDGET_WINDOW_MS, CHAT_MODEL_BUDGET_PER_WINDOW);
 
 const SECURITY_HEADERS = {
   "cache-control": "no-store",
@@ -116,35 +125,6 @@ function assertContentType(request: NextRequest): NextResponse | null {
     return jsonResponse({ error: "Unsupported media type." }, 415);
   }
   return null;
-}
-
-function assertBodySize(request: NextRequest): NextResponse | null {
-  const len = request.headers.get("content-length");
-  if (len && Number(len) > MAX_BODY_BYTES) {
-    return jsonResponse({ error: "Payload too large." }, 413);
-  }
-  return null;
-}
-
-function sweepRateLimit(now: number) {
-  for (const [key, record] of rateLimitMap) {
-    if (record.resetAt < now) rateLimitMap.delete(key);
-  }
-}
-
-function applyRateLimit(ip: string): boolean {
-  const now = Date.now();
-  writeCounter += 1;
-  if (writeCounter % SWEEP_EVERY === 0) sweepRateLimit(now);
-
-  const record = rateLimitMap.get(ip);
-  if (!record || record.resetAt < now) {
-    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
-    return true;
-  }
-  if (record.count >= RATE_LIMIT_MAX) return false;
-  record.count += 1;
-  return true;
 }
 
 function validateMessage(raw: unknown): { ok: true; value: string } | { ok: false } {
@@ -306,26 +286,32 @@ export async function OPTIONS() {
 }
 
 export async function POST(request: NextRequest) {
-  const guard =
-    assertContentType(request) ??
-    assertBodySize(request) ??
-    assertSameOrigin(request);
+  const guard = assertContentType(request) ?? assertSameOrigin(request);
   if (guard) return guard;
 
+  const declared = request.headers.get("content-length");
+  if (declared && Number(declared) > CHAT_MAX_BODY_BYTES) {
+    return jsonResponse({ error: "Payload too large." }, 413);
+  }
+
   const ip = getClientIp(request);
-  if (!applyRateLimit(ip)) {
-    return jsonResponse(
+  if (!rateLimiter.allow(ip)) {
+    return NextResponse.json(
       { error: "Too many requests. Please try again in a moment." },
-      429,
+      { status: 429, headers: { ...SECURITY_HEADERS, "retry-after": "60" } },
     );
   }
 
-  let body: ChatRequestBody;
-  try {
-    body = (await request.json()) as ChatRequestBody;
-  } catch {
-    return jsonResponse({ error: "Invalid JSON body." }, 400);
+  // The body is counted as it is read, so a missing or false Content-Length
+  // cannot get an oversized body through.
+  const read = await readJsonWithLimit(request, CHAT_MAX_BODY_BYTES);
+  if (!read.ok) {
+    return jsonResponse(
+      { error: read.status === 413 ? "Payload too large." : "Invalid JSON body." },
+      read.status,
+    );
   }
+  const body = (read.value && typeof read.value === "object" ? read.value : {}) as ChatRequestBody;
 
   const result = validateMessage(body.message);
   if (!result.ok) {
@@ -333,7 +319,8 @@ export async function POST(request: NextRequest) {
   }
 
   const fallback = buildReply(result.value);
-  const groqText = await callGroq(result.value);
+  const groqText =
+    process.env.GROQ_API_KEY && modelBudget.take() ? await callGroq(result.value) : null;
   const reply: Reply = groqText
     ? { text: groqText, suggestions: fallback.suggestions }
     : fallback;
