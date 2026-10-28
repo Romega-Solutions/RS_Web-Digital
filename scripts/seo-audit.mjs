@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
+import { spawn } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
+import { createServer } from "node:net";
 import { pathToFileURL } from "node:url";
 
 const expectedOrigin = "https://www.romega-solutions.com";
@@ -10,7 +12,7 @@ const staticPages = [
   { path: "/services", html: `${appDir}/services.html`, title: "Our Services | Romega Solutions" },
   { path: "/careers", html: `${appDir}/careers.html`, title: "Careers | Romega Solutions" },
   { path: "/talent", html: `${appDir}/talent.html`, title: "Talent Pool | Romega Solutions" },
-  { path: "/contact", html: `${appDir}/contact.html`, title: "Contact Romega Solutions | Romega Solutions" },
+  { path: "/contact", html: null, title: "Contact Romega Solutions | Romega Solutions" },
   { path: "/privacy", html: `${appDir}/privacy.html`, title: "Privacy Policy | Romega Solutions" },
   { path: "/terms", html: `${appDir}/terms.html`, title: "Terms and Conditions | Romega Solutions" },
 ];
@@ -20,6 +22,58 @@ function assertBuilt() {
     existsSync(appDir),
     "Missing .next build output. Run `pnpm run build` before `pnpm run audit:seo`.",
   );
+}
+
+// /contact is rendered on each request (it reads the Turnstile settings at run
+// time), so there is no built contact.html. Its HTML comes from a running server:
+// the one at SEO_AUDIT_BASE_URL if that is set, otherwise a short-lived
+// `next start` on a free local port that this script starts and stops itself.
+async function freePort() {
+  return new Promise((resolve, reject) => {
+    const probe = createServer();
+    probe.once("error", reject);
+    probe.listen(0, "127.0.0.1", () => {
+      const { port } = probe.address();
+      probe.close(() => resolve(port));
+    });
+  });
+}
+
+async function fetchPageHtml(baseUrl, routePath) {
+  const response = await fetch(new URL(routePath, baseUrl));
+  assert.equal(response.status, 200, `${routePath} returned ${response.status}`);
+  return response.text();
+}
+
+async function fetchDynamicHtml(routePath) {
+  if (process.env.SEO_AUDIT_BASE_URL) {
+    return fetchPageHtml(process.env.SEO_AUDIT_BASE_URL, routePath);
+  }
+  const port = await freePort();
+  const baseUrl = `http://127.0.0.1:${port}`;
+  const server = spawn(
+    process.execPath,
+    ["node_modules/next/dist/bin/next", "start", "-H", "127.0.0.1", "-p", String(port)],
+    { stdio: "ignore" },
+  );
+  let exited = false;
+  server.once("exit", () => {
+    exited = true;
+  });
+  try {
+    for (let attempt = 0; attempt < 60; attempt += 1) {
+      assert.ok(!exited, "`next start` stopped before it was ready. Run `pnpm run build` first.");
+      try {
+        return await fetchPageHtml(baseUrl, routePath);
+      } catch (error) {
+        if (error?.name === "AssertionError") throw error;
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
+    }
+    assert.fail(`${routePath} did not answer on ${baseUrl}`);
+  } finally {
+    server.kill();
+  }
 }
 
 function readBuiltHtml(filePath) {
@@ -47,8 +101,10 @@ async function getBuiltRouteText(routePath) {
 
 assertBuilt();
 
+const contactHtml = await fetchDynamicHtml("/contact");
+
 for (const page of staticPages) {
-  const html = readBuiltHtml(page.html);
+  const html = page.path === "/contact" ? contactHtml : readBuiltHtml(page.html);
   assert.equal(extractTitle(html), page.title, `${page.path} has the wrong title`);
   assert.ok(
     !html.includes("| Romega Solutions | Romega Solutions"),
@@ -62,7 +118,6 @@ for (const page of staticPages) {
   assert.ok(html.includes("application/ld+json"), `${page.path} is missing JSON-LD`);
 }
 
-const contactHtml = readBuiltHtml(`${appDir}/contact.html`);
 assert.ok(
   contactHtml.includes("talent acquisition") &&
     contactHtml.includes("brand and growth support") &&
