@@ -5,6 +5,13 @@ import { isValidEmail } from "@/lib/form/email";
 import { smartName } from "@/lib/form/name";
 import { isValidPhoneValue } from "@/lib/form/phone";
 import { MESSAGE_REJECTED, isPlainText } from "@/lib/form/text";
+import { serverCaptchaMessage } from "@/lib/turnstile/messages";
+import {
+  TURNSTILE_FAILURE_STATUS,
+  closeTurnstileGate,
+  openTurnstileGate,
+  type TurnstileFailure,
+} from "@/lib/turnstile/verify";
 
 type ContactBody = {
   firstName?: string;
@@ -14,7 +21,6 @@ type ContactBody = {
   company?: string;
   phone?: string;
   message?: string;
-  recaptchaToken?: string;
   botfield?: string;
   privacyConsent?: boolean;
 };
@@ -201,31 +207,15 @@ function normalizeSubject(value: string): { code: SubjectCode; label: string } |
   return null;
 }
 
-async function verifyRecaptcha(token: string) {
-  const secretKey = process.env.RECAPTCHA_SECRET_KEY;
-  if (!secretKey) {
-    return true;
-  }
-
-  const controller = new AbortController();
-  const timeoutMs = Number(process.env.RECAPTCHA_TIMEOUT_MS || "5000");
-  const timeout = setTimeout(() => controller.abort(), timeoutMs);
-
-  try {
-    const response = await fetch("https://www.google.com/recaptcha/api/siteverify", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: `secret=${encodeURIComponent(secretKey)}&response=${encodeURIComponent(token)}`,
-      signal: controller.signal,
-    });
-
-    const data = (await response.json()) as { success?: boolean };
-    return response.ok && data.success === true;
-  } catch {
-    return false;
-  } finally {
-    clearTimeout(timeout);
-  }
+function captchaFailureResponse(failure: TurnstileFailure) {
+  return NextResponse.json(
+    {
+      success: false,
+      message: serverCaptchaMessage("contact", failure.code),
+      code: failure.code.toLowerCase(),
+    },
+    { status: TURNSTILE_FAILURE_STATUS[failure.code] },
+  );
 }
 
 type ContactEmailPayload = {
@@ -475,20 +465,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (process.env.RECAPTCHA_SECRET_KEY) {
-      if (!body.recaptchaToken) {
-        return NextResponse.json(
-          { success: false, message: "reCAPTCHA verification required.", code: "recaptcha_required" },
-          { status: 400 },
-        );
-      }
-
-      const recaptchaValid = await verifyRecaptcha(body.recaptchaToken);
-      if (!recaptchaValid) {
-        return NextResponse.json(
-          { success: false, message: "reCAPTCHA verification failed.", code: "recaptcha_failed" },
-          { status: 400 },
-        );
+    // The check is off unless CONTACT_TURNSTILE_MODE=on. When on, the token
+    // arrives in the x-turnstile-token header.
+    const gate = openTurnstileGate("contact", request.headers);
+    if (gate.state === "fail") {
+      return captchaFailureResponse(gate.failure);
+    }
+    if (gate.state === "ready") {
+      const failure = await closeTurnstileGate(gate, request.headers);
+      if (failure) {
+        return captchaFailureResponse(failure);
       }
     }
 

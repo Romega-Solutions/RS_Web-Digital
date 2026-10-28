@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import { Suspense } from "react";
 import { MainTemplate } from "@/components/templates/MainTemplate";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -6,6 +7,7 @@ import { SiteFooter } from "@/components/organisms/layout/SiteFooter";
 import { SiteHeader } from "@/components/organisms/layout/SiteHeader";
 import { ServicesFaqSection } from "@/components/organisms/services/ServicesFaqSection";
 import { absoluteUrl, createMetadata } from "@/lib/seo";
+import { turnstileSiteKeyForPage } from "@/lib/turnstile/verify";
 import ContactPageClient from "./ContactPageClient";
 
 const contactFaqs = [
@@ -60,7 +62,10 @@ export const metadata: Metadata = createMetadata({
   ],
 });
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  // Read at request time so the site key can be changed in Vercel without a rebuild.
+  await connection();
+  const turnstileSiteKey = turnstileSiteKeyForPage("contact");
   const contactFormAvailable =
     Boolean(process.env.RESEND_API_KEY) ||
     (process.env.EMAIL_CONTACT_FALLBACK_ENABLED?.toLowerCase() === "true" &&
@@ -119,7 +124,10 @@ export default function ContactPage() {
       footer={<SiteFooter />}
     >
       <Suspense fallback={null}>
-        <ContactPageClient contactFormAvailable={contactFormAvailable} />
+        <ContactPageClient
+          contactFormAvailable={contactFormAvailable}
+          turnstileSiteKey={turnstileSiteKey}
+        />
       </Suspense>
 
       <ServicesFaqSection faqs={contactFaqs} />
