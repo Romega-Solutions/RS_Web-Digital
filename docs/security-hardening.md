@@ -58,3 +58,35 @@ a low number would block real applicants. Counters are per region.
 The privacy policy names Cloudflare Turnstile and links Cloudflare's Turnstile
 Privacy Addendum. The policy's version and date were not changed; whether to
 change them is a decision for the site owner.
+
+## Response headers
+
+Set for every route from `next.config.ts` (built in `src/lib/security-headers.ts`):
+
+- Enforced: `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`,
+  `Referrer-Policy: strict-origin-when-cross-origin`, and a `Permissions-Policy`
+  that turns camera, microphone, geolocation, payment and USB off.
+- `X-Powered-By` is no longer sent.
+- `Strict-Transport-Security` is not touched here. Vercel already sends it; changing
+  it (for example adding `includeSubDomains` or `preload`) affects every subdomain
+  and is a separate decision.
+
+### Content-Security-Policy is report-only
+
+It is sent as `Content-Security-Policy-Report-Only`, so a browser only logs what it
+would block, in the console ("[Report Only] ..."). Nothing is blocked and there is
+no report endpoint. Allowed on purpose:
+
+- scripts and frames from `https://challenges.cloudflare.com` (Turnstile) and the
+  Vercel analytics script from `https://va.vercel-scripts.com`;
+- the footer map's OpenStreetMap tiles and the marker picture from unpkg, as images only.
+
+`script-src` includes `'unsafe-inline'` because Next.js writes small inline scripts
+into each page and a nonce would make every page dynamic. So the policy limits where
+scripts may load from; it does not stop an inline script. Enforcing it is a later step.
+
+Before enforcing: open a Vercel Preview, browse every page with the console open
+(also with the chat and both forms), and confirm there are no "[Report Only]" lines.
+Preview deployments also load Vercel's toolbar, which may add its own lines on
+Previews only. To turn the policy off, remove the `headers()` entry from `next.config.ts`
+or use Vercel Instant Rollback.
