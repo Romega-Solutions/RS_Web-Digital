@@ -36,9 +36,6 @@ const nextConfig: NextConfig = {
         : []),
     ],
   },
-  experimental: {
-    viewTransition: true,
-  },
   // The Market Research pages are fully static, but the sitemap regenerates on
   // the server (it also lists live Careers positions) and reads the posts from
   // disk. Next's tracer misses those files for the sitemap, and a per-route
