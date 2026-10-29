@@ -3,6 +3,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import Script from "next/script";
+import { AppButton } from "@/components/atoms/Button";
 import {
   acceptClarity,
   declineClarity,
@@ -71,26 +72,30 @@ export default function ClarityConsentBanner({ projectId }: { projectId: string 
         .
       </p>
       <div className={styles.actions}>
-        <button
+        <AppButton
           type="button"
-          className={styles.decline}
+          variant="outline"
+          size="sm"
+          className={styles.mobileFull}
           onClick={() => {
             declineClarity(storage());
             setDismissed(true);
           }}
         >
           Decline
-        </button>
-        <button
+        </AppButton>
+        <AppButton
           type="button"
-          className={styles.accept}
+          variant="primary"
+          size="sm"
+          className={styles.mobileFull}
           onClick={() => {
             acceptClarity(storage());
             setAcceptedNow(true);
           }}
         >
           Accept
-        </button>
+        </AppButton>
       </div>
     </section>
   );

@@ -9,7 +9,7 @@
   z-index: 990;
   width: min(26rem, calc(100vw - 6.5rem));
   padding: 1rem 1.125rem;
-  border-radius: 0.75rem;
+  border-radius: 1.25rem;
   background: var(--color-surface);
   color: var(--color-text-main);
   border-top: 4px solid var(--color-primary);
@@ -34,34 +34,6 @@
   justify-content: flex-end;
 }
 
-.accept,
-.decline {
-  min-height: 2.5rem;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  font: inherit;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.accept {
-  background: var(--color-action);
-  color: var(--color-action-text);
-  border: 1px solid var(--color-action);
-}
-
-.accept:hover {
-  background: var(--color-action-hover);
-}
-
-.decline {
-  background: transparent;
-  color: var(--color-neutral);
-  border: 1px solid var(--color-muted);
-}
-
-.accept:focus-visible,
-.decline:focus-visible,
 .link:focus-visible {
   outline: 3px solid var(--color-secondary-accessible);
   outline-offset: 2px;
@@ -73,8 +45,14 @@
     font-size: 0.8125rem;
   }
 
-  .accept,
-  .decline {
+  /* Two equal columns: with flex alone the outline button's border makes it
+     a few pixels wider than the filled one. */
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .mobileFull {
     flex: 1;
   }
 }

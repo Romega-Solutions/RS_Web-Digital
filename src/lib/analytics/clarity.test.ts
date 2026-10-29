@@ -128,6 +128,17 @@ test("Escape closes the banner without a choice", () => {
   assert.equal((banner.match(/type="button"/g) ?? []).length, 2);
 });
 
+test("the banner buttons are the site's AppButton, split evenly on phones", () => {
+  const banner = src("components/analytics/ClarityConsentBanner.tsx");
+  assert.match(banner, /import \{ AppButton \} from "@\/components\/atoms\/Button"/);
+  assert.match(banner, /<AppButton\s+type="button"\s+variant="outline"\s+size="sm"\s+className=\{styles\.mobileFull\}[\s\S]*?Decline\s*<\/AppButton>/);
+  assert.match(banner, /<AppButton\s+type="button"\s+variant="primary"\s+size="sm"\s+className=\{styles\.mobileFull\}[\s\S]*?Accept\s*<\/AppButton>/);
+  assert.ok(!/<button/.test(banner));
+  const css = src("components/analytics/ClarityConsentBanner.module.css");
+  assert.ok(!/\.(accept|decline)\b/.test(css));
+  assert.match(css, /@media \(max-width: 640px\)[\s\S]*\.mobileFull \{\s*flex: 1;/);
+});
+
 test("no stored choice, an unknown value or broken storage all mean ask again", () => {
   assert.equal(readConsent(memoryStorage()), null);
   assert.equal(readConsent(memoryStorage({ [CLARITY_CONSENT_KEY]: "maybe" })), null);
