@@ -7,6 +7,8 @@ import {
   clarityProjectId,
   claritySnippet,
   declineClarity,
+  isConsentExemptPath,
+  showConsentBackdrop,
   isBannerCloseKey,
   isValidClarityId,
   readConsent,
@@ -164,4 +166,34 @@ test("form fields and chat text are masked from recordings", () => {
   const chat = src("components/organisms/shared/ChatLauncher.tsx");
   assert.match(chat, /aria-label="Chat messages"\s+data-clarity-mask="true"/);
   assert.match(chat, /className=\{styles\.composer\}[^>]*data-clarity-mask="true"/);
+});
+
+test("the dim is skipped on the privacy page", () => {
+  assert.equal(isConsentExemptPath("/privacy"), true);
+  assert.equal(isConsentExemptPath("/privacy/cookies"), true);
+  assert.equal(isConsentExemptPath("/"), false);
+  assert.equal(isConsentExemptPath("/about/privacy"), false);
+  assert.equal(isConsentExemptPath(null), false);
+  assert.equal(showConsentBackdrop(true, "/privacy"), false);
+  assert.equal(showConsentBackdrop(true, "/"), true);
+  const banner = src("components/analytics/ClarityConsentBanner.tsx");
+  assert.match(banner, /import \{ usePathname \} from "next\/navigation"/);
+  assert.match(banner, /showConsentBackdrop\(open, pathname\)/);
+  // The banner itself still opens there: open does not depend on the path.
+  assert.match(banner, /const open = stored === null && !acceptedNow && !dismissed;/);
+});
+
+test("the dim goes once a choice is made and never blocks the page", () => {
+  assert.equal(showConsentBackdrop(false, "/"), false);
+  const banner = src("components/analytics/ClarityConsentBanner.tsx");
+  assert.match(banner, /if \(!open\) return tag;/);
+  assert.match(banner, /\{dim \? <div className=\{styles\.backdrop\}/);
+  assert.ok(!/aria-modal|inert|overflow = "hidden"/.test(banner));
+  const css = src("components/analytics/ClarityConsentBanner.module.css");
+  const z = (sel: string) => Number(new RegExp(`\\${sel} \\{[^}]*?z-index: (\\d+)`).exec(css)?.[1]);
+  assert.match(css, /\.backdrop \{[^}]*background: rgb\(15 23 42 \/ 0\.55\);[^}]*pointer-events: none;/);
+  const chat = src("components/organisms/shared/ChatLauncher.module.css");
+  const chatMax = Math.max(...[...chat.matchAll(/z-index: (\d+)/g)].map((m) => Number(m[1])));
+  assert.ok(z(".backdrop") > chatMax);
+  assert.ok(z(".banner") > z(".backdrop"));
 });

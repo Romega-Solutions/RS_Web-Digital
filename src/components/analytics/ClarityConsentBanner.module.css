@@ -6,7 +6,7 @@
   position: fixed;
   left: clamp(0.75rem, 3vw, 2rem);
   bottom: clamp(0.75rem, 3vw, 2rem);
-  z-index: 990;
+  z-index: 1003;
   width: min(26rem, calc(100vw - 6.5rem));
   padding: 1rem 1.125rem;
   border-radius: 1.25rem;
@@ -17,6 +17,16 @@
   font-family: var(--font-poppins), Arial, Helvetica, sans-serif;
   font-size: 0.875rem;
   line-height: 1.5;
+}
+
+/* Visual only: dims the page (and the chat button, z-index 999-1001) while
+   the banner is open. It takes no clicks, so the page stays usable. */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1002;
+  background: rgb(15 23 42 / 0.55);
+  pointer-events: none;
 }
 
 .text {

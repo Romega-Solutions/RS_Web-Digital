@@ -3,6 +3,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import Script from "next/script";
+import { usePathname } from "next/navigation";
 import { AppButton } from "@/components/atoms/Button";
 import {
   acceptClarity,
@@ -10,6 +11,7 @@ import {
   claritySnippet,
   isBannerCloseKey,
   readConsent,
+  showConsentBackdrop,
   shouldLoadClarity,
   type ClarityConsent,
 } from "@/lib/analytics/clarity";
@@ -38,6 +40,10 @@ export default function ClarityConsentBanner({ projectId }: { projectId: string 
   const [dismissed, setDismissed] = useState(false);
   const load = stored !== "unknown" && shouldLoadClarity(stored, acceptedNow);
   const open = stored === null && !acceptedNow && !dismissed;
+  // A visual-only dim behind the banner. It takes no clicks and never locks
+  // the page, is skipped on the privacy page, and goes once a choice is made.
+  const pathname = usePathname();
+  const dim = showConsentBackdrop(open, pathname);
 
   useEffect(() => {
     if (!open) return;
@@ -57,46 +63,49 @@ export default function ClarityConsentBanner({ projectId }: { projectId: string 
   if (!open) return tag;
 
   return (
-    <section
-      className={styles.banner}
-      role="region"
-      aria-label="Analytics consent"
-      aria-describedby="clarity-consent-text"
-    >
-      <p id="clarity-consent-text" className={styles.text}>
-        May we use Microsoft Clarity to see how visitors use this site? It records clicks and
-        scrolling, with form fields hidden. See our{" "}
-        <Link href="/privacy" className={styles.link}>
-          Privacy Policy
-        </Link>
-        .
-      </p>
-      <div className={styles.actions}>
-        <AppButton
-          type="button"
-          variant="outline"
-          size="sm"
-          className={styles.mobileFull}
-          onClick={() => {
-            declineClarity(storage());
-            setDismissed(true);
-          }}
-        >
-          Decline
-        </AppButton>
-        <AppButton
-          type="button"
-          variant="primary"
-          size="sm"
-          className={styles.mobileFull}
-          onClick={() => {
-            acceptClarity(storage());
-            setAcceptedNow(true);
-          }}
-        >
-          Accept
-        </AppButton>
-      </div>
-    </section>
+    <>
+      {dim ? <div className={styles.backdrop} aria-hidden="true" data-consent-backdrop="" /> : null}
+      <section
+        className={styles.banner}
+        role="region"
+        aria-label="Analytics consent"
+        aria-describedby="clarity-consent-text"
+      >
+        <p id="clarity-consent-text" className={styles.text}>
+          May we use Microsoft Clarity to see how visitors use this site? It records clicks and
+          scrolling, with form fields hidden. See our{" "}
+          <Link href="/privacy" className={styles.link}>
+            Privacy Policy
+          </Link>
+          .
+        </p>
+        <div className={styles.actions}>
+          <AppButton
+            type="button"
+            variant="outline"
+            size="sm"
+            className={styles.mobileFull}
+            onClick={() => {
+              declineClarity(storage());
+              setDismissed(true);
+            }}
+          >
+            Decline
+          </AppButton>
+          <AppButton
+            type="button"
+            variant="primary"
+            size="sm"
+            className={styles.mobileFull}
+            onClick={() => {
+              acceptClarity(storage());
+              setAcceptedNow(true);
+            }}
+          >
+            Accept
+          </AppButton>
+        </div>
+      </section>
+    </>
   );
 }

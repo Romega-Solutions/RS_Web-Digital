@@ -100,3 +100,13 @@ export function declineClarity(storage: StorageLike | undefined): void {
 export function isBannerCloseKey(key: string): boolean {
   return key === "Escape" || key === "Esc";
 }
+
+/** The privacy page (and any path starting with /privacy) is never dimmed. */
+export function isConsentExemptPath(pathname: string | null | undefined): boolean {
+  return typeof pathname === "string" && pathname.startsWith("/privacy");
+}
+
+/** The dim shows only while the banner is open, and never on the privacy page. */
+export function showConsentBackdrop(open: boolean, pathname: string | null | undefined): boolean {
+  return open && !isConsentExemptPath(pathname);
+}
