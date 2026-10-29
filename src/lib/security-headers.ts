@@ -19,6 +19,16 @@ export const CHALLENGES_ORIGIN = "https://challenges.cloudflare.com";
 // deployments (and from the site's own /_vercel/ path, which 'self' covers).
 export const VERCEL_SCRIPTS_ORIGIN = "https://va.vercel-scripts.com";
 
+// Microsoft Clarity (session analytics, production only and only after the
+// visitor accepts the banner) loads its tag from www.clarity.ms, then a script
+// from a numbered *.clarity.ms host, and sends its data to *.clarity.ms and
+// c.bing.com, partly as image beacons.
+export const CLARITY_ORIGINS = {
+  script: ["https://www.clarity.ms", "https://*.clarity.ms"],
+  connect: ["https://*.clarity.ms", "https://c.bing.com"],
+  img: ["https://*.clarity.ms", "https://c.bing.com"],
+} as const;
+
 // The footer map (Leaflet) draws OpenStreetMap tiles and takes its marker
 // pictures from unpkg. Both are images only.
 export const MAP_TILES_ORIGIN = "https://*.tile.openstreetmap.org";
@@ -47,6 +57,7 @@ export function buildContentSecurityPolicy({ development = false }: CspOptions =
     "'unsafe-inline'",
     CHALLENGES_ORIGIN,
     VERCEL_SCRIPTS_ORIGIN,
+    ...CLARITY_ORIGINS.script,
     ...(development ? ["'unsafe-eval'"] : []),
   ];
 
@@ -57,11 +68,23 @@ export function buildContentSecurityPolicy({ development = false }: CspOptions =
     ["style-src", ["'self'", "'unsafe-inline'"]],
     // Remote images go through /_next/image, so they are same-origin here. The
     // footer map is the exception: its tiles and marker are loaded by Leaflet.
-    ["img-src", ["'self'", "data:", "blob:", MAP_TILES_ORIGIN, MAP_MARKER_ORIGIN]],
+    // Clarity also sends some of its data as image beacons.
+    [
+      "img-src",
+      ["'self'", "data:", "blob:", MAP_TILES_ORIGIN, MAP_MARKER_ORIGIN, ...CLARITY_ORIGINS.img],
+    ],
     // next/font serves its files from the site itself.
     ["font-src", ["'self'", "data:"]],
     ["media-src", ["'self'"]],
-    ["connect-src", ["'self'", CHALLENGES_ORIGIN, ...(development ? ["ws:", "wss:"] : [])]],
+    [
+      "connect-src",
+      [
+        "'self'",
+        CHALLENGES_ORIGIN,
+        ...CLARITY_ORIGINS.connect,
+        ...(development ? ["ws:", "wss:"] : []),
+      ],
+    ],
     ["frame-src", [CHALLENGES_ORIGIN]],
     ["worker-src", ["'self'", "blob:"]],
     ["manifest-src", ["'self'"]],
