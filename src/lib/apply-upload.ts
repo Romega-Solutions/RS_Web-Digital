@@ -10,6 +10,17 @@ export const RESUME_TOO_LARGE_MESSAGE = `File is over ${MAX_RESUME_MB} MB. Pleas
 
 export const RESUME_NOT_PDF_MESSAGE = `That file doesn't look like a PDF. Please upload your resume as a PDF, or email it to ${HR_EMAIL}.`;
 
+export const APPLY_ALREADY_APPLIED_CODE = "ALREADY_APPLIED";
+
+// Shown when the portal says this email already has an open application for
+// the role. Fixed text: nothing about the earlier application is shown.
+export const APPLY_ALREADY_APPLIED_MESSAGE = "You've already applied for this role — we'll be in touch.";
+
+/** The portal's 409 reply for an open application with the same email and role. */
+export function isAlreadyAppliedReply(status: number | undefined, code: unknown): boolean {
+  return status === 409 && code === APPLY_ALREADY_APPLIED_CODE;
+}
+
 export const APPLY_GENERIC_ERROR = `Something went wrong. Please try again, or email your resume to ${HR_EMAIL}.`;
 
 /** Exactly MAX_RESUME_BYTES is allowed; one byte more is rejected. */
@@ -80,6 +91,10 @@ export async function readApplyReply(
       ok: true,
       applicationCode: typeof body.applicationCode === "string" ? body.applicationCode : null,
     };
+  }
+  if (isAlreadyAppliedReply(response.status, body.code)) {
+    // No code returned, so the form does not add the email-us link.
+    return { ok: false, message: APPLY_ALREADY_APPLIED_MESSAGE };
   }
   const message =
     typeof body.error === "string" && body.error.trim() ? body.error : APPLY_GENERIC_ERROR;
