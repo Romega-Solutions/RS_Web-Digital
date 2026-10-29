@@ -8,8 +8,11 @@
 // to Cloudflare for a form that would be refused anyway.
 
 import {
+  APPLY_ALREADY_APPLIED_CODE,
+  APPLY_ALREADY_APPLIED_MESSAGE,
   RESUME_NOT_PDF_MESSAGE,
   RESUME_TOO_LARGE_MESSAGE,
+  isAlreadyAppliedReply,
   isResumeTooLarge,
   isUnusableUpstreamReply,
 } from "./apply-upload.ts";
@@ -132,6 +135,24 @@ export async function handleApplyRequest(
     }
 
     const text = await upstream.text();
+
+    // An open application already exists for this email and role. Answer with
+    // the fixed code and message only, whatever else the portal sent.
+    if (upstream.status === 409) {
+      let code: unknown;
+      try {
+        code = (JSON.parse(text) as { code?: unknown } | null)?.code;
+      } catch {
+        code = undefined;
+      }
+      if (isAlreadyAppliedReply(upstream.status, code)) {
+        return new Response(
+          JSON.stringify({ ok: false, code: APPLY_ALREADY_APPLIED_CODE, error: APPLY_ALREADY_APPLIED_MESSAGE }),
+          { status: 409, headers: { "Content-Type": "application/json", "Cache-Control": "no-store" } },
+        );
+      }
+    }
+
     // Pass through whatever the upstream returned, preserving status.
     return new Response(text, {
       status: upstream.status,
