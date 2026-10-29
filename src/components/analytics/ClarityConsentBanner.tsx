@@ -2,12 +2,15 @@
 
 import { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
+import Script from "next/script";
 import {
   acceptClarity,
   declineClarity,
+  claritySnippet,
   isBannerCloseKey,
   readConsent,
-  type ClarityWindow,
+  shouldLoadClarity,
+  type ClarityConsent,
 } from "@/lib/analytics/clarity";
 import styles from "./ClarityConsentBanner.module.css";
 
@@ -22,16 +25,18 @@ function storage(): Storage | undefined {
 // The stored choice only changes through this banner, so there is nothing to subscribe to.
 const subscribe = () => () => {};
 
-export default function ClarityConsentBanner() {
-  // A stored "accepted" is re-sent by the tag itself; a stored choice of either
-  // kind keeps the banner hidden. The server render never shows it.
-  const hasChoice = useSyncExternalStore(
+export default function ClarityConsentBanner({ projectId }: { projectId: string }) {
+  // The server render has no stored choice to read, so it shows nothing and
+  // loads nothing. A stored choice of either kind keeps the banner hidden.
+  const stored = useSyncExternalStore<ClarityConsent | null | "unknown">(
     subscribe,
-    () => readConsent(storage()) !== null,
-    () => true,
+    () => readConsent(storage()),
+    () => "unknown",
   );
+  const [acceptedNow, setAcceptedNow] = useState(false);
   const [dismissed, setDismissed] = useState(false);
-  const open = !hasChoice && !dismissed;
+  const load = stored !== "unknown" && shouldLoadClarity(stored, acceptedNow);
+  const open = stored === null && !acceptedNow && !dismissed;
 
   useEffect(() => {
     if (!open) return;
@@ -42,7 +47,13 @@ export default function ClarityConsentBanner() {
     return () => document.removeEventListener("keydown", onKey);
   }, [open]);
 
-  if (!open) return null;
+  const tag = load ? (
+    <Script id="ms-clarity" strategy="afterInteractive">
+      {claritySnippet(projectId)}
+    </Script>
+  ) : null;
+
+  if (!open) return tag;
 
   return (
     <section
@@ -74,8 +85,8 @@ export default function ClarityConsentBanner() {
           type="button"
           className={styles.accept}
           onClick={() => {
-            acceptClarity(window as unknown as ClarityWindow, storage());
-            setDismissed(true);
+            acceptClarity(storage());
+            setAcceptedNow(true);
           }}
         >
           Accept

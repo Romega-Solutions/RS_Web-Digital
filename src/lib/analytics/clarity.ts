@@ -31,9 +31,9 @@ export function clarityProjectId(env: {
 }
 
 /**
- * Clarity's standard tag. The ID is checked again here because it is written
- * into an inline script. If the visitor accepted earlier, consent is queued
- * straight away so it is sent as soon as the tag loads.
+ * Clarity's standard tag, followed by consent so cookies are set. It is only
+ * ever rendered after the visitor accepts. The ID is checked again here
+ * because it is written into an inline script.
  */
 export function claritySnippet(id: string): string {
   if (!isValidClarityId(id)) throw new Error("Invalid Clarity project ID");
@@ -43,8 +43,19 @@ export function claritySnippet(id: string): string {
     't=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;',
     "y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);",
     `})(window,document,"clarity","script","${id}");`,
-    `try{if(localStorage.getItem("${CLARITY_CONSENT_KEY}")==="accepted"){window.clarity("consent");}}catch(e){}`,
+    'window.clarity("consent");',
   ].join("");
+}
+
+/**
+ * The tag loads only with consent: an Accept in this visit or one stored from
+ * an earlier visit. No choice or a Decline means it never loads.
+ */
+export function shouldLoadClarity(
+  stored: ClarityConsent | null,
+  acceptedNow: boolean,
+): boolean {
+  return acceptedNow || stored === "accepted";
 }
 
 export function readConsent(storage: StorageLike | undefined): ClarityConsent | null {
@@ -75,9 +86,9 @@ export function sendConsent(win: ClarityWindow): void {
   win.clarity!("consent");
 }
 
-export function acceptClarity(win: ClarityWindow, storage: StorageLike | undefined): void {
+/** Accept stores the choice; the caller then loads the tag, which sends consent. */
+export function acceptClarity(storage: StorageLike | undefined): void {
   saveConsent(storage, "accepted");
-  sendConsent(win);
 }
 
 /** Declining stores the choice and sends nothing to Clarity. */

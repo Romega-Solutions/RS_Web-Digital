@@ -11,6 +11,7 @@ import {
   isValidClarityId,
   readConsent,
   sendConsent,
+  shouldLoadClarity,
   type ClarityWindow,
 } from "./clarity.ts";
 
@@ -49,12 +50,37 @@ test("an ID that is not plain letters and digits is refused", () => {
   assert.equal(isValidClarityId("AbC123xyz"), true);
 });
 
-test("the tag is Clarity's standard snippet and re-sends a stored accept", () => {
+test("the tag is Clarity's standard snippet and sends consent once loaded", () => {
   const snippet = claritySnippet("testid123");
   assert.match(snippet, /https:\/\/www\.clarity\.ms\/tag\/"\+i/);
   assert.match(snippet, /"clarity","script","testid123"/);
-  assert.ok(snippet.includes(`localStorage.getItem("${CLARITY_CONSENT_KEY}")==="accepted"`));
-  assert.ok(snippet.includes('window.clarity("consent")'));
+  assert.ok(snippet.endsWith('window.clarity("consent");'));
+  assert.ok(!snippet.includes("localStorage"));
+});
+
+test("no choice means no tag", () => {
+  assert.equal(shouldLoadClarity(null, false), false);
+});
+
+test("Decline means no tag, in this visit and later ones", () => {
+  assert.equal(shouldLoadClarity("declined", false), false);
+});
+
+test("Accept loads the tag, which sends consent", () => {
+  assert.equal(shouldLoadClarity(null, true), true);
+  const banner = src("components/analytics/ClarityConsentBanner.tsx");
+  assert.match(banner, /acceptClarity\(storage\(\)\);\s*setAcceptedNow\(true\)/);
+  assert.match(banner, /load \? \(\s*<Script id="ms-clarity" strategy="afterInteractive">\s*\{claritySnippet\(projectId\)\}/);
+});
+
+test("a stored Accept loads the tag on the next visit", () => {
+  assert.equal(shouldLoadClarity("accepted", false), true);
+  assert.equal(shouldLoadClarity(readConsent(memoryStorage({ [CLARITY_CONSENT_KEY]: "accepted" })), false), true);
+});
+
+test("the server render loads nothing until the stored choice is read", () => {
+  const banner = src("components/analytics/ClarityConsentBanner.tsx");
+  assert.match(banner, /const load = stored !== "unknown" && shouldLoadClarity\(stored, acceptedNow\)/);
 });
 
 test("the layout renders Clarity next to Analytics, guarded by the production check", () => {
@@ -62,18 +88,16 @@ test("the layout renders Clarity next to Analytics, guarded by the production ch
   assert.match(layout, /VERCEL_ENV: process\.env\.VERCEL_ENV/);
   assert.match(layout, /<Analytics \/>\s*\{CLARITY_PROJECT_ID \? <Clarity projectId=\{CLARITY_PROJECT_ID\} \/> : null\}/);
   const component = src("components/analytics/Clarity.tsx");
-  assert.match(component, /strategy="afterInteractive"/);
-  assert.match(component, /from "next\/script"/);
   // The banner is part of the Clarity component, so it shows only when Clarity is rendered.
-  assert.match(component, /<ClarityConsentBanner \/>/);
+  assert.match(component, /<ClarityConsentBanner projectId=\{projectId\} \/>/);
+  assert.ok(!component.includes("<Script"));
+  assert.match(src("components/analytics/ClarityConsentBanner.tsx"), /from "next\/script"/);
 });
 
-test("Accept stores the choice and sends consent", () => {
+test("Accept stores the choice", () => {
   const storage = memoryStorage();
-  const { win, calls } = fakeWindow();
-  acceptClarity(win, storage);
+  acceptClarity(storage);
   assert.equal(storage.data.get(CLARITY_CONSENT_KEY), "accepted");
-  assert.deepEqual(calls, [["consent"]]);
   assert.equal(readConsent(storage), "accepted");
 });
 
