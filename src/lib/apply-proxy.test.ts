@@ -26,7 +26,7 @@ const ON_ENV: TurnstileEnv = {
 type Call = { url: string; init?: RequestInit };
 
 // One fake fetch that plays both Cloudflare and the portal, and records the calls.
-function fakes(options: { cloudflare?: unknown; portalStatus?: number } = {}) {
+function fakes(options: { cloudflare?: unknown; portalStatus?: number; portalBody?: unknown } = {}) {
   const calls: Call[] = [];
   const impl = (async (url: string | URL | Request, init?: RequestInit) => {
     const target = String(url);
@@ -40,7 +40,7 @@ function fakes(options: { cloudflare?: unknown; portalStatus?: number } = {}) {
       };
       return new Response(JSON.stringify(reply), { status: 200, headers: { "content-type": "application/json" } });
     }
-    return new Response(JSON.stringify({ ok: true, applicationCode: "APP-1" }), {
+    return new Response(JSON.stringify(options.portalBody ?? { ok: true, applicationCode: "APP-1" }), {
       status: options.portalStatus ?? 200,
       headers: { "content-type": "application/json" },
     });
@@ -290,4 +290,27 @@ test("the privacy policy names Cloudflare Turnstile and its addendum", () => {
   );
   assert.match(policy, /Cloudflare, Inc\. \(Turnstile\)/);
   assert.match(policy, /cloudflare\.com\/turnstile-privacy-policy/);
+});
+
+test("a portal 409 ALREADY_APPLIED becomes the fixed already-applied reply, after the Cloudflare check", async () => {
+  const fake = fakes({
+    portalStatus: 409,
+    portalBody: { ok: false, code: "ALREADY_APPLIED", error: "x", applicationCode: "APP-9", status: "offered", name: "Juan" },
+  });
+  const { response, body } = await run(ON_ENV, applyRequest(applicationForm(), { "x-turnstile-token": TOKEN }), fake);
+  assert.equal(response.status, 409);
+  assert.deepEqual(body, {
+    ok: false,
+    code: "ALREADY_APPLIED",
+    error: "You've already applied for this role — we'll be in touch.",
+  });
+  assert.equal(fake.cloudflareCalls().length, 1);
+  assert.equal(fake.portalCalls().length, 1);
+});
+
+test("another 409 from the portal is still passed through as before", async () => {
+  const fake = fakes({ portalStatus: 409, portalBody: { ok: false, code: "OTHER", error: "Conflict." } });
+  const { response, body } = await run(BASE_ENV, applyRequest(applicationForm()), fake);
+  assert.equal(response.status, 409);
+  assert.deepEqual(body, { ok: false, code: "OTHER", error: "Conflict." });
 });

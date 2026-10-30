@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import {
+  APPLY_ALREADY_APPLIED_MESSAGE,
   APPLY_GENERIC_ERROR,
   MAX_RESUME_BYTES,
   MAX_RESUME_MB,
@@ -131,4 +132,21 @@ test("apply form uses the shared cap and has no hard-coded size", () => {
   assert.doesNotMatch(source, /10 MB|MAX_FILE_MB|\* 1024/);
   assert.match(source, /readApplyReply\(response\)/);
   assert.doesNotMatch(source, /response\.json\(\)/);
+});
+
+test("a 409 ALREADY_APPLIED reply shows the fixed already-applied message, with no email-us link", async () => {
+  const body = JSON.stringify({ ok: false, code: "ALREADY_APPLIED", error: "anything the server said" });
+  assert.deepEqual(await readApplyReply(reply(409, "application/json", body)), {
+    ok: false,
+    message: "You've already applied for this role — we'll be in touch.",
+  });
+  assert.equal(APPLY_ALREADY_APPLIED_MESSAGE, "You've already applied for this role — we'll be in touch.");
+});
+
+test("ALREADY_APPLIED on a status other than 409 is not treated as already applied", async () => {
+  const body = JSON.stringify({ ok: false, code: "ALREADY_APPLIED", error: "Bad request." });
+  assert.deepEqual(await readApplyReply(reply(400, "application/json", body)), {
+    ok: false,
+    message: "Bad request.",
+  });
 });
