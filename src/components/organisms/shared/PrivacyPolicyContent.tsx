@@ -71,6 +71,27 @@ export function PrivacyPolicyContent({
           understand website traffic patterns without identifying individual
           visitors.
         </li>
+        <li>
+          <strong>Microsoft Clarity:</strong> If you select Accept in the
+          analytics banner, we use Microsoft Clarity to understand how visitors
+          use our site. Clarity records clicks, scrolling and mouse movement,
+          and can replay a visit as a session recording. Form fields, including
+          our contact and job application forms and the chat box, are masked so
+          what you type is not recorded. Clarity runs only with your consent and
+          sets the <code>_clck</code> and <code>_clsk</code> cookies to
+          recognize repeat visits and group a visit&apos;s pages. You can say no
+          by selecting Decline in the banner, or by clearing this site&apos;s
+          stored data in your browser to be asked again. You can also opt out
+          of Microsoft&apos;s advertising and personalization at{" "}
+          <a
+            href="https://choice.microsoft.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            choice.microsoft.com
+          </a>
+          .
+        </li>
       </ul>
       <p>
         You can manage or disable cookies through your browser settings, though
@@ -114,6 +135,22 @@ export function PrivacyPolicyContent({
           rel="noopener noreferrer"
         >
           Cloudflare&apos;s Turnstile Privacy Addendum
+        </a>
+        .
+      </p>
+      <p>
+        <strong>Microsoft Corporation (Clarity).</strong> If you accept
+        analytics, Microsoft receives the usage data Clarity records on our
+        site, such as clicks, scrolling, mouse movement and the pages you view,
+        together with technical details such as your browser, device and IP
+        address. Form fields and chat text are masked before they are sent.
+        Microsoft processes this data to provide Clarity to us. See{" "}
+        <a
+          href="https://www.microsoft.com/privacy/privacystatement"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Microsoft&apos;s Privacy Statement
         </a>
         .
       </p>

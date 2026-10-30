@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import {
   CHALLENGES_ORIGIN,
+  CLARITY_ORIGINS,
   MAP_MARKER_ORIGIN,
   MAP_TILES_ORIGIN,
   VERCEL_SCRIPTS_ORIGIN,
@@ -40,7 +41,10 @@ test("Turnstile can load its script, frame and calls; nothing else third-party i
   assert.ok(directive(csp, "connect-src").includes(CHALLENGES_ORIGIN));
   assert.ok(directive(csp, "script-src").includes(VERCEL_SCRIPTS_ORIGIN));
   const external = directive(csp, "script-src").filter((v) => v.startsWith("http"));
-  assert.deepEqual(external.sort(), [CHALLENGES_ORIGIN, VERCEL_SCRIPTS_ORIGIN].sort());
+  assert.deepEqual(
+    external.sort(),
+    [CHALLENGES_ORIGIN, VERCEL_SCRIPTS_ORIGIN, ...CLARITY_ORIGINS.script].sort(),
+  );
 });
 
 test("the footer map's tiles and marker images are allowed, as images only", () => {
@@ -71,4 +75,17 @@ test("next.config.ts hides the framework header and uses the builder, and leaves
   assert.match(config, /poweredByHeader:\s*false/);
   assert.match(config, /buildSecurityHeaders\(/);
   assert.ok(!/Strict-Transport-Security/i.test(config));
+});
+
+test("Microsoft Clarity can load its script and send its data, and gets no frame", () => {
+  const csp = buildContentSecurityPolicy();
+  for (const origin of ["https://www.clarity.ms", "https://*.clarity.ms"]) {
+    assert.ok(directive(csp, "script-src").includes(origin), origin);
+  }
+  for (const origin of ["https://*.clarity.ms", "https://c.bing.com"]) {
+    assert.ok(directive(csp, "connect-src").includes(origin), origin);
+    assert.ok(directive(csp, "img-src").includes(origin), origin);
+  }
+  assert.ok(!directive(csp, "script-src").includes("https://c.bing.com"));
+  assert.deepEqual(directive(csp, "frame-src"), [CHALLENGES_ORIGIN]);
 });

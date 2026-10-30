@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
+import Clarity from "@/components/analytics/Clarity";
+import { clarityProjectId } from "@/lib/analytics/clarity";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { RouteAnnouncer } from "@/components/accessibility/RouteAnnouncer";
 import { ChatLauncher } from "@/components/organisms/shared/ChatLauncher";
@@ -95,6 +97,12 @@ export const metadata: Metadata = {
   category: "business",
 };
 
+// Microsoft Clarity loads only on the Production deployment with a valid ID.
+const CLARITY_PROJECT_ID = clarityProjectId({
+  VERCEL_ENV: process.env.VERCEL_ENV,
+  NEXT_PUBLIC_CLARITY_PROJECT_ID: process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID,
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -113,6 +121,7 @@ export default function RootLayout({
         {children}
         <ChatLauncher />
         <Analytics />
+        {CLARITY_PROJECT_ID ? <Clarity projectId={CLARITY_PROJECT_ID} /> : null}
         <SpeedInsights />
       </body>
     </html>
