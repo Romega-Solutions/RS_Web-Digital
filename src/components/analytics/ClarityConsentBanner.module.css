@@ -1,0 +1,96 @@
+@reference "../../app/globals.css";
+
+/* Bottom-left, clear of the chat button on the right. Not modal: the page
+   stays usable, and on phones it sits low and compact with its own spacing. */
+.banner {
+  position: fixed;
+  left: clamp(0.75rem, 3vw, 2rem);
+  bottom: clamp(0.75rem, 3vw, 2rem);
+  z-index: 1003;
+  width: min(26rem, calc(100vw - 6.5rem));
+  padding: 1rem 1.125rem;
+  border-radius: 1.25rem;
+  background: var(--color-surface);
+  color: var(--color-text-main);
+  border-top: 4px solid var(--color-primary);
+  box-shadow: 0 10px 30px rgb(15 23 42 / 0.18);
+  font-family: var(--font-poppins), Arial, Helvetica, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* Visual only: dims the page (and the chat button, z-index 999-1001) while
+   the banner is open. It takes no clicks, so the page stays usable. */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1002;
+  background: rgb(15 23 42 / 0.55);
+  pointer-events: none;
+}
+
+.text {
+  margin: 0 0 0.75rem;
+}
+
+.link {
+  color: var(--color-action);
+  text-decoration: underline;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.link:focus-visible {
+  outline: 3px solid var(--color-secondary-accessible);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .banner {
+    padding: 0.75rem 0.875rem;
+    font-size: 0.8125rem;
+  }
+
+  /* Two equal columns: with flex alone the outline button's border makes it
+     a few pixels wider than the filled one. */
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .mobileFull {
+    flex: 1;
+  }
+}
+
+/* Desktop only: a floating bar along the bottom of the screen, inset like
+   the chat button and rounded 1.25rem on all four corners. Its right edge stops
+   short of the chat button's lane (the button's inset + its 4rem desktop width + a 1.5rem gap),
+   so the two never overlap. Content is centered at the site's content width,
+   with the text on the left and the buttons on the right. */
+@media (min-width: 641px) {
+  .banner {
+    left: clamp(1rem, 3vw, 2rem);
+    right: calc(clamp(1rem, 3vw, 2rem) + 4rem + 1.5rem);
+    bottom: clamp(1rem, 3vw, 2rem);
+    width: auto;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1rem max(var(--layout-gutter), calc((100% - var(--layout-content)) / 2));
+    border-radius: 1.25rem;
+  }
+
+  .text {
+    flex: 1;
+    margin: 0;
+  }
+
+  .actions {
+    flex-shrink: 0;
+  }
+}

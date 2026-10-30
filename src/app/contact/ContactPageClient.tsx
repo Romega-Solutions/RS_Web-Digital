@@ -426,6 +426,7 @@ export default function ContactPageClient({ contactFormAvailable, turnstileSiteK
           <div className={styles.formWrap}>
             <form
               className={styles.form}
+              data-clarity-mask="true"
               onSubmit={handleSubmit}
               onFocusCapture={turnstile.prepare}
               noValidate

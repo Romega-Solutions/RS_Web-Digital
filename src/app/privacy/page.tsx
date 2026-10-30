@@ -34,7 +34,7 @@ export default function PrivacyPage() {
         about: { "@id": absoluteUrl("/#organization") },
         inLanguage: "en-US",
         datePublished: "2025-08-27",
-        dateModified: "2026-04-24",
+        dateModified: "2026-10-30",
       },
     ],
   };
@@ -46,7 +46,7 @@ export default function PrivacyPage() {
       footer={<SiteFooter />}
       title="Privacy Policy"
       subtitle="How we collect, use, and protect your personal information at Romega Solutions."
-      lastUpdated="April 24, 2026"
+      lastUpdated="October 30, 2026"
     >
       <LegalPageCard>
         <PrivacyPolicyContent />

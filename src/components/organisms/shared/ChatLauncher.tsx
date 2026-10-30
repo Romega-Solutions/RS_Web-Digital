@@ -390,6 +390,7 @@ export function ChatLauncher() {
                 role="log"
                 aria-live="polite"
                 aria-label="Chat messages"
+                data-clarity-mask="true"
               >
                 {messages.map((m) => {
                   const shouldAnimate =
@@ -446,7 +447,11 @@ export function ChatLauncher() {
                 </div>
               )}
 
-              <form className={styles.composer} onSubmit={handleSubmit}>
+              <form
+                className={styles.composer}
+                onSubmit={handleSubmit}
+                data-clarity-mask="true"
+              >
                 <label htmlFor={`${panelId}-input`} className="sr-only">
                   Type your message
                 </label>

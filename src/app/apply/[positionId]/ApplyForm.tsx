@@ -220,7 +220,12 @@ export function ApplyForm({
   if (status === "success") {
     const firstName = submittedName.split(" ")[0];
     return (
-      <div className={styles.success} role="status" aria-live="polite">
+      <div
+        className={styles.success}
+        role="status"
+        aria-live="polite"
+        data-clarity-mask="true"
+      >
         <h3 className={styles.successTitle}>Thanks{firstName ? `, ${firstName}` : ""}!</h3>
         <p className={styles.successBody}>
           Your application for <strong>{jobTitle}</strong> has been received.
@@ -249,6 +254,7 @@ export function ApplyForm({
   return (
     <form
       ref={formRef}
+      data-clarity-mask="true"
       onSubmit={handleSubmit}
       onFocusCapture={turnstile.prepare}
       className={styles.form}
@@ -393,7 +399,11 @@ export function ApplyForm({
 
       {showBanner && (
         // The field-summary line is polite: each field error already announces itself.
-        <div className={styles.alert} role={summary ? "status" : "alert"}>
+        <div
+          className={styles.alert}
+          role={summary ? "status" : "alert"}
+          data-clarity-mask="true"
+        >
           {mailLink ? (
             <MailLinkedMessage
               message={errorMsg}
