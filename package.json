@@ -47,7 +47,7 @@
     "react-leaflet": "^5.0.0",
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.1",
-    "resend": "^6.12.4",
+    "resend": "^6.35.0",
     "sanitize-html": "^2.18.1",
     "yaml": "^2.9.1"
   },
